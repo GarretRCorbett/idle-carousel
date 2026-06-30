@@ -1,0 +1,17 @@
+# Godot exports — never commit these
+*.exe
+*.pck
+*.apk
+*.aab
+*.wasm
+*.zip
+
+# Godot cache — auto-generated, don't commit
+.godot/
+/android/
+*.import
+*.uid
+
+# OS files
+.DS_Store
+Thumbs.db
