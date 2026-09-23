@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+enemy_name = "Rock"
+move_speed = 25.0
+base_health = 8.0
+damage_per_second = 4.0
+latch_drag = 0.3
+gold_drop = 8.0
+placeholder_color = Color(0.4784, 0.4784, 0.549, 1)
+placeholder_points = 7
+placeholder_size = 16.0

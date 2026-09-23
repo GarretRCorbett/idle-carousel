@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+enemy_name = "Leaf"
+move_speed = 90.0
+base_health = 2.0
+damage_per_second = 1.0
+latch_drag = 0.05
+gold_drop = 1.0
+placeholder_color = Color(0.8784, 0.4824, 0.2235, 1)
+placeholder_points = 5
+placeholder_size = 10.0
