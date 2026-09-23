@@ -9,8 +9,6 @@
 # Godot cache — auto-generated, don't commit
 .godot/
 /android/
-*.import
-*.uid
 
 # OS files
 .DS_Store
