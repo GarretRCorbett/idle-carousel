@@ -28,6 +28,7 @@ func _ready() -> void:
 	_click_router.enemy_clicked.connect(_on_enemy_clicked)
 	_wave_manager.center = _carousel.position
 	_wave_manager.enemy_spawned.connect(_on_enemy_spawned)
+	_wave_manager.countdown_changed.connect(_hud.set_wave_countdown)
 	GameState.overloaded.connect(_on_overloaded)
 	GameState.booth_count_changed.connect(_layout_booths)
 	_setup_mounts()
@@ -35,6 +36,7 @@ func _ready() -> void:
 	_layout_booths(GameState.get_booth_count())
 	get_viewport().size_changed.connect(_center_world)
 	_center_world()
+	_wave_manager.start()
 
 
 func _physics_process(delta: float) -> void:
@@ -108,10 +110,12 @@ func _on_enemy_died(enemy: EnemyBase) -> void:
 	_remove_enemy(enemy)
 
 
-## TEMPORARY (OVERLOAD_CLEAR rule): every enemy is removed, with no Gold.
+## TEMPORARY (OVERLOAD_CLEAR rule): every enemy is removed, with no Gold,
+## and the next wave is a full interval away.
 func _on_overloaded() -> void:
 	for enemy: EnemyBase in _enemy_layer.get_children():
 		_remove_enemy(enemy)
+	_wave_manager.restart_countdown()
 
 
 func _remove_enemy(enemy: EnemyBase) -> void:

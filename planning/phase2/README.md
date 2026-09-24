@@ -1,8 +1,13 @@
 # Phase 2 Planning: Start Here
 
 ## Status (2026-09-24)
-**Done:** Steps 1–5, 5b, and the pacing pass (GDD v1.6–1.7): GameState, spin, Boost button with Overdrive, Horse and booth payouts, leveled shop (Carousel Speed, Boost Power, Ticket Booth to 4), HUD labels. 78 tests pass.
-**Next:** Steps 6–8 merged (Leaf, latch/stall, waves). Plan drafted in `step6_8_plan.md`, waiting on Garret's approval.
+**Done:** Steps 1–8, 5b, and the pacing pass (GDD v1.6–1.7): GameState, spin, Boost button with Overdrive, Horse and booth payouts, leveled shop (Carousel Speed, Boost Power, Click Damage, Ticket Booth to 4), HUD labels, Leaves in timed waves, click damage, latch drag, and two TEMPORARY fail rules. 121 tests pass.
+**Next:** Garret playtests Steps 6–8 (checklist in `step6_8_plan.md` §7), including both fail rules, then Step 9 (Wolf).
+
+**Fail rules (TEMPORARY, switch with `fail_rule` in `resources/config/run_config.tres`):**
+- `HEALTH_STALL` (default): latched Leaves drain health; at 0 the carousel stops until every latch is cleared, then refills to 25%.
+- `OVERLOAD_CLEAR` (Codex, memo G): no health drain; drag stops at 25% speed; 10 s stuck there removes all enemies (no Gold) and restarts the wave countdown.
+- Garret's direction: **idle first, pressure when pushing** (a mastered tier should run safely forever). The real fail state is still DECISION PENDING.
 
 ## Garret's latest playtest (after the pacing pass)
 - Fun; he bought all 4 booths. Still "a tad slow", but hold off retuning until enemies exist.
@@ -53,6 +58,8 @@ The memos are **input, not decisions.** Each step plan lists what it takes from 
 - Leaf: 2 Gold per kill, 1 damage/sec latched, health bar hidden until hit.
 - Waves: first at 10 s, then every 20 s; 3–5 Leaves clustered from one direction.
 - TEMPORARY stall refills to 25% once all latches clear.
+- After Codex's memo G: build both fail rules, switchable, and compare in playtest.
+- Core feel: idle first, pressure when pushing.
 
 ## Design questions collected for later steps (originally asked; answers above)
 - **Step 4:** fixed booth payout confirmed. Gold/sec uses a 10-second window that starts at 0 and fills up (memo C §5).

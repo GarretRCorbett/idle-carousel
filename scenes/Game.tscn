@@ -60,6 +60,10 @@ script = ExtResource("8_router")
 script = ExtResource("9_waves")
 enemy_scene = ExtResource("10_leaf")
 
+[node name="WaveTimer" type="Timer" parent="WaveManager"]
+process_callback = 0
+one_shot = true
+
 [node name="HUD" type="CanvasLayer" parent="." unique_id=691397781]
 script = ExtResource("4_kiw3p")
 

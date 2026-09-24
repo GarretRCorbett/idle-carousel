@@ -10,6 +10,8 @@ signal boost_requested
 @export var gold_format: String = "Gold: %d"
 @export var gold_per_second_format: String = "Gold per sec: %.1f"
 @export var speed_format: String = "Speed: ×%.2f"
+# TODO(Garret): text
+@export var wave_countdown_format: String = "Next wave: %d"
 ## Boost bar tint during Overdrive.
 @export var overdrive_bar_modulate: Color = Color(1.6, 1.3, 0.35)
 ## Keyboard shortcut for the Boost button.
@@ -19,6 +21,7 @@ signal boost_requested
 @onready var _gold_per_sec_label: Label = %GoldPerSecLabel
 @onready var _speed_label: Label = %SpeedLabel
 @onready var _health_bar: ProgressBar = %HealthBar
+@onready var _wave_countdown_label: Label = %WaveCountdownLabel
 @onready var _boost_bar: ProgressBar = %BoostBar
 @onready var _boost_button: Button = %BoostButton
 
@@ -60,6 +63,11 @@ func _on_overdrive_changed(active: bool) -> void:
 func _on_health_changed(current: float, maximum: float) -> void:
 	_health_bar.max_value = maximum
 	_health_bar.value = current
+
+
+## Game forwards WaveManager's countdown here.
+func set_wave_countdown(seconds_left: int) -> void:
+	_wave_countdown_label.text = wave_countdown_format % seconds_left
 
 
 func _make_shortcut(key: Key) -> Shortcut:

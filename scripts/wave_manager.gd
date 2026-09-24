@@ -1,12 +1,21 @@
 class_name WaveManager
 extends Node
-## Sends waves of enemies. A wave is one cluster from a random direction,
+## Sends waves of enemies on a countdown that always runs, whether or not the
+## last wave is cleared (GDD). A wave is one cluster from a random direction,
 ## spread a little sideways and staggered outward so they arrive one after
 ## another. It only creates enemies; Game adds them to the world and wires them.
 
 signal enemy_spawned(enemy: EnemyBase)
+## Whole seconds until the next wave, rounded up. Emitted when it changes.
+signal countdown_changed(seconds_left: int)
 
 @export var enemy_scene: PackedScene
+
+@export_group("Timing")
+## Seconds from the start of a run to the first wave.
+@export_range(0.0, 600.0, 0.5, "suffix:s") var first_wave_delay: float = 10.0
+## Seconds between waves after that.
+@export_range(1.0, 600.0, 0.5, "suffix:s") var wave_interval: float = 20.0
 
 @export_group("Wave Shape")
 @export_range(1, 50, 1) var min_group: int = 3
@@ -25,6 +34,47 @@ signal enemy_spawned(enemy: EnemyBase)
 ## Where the carousel center is, in World space. Set by Game.
 var center: Vector2 = Vector2.ZERO
 var rng := RandomNumberGenerator.new()
+var _shown_seconds: int = -1
+
+@onready var _timer: Timer = $WaveTimer
+
+
+func _ready() -> void:
+	_timer.one_shot = true
+	_timer.timeout.connect(_on_wave_timer_timeout)
+
+
+## Starts the countdown to the first wave. Game calls this when a run starts.
+func start() -> void:
+	_timer.start(first_wave_delay)
+	_emit_countdown_if_changed()
+
+
+## Restarts the countdown at a full wave_interval without sending a wave.
+func restart_countdown() -> void:
+	_timer.start(wave_interval)
+	_emit_countdown_if_changed()
+
+
+func get_seconds_left() -> float:
+	return _timer.time_left
+
+
+func _process(_delta: float) -> void:
+	_emit_countdown_if_changed()
+
+
+func _on_wave_timer_timeout() -> void:
+	spawn_wave()
+	_timer.start(wave_interval)
+	_emit_countdown_if_changed()
+
+
+func _emit_countdown_if_changed() -> void:
+	var seconds := ceili(_timer.time_left)
+	if seconds != _shown_seconds:
+		_shown_seconds = seconds
+		countdown_changed.emit(seconds)
 
 
 func _unhandled_input(event: InputEvent) -> void:

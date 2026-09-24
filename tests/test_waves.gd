@@ -44,3 +44,51 @@ func test_spawn_wave_announces_each_enemy() -> void:
 	assert_int(spawned.size()).is_equal(count)
 	for enemy in spawned:
 		enemy.free()
+
+
+# --- Countdown ---------------------------------------------------------------------
+
+var _sent: int = 0
+
+
+func _running_waves() -> WaveManager:
+	var waves := WaveManager.new()
+	var timer := Timer.new()
+	timer.name = "WaveTimer"
+	waves.add_child(timer)
+	waves.enemy_scene = load("res://scenes/enemies/Leaf.tscn")
+	waves.first_wave_delay = 7.0
+	waves.wave_interval = 15.0
+	add_child(waves)
+	auto_free(waves)
+	waves.enemy_spawned.connect(func(e: EnemyBase) -> void:
+		_sent += 1
+		e.free())
+	return waves
+
+
+func test_first_wave_uses_the_first_delay() -> void:
+	var waves := _running_waves()
+	var shown: Array[int] = []
+	waves.countdown_changed.connect(func(s: int) -> void: shown.append(s))
+	waves.start()
+	assert_float(waves.get_seconds_left()).is_equal_approx(7.0, 0.001)
+	assert_array(shown).is_equal([7])
+
+
+func test_each_wave_restarts_the_countdown_at_the_interval() -> void:
+	_sent = 0
+	var waves := _running_waves()
+	waves.start()
+	waves._on_wave_timer_timeout()
+	assert_int(_sent).is_between(3, 5)
+	assert_float(waves.get_seconds_left()).is_equal_approx(15.0, 0.001)
+
+
+func test_restart_countdown_sends_no_wave() -> void:
+	_sent = 0
+	var waves := _running_waves()
+	waves.start()
+	waves.restart_countdown()
+	assert_int(_sent).is_equal(0)
+	assert_float(waves.get_seconds_left()).is_equal_approx(15.0, 0.001)

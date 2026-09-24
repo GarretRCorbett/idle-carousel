@@ -130,7 +130,7 @@ From Garret's first playtest (see `planning/phase2/codex_memo_e_playtest_feedbac
 
 ---
 
-## Step 6 — One Leaf: approach, click damage, death (45–75 min)
+## ✅ Step 6 — One Leaf: approach, click damage, death (45–75 min)
 
 **Claude Code:** `enemy_base.gd` and `enemy_leaf.gd` reading `leaf.tres`, a placeholder polygon plus health bar in an `Enemy.tscn` draft, approach movement, clicking to damage, dying exactly once, and a Gold drop. The **Click Damage 1** upgrade also goes in here.
 **Garret:** check that the Leaf is readable and clickable at speed.
@@ -139,7 +139,7 @@ From Garret's first playtest (see `planning/phase2/codex_memo_e_playtest_feedbac
 
 ---
 
-## Step 7 — Latch, drag, health, temporary stall (60–90 min)
+## ✅ Step 7 — Latch, drag, health, temporary stall (60–90 min)
 
 **Claude Code:** the Leaf latches at the rim and holds its world position, drag adds up (no floor), latched enemies deal damage per second, and the TEMPORARY zero-health stall.
 **Garret:** tune drag and damage. Watch the full-stop spiral: tense or hopeless? (See NOTES.)
@@ -148,7 +148,7 @@ From Garret's first playtest (see `planning/phase2/codex_memo_e_playtest_feedbac
 
 ---
 
-## Step 8 — Wave countdown (45–75 min)
+## ✅ Step 8 — Wave countdown (45–75 min)
 
 **Claude Code:** `wave_manager.gd` with a Timer and a countdown that always runs, spawning Leaves in groups of 3–5 around the edge. The countdown shows on the HUD.
 **Garret:** tune the wave gap and group size.

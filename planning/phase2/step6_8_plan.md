@@ -1,5 +1,5 @@
 # Phase 2 · Steps 6–8 Plan: Leaves, Latch, Waves
-**Status:** DRAFT, waiting on Garret's approval.
+**Status:** BUILT 2026-09-24 (three commits). Change during the build: Step 7 has two switchable fail rules (see README and `codex_memo_g_fail_state.md`).
 **Why merged:** Garret (2026-09-24) asked to build Steps 6, 7, and 8 together. A Leaf that just walks in has nothing to do without latching, and hand-spawning is throwaway work once waves exist.
 **Inputs:** PHASE_2_GOALS.md Steps 6–8, GDD v1.7 (Clicking, Health, Latch, Leaf, Wave Controls), `codex_memo_b_input_layout.md` §1 and §3, `codex_memo_c_state_speed.md` §6.
 

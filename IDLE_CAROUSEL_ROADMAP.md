@@ -134,4 +134,4 @@
 ## Next Concrete Step
 _Update this line at the end of every session._
 
-> Phase 2 Step 6: the first Leaf (approach, click damage, death pays Gold) + Click Damage as a leveled shop row. Plan first. Steps 1–5b and the pacing pass (leveled shop, booths, Overdrive) are done; status and playtest notes in `planning/phase2/README.md`.
+> Garret playtests Steps 6–8 (Leaves, latch, waves) and compares the two TEMPORARY fail rules (`fail_rule` in run_config.tres). Then Phase 2 Step 9: Wolf sweep. Status and checklist in `planning/phase2/README.md`.

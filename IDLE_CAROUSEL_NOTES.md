@@ -17,7 +17,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> Phase 2 Step 6: the first Leaf (approach, click damage, death pays Gold) + Click Damage as a leveled shop row. Plan first. Steps 1–5b and the pacing pass (leveled shop, booths, Overdrive) are done; status and playtest notes in `planning/phase2/README.md`.
+> Garret playtests Steps 6–8 (Leaves, latch, waves) and compares the two TEMPORARY fail rules (`fail_rule` in run_config.tres). Then Phase 2 Step 9: Wolf sweep. Status and checklist in `planning/phase2/README.md`.
 
 ---
 
@@ -31,6 +31,9 @@ _Update at the end of every session._
   - Boss spawn condition: `kills_this_tier >= required_kills[current_tier]`
   - Can tune required kills per tier separately (early = 10, later = 20?)
   - Add during tier system build (Phase 4) — it's a number + condition, not a system
+
+### Fail state direction (Garret, 2026-09-24)
+- [ ] **Core feel: idle first, pressure when pushing.** A well-upgraded tier should run safely forever; danger comes from pushing tiers and bosses. Codex's memo (`planning/phase2/codex_memo_g_fail_state.md`) argues carousel health duplicates drag and suggests a speed floor plus automatic overload recovery instead. Both rules are playable now via `fail_rule` in run_config.tres. Decide the real rule (GDD DECISION PENDING) before Phase 4. If health goes, Unicorn's heal and the Carousel Health upgrade need rethinking.
 
 ### Balance (tune during playtesting — don't set in stone early)
 - [ ] Gold per second at each tier
