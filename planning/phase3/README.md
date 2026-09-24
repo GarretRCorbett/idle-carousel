@@ -8,11 +8,36 @@ writes `step1_plan.md`.
 Phase 3 roadmap scope: Turtle, Eagle, Lion, Unicorn; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
 
+## Decided 2026-09-24 (Garret)
+- **Boss access:** a minimal per-tier kill gate plus a manual "Challenge boss" button, built
+  in Phase 3. HUD polish and the full shop visibility system stay in Phase 4. (Q1)
+- **Run target** (2.5–3.5 h) means online play, checking in now and then. Faster expert
+  runs are fine. (Q3)
+- **Tier select:** players can go back and farm any unlocked tier. (Q4)
+- **Boss rule (TEMPORARY for playtests; the real fail state stays DECISION PENDING in the
+  GDD).** After memo N (Clicker Heroes and other idle games):
+  - **Timed fight.** Kill the boss (and any required split children) before the timer
+    runs out. Starting timers from memo N: Leaf Storm 90 s, Stick Giant 120, Boulder 120,
+    Gilded Gale 150, Ancient Log 150, Obsidian Boulder 180. Stored in boss data.
+  - **Failure costs time only.** Timeout ends the attempt, the boss resets, you go back
+    to farming. No Gold cost, no mount loss. Gold, mounts, unlocks, and kill-gate
+    progress are kept.
+  - **Health still matters, with unlimited crank rescues.** Latches still drag and
+    damage; a stall doesn't end the attempt, you crank back as many times as needed while
+    the timer keeps running. The fight is a balance of dealing damage and not stalling.
+    (A one-rescue limit can be tried later.) The 60 s safety net must never remove the
+    boss or count as a win during a fight.
+  - **Bosses need active play at first.** Near-idle wins only when truly maxed. Garret:
+    "maybe after a prestige or two." Prestige is still DECISION PENDING and outside v1.0
+    scope in the GDD; this is noted as input to that decision, not a decision.
+  - **Retries are manual and free:** press Challenge again whenever you like.
+
 ## What's in this folder
 | File | What it is |
 |---|---|
 | `claude_audit.md` | What Phase 2 code already supports, what's hard-wired to Horse/Wolf/Leaf, stale data, art inventory |
 | `codex_memo_l_mounts_enemies_bosses.md` | Codex: architecture for new mounts, statuses, tiers, bosses, multi-latch, removal safety, tests, 11-step plan, 18 questions |
+| `codex_memo_n_boss_timers.md` | Codex: how Clicker Heroes, Tap Titans 2, Idle Slayer, and Melvor handle boss failure; player reactions; timed-boss proposal |
 | `codex_memo_m_tiers_pacing.md` | Codex: tier loop, kill gate, wave recipes, stat scaling, 3-hour economy model, prices, simulator, boss tuning, 12 questions |
 
 The memos are **input, not decisions.**
@@ -105,7 +130,7 @@ About 8–10 sessions. Grey + Green with Stick, Rock, Turtle/Eagle, and Leaf Sto
 Grouped by when they're needed. Recommendations marked ★. Full reasoning is in the memos
 (L = memo L question number, M = memo M question number).
 
-**Before Step 1 (shape of the phase)**
+**Before Step 1 (shape of the phase)** — Q1, Q3, Q4, Q5 answered above. Q2 still open.
 1. Boss access: ★ minimal kill gate + a manual "Challenge" button in Phase 3 / auto-summon when the gate is met / dev shortcuts only, gate in Phase 4. (M2, L17)
 2. What counts toward the gate: ★ kills of ordinary enemies in that tier, kept through failures / every kill incl. summons / waves completed. (M3)
 3. What does the 2.5–3.5 h target measure? ★ someone playing online, checking in now and then / constant active play / total time incl. offline. (M1)
