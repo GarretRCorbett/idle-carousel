@@ -125,8 +125,7 @@ A **Ticket Booth** sits fixed in the world just outside the carousel edge at the
 
 ### Spin Speed
 The single most important stat in the game. Affects:
-- How often each mount triggers (sweeps past enemies or ticket booth)
-- How much damage mounts deal (faster sweep = harder hit)
+- How often each mount triggers (sweeps past enemies or ticket booth). Like booth Gold, mount damage per hit is fixed; faster spin means more hits per minute, not harder hits (upgrades like Wolf Fang raise damage per hit)
 - How quickly the carousel recovers from latch slowdown
 
 ### Clicking and Spin Boost

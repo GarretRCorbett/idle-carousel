@@ -13,11 +13,12 @@ extends Resource
 @export_range(0.0, 1000.0, 1.0, "or_greater", "suffix:px") var sweep_range: float = 0.0
 ## Width of the sweep in degrees. 0 = a single ray; wider arcs hit more enemies.
 @export_range(0.0, 360.0, 1.0, "suffix:°") var sweep_arc: float = 0.0
-## Damage per hit before spin-speed scaling.
+## Damage per hit. Fixed per hit: faster spin means more hits per minute (GDD v1.4).
 @export_range(0.0, 100.0, 0.05, "or_greater") var base_damage: float = 0.0
 
 @export_group("Economy")
-## Gold per trigger (booth pass or sweep) before spin-speed scaling.
+## Gold per trigger (booth pass or sweep). Fixed per trigger: faster spin means
+## more triggers per minute, not more Gold per trigger (GDD v1.4).
 @export_range(0.0, 1000.0, 0.1, "or_greater") var base_gold_bonus: float = 0.0
 ## Gold cost to unlock this mount. 0 = available from the start.
 @export_range(0, 1000000, 1, "or_greater") var unlock_cost_gold: int = 0

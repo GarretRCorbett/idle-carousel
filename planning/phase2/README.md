@@ -26,7 +26,15 @@ The memos are **input, not decisions.** Each step plan lists what it takes from 
 - **Enemies:** `Area2D` root on an `EnemyHurtbox` physics layer, with separate `click_radius` and `hitbox_radius` fields added to `EnemyData` (memos A and B agree).
 - **Prices:** Wolf's cost moves from `MountData.unlock_cost_gold` into its `UpgradeData` (memo C). That happens at Step 10.
 
-## Design questions collected for later steps (not blocking yet)
+## Decided 2026-09-23 (Garret)
+- Spin upgrades **add up** (+20% then +30% = +50%). Pick whatever reads most intuitively in the UI.
+- Boost: +10% per click, cap +50%, fades over 2 s. Base speed 45°/s. All tunable.
+- Wolf damage per hit is **fixed** (frequency only), like booth Gold. GDD updated.
+- Zero health with nothing latched → refill right away.
+- Stopped Wolf deals no damage; placing a Wolf on an enemy gives no free hit.
+- Overlapping enemies: the one nearest the click takes it.
+
+## Design questions collected for later steps (originally asked; answers above)
 - **Step 4:** fixed booth payout confirmed. Gold/sec uses a 10-second window that starts at 0 and fills up (memo C §5).
 - **Step 6:** when enemies overlap, the one nearest the click wins (memo B).
 - **Step 7:** if health hits 0 with nothing latched, it refills immediately (memo C §6). OK?

@@ -1,3 +1,139 @@
-[gd_scene format=3 uid="uid://dcfdl6eyrv0ks"]
+[gd_scene format=3]
 
-[node name="Game" type="Node2D" unique_id=637950921]
+[ext_resource type="Script" path="res://scripts/game.gd" id="1_78awf"]
+[ext_resource type="Script" path="res://scripts/carousel.gd" id="2_s0nni"]
+[ext_resource type="Script" path="res://scripts/ticket_booth.gd" id="3_aug50"]
+[ext_resource type="Script" path="res://scripts/hud.gd" id="4_kiw3p"]
+
+[node name="Game" type="Node2D" unique_id=1479670653]
+script = ExtResource("1_78awf")
+
+[node name="World" type="Node2D" parent="." unique_id=151885564]
+position = Vector2(640, 360)
+
+[node name="Carousel" type="Node2D" parent="World" unique_id=1220680937]
+script = ExtResource("2_s0nni")
+
+[node name="MountSlots" type="Node2D" parent="World/Carousel" unique_id=368186735]
+
+[node name="Slot1" type="Marker2D" parent="World/Carousel/MountSlots" unique_id=1765232460]
+position = Vector2(0, -75)
+rotation = -1.5707964
+
+[node name="Slot2" type="Marker2D" parent="World/Carousel/MountSlots" unique_id=617337684]
+position = Vector2(65, -38)
+rotation = -0.5235988
+
+[node name="Slot3" type="Marker2D" parent="World/Carousel/MountSlots" unique_id=169725387]
+position = Vector2(65, 38)
+rotation = 0.5235988
+
+[node name="Slot4" type="Marker2D" parent="World/Carousel/MountSlots" unique_id=241968955]
+position = Vector2(0, 75)
+rotation = 1.5707964
+
+[node name="Slot5" type="Marker2D" parent="World/Carousel/MountSlots" unique_id=1740546677]
+position = Vector2(-65, 38)
+rotation = 2.6179938
+
+[node name="Slot6" type="Marker2D" parent="World/Carousel/MountSlots" unique_id=702795957]
+position = Vector2(-65, -38)
+rotation = 3.6651914
+
+[node name="TicketBooth" type="Node2D" parent="World" unique_id=1016736405]
+position = Vector2(0, -130)
+script = ExtResource("3_aug50")
+
+[node name="EnemyLayer" type="Node2D" parent="World" unique_id=1648558723]
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=691397781]
+script = ExtResource("4_kiw3p")
+
+[node name="HUDRoot" type="Control" parent="HUD" unique_id=1947639432]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="ScreenMargin" type="MarginContainer" parent="HUD/HUDRoot" unique_id=405876297]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Columns" type="HBoxContainer" parent="HUD/HUDRoot/ScreenMargin" unique_id=1384844776]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 24
+
+[node name="LeftColumn" type="VBoxContainer" parent="HUD/HUDRoot/ScreenMargin/Columns" unique_id=1962999182]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="StatsPanel" type="PanelContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/LeftColumn" unique_id=1474626265]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="StatsMargin" type="MarginContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/LeftColumn/StatsPanel" unique_id=308990747]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="StatsVBox" type="VBoxContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/LeftColumn/StatsPanel/StatsMargin" unique_id=923734390]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="GoldLabel" type="Label" parent="HUD/HUDRoot/ScreenMargin/Columns/LeftColumn/StatsPanel/StatsMargin/StatsVBox" unique_id=1381259152]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GoldPerSecLabel" type="Label" parent="HUD/HUDRoot/ScreenMargin/Columns/LeftColumn/StatsPanel/StatsMargin/StatsVBox" unique_id=998287850]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HealthBar" type="ProgressBar" parent="HUD/HUDRoot/ScreenMargin/Columns/LeftColumn/StatsPanel/StatsMargin/StatsVBox" unique_id=728908977]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+mouse_filter = 2
+show_percentage = false
+
+[node name="WaveCountdownLabel" type="Label" parent="HUD/HUDRoot/ScreenMargin/Columns/LeftColumn/StatsPanel/StatsMargin/StatsVBox" unique_id=1635964367]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WorldSpacer" type="Control" parent="HUD/HUDRoot/ScreenMargin/Columns" unique_id=596067726]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="ShopPanel" type="PanelContainer" parent="HUD/HUDRoot/ScreenMargin/Columns" unique_id=1638066341]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+
+[node name="ShopMargin" type="MarginContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/ShopPanel" unique_id=1800514674]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="UpgradeRows" type="VBoxContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/ShopPanel/ShopMargin" unique_id=849373820]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
