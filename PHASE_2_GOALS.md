@@ -116,15 +116,15 @@ Game (Node2D)                      game.gd
 
 ---
 
-## Step 5b — First-playtest fixes (Claude Code + Garret)
+## ✅ Step 5b — First-playtest fixes (Claude Code + Garret)
 
 From Garret's first playtest (see `planning/phase2/codex_memo_e_playtest_feedback.md`).
 
-- [ ] **Smooth spin:** turn on physics interpolation, so the carousel draws smoothly on 60 Hz and 120 Hz screens without changing any gameplay math. *(Garret flips one project setting; code handles the rest.)*
-- [ ] **Spin button** below the carousel with a boost bar. Empty-space clicks do nothing. The Space key also presses it.
-- [ ] **No click Gold.** Gold comes from Horse passes (and kills from Step 6).
-- [ ] **HUD labels:** "Gold", "Gold per sec", "Speed ×1.35" (the multiplier of base speed).
-- [ ] **Shop:** every row stays listed with a fill bar toward its cost. Locked rows show what they need; bought rows stay in place, marked as bought.
+- [x] **Smooth spin:** turn on physics interpolation, so the carousel draws smoothly on 60 Hz and 120 Hz screens without changing any gameplay math. *(Garret flips one project setting; code handles the rest.)*
+- [x] **Boost button** below the carousel with a boost bar. Empty-space clicks do nothing. The Space key also presses it.
+- [x] **No click Gold.** Gold comes from Horse passes (and kills from Step 6).
+- [x] **HUD labels:** "Gold", "Gold per sec", "Speed ×1.35" (the multiplier of base speed).
+- [x] **Shop:** every row stays listed with a fill bar toward its cost. Locked rows show what they need; bought rows stay in place, marked as bought.
 
 **Done when:** the spin looks smooth, the Spin button clearly speeds it up, and the shop always shows what you're saving toward.
 

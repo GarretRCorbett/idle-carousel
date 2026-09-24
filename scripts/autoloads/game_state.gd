@@ -140,19 +140,6 @@ func advance_simulation(delta: float) -> void:
 	_advance_income_window()
 
 
-## A click on the open play area: spin boost, plus a small Gold burst if no
-## enemies are latched. Both happen together so nothing can slip in between.
-func register_play_area_click() -> void:
-	add_click_boost()
-	if get_latched_count() == 0:
-		add_gold(_config.play_area_click_gold)
-
-
-## Latched enemies (registry arrives in Step 7).
-func get_latched_count() -> int:
-	return 0
-
-
 func _advance_income_window() -> void:
 	var epoch := floori(_elapsed / _config.income_bucket_seconds)
 	if epoch == _income_epoch:
@@ -181,6 +168,13 @@ func get_effective_spin_speed_rad_s() -> float:
 			* drag_factor)
 
 
+## Current speed as a multiple of base speed (1.35 = 35% faster than base).
+## Includes upgrades, boost, and drag; this is what the HUD shows.
+func get_speed_multiplier() -> float:
+	var base := deg_to_rad(_config.base_spin_speed_deg_s)
+	return get_effective_spin_speed_rad_s() / base if base > 0.0 else 0.0
+
+
 ## 1.0 plus every purchased spin bonus, added together (+20% and +30% = 1.5).
 func get_spin_upgrade_multiplier() -> float:
 	return 1.0 + _spin_bonus
@@ -196,7 +190,12 @@ func get_click_boost() -> float:
 	return _boost_peak * remaining
 
 
-## One play-area click: stack the bonus (up to the cap) and restart the fade.
+## How full the boost is, 0..1 (for the boost bar).
+func get_click_boost_fraction() -> float:
+	return get_click_boost() / _config.click_boost_cap if _config.click_boost_cap > 0.0 else 0.0
+
+
+## One Boost press: stack the bonus (up to the cap) and restart the fade.
 func add_click_boost() -> void:
 	var previous_speed := get_effective_spin_speed_rad_s()
 	_boost_peak = minf(_config.click_boost_cap, get_click_boost() + _config.click_boost_increment)

@@ -4,7 +4,6 @@
 [ext_resource type="Script" path="res://scripts/carousel.gd" id="2_s0nni"]
 [ext_resource type="Script" path="res://scripts/ticket_booth.gd" id="3_aug50"]
 [ext_resource type="Script" path="res://scripts/hud.gd" id="4_kiw3p"]
-[ext_resource type="Script" path="res://scripts/click_router.gd" id="5_click"]
 [ext_resource type="PackedScene" path="res://scenes/mounts/Horse.tscn" id="6_horse"]
 [ext_resource type="Script" path="res://scripts/upgrade_shop.gd" id="7_shop"]
 
@@ -51,9 +50,6 @@ script = ExtResource("3_aug50")
 
 [node name="EnemyLayer" type="Node2D" parent="World" unique_id=1648558723]
 
-[node name="ClickLayer" type="Node2D" parent="World"]
-script = ExtResource("5_click")
-
 [node name="HUD" type="CanvasLayer" parent="." unique_id=691397781]
 script = ExtResource("4_kiw3p")
 
@@ -83,7 +79,7 @@ mouse_filter = 2
 theme_override_constants/separation = 24
 
 [node name="LeftColumn" type="VBoxContainer" parent="HUD/HUDRoot/ScreenMargin/Columns" unique_id=1962999182]
-custom_minimum_size = Vector2(220, 0)
+custom_minimum_size = Vector2(260, 0)
 layout_mode = 2
 mouse_filter = 2
 
@@ -112,6 +108,10 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="SpeedLabel" type="Label" parent="HUD/HUDRoot/ScreenMargin/Columns/LeftColumn/StatsPanel/StatsMargin/StatsVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
 [node name="HealthBar" type="ProgressBar" parent="HUD/HUDRoot/ScreenMargin/Columns/LeftColumn/StatsPanel/StatsMargin/StatsVBox" unique_id=728908977]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 20)
@@ -123,10 +123,39 @@ show_percentage = false
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="WorldSpacer" type="Control" parent="HUD/HUDRoot/ScreenMargin/Columns" unique_id=596067726]
+[node name="PlayColumn" type="VBoxContainer" parent="HUD/HUDRoot/ScreenMargin/Columns"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
+
+[node name="PlaySpace" type="Control" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="BoostCenter" type="CenterContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="BoostColumn" type="VBoxContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="BoostBar" type="ProgressBar" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter/BoostColumn"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 10)
+layout_mode = 2
+mouse_filter = 2
+max_value = 1.0
+show_percentage = false
+
+[node name="BoostButton" type="Button" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter/BoostColumn"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 48)
+layout_mode = 2
+focus_mode = 0
+text = "Boost"
 
 [node name="ShopPanel" type="PanelContainer" parent="HUD/HUDRoot/ScreenMargin/Columns" unique_id=1638066341]
 script = ExtResource("7_shop")

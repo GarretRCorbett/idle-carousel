@@ -1,5 +1,5 @@
 extends GdUnitTestSuite
-## Gold/sec (rolling window of actual earnings) and the play-area click burst.
+## Gold/sec (rolling window of actual earnings). Boosting never pays Gold.
 
 var _config: RunConfig
 
@@ -8,7 +8,6 @@ func before_test() -> void:
 	_config = RunConfig.new()
 	_config.income_bucket_seconds = 1.0
 	_config.income_bucket_count = 10
-	_config.play_area_click_gold = 0.25
 	GameState.reset_run(_config)
 
 
@@ -57,7 +56,8 @@ func test_reset_clears_income() -> void:
 	assert_float(GameState.get_recent_gold_per_second()).is_equal(0.0)
 
 
-func test_play_area_click_gives_boost_and_gold_when_nothing_latched() -> void:
-	GameState.register_play_area_click()
-	assert_float(GameState.get_gold()).is_equal_approx(0.25, 0.00001)
-	assert_float(GameState.get_click_boost()).is_greater(0.0)
+func test_boost_never_pays_gold() -> void:
+	for i in 10:
+		GameState.add_click_boost()
+	assert_float(GameState.get_gold()).is_equal(0.0)
+	assert_float(GameState.get_recent_gold_per_second()).is_equal(0.0)

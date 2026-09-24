@@ -1,66 +1,125 @@
 class_name UpgradeShop
 extends PanelContainer
-## Builds one row per upgrade from the catalog: name + description on the
-## left, a cost button on the right. Rows appear once their prerequisite is
-## bought and disappear when purchased. Unaffordable rows are dimmed.
+## One row per upgrade from the catalog, always listed in catalog order so rows
+## never shift under the cursor. Each row is in one state:
+##   LOCKED      prerequisite not bought: dimmed, shows what it needs
+##   SAVING      Gold below cost: fill bar shows progress toward the cost
+##   AFFORDABLE  buy button enabled, bar full
+##   BOUGHT      compact, marked bought; no bar
+## GDD v1.5: every row shows a fill bar; bought rows stay marked.
 
-## Button text; %d is the cost. TODO(Garret): text
+enum RowState { LOCKED, SAVING, AFFORDABLE, BOUGHT }
+
+# Wording (Garret's text).
+## Buy button text; %d is the cost.
 @export var cost_format: String = "%d"
-## Tint for rows you can't afford yet.
-@export var unaffordable_modulate: Color = Color(1.0, 1.0, 1.0, 0.45)
-@export var row_separation: int = 8
+## Shown on locked rows; %s is the prerequisite's name.
+@export var requires_format: String = "Requires %s"
+## Shown on the button of a bought row.
+@export var bought_mark: String = "✓"
+
+@export_group("Look")
+@export var locked_modulate: Color = Color(1.0, 1.0, 1.0, 0.55)
+@export var bought_modulate: Color = Color(1.0, 1.0, 1.0, 0.7)
+@export var row_separation: int = 4
+@export var progress_bar_height: float = 6.0
 
 @onready var _rows: VBoxContainer = %UpgradeRows
 
-var _row_by_id: Dictionary[StringName, HBoxContainer] = {}
-var _button_by_id: Dictionary[StringName, Button] = {}
+var _rows_by_id: Dictionary[StringName, ShopRow] = {}
+
+
+class ShopRow:
+	var root: VBoxContainer
+	var status: Label
+	var button: Button
+	var progress: ProgressBar
 
 
 func _ready() -> void:
 	for upgrade in UpgradeManager.get_definitions():
-		_add_row(upgrade)
+		_rows_by_id[upgrade.id] = _build_row(upgrade)
 	GameState.gold_changed.connect(func(_b: float, _d: float) -> void: _refresh())
 	GameState.run_reset.connect(_refresh)
 	UpgradeManager.upgrade_purchased.connect(func(_id: StringName) -> void: _refresh())
 	_refresh()
 
 
-func _add_row(upgrade: UpgradeData) -> void:
-	var row := HBoxContainer.new()
-	row.name = String(upgrade.id)
-	row.add_theme_constant_override("separation", row_separation)
-	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+## The state a row should show right now.
+static func get_row_state(id: StringName) -> RowState:
+	if UpgradeManager.is_purchased(id):
+		return RowState.BOUGHT
+	var upgrade := UpgradeManager.get_definition(id)
+	if upgrade.prerequisite_id != &"" and not UpgradeManager.is_purchased(upgrade.prerequisite_id):
+		return RowState.LOCKED
+	return RowState.AFFORDABLE if UpgradeManager.can_purchase(id) else RowState.SAVING
 
+
+func _build_row(upgrade: UpgradeData) -> ShopRow:
+	var row := ShopRow.new()
+	row.root = VBoxContainer.new()
+	row.root.name = String(upgrade.id)
+	row.root.add_theme_constant_override("separation", row_separation)
+	row.root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	var line := HBoxContainer.new()
+	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var text := VBoxContainer.new()
 	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	text.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var name_label := Label.new()
-	name_label.text = upgrade.display_name
-	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	var desc_label := Label.new()
-	desc_label.text = upgrade.description
-	desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	text.add_child(name_label)
-	text.add_child(desc_label)
+	text.add_child(_label(upgrade.display_name, false))
+	text.add_child(_label(upgrade.description, true))
+	row.status = _label("", true)
+	text.add_child(row.status)
 
-	var button := Button.new()
-	button.text = cost_format % upgrade.cost_gold
-	button.custom_minimum_size = Vector2(72, 0)
-	button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	button.focus_mode = Control.FOCUS_NONE
-	button.pressed.connect(UpgradeManager.purchase.bind(upgrade.id))
+	row.button = Button.new()
+	row.button.custom_minimum_size = Vector2(72, 0)
+	row.button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.button.focus_mode = Control.FOCUS_NONE
+	row.button.pressed.connect(UpgradeManager.purchase.bind(upgrade.id))
+	line.add_child(text)
+	line.add_child(row.button)
 
-	row.add_child(text)
-	row.add_child(button)
-	_rows.add_child(row)
-	_row_by_id[upgrade.id] = row
-	_button_by_id[upgrade.id] = button
+	row.progress = ProgressBar.new()
+	row.progress.custom_minimum_size = Vector2(0, progress_bar_height)
+	row.progress.show_percentage = false
+	row.progress.max_value = 1.0
+	row.progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	row.root.add_child(line)
+	row.root.add_child(row.progress)
+	_rows.add_child(row.root)
+	return row
+
+
+func _label(text: String, wraps: bool) -> Label:
+	var label := Label.new()
+	label.text = text
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if wraps:
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	else:
+		label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	return label
 
 
 func _refresh() -> void:
-	for id in _row_by_id:
-		var row := _row_by_id[id]
-		row.visible = UpgradeManager.is_visible_in_shop(id)
-		var can_buy := UpgradeManager.can_purchase(id)
-		_button_by_id[id].disabled = not can_buy
-		row.modulate = Color.WHITE if can_buy else unaffordable_modulate
+	for id in _rows_by_id:
+		var row := _rows_by_id[id]
+		var upgrade := UpgradeManager.get_definition(id)
+		var state := get_row_state(id)
+		row.button.disabled = state != RowState.AFFORDABLE
+		row.button.text = bought_mark if state == RowState.BOUGHT else cost_format % upgrade.cost_gold
+		row.progress.visible = state != RowState.BOUGHT
+		row.progress.value = clampf(GameState.get_gold() / upgrade.cost_gold, 0.0, 1.0) if upgrade.cost_gold > 0.0 else 1.0
+		row.status.visible = state == RowState.LOCKED
+		if state == RowState.LOCKED:
+			var prerequisite := UpgradeManager.get_definition(upgrade.prerequisite_id)
+			row.status.text = requires_format % prerequisite.display_name
+		match state:
+			RowState.LOCKED:
+				row.root.modulate = locked_modulate
+			RowState.BOUGHT:
+				row.root.modulate = bought_modulate
+			_:
+				row.root.modulate = Color.WHITE

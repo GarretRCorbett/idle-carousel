@@ -23,7 +23,9 @@ func pop() -> void:
 	if _pop_tween != null:
 		_pop_tween.kill()
 	scale = Vector2.ONE * pop_scale
-	_pop_tween = create_tween()
+	# Scale is part of the transform, which physics interpolation smooths, so
+	# animate it on physics ticks too.
+	_pop_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 	_pop_tween.tween_property(self, "scale", Vector2.ONE, pop_duration)
 
 

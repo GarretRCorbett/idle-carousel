@@ -19,6 +19,13 @@ signal rotation_advanced(previous_angle: float, delta_angle: float)
 @export var rim_color: Color = Color("2d5a25")
 @export var hub_color: Color = Color("2d5a25")
 
+@export_group("Boost Feedback")
+## Brief brighten when Boost is pressed, so the press visibly lands on the carousel.
+@export var pulse_modulate: Color = Color(1.35, 1.35, 1.35)
+@export_range(0.01, 1.0, 0.01, "suffix:s") var pulse_duration: float = 0.2
+
+var _pulse_tween: Tween
+
 var _unwrapped_angle: float = 0.0
 
 
@@ -38,10 +45,19 @@ func get_unwrapped_angle() -> float:
 	return _unwrapped_angle
 
 
+func pulse() -> void:
+	if _pulse_tween != null:
+		_pulse_tween.kill()
+	modulate = pulse_modulate
+	_pulse_tween = create_tween()
+	_pulse_tween.tween_property(self, "modulate", Color.WHITE, pulse_duration)
+
+
 func _draw() -> void:
 	draw_circle(Vector2.ZERO, radius, base_color)
 	for i in spoke_count:
 		var direction := Vector2.from_angle(TAU * i / spoke_count)
-		draw_line(direction * hub_radius, direction * (radius - rim_width), rim_color, spoke_width)
-	draw_arc(Vector2.ZERO, radius - rim_width / 2.0, 0.0, TAU, 64, rim_color, rim_width)
+		# Antialiased so thin spokes glide instead of snapping pixel to pixel.
+		draw_line(direction * hub_radius, direction * (radius - rim_width), rim_color, spoke_width, true)
+	draw_arc(Vector2.ZERO, radius - rim_width / 2.0, 0.0, TAU, 64, rim_color, rim_width, true)
 	draw_circle(Vector2.ZERO, hub_radius, hub_color)

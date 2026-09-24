@@ -7,8 +7,6 @@ extends Resource
 @export_group("Economy")
 ## Gold the player has when a run starts.
 @export_range(0.0, 1000000.0, 1.0, "or_greater") var starting_gold: float = 0.0
-## Gold from a play-area click, only while no enemies are latched.
-@export_range(0.0, 1000.0, 0.05, "or_greater") var play_area_click_gold: float = 0.25
 ## Gold/sec on the HUD is actual Gold earned over the last
 ## (income_bucket_count × income_bucket_seconds) seconds, about 10 s.
 @export_range(0.1, 10.0, 0.1, "suffix:s") var income_bucket_seconds: float = 1.0
@@ -21,11 +19,11 @@ extends Resource
 @export_group("Spin")
 ## Base spin before upgrades, boost, and drag. 45 = one turn every 8 seconds.
 @export_range(1.0, 720.0, 1.0, "or_greater", "suffix:°/s") var base_spin_speed_deg_s: float = 45.0
-## Speed bonus added per play-area click (0.1 = +10%).
+## Speed bonus added per Boost press (0.1 = +10%).
 @export_range(0.0, 2.0, 0.01) var click_boost_increment: float = 0.10
 ## Most the click bonus can stack to (0.5 = +50%).
 @export_range(0.0, 10.0, 0.01) var click_boost_cap: float = 0.50
-## After the latest click, the bonus fades to zero over this many seconds.
+## After the latest press, the bonus fades to zero over this many seconds.
 @export_range(0.05, 30.0, 0.05, "suffix:s") var click_boost_decay_seconds: float = 2.0
 
 
@@ -34,8 +32,6 @@ func get_problems() -> PackedStringArray:
 	var problems := PackedStringArray()
 	if not is_finite(starting_gold) or starting_gold < 0.0:
 		problems.append("starting_gold must be a finite number >= 0")
-	if not is_finite(play_area_click_gold) or play_area_click_gold < 0.0:
-		problems.append("play_area_click_gold must be a finite number >= 0")
 	if not is_finite(income_bucket_seconds) or income_bucket_seconds <= 0.0:
 		problems.append("income_bucket_seconds must be a finite number > 0")
 	if income_bucket_count < 1:
