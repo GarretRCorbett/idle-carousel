@@ -49,6 +49,16 @@ func test_spawn_wave_announces_each_enemy() -> void:
 # --- Countdown ---------------------------------------------------------------------
 
 var _sent: int = 0
+## Spawned enemies, freed after each test. Freeing them inside the signal would
+## hand later listeners a freed object (and their checks would silently skip).
+var _spawned: Array[EnemyBase] = []
+
+
+func after_test() -> void:
+	for enemy in _spawned:
+		if is_instance_valid(enemy):
+			enemy.free()
+	_spawned.clear()
 
 
 func _running_waves() -> WaveManager:
@@ -63,7 +73,7 @@ func _running_waves() -> WaveManager:
 	auto_free(waves)
 	waves.enemy_spawned.connect(func(e: EnemyBase) -> void:
 		_sent += 1
-		e.free())
+		_spawned.append(e))
 	return waves
 
 
@@ -103,6 +113,7 @@ func test_sending_early_restarts_the_countdown_and_marks_bonus_gold() -> void:
 	var count := waves.send_wave_now()
 	assert_int(_sent).is_equal(count)
 	assert_float(waves.get_seconds_left()).is_equal_approx(15.0, 0.001)
+	assert_int(multipliers.size()).is_equal(count)
 	for m in multipliers:
 		assert_float(m).is_equal(waves.early_send_gold_multiplier)
 
@@ -112,7 +123,10 @@ func test_timed_waves_have_no_bonus() -> void:
 	var multipliers: Array[float] = []
 	waves.enemy_spawned.connect(func(e: EnemyBase) -> void: multipliers.append(e.gold_multiplier))
 	waves.start()
+	_sent = 0
 	waves._on_wave_timer_timeout()
+	assert_int(multipliers.size()).is_greater(0)
+	assert_int(multipliers.size()).is_equal(_sent)
 	for m in multipliers:
 		assert_float(m).is_equal(1.0)
 
