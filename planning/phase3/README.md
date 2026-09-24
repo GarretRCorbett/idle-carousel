@@ -31,6 +31,7 @@ the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
     "maybe after a prestige or two." Prestige is still DECISION PENDING and outside v1.0
     scope in the GDD; this is noted as input to that decision, not a decision.
   - **Retries are manual and free:** press Challenge again whenever you like.
+- **Speedrun-friendly** (Garret, see NOTES): track active run time and each boss's first-clear time in GameState; seed wave randomness per run.
 
 ## What's in this folder
 | File | What it is |
@@ -130,7 +131,7 @@ About 8–10 sessions. Grey + Green with Stick, Rock, Turtle/Eagle, and Leaf Sto
 Grouped by when they're needed. Recommendations marked ★. Full reasoning is in the memos
 (L = memo L question number, M = memo M question number).
 
-**Before Step 1 (shape of the phase)** — Q1, Q3, Q4, Q5 answered above. Q2 still open.
+**Before Step 1 (shape of the phase)** — all answered. Q2 (Garret): **any enemy kill in the tier counts** toward its gate (Leaf, Stick, Rock; boss summons only exist after the gate is met, so they can't be farmed for it).
 1. Boss access: ★ minimal kill gate + a manual "Challenge" button in Phase 3 / auto-summon when the gate is met / dev shortcuts only, gate in Phase 4. (M2, L17)
 2. What counts toward the gate: ★ kills of ordinary enemies in that tier, kept through failures / every kill incl. summons / waves completed. (M3)
 3. What does the 2.5–3.5 h target measure? ★ someone playing online, checking in now and then / constant active play / total time incl. offline. (M1)

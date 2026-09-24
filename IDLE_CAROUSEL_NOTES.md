@@ -57,6 +57,10 @@ _Update at the end of every session._
 ### Scope ideas to revisit later
 - [ ] **Roguelike element** (Garret, 2026-09-24): the itch came from wanting more mounts. Parked to protect v1.0 scope; revisit when planning prestige (a DECISION PENDING in the GDD).
 
+### Speedrun timer (Garret, 2026-09-24)
+- [ ] An optional run timer so players can speedrun, e.g. "fresh start to Tier 5." Garret wants to plan for it. Scope (v1.0 or later) not decided yet.
+- **Plan for it now (cheap):** GameState tracks active play time from the start of the run (memo M already suggests this for saves/stats) and records the time each boss is first beaten, so splits come for free. Keep wave randomness seeded per run so runs are comparable, and keep offline progress out of speedrun time (or disable it for a speedrun). Later: an in-game timer display with splits per tier, and maybe a "speedrun mode" toggle on New Game.
+
 ### QoL Ideas (post v1.0 unless easy)
 - [ ] **Auto-boost option** (Garret, 2026-09-24): some way to keep the boost up while fighting enemies (an auto-clicker upgrade or a hold-to-boost). Revisit once Leaves exist, since it changes how active play feels.
 - [ ] **Idle base speed feels slow** (Garret, 2026-09-24): fine for now because it encourages clicking; retune once enemies add pressure.
