@@ -108,15 +108,75 @@ func test_stall_timeout_removes_every_enemy_without_gold() -> void:
 	assert_float(GameState.get_gold()).is_equal(0.0)
 
 
-func test_wolf_in_slot_2_kills_a_latched_leaf_within_one_turn() -> void:
+func test_bought_wolf_kills_a_latched_leaf() -> void:
 	var game := _game()
+	GameState.add_gold(1000.0)
+	assert_bool(UpgradeManager.purchase(&"mount_slot")).is_true()
+	assert_bool(UpgradeManager.purchase(&"wolf")).is_true()
 	var enemy := _first_enemy(game)
 	var gold_drop := enemy.data.gold_drop
+	var gold_before := GameState.get_gold()
 	enemy.advance(100.0)  # latch at the rim
 	var carousel := game.get_node("World/Carousel") as Carousel
-	for i in 120:
+	var passes_needed := ceili(enemy.data.base_health / (load("res://resources/mounts/wolf.tres") as MountData).base_damage)
+	for i in 120 * passes_needed:
 		carousel.advance_rotation(1.0 / 60.0, TAU / 2.0)  # one turn in 2 s
 	assert_bool(enemy.can_receive_click()).is_false()
-	# The Horse also passes the booth during the turn, so Gold is at least the drop.
-	assert_float(GameState.get_gold()).is_greater_equal(gold_drop)
+	# The Horse also passes the booth during the turns, so Gold rises by at least the drop.
+	assert_float(GameState.get_gold() - gold_before).is_greater_equal(gold_drop)
 	assert_int(GameState.get_latched_count()).is_equal(0)
+
+
+# --- Mounts in the Game scene ------------------------------------------------------
+
+func _mounts(game: Game) -> Array[MountBase]:
+	var mounts: Array[MountBase] = []
+	for child in game.get_node("World/Carousel/MountSlots").get_children():
+		if child is MountBase and not child.is_queued_for_deletion():
+			mounts.append(child)
+	return mounts
+
+
+func test_run_starts_with_one_horse_at_the_top() -> void:
+	var game := _game()
+	var mounts := _mounts(game)
+	assert_int(mounts.size()).is_equal(1)
+	assert_bool(mounts[0] is MountHorse).is_true()
+	assert_float(mounts[0].get_slot_angle()).is_equal_approx(-PI / 2.0, 0.00001)
+
+
+func test_buying_mounts_adds_nodes_spaced_evenly() -> void:
+	var game := _game()
+	GameState.add_gold(10000.0)
+	UpgradeManager.purchase(&"mount_slot")
+	UpgradeManager.purchase(&"wolf")
+	UpgradeManager.purchase(&"mount_slot")
+	UpgradeManager.purchase(&"horse")
+	var mounts := _mounts(game)
+	assert_int(mounts.size()).is_equal(3)
+	assert_bool(mounts[1] is MountWolf).is_true()
+	for i in 3:
+		var expected := -PI / 2.0 + TAU * i / 3.0
+		assert_float(absf(angle_difference(mounts[i].get_slot_angle(), expected))).is_less(0.02)
+
+
+func test_selling_a_horse_removes_its_node() -> void:
+	var game := _game()
+	GameState.add_gold(10000.0)
+	UpgradeManager.purchase(&"mount_slot")
+	UpgradeManager.purchase(&"horse")
+	assert_int(_mounts(game).size()).is_equal(2)
+	assert_bool(UpgradeManager.sell(&"horse")).is_true()
+	assert_int(_mounts(game).size()).is_equal(1)
+
+
+func test_respacing_never_pays_a_booth_pass() -> void:
+	var game := _game()
+	GameState.add_gold(10000.0)
+	var gold := GameState.get_gold()
+	UpgradeManager.purchase(&"mount_slot")
+	UpgradeManager.purchase(&"horse")  # the first Horse stays on top, the new one goes to the bottom
+	var carousel := game.get_node("World/Carousel") as Carousel
+	carousel.advance_rotation(1.0, 0.01)
+	var spent := UpgradeManager.get_definition(&"mount_slot").cost_gold + UpgradeManager.get_definition(&"horse").cost_gold
+	assert_float(GameState.get_gold()).is_equal(gold - spent)

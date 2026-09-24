@@ -10,9 +10,12 @@ enum EffectType {
 	ADD_BOOST_CAP,     ## effect_value added to the max boost (0.1 = +10%)
 	ADD_TICKET_BOOTH,  ## one more ticket booth per level
 	ADD_CLICK_DAMAGE,  ## effect_value added to click damage per level
-	ADD_MOUNT_SLOT,    ## Step 10
-	UNLOCK_MOUNT,      ## Step 10
+	ADD_MOUNT_SLOT,    ## one more mount slot per level
+	BUY_MOUNT,         ## one mount_scene per level, placed in the next free slot
 }
+
+## Which shop tab the row appears on.
+enum Tab { CAROUSEL, COMBAT, MOUNTS }
 
 ## Internal key. Never shown to the player; don't rename after release.
 @export var id: StringName = &""
@@ -22,6 +25,14 @@ enum EffectType {
 @export var effect_type: EffectType = EffectType.ADD_SPIN_BONUS
 ## Added once per level.
 @export var effect_value: float = 0.0
+@export var tab: Tab = Tab.CAROUSEL
+
+@export_group("Mounts")
+## BUY_MOUNT: the mount scene each level adds.
+@export var mount_scene: PackedScene
+## BUY_MOUNT: selling one back refunds this fraction of the last level's price.
+## 0 = can't be sold.
+@export_range(0.0, 1.0, 0.05) var sell_refund_fraction: float = 0.0
 
 @export_group("Price and Levels")
 ## Price of the first level.
@@ -53,4 +64,6 @@ func get_problems() -> PackedStringArray:
 		problems.append("%s: effect_value must be finite" % id)
 	if prerequisite_id == id and id != &"":
 		problems.append("%s: can't be its own prerequisite" % id)
+	if effect_type == EffectType.BUY_MOUNT and mount_scene == null:
+		problems.append("%s: BUY_MOUNT needs a mount_scene" % id)
 	return problems

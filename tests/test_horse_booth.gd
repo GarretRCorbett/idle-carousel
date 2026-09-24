@@ -2,19 +2,16 @@ extends GdUnitTestSuite
 ## Horse + carousel together: passes are counted from real rotation.
 
 var _carousel: Carousel
-var _slot: Marker2D
 var _horse: MountHorse
 var _passes: Array = []
 
 
 func before_test() -> void:
 	_carousel = auto_free(Carousel.new())
-	_slot = Marker2D.new()
-	_slot.position = Vector2(0.0, -75.0)  # top of the carousel, where the booth is
-	_carousel.add_child(_slot)
 	_horse = MountHorse.new()
 	_horse.data = load("res://resources/mounts/horse.tres")
-	_slot.add_child(_horse)
+	_carousel.add_child(_horse)
+	_horse.place(-PI / 2.0, 75.0)  # top of the carousel, where the booth is
 	_horse.setup(_carousel)
 	_set_booths([Vector2(0.0, -130.0)])  # one booth straight above
 	_passes.clear()
@@ -51,7 +48,9 @@ func test_many_small_ticks_pay_once_per_turn() -> void:
 
 func test_moving_the_horse_to_another_slot_pays_nothing() -> void:
 	_carousel.advance_rotation(1.0, TAU * 0.25)
-	_slot.position = Vector2(0.0, 75.0)  # relocate across the booth line
+	_horse.place(PI / 2.0, 75.0)  # relocate across the booth line
+	assert_array(_passes).is_empty()
+	_carousel.advance_rotation(1.0, 0.1)  # the next tick only counts real travel
 	assert_array(_passes).is_empty()
 
 

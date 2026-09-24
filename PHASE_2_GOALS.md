@@ -165,7 +165,7 @@ From Garret's first playtest (see `planning/phase2/codex_memo_e_playtest_feedbac
 
 ---
 
-## Step 10 — Slots, Wolf, extra Horses, Ticket Booths (2–3 hours)
+## ✅ Step 10 — Slots, Wolf, extra Horses, Ticket Booths (2–3 hours)
 
 **Claude Code:** Mount Slot 2 (and 3) and Wolf as shop items, plus **extra Horses** (bought into empty slots, rising price, sell back for a partial refund) and **Ticket Booths 2–4** (rising price, re-spaced evenly). Mounts space themselves evenly by count. Moving a Horse or a booth never pays Gold. The dev-only Wolf shortcut is removed.
 **Done when:** buying Slot 2 then Wolf works; buying a second Horse and Booth 2 roughly quadruples booth income; selling a Horse frees its slot; nothing pays from being moved.

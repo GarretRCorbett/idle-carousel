@@ -4,6 +4,7 @@ extends Node
 ## about the Carousel or HUD.
 
 signal upgrade_purchased(id: StringName)
+signal upgrade_sold(id: StringName)
 
 const CATALOG: UpgradeCatalog = preload("res://resources/upgrades/upgrade_catalog.tres")
 
@@ -60,4 +61,20 @@ func purchase(id: StringName) -> bool:
 	if not GameState.try_purchase_upgrade(get_definition(id)):
 		return false
 	upgrade_purchased.emit(id)
+	return true
+
+
+## Mounts only: sells one back for a partial refund.
+func can_sell(id: StringName) -> bool:
+	return GameState.can_sell_mount(get_definition(id))
+
+
+func get_sell_refund(id: StringName) -> float:
+	return GameState.get_sell_refund(get_definition(id))
+
+
+func sell(id: StringName) -> bool:
+	if not GameState.try_sell_mount(get_definition(id)):
+		return false
+	upgrade_sold.emit(id)
 	return true

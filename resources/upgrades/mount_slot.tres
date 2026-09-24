@@ -4,12 +4,12 @@
 
 [resource]
 script = ExtResource("1_script")
-id = &"click_damage"
-display_name = "Click Damage"
-description = "+0.5 damage per click"
-effect_type = 3
-effect_value = 0.5
-cost_gold = 25.0
-cost_growth = 1.5
-max_level = 10
-tab = 1
+id = &"mount_slot"
+display_name = "Mount Slot"
+description = "Room for one more mount"
+effect_type = 4
+effect_value = 1.0
+tab = 2
+cost_gold = 60.0
+cost_growth = 2.5
+max_level = 2

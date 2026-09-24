@@ -63,11 +63,11 @@ func test_spin_bonuses_add_up() -> void:
 	assert_float(GameState.get_spin_upgrade_multiplier()).is_equal_approx(1.5, 0.00001)
 
 
-func test_unsupported_effect_is_rejected_without_charge() -> void:
-	var slot := _spin(&"slot", 5.0, 1.0)
-	slot.effect_type = UpgradeData.EffectType.ADD_MOUNT_SLOT  # arrives in Step 10
+func test_invalid_upgrade_is_rejected_without_charge() -> void:
+	var mount := _spin(&"mount", 5.0, 1.0)
+	mount.effect_type = UpgradeData.EffectType.BUY_MOUNT  # no mount_scene: invalid
 	GameState.add_gold(10.0)
-	assert_bool(GameState.try_purchase_upgrade(slot)).is_false()
+	assert_bool(GameState.try_purchase_upgrade(mount)).is_false()
 	assert_float(GameState.get_gold()).is_equal(10.0)
 
 

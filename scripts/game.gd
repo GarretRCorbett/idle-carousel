@@ -5,6 +5,10 @@ extends Node2D
 ## is explicit: GameState first (boost decay, income window, later latch damage),
 ## then enemies move, then the carousel moves at the resulting speed.
 
+## Distance of mounts from the carousel center. Mounts space themselves evenly
+## around this circle, the first one at the top (where the first booth is).
+@export_range(10.0, 400.0, 1.0, "suffix:px") var mount_radius: float = 75.0
+
 @onready var _world: Node2D = $World
 @onready var _carousel: Carousel = $World/Carousel
 @onready var _hud: Hud = $HUD
@@ -16,6 +20,10 @@ extends Node2D
 @onready var _wave_manager: WaveManager = $WaveManager
 
 var _booths: Array[TicketBooth] = []
+var _booth_bearings: Array[float] = []
+## Mount nodes in roster order, and the roster ids they were built from.
+var _mounts: Array[MountBase] = []
+var _mount_ids: Array[StringName] = []
 var _horses: Array[MountHorse] = []
 var _wolves: Array[MountWolf] = []
 ## Booth distance from the carousel center, taken from the scene's booth.
@@ -33,9 +41,10 @@ func _ready() -> void:
 	GameState.stall_timed_out.connect(_on_stall_timed_out)
 	_hud.boost_held_changed.connect(GameState.set_boost_held)
 	GameState.booth_count_changed.connect(_layout_booths)
-	_setup_mounts()
+	GameState.mounts_changed.connect(_sync_mounts)
 	GameState.reset_run()
 	_layout_booths(GameState.get_booth_count())
+	_sync_mounts(GameState.get_mount_roster())
 	get_viewport().size_changed.connect(_center_world)
 	_center_world()
 	_wave_manager.start()
@@ -49,18 +58,63 @@ func _physics_process(delta: float) -> void:
 	_carousel.set_boost_state(GameState.is_boost_maxed(), GameState.is_overdrive_active())
 
 
-func _setup_mounts() -> void:
-	for slot in _mount_slots.get_children():
-		for mount in slot.get_children():
-			if mount is MountBase:
-				mount.setup(_carousel)
-			if mount is MountHorse:
-				_horses.append(mount)
-				mount.booth_passed.connect(_on_booth_passed)
-			if mount is MountWolf:
-				_wolves.append(mount)
-				mount.set_enemy_layer(_enemy_layer)
-				mount.enemy_swept.connect(_on_enemy_swept)
+## Makes the mounts on the carousel match GameState's roster. Existing mounts
+## are kept (so a Wolf keeps its hit memory); new ones are created and sold ones
+## removed. Then everything is re-spaced evenly.
+func _sync_mounts(roster: Array[StringName]) -> void:
+	var spare_mounts := _mounts.duplicate()
+	var spare_ids := _mount_ids.duplicate()
+	var mounts: Array[MountBase] = []
+	for id in roster:
+		var index := spare_ids.find(id)
+		if index >= 0:
+			mounts.append(spare_mounts[index])
+			spare_mounts.remove_at(index)
+			spare_ids.remove_at(index)
+		else:
+			var mount := _create_mount(id)
+			if mount != null:
+				mounts.append(mount)
+	for mount: MountBase in spare_mounts:
+		mount.teardown()
+		_mount_slots.remove_child(mount)
+		mount.queue_free()
+	_mounts = mounts
+	_mount_ids = roster.duplicate()
+	_horses.clear()
+	_wolves.clear()
+	for mount in _mounts:
+		if mount is MountHorse:
+			_horses.append(mount)
+		elif mount is MountWolf:
+			_wolves.append(mount)
+	_layout_mounts()
+
+
+func _create_mount(id: StringName) -> MountBase:
+	var upgrade := UpgradeManager.get_definition(id)
+	if upgrade == null or upgrade.mount_scene == null:
+		push_error("No mount scene for %s" % id)
+		return null
+	var mount := upgrade.mount_scene.instantiate() as MountBase
+	_mount_slots.add_child(mount)
+	mount.setup(_carousel)
+	if mount is MountHorse:
+		mount.booth_passed.connect(_on_booth_passed)
+	if mount is MountWolf:
+		mount.enemy_swept.connect(_on_enemy_swept)
+	return mount
+
+
+## Evenly spaced, first at the top. Moving is a jump, so it never pays Gold,
+## and each Wolf re-seeds so moving onto an enemy isn't a free hit.
+func _layout_mounts() -> void:
+	for i in _mounts.size():
+		_mounts[i].place(-PI / 2.0 + TAU * i / _mounts.size(), mount_radius)
+	for horse in _horses:
+		horse.set_booth_bearings(_booth_bearings)
+	for wolf in _wolves:
+		wolf.set_enemy_layer(_enemy_layer)
 
 
 ## Makes exactly `count` booths, evenly spaced starting at the top. Moving a
@@ -72,7 +126,7 @@ func _layout_booths(count: int) -> void:
 		_booths.append(booth)
 	while _booths.size() > count and _booths.size() > 1:
 		_booths.pop_back().queue_free()
-	var bearings: Array[float] = []
+	_booth_bearings.clear()
 	for i in _booths.size():
 		var bearing := -PI / 2.0 + TAU * i / _booths.size()
 		# Whole pixels: from_angle(-PI/2) gives x ≈ 1e-14, not 0, which would sit a
@@ -80,9 +134,9 @@ func _layout_booths(count: int) -> void:
 		_booths[i].position = (_carousel.position + Vector2.from_angle(bearing) * _booth_radius).round()
 		_booths[i].reset_physics_interpolation()
 		# Read the bearing back from the position, exactly as mounts read slot angles.
-		bearings.append((_booths[i].position - _carousel.position).angle())
+		_booth_bearings.append((_booths[i].position - _carousel.position).angle())
 	for horse in _horses:
-		horse.set_booth_bearings(bearings)
+		horse.set_booth_bearings(_booth_bearings)
 
 
 func _on_booth_passed(horse: MountHorse, booth_index: int, pass_count: int) -> void:

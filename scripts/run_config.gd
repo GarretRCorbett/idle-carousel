@@ -66,6 +66,12 @@ extends Resource
 ## Damage per enemy click before Click Damage upgrades.
 @export_range(0.0, 1000.0, 0.1, "or_greater") var base_click_damage: float = 1.0
 
+@export_group("Mounts")
+## Mount slots at the start of a run (more are bought in the shop).
+@export_range(1, 6, 1) var starting_mount_slots: int = 1
+## Horses at the start of a run. They can't be sold, so you always keep an income.
+@export_range(1, 6, 1) var starting_horses: int = 1
+
 @export_group("Ticket Booths")
 ## Booths at the start of a run (more are bought in the shop).
 @export_range(1, 8, 1) var starting_booths: int = 1
@@ -106,6 +112,8 @@ func get_problems() -> PackedStringArray:
 			break
 	if not is_finite(stall_timeout_seconds) or stall_timeout_seconds <= 0.0:
 		problems.append("stall_timeout_seconds must be a finite number > 0")
+	if starting_horses > starting_mount_slots:
+		problems.append("starting_horses can't be more than starting_mount_slots")
 	if starting_booths < 1:
 		problems.append("starting_booths must be at least 1")
 	if not is_finite(click_boost_cap) or click_boost_cap < 0.0:

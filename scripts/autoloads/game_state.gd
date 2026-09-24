@@ -16,6 +16,12 @@ signal boost_maxed_changed(maxed: bool)
 signal overdrive_changed(active: bool)
 ## An upgrade level was bought and fully applied (Gold, level, and effect).
 signal upgrade_applied(id: StringName, level: int)
+## A mount was sold back; its level is already lowered and the refund paid.
+signal upgrade_sold(id: StringName, level: int)
+## The mounts on the carousel changed. roster lists mount ids in placement order.
+signal mounts_changed(roster: Array[StringName])
+## Mount slot capacity changed.
+signal mount_slots_changed(count: int)
 ## Number of latched enemies changed.
 signal latch_count_changed(count: int)
 ## TEMPORARY: the carousel stalled at 0 health (true) or restarted (false).
@@ -40,6 +46,8 @@ class Latch:
 		damage_per_second = dps
 
 
+## The mount a run starts with (RunConfig.starting_horses of them).
+const STARTING_MOUNT: StringName = &"horse"
 const DEFAULT_CONFIG: RunConfig = preload("res://resources/config/run_config.tres")
 
 var _config: RunConfig = DEFAULT_CONFIG
@@ -59,6 +67,9 @@ var _spin_bonus: float = 0.0
 var _boost_cap_bonus: float = 0.0
 var _click_damage_bonus: float = 0.0
 var _booth_count: int = 1
+# Mounts: ids (the BUY_MOUNT upgrade id, e.g. &"horse") in placement order.
+var _mount_roster: Array[StringName] = []
+var _mount_slots: int = 1
 var _upgrade_levels: Dictionary[StringName, int] = {}
 var _purchase_in_progress: bool = false
 # Gold/sec: Gold earned per time bucket in a ring (bucket = epoch % count).
@@ -106,6 +117,10 @@ func reset_run(config_override: RunConfig = null) -> void:
 	_boost_cap_bonus = 0.0
 	_click_damage_bonus = 0.0
 	_booth_count = config.starting_booths
+	_mount_slots = config.starting_mount_slots
+	_mount_roster.clear()
+	for i in config.starting_horses:
+		_mount_roster.append(STARTING_MOUNT)
 	_latches.clear()
 	_total_drag = 0.0
 	_total_latch_dps = 0.0
@@ -128,6 +143,8 @@ func reset_run(config_override: RunConfig = null) -> void:
 	health_changed.emit(_health, get_max_health())
 	spin_speed_changed.emit(get_effective_spin_speed_rad_s())
 	booth_count_changed.emit(_booth_count)
+	mount_slots_changed.emit(_mount_slots)
+	mounts_changed.emit(get_mount_roster())
 	boost_maxed_changed.emit(false)
 	overdrive_changed.emit(false)
 	latch_count_changed.emit(0)
@@ -523,6 +540,56 @@ func get_booth_count() -> int:
 	return _booth_count
 
 
+# --- Mounts ----------------------------------------------------------------------
+
+## Mount ids in placement order (a copy).
+func get_mount_roster() -> Array[StringName]:
+	return _mount_roster.duplicate()
+
+
+func get_mount_slots() -> int:
+	return _mount_slots
+
+
+func has_free_mount_slot() -> bool:
+	return _mount_roster.size() < _mount_slots
+
+
+## True if one of this mount can be sold back right now: it's sellable and at
+## least one was bought (starting mounts don't count, so they can't be sold).
+func can_sell_mount(upgrade: UpgradeData) -> bool:
+	return (upgrade != null
+			and upgrade.effect_type == UpgradeData.EffectType.BUY_MOUNT
+			and upgrade.sell_refund_fraction > 0.0
+			and get_upgrade_level(upgrade.id) > 0)
+
+
+## Refund for selling one: sell_refund_fraction of what the last one cost.
+func get_sell_refund(upgrade: UpgradeData) -> float:
+	if not can_sell_mount(upgrade):
+		return 0.0
+	return roundf(upgrade.get_cost_for_level(get_upgrade_level(upgrade.id) - 1) * upgrade.sell_refund_fraction)
+
+
+## Sells the most recently placed one of this mount. The refund isn't income,
+## so it doesn't count toward Gold/sec. The level drops, so rebuying costs the
+## same as before.
+func try_sell_mount(upgrade: UpgradeData) -> bool:
+	if _purchase_in_progress or not can_sell_mount(upgrade):
+		return false
+	var index := _mount_roster.rfind(upgrade.id)
+	if index < 0:
+		return false
+	var refund := get_sell_refund(upgrade)
+	_upgrade_levels[upgrade.id] = get_upgrade_level(upgrade.id) - 1
+	_mount_roster.remove_at(index)
+	_gold += refund
+	gold_changed.emit(_gold, refund)
+	mounts_changed.emit(get_mount_roster())
+	upgrade_sold.emit(upgrade.id, get_upgrade_level(upgrade.id))
+	return true
+
+
 # --- Upgrades --------------------------------------------------------------------
 
 ## Levels bought (0 = not bought).
@@ -554,6 +621,8 @@ func can_purchase_upgrade(upgrade: UpgradeData) -> bool:
 		return false
 	if not _is_effect_supported(upgrade):
 		return false
+	if upgrade.effect_type == UpgradeData.EffectType.BUY_MOUNT and not has_free_mount_slot():
+		return false
 	return can_afford(get_upgrade_cost(upgrade))
 
 
@@ -566,6 +635,8 @@ func try_purchase_upgrade(upgrade: UpgradeData) -> bool:
 	var cost := get_upgrade_cost(upgrade)
 	var previous_speed := get_effective_spin_speed_rad_s()
 	var previous_booths := _booth_count
+	var previous_slots := _mount_slots
+	var previous_mount_count := _mount_roster.size()
 	_gold -= cost
 	_upgrade_levels[upgrade.id] = get_upgrade_level(upgrade.id) + 1
 	match upgrade.effect_type:
@@ -577,11 +648,19 @@ func try_purchase_upgrade(upgrade: UpgradeData) -> bool:
 			_booth_count += 1
 		UpgradeData.EffectType.ADD_CLICK_DAMAGE:
 			_click_damage_bonus += upgrade.effect_value
+		UpgradeData.EffectType.ADD_MOUNT_SLOT:
+			_mount_slots += 1
+		UpgradeData.EffectType.BUY_MOUNT:
+			_mount_roster.append(upgrade.id)
 	# Everything is committed; now announce it.
 	gold_changed.emit(_gold, -cost)
 	_emit_speed_if_changed(previous_speed)
 	if _booth_count != previous_booths:
 		booth_count_changed.emit(_booth_count)
+	if _mount_slots != previous_slots:
+		mount_slots_changed.emit(_mount_slots)
+	if _mount_roster.size() != previous_mount_count:
+		mounts_changed.emit(get_mount_roster())
 	upgrade_applied.emit(upgrade.id, get_upgrade_level(upgrade.id))
 	_purchase_in_progress = false
 	return true
@@ -593,4 +672,6 @@ func _is_effect_supported(upgrade: UpgradeData) -> bool:
 		UpgradeData.EffectType.ADD_BOOST_CAP,
 		UpgradeData.EffectType.ADD_TICKET_BOOTH,
 		UpgradeData.EffectType.ADD_CLICK_DAMAGE,
+		UpgradeData.EffectType.ADD_MOUNT_SLOT,
+		UpgradeData.EffectType.BUY_MOUNT,
 	]

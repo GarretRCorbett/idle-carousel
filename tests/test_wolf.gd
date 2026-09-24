@@ -46,22 +46,20 @@ func test_no_passes_when_stopped() -> void:
 
 # --- A real Wolf ----------------------------------------------------------------------
 
-## Carousel at the origin; Wolf in a slot 75 px out at angle 0 (pointing +X),
+## Carousel at the origin; Wolf 75 px out at angle 0 (pointing +X),
 ## reaching 65 px further (to 140 px from the center).
 func _setup_wolf() -> void:
 	_carousel = auto_free(Carousel.new())
 	add_child(_carousel)
 	_layer = auto_free(Node2D.new())
 	add_child(_layer)
-	var slot := Marker2D.new()
-	slot.position = Vector2(75.0, 0.0)
-	_carousel.add_child(slot)
 	var data := MountData.new()
 	data.sweep_range = 65.0
 	data.base_damage = 3.0
 	_wolf = MountWolf.new()
 	_wolf.data = data
-	slot.add_child(_wolf)
+	_carousel.add_child(_wolf)
+	_wolf.place(0.0, 75.0)
 	_wolf.setup(_carousel)
 	_wolf.set_enemy_layer(_layer)
 	_hits.clear()
@@ -129,13 +127,11 @@ func test_placing_a_wolf_on_an_enemy_gives_no_free_hit() -> void:
 	_layer = auto_free(Node2D.new())
 	add_child(_layer)
 	var enemy := _enemy_at(0.0, 110.0)
-	var slot := Marker2D.new()
-	slot.position = Vector2(75.0, 0.0)
-	_carousel.add_child(slot)
 	_wolf = MountWolf.new()
 	_wolf.data = MountData.new()
 	_wolf.data.sweep_range = 65.0
-	slot.add_child(_wolf)
+	_carousel.add_child(_wolf)
+	_wolf.place(0.0, 75.0)
 	_wolf.setup(_carousel)
 	_wolf.set_enemy_layer(_layer)
 	_hits.clear()

@@ -20,8 +20,9 @@ var _enemy_layer: Node
 var _last_hit_pass: Dictionary[int, int] = {}
 
 
-## Called by Game with the layer enemies live in. Anything already under the
-## line counts as hit on this pass, so placing a Wolf gives no free hit.
+## Called by Game with the layer enemies live in, and again after the Wolf is
+## moved. Anything already under the line counts as hit on this pass, so
+## placing or moving a Wolf gives no free hit.
 func set_enemy_layer(layer: Node) -> void:
 	_enemy_layer = layer
 	var angle := _carousel.get_unwrapped_angle() + get_slot_angle()
@@ -63,7 +64,7 @@ func _window_of(enemy: EnemyBase) -> Vector2:
 	var offset := enemy.global_position - _carousel.global_position
 	var distance := offset.length()
 	var hitbox := enemy.data.hitbox_radius
-	var inner := (get_parent() as Node2D).position.length()
+	var inner := get_slot_radius()
 	var outer := inner + data.sweep_range
 	if distance + hitbox < inner or distance - hitbox > outer or distance <= hitbox:
 		return Vector2(0.0, -1.0)

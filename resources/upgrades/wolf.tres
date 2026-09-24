@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3]
+
+[ext_resource type="Script" path="res://scripts/upgrade_data.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/mounts/Wolf.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"wolf"
+display_name = "Wolf"
+description = "Sweeps enemies as the carousel turns"
+effect_type = 5
+effect_value = 1.0
+tab = 2
+mount_scene = ExtResource("2_scene")
+cost_gold = 80.0
+cost_growth = 1.5
+max_level = 1

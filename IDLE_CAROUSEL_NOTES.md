@@ -17,11 +17,14 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> Garret playtests Step 9 (Wolf in slot 2, softer drag, regen, crank; checklist in `planning/phase2/step9_plan.md`). Then Step 10: a Mounts tab in the shop (buy Horse or Wolf, and mount slots). Plan first.
+> Garret playtests Step 10 (shop tabs, buy Slot + Wolf, extra Horses, selling, Kenney sprites; checklist in `planning/phase2/step10_plan.md`). Then Phase 2 Step 11: five-minute playtest + walkthrough.
 
 ---
 
 ## 🚧 To-Do / Things To Add
+
+### Balance: Wolf vs Leaf tiers (Garret, 2026-09-24)
+- [ ] Wolf does 1.5 per hit so a Grey Leaf takes 2 passes. Players may meet tougher Leaf tiers before buying the Wolf; revisit Wolf damage (and Wolf Fang) when tiers exist.
 
 ### Gameplay Gates
 - [ ] **Enemy kill count per tier** — need a minimum kills before boss spawns

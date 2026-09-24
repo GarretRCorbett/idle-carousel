@@ -1,26 +1,49 @@
 class_name MountBase
 extends Node2D
-## Base for every mount. Lives under a slot marker on the carousel, so it
-## rotates with it. The slot's +X axis points outward. Draws a code placeholder
-## from its MountData until real art exists.
+## Base for every mount. Lives under Carousel/MountSlots, so it rotates with the
+## carousel. Game places it with place(); its +X axis points outward. Draws its
+## MountData texture, or a code placeholder when there's none.
 
 @export var data: MountData
+
+@export_group("Sprite")
+## Turns the sprite so the top of the animal's head points outward (90°).
+@export_range(-180.0, 180.0, 1.0, "suffix:°") var texture_rotation_deg: float = 90.0
 
 var _carousel: Carousel
 
 
-## Called by Game after the mount is in its slot.
+## Called by Game once the mount is under MountSlots.
 func setup(carousel: Carousel) -> void:
 	_carousel = carousel
 	_carousel.rotation_advanced.connect(_on_rotation_advanced)
 
 
-## This mount's angle on the carousel, in carousel space. Taken from the slot's
+## Moves the mount to `angle` (carousel space, radians) at `radius` from the
+## center. Moving is a jump, not travel, so it never counts as a booth pass or
+## a sweep. Whole pixels, like the booths, so the top spot is exactly the top.
+func place(angle: float, radius: float) -> void:
+	position = (Vector2.from_angle(angle) * radius).round()
+	rotation = angle
+	reset_physics_interpolation()
+
+
+## Stops reacting to the carousel; Game calls this before removing the mount.
+func teardown() -> void:
+	if _carousel != null and _carousel.rotation_advanced.is_connected(_on_rotation_advanced):
+		_carousel.rotation_advanced.disconnect(_on_rotation_advanced)
+
+
+## This mount's angle on the carousel, in carousel space. Taken from its
 ## position (not its rotation) so it's computed exactly like the booth bearing;
 ## rotation is stored in single precision and would sit a hair off the booth.
 func get_slot_angle() -> float:
-	var slot := get_parent() as Node2D
-	return slot.position.angle() if slot != null else 0.0
+	return position.angle()
+
+
+## Distance from the carousel center.
+func get_slot_radius() -> float:
+	return position.length()
 
 
 ## Override in mounts that react to rotation (Horse: booth passes; Wolf: sweeps).
@@ -29,7 +52,15 @@ func _on_rotation_advanced(_previous_angle: float, _delta_angle: float) -> void:
 
 
 func _draw() -> void:
-	if data == null or data.texture != null:
+	if data == null:
+		return
+	if data.texture != null:
+		# Scale so the larger side is the placeholder's diameter.
+		var tex_size := data.texture.get_size()
+		var draw_size := tex_size * (2.0 * data.placeholder_size / maxf(tex_size.x, tex_size.y))
+		draw_set_transform(Vector2.ZERO, deg_to_rad(texture_rotation_deg))
+		draw_texture_rect(data.texture, Rect2(-draw_size / 2.0, draw_size), false)
+		draw_set_transform(Vector2.ZERO)
 		return
 	var points := PackedVector2Array()
 	for i in data.placeholder_points:
