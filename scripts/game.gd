@@ -33,7 +33,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	GameState.advance_simulation(delta)
 	_carousel.advance_rotation(delta, GameState.get_effective_spin_speed_rad_s())
-	_carousel.set_boost_fraction(GameState.get_click_boost_fraction())
+	_carousel.set_boost_state(GameState.is_boost_maxed(), GameState.is_overdrive_active())
 
 
 func _setup_mounts() -> void:

@@ -27,6 +27,16 @@ extends Resource
 ## After the latest press, the bonus fades to zero over this many seconds.
 ## Holding the bar full takes about presses_to_fill / this presses per second.
 @export_range(0.05, 30.0, 0.05, "suffix:s") var click_boost_decay_seconds: float = 4.0
+## The boost counts as "maxed" when the bar reaches this fraction...
+@export_range(0.0, 1.0, 0.01) var boost_maxed_on_fraction: float = 0.99
+## ...and stays maxed until it drops below this (so dips between presses don't count).
+@export_range(0.0, 1.0, 0.01) var boost_maxed_off_fraction: float = 0.8
+
+@export_group("Overdrive")
+## Keep the boost maxed this long to trigger Overdrive...
+@export_range(0.0, 60.0, 0.5, "suffix:s") var overdrive_hold_seconds: float = 5.0
+## ...which multiplies speed by this until the boost is no longer maxed.
+@export_range(1.0, 10.0, 0.1) var overdrive_multiplier: float = 2.0
 
 @export_group("Ticket Booths")
 ## Booths at the start of a run (more are bought in the shop).
@@ -46,6 +56,10 @@ func get_problems() -> PackedStringArray:
 		problems.append("max_health must be a finite number > 0")
 	if not is_finite(base_spin_speed_deg_s) or base_spin_speed_deg_s < 0.0:
 		problems.append("base_spin_speed_deg_s must be a finite number >= 0")
+	if boost_maxed_off_fraction > boost_maxed_on_fraction:
+		problems.append("boost_maxed_off_fraction must be <= boost_maxed_on_fraction")
+	if not is_finite(overdrive_multiplier) or overdrive_multiplier < 1.0:
+		problems.append("overdrive_multiplier must be >= 1")
 	if boost_presses_to_fill < 1:
 		problems.append("boost_presses_to_fill must be at least 1")
 	if starting_booths < 1:

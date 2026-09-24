@@ -1,5 +1,5 @@
 # 🎠 Idle Carousel — Game Design Document
-### Version 1.5 | Working Title: Idle Carousel
+### Version 1.7 | Working Title: Idle Carousel
 > Solo dev project. Built in Godot 4.7 stable. Target: Steam release, anonymous, $4.99 (sale target ~$3.49–$3.75), with a free demo.
 > Personal motivation: daughters love carousels.
 > Influences: Cookie Clicker, Clicker Heroes, A Game About Feeding a Black Hole, Rusty's Retirement.
@@ -7,6 +7,7 @@
 ---
 
 ## Changelog
+- **v1.7** — Overdrive: hold the Boost bar at max for 5 s for ×2 speed until it drops (gold glow). New Random Events section (Golden-Cookie-style pickups and surprise visitors), planned for Phase 4. Speed bonuses from any source multiply together.
 - **v1.6** — Shop pacing (Garret): upgrades have levels. Spin Speed 1–4 become **Carousel Speed** (+20% base speed per level, 10 levels); new **Boost Power** (+10% max boost per level, 10 levels); **Ticket Booth** starts at 500 Gold. Each level costs ×1.5 the last. Boost bar takes 10 presses to fill and fades over 4 s; the carousel glows while boost is maxed.
 - **v1.5** — First-playtest changes (Garret): a dedicated Spin button replaces click-anywhere boosting; clicks never pay Gold (Gold comes from Horse booth passes and enemy kills); extra Horses can be bought into empty slots (rising price) and sold back for a partial refund; up to 4 ticket booths, re-spaced evenly, rising price; only Horse passes pay at booths; HUD labels plus a Speed ×multiplier; shop keeps every row listed with a progress fill, bought rows stay marked.
 - **v1.4** — Phase 2 design decisions: booth pays a fixed amount per pass (spin speed scales frequency only, not payout); click rules and stacking spin boost defined; latched enemies hold their world position; latch drag adds up and can stop the carousel; Wolf pierces, hitting each enemy once per pass; slots 2–3 buyable from the start, slots 4–6 unlocked by bosses then bought with Gold; wave countdown always runs; shop may use tabs, Gold stays the only currency; HUD Gold/sec is recent actual income; temporary zero-health stall for Phase 2 (fail state still pending).
@@ -134,6 +135,7 @@ The single most important stat in the game. Affects:
 - **Spin button** (below the carousel, with a boost bar): each press adds a small temporary speed bonus. Bonuses stack up to a cap and decay back to base speed over a couple of seconds (cap and decay are tunable). Rapid pressing is rewarded but never required.
 - **Click an enemy:** damages it (approaching or latched). Clicking an enemy never boosts spin.
 - **Clicking empty space** does nothing. **UI buttons and panels** never count as game clicks.
+- **Overdrive:** keep the Boost bar at max for 5 seconds and speed doubles (×2) until the bar drops back below 80%. The carousel and Boost bar glow gold while it lasts. It rewards active play without being required. Hold time and multiplier are tunable.
 
 ### Health
 The carousel has a health bar. Enemies that successfully latch deal damage over time until removed.
@@ -370,6 +372,32 @@ Two trees. Both cost Gold. Upgrades always show the next tier even if locked so 
 | Unicorn Unlock | Requires 3 other mounts at Tier 2 |
 | Unicorn Tier 2 | All Unicorn effects plus 50% |
 | Prismatic Horn | Unicorn effects doubled |
+
+---
+
+## Random Events
+
+Short, surprising bonuses that break up the idle rhythm, in the spirit of Cookie Clicker's golden cookies. Planned for **Phase 4 (Systems)**; the speed-modifier plumbing already exists (Overdrive uses it).
+
+### Two kinds
+- **Clickable pickups:** a glowing token drifts in or appears somewhere on screen for a few seconds. Click it before it fades to get its effect. Missing it costs nothing.
+- **Surprise visitors:** something just happens, with no click needed, and the screen says so.
+
+### Effect ideas (tune in playtesting)
+| Event | Kind | Effect |
+|---|---|---|
+| Speed Surge | Pickup | ×2 to ×4 speed for 10–20 s |
+| Golden Hour | Pickup | ×2 or ×3 Gold from booth passes for 15–30 s |
+| Lucky Ticket | Pickup | Flat Gold bonus (a few minutes of current income) |
+| Wandering Horse | Visitor | A temporary extra Horse rides the carousel for 30–60 s (takes no slot) |
+| Pop-up Booth | Visitor | A temporary extra ticket booth appears for 30–60 s |
+
+### Rules
+- Bonuses from different sources **multiply** (Overdrive ×2 during a ×3 Speed Surge = ×6). Two of the same event don't stack; the second refreshes the timer.
+- Events are purely good. They never punish the player for not clicking.
+- Timing is random within a window (e.g. every 2–5 minutes), tunable, and never during a boss intro.
+- Offline: events don't happen while away.
+- Each event is a `.tres` (effect, strength, duration, weight) so new events are data, not code.
 
 ---
 
@@ -743,6 +771,6 @@ Save these for after v1.0 ships. Do not build during v1.0 development.
 
 ---
 
-*GDD Version 1.5*
+*GDD Version 1.7*
 *Created: June 2026*
 *Status: Design complete, ready for development*

@@ -10,6 +10,8 @@ signal boost_requested
 @export var gold_format: String = "Gold: %d"
 @export var gold_per_second_format: String = "Gold per sec: %.1f"
 @export var speed_format: String = "Speed: ×%.2f"
+## Boost bar tint during Overdrive.
+@export var overdrive_bar_modulate: Color = Color(1.6, 1.3, 0.35)
 ## Keyboard shortcut for the Boost button.
 @export var boost_key: Key = KEY_SPACE
 
@@ -26,6 +28,7 @@ func _ready() -> void:
 	GameState.health_changed.connect(_on_health_changed)
 	GameState.gold_per_second_changed.connect(_on_gold_per_second_changed)
 	GameState.spin_speed_changed.connect(_on_spin_speed_changed)
+	GameState.overdrive_changed.connect(_on_overdrive_changed)
 	_boost_button.pressed.connect(boost_requested.emit)
 	_boost_button.shortcut = _make_shortcut(boost_key)
 	# Read the current values in case they were announced before we connected.
@@ -33,6 +36,7 @@ func _ready() -> void:
 	_on_health_changed(GameState.get_health(), GameState.get_max_health())
 	_on_gold_per_second_changed(GameState.get_recent_gold_per_second())
 	_on_spin_speed_changed(GameState.get_effective_spin_speed_rad_s())
+	_on_overdrive_changed(GameState.is_overdrive_active())
 
 
 func _on_gold_changed(balance: float, _delta: float) -> void:
@@ -47,6 +51,10 @@ func _on_gold_per_second_changed(value: float) -> void:
 func _on_spin_speed_changed(_speed_rad_s: float) -> void:
 	_speed_label.text = speed_format % GameState.get_speed_multiplier()
 	_boost_bar.value = GameState.get_click_boost_fraction()
+
+
+func _on_overdrive_changed(active: bool) -> void:
+	_boost_bar.self_modulate = overdrive_bar_modulate if active else Color.WHITE
 
 
 func _on_health_changed(current: float, maximum: float) -> void:

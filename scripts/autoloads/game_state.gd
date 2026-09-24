@@ -10,6 +10,10 @@ signal health_changed(current: float, maximum: float)
 ## Effective spin speed in radians/second (what Carousel applies each tick).
 signal spin_speed_changed(speed_rad_s: float)
 signal booth_count_changed(count: int)
+## The boost bar reached max (true) or fell back below the "maxed" line (false).
+signal boost_maxed_changed(maxed: bool)
+## Overdrive started (true) or ended (false).
+signal overdrive_changed(active: bool)
 ## An upgrade level was bought and fully applied (Gold, level, and effect).
 signal upgrade_applied(id: StringName, level: int)
 ## Emitted after every value has been reset, before the fresh values are re-announced.
@@ -23,6 +27,12 @@ var _health: float = 0.0
 # Click boost: the bonus at the latest press, fading linearly to 0 over the decay time.
 var _boost_peak: float = 0.0
 var _boost_elapsed: float = 0.0
+var _boost_maxed: bool = false
+var _boost_maxed_seconds: float = 0.0
+var _overdrive: bool = false
+## Temporary speed multipliers by source (overdrive now; random events later).
+## They multiply together and into the effective speed.
+var _speed_modifiers: Dictionary[StringName, float] = {}
 # Upgrade effects, summed over bought levels.
 var _spin_bonus: float = 0.0
 var _boost_cap_bonus: float = 0.0
@@ -54,6 +64,10 @@ func reset_run(config_override: RunConfig = null) -> void:
 	_health = config.max_health
 	_boost_peak = 0.0
 	_boost_elapsed = 0.0
+	_boost_maxed = false
+	_boost_maxed_seconds = 0.0
+	_overdrive = false
+	_speed_modifiers.clear()
 	_spin_bonus = 0.0
 	_boost_cap_bonus = 0.0
 	_booth_count = config.starting_booths
@@ -71,6 +85,8 @@ func reset_run(config_override: RunConfig = null) -> void:
 	health_changed.emit(_health, get_max_health())
 	spin_speed_changed.emit(get_effective_spin_speed_rad_s())
 	booth_count_changed.emit(_booth_count)
+	boost_maxed_changed.emit(false)
+	overdrive_changed.emit(false)
 
 
 # --- Gold -------------------------------------------------------------------
@@ -141,6 +157,7 @@ func advance_simulation(delta: float) -> void:
 		return
 	var previous_speed := get_effective_spin_speed_rad_s()
 	_boost_elapsed = minf(_config.click_boost_decay_seconds, _boost_elapsed + delta)
+	_update_boost_status(delta)
 	_emit_speed_if_changed(previous_speed)
 	_elapsed += delta
 	_advance_income_window()
@@ -165,13 +182,41 @@ func _advance_income_window() -> void:
 
 # --- Spin speed ------------------------------------------------------------------
 
-## base × upgrades × (1 + click boost) × (1 − drag), never below zero.
+## base × upgrades × (1 + click boost) × modifiers (Overdrive, events) × (1 − drag),
+## never below zero.
 func get_effective_spin_speed_rad_s() -> float:
 	var drag_factor := maxf(0.0, 1.0 - _total_drag)
 	return (deg_to_rad(_config.base_spin_speed_deg_s)
 			* get_spin_upgrade_multiplier()
 			* (1.0 + get_click_boost())
+			* get_speed_modifier_multiplier()
 			* drag_factor)
+
+
+## Product of every temporary speed modifier (1.0 when there are none).
+func get_speed_modifier_multiplier() -> float:
+	var product := 1.0
+	for multiplier in _speed_modifiers.values():
+		product *= multiplier
+	return product
+
+
+## Adds or replaces a temporary speed multiplier from one source (e.g. &"overdrive",
+## later a random event). Remove it with remove_speed_modifier().
+func set_speed_modifier(source: StringName, multiplier: float) -> void:
+	if not is_finite(multiplier) or multiplier < 0.0:
+		return
+	var previous_speed := get_effective_spin_speed_rad_s()
+	_speed_modifiers[source] = multiplier
+	_emit_speed_if_changed(previous_speed)
+
+
+func remove_speed_modifier(source: StringName) -> void:
+	if not _speed_modifiers.has(source):
+		return
+	var previous_speed := get_effective_spin_speed_rad_s()
+	_speed_modifiers.erase(source)
+	_emit_speed_if_changed(previous_speed)
 
 
 ## Current speed as a multiple of base speed (1.35 = 35% faster than base).
@@ -214,7 +259,46 @@ func add_click_boost() -> void:
 	var cap := get_boost_cap()
 	_boost_peak = minf(cap, get_click_boost() + cap / _config.boost_presses_to_fill)
 	_boost_elapsed = 0.0
+	_update_boost_status(0.0)
 	_emit_speed_if_changed(previous_speed)
+
+
+func is_boost_maxed() -> bool:
+	return _boost_maxed
+
+
+func is_overdrive_active() -> bool:
+	return _overdrive
+
+
+## Seconds the boost has stayed maxed (0 when not maxed); for a charge-up display.
+func get_boost_maxed_seconds() -> float:
+	return _boost_maxed_seconds
+
+
+## Tracks "maxed" with two thresholds so dips between presses don't break it,
+## and turns Overdrive on after holding it long enough, off when it breaks.
+func _update_boost_status(delta: float) -> void:
+	var fraction := get_click_boost_fraction()
+	if not _boost_maxed and fraction >= _config.boost_maxed_on_fraction:
+		_boost_maxed = true
+		_boost_maxed_seconds = 0.0
+		boost_maxed_changed.emit(true)
+	elif _boost_maxed and fraction < _config.boost_maxed_off_fraction:
+		_boost_maxed = false
+		_boost_maxed_seconds = 0.0
+		boost_maxed_changed.emit(false)
+		if _overdrive:
+			_overdrive = false
+			remove_speed_modifier(&"overdrive")
+			overdrive_changed.emit(false)
+		return
+	if _boost_maxed:
+		_boost_maxed_seconds += delta
+		if not _overdrive and _boost_maxed_seconds >= _config.overdrive_hold_seconds:
+			_overdrive = true
+			set_speed_modifier(&"overdrive", _config.overdrive_multiplier)
+			overdrive_changed.emit(true)
 
 
 func _emit_speed_if_changed(previous_speed: float) -> void:

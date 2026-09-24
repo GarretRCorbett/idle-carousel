@@ -20,16 +20,14 @@ signal rotation_advanced(previous_angle: float, delta_angle: float)
 @export var hub_color: Color = Color("2d5a25")
 
 @export_group("Boost Glow")
-## The carousel glows while the boost bar is maxed out.
+## Glow while the boost bar is maxed out...
 @export var boost_glow_modulate: Color = Color(1.3, 1.3, 1.1)
-## Glow turns on when the bar reaches this fraction...
-@export_range(0.0, 1.0, 0.01) var glow_on_fraction: float = 0.99
-## ...and stays on until it drops below this, so it doesn't flicker between presses.
-@export_range(0.0, 1.0, 0.01) var glow_off_fraction: float = 0.8
-## Seconds to fade the glow in or out.
+## ...and a gold glow during Overdrive (maxed long enough for ×2 speed).
+@export var overdrive_glow_modulate: Color = Color(1.5, 1.3, 0.55)
+## Seconds to fade between glow states.
 @export_range(0.01, 2.0, 0.01, "suffix:s") var glow_fade_seconds: float = 0.25
 
-var _glowing: bool = false
+var _glow_target: Color = Color.WHITE
 
 var _unwrapped_angle: float = 0.0
 
@@ -50,21 +48,22 @@ func get_unwrapped_angle() -> float:
 	return _unwrapped_angle
 
 
-## Called each tick with how full the boost bar is (0..1).
-func set_boost_fraction(fraction: float) -> void:
-	if fraction >= glow_on_fraction:
-		_glowing = true
-	elif fraction < glow_off_fraction:
-		_glowing = false
+## Called each tick with the boost state from GameState.
+func set_boost_state(maxed: bool, overdrive: bool) -> void:
+	if overdrive:
+		_glow_target = overdrive_glow_modulate
+	elif maxed:
+		_glow_target = boost_glow_modulate
+	else:
+		_glow_target = Color.WHITE
 
 
-func is_glowing() -> bool:
-	return _glowing
+func get_glow_target() -> Color:
+	return _glow_target
 
 
 func _process(delta: float) -> void:
-	var target := boost_glow_modulate if _glowing else Color.WHITE
-	modulate = modulate.lerp(target, clampf(delta / glow_fade_seconds, 0.0, 1.0))
+	modulate = modulate.lerp(_glow_target, clampf(delta / glow_fade_seconds, 0.0, 1.0))
 
 
 func _draw() -> void:

@@ -59,16 +59,14 @@ func test_row_is_maxed_after_every_level() -> void:
 
 # --- Carousel glow ---------------------------------------------------------------
 
-func test_glow_turns_on_at_max_and_holds_between_presses() -> void:
+func test_carousel_glow_follows_boost_state() -> void:
 	var carousel: Carousel = auto_free(Carousel.new())
-	carousel.set_boost_fraction(0.9)
-	assert_bool(carousel.is_glowing()).is_false()
-	carousel.set_boost_fraction(1.0)
-	assert_bool(carousel.is_glowing()).is_true()
-	carousel.set_boost_fraction(0.85)  # dipping between presses keeps it on
-	assert_bool(carousel.is_glowing()).is_true()
-	carousel.set_boost_fraction(0.5)
-	assert_bool(carousel.is_glowing()).is_false()
+	carousel.set_boost_state(false, false)
+	assert_that(carousel.get_glow_target()).is_equal(Color.WHITE)
+	carousel.set_boost_state(true, false)
+	assert_that(carousel.get_glow_target()).is_equal(carousel.boost_glow_modulate)
+	carousel.set_boost_state(true, true)
+	assert_that(carousel.get_glow_target()).is_equal(carousel.overdrive_glow_modulate)
 
 
 # --- Click blocking -----------------------------------------------------------------

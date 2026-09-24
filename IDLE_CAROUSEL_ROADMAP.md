@@ -77,6 +77,7 @@
 - [ ] Save system: auto, milestone, manual; `user://save_data.json`
 - [ ] Offline progress with the 8-hour clamp and "Welcome back" popup
 - [ ] Wave controls: auto-wave toggle, next wave, Emergency Clear
+- [ ] Random Events (GDD): clickable pickups (speed/Gold surges, Lucky Ticket) and surprise visitors (Wandering Horse, Pop-up Booth), data-driven
 
 **⚠️ Resolve before starting:** DECISION PENDING — death/fail state design.
 **Claude Code:** UpgradeManager, save/load serialization, offline math, tests for all three.
