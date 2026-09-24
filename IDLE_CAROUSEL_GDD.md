@@ -1,5 +1,5 @@
 # 🎠 Idle Carousel — Game Design Document
-### Version 1.3 | Working Title: Idle Carousel
+### Version 1.4 | Working Title: Idle Carousel
 > Solo dev project. Built in Godot 4.7 stable. Target: Steam release, anonymous, $4.99 (sale target ~$3.49–$3.75), with a free demo.
 > Personal motivation: daughters love carousels.
 > Influences: Cookie Clicker, Clicker Heroes, A Game About Feeding a Black Hole, Rusty's Retirement.
@@ -7,6 +7,7 @@
 ---
 
 ## Changelog
+- **v1.4** — Phase 2 design decisions: booth pays a fixed amount per pass (spin speed scales frequency only, not payout); click rules and stacking spin boost defined; latched enemies hold their world position; latch drag adds up and can stop the carousel; Wolf pierces, hitting each enemy once per pass; slots 2–3 buyable from the start, slots 4–6 unlocked by bosses then bought with Gold; wave countdown always runs; shop may use tabs, Gold stays the only currency; HUD Gold/sec is recent actual income; temporary zero-health stall for Phase 2 (fail state still pending).
 - **v1.3** — Steam Achievements moved into v1.0 scope. Price set to $4.99. Added Asset & AI Policy section. Marked the two open design questions (fail state, prestige scope) as DECISION PENDING. Fixed Godot version note.
 - **v1.2** — Removed Sparks currency. All upgrades now cost Gold only. Simplified to single-currency economy. Removed Combat Tree as a separate tab — combat upgrades merged into a unified Upgrade Shop. GameState updated to remove sparks variable.
 - **v1.1** — Internal notes version
@@ -94,7 +95,7 @@ The game does NOT have distinct build phase and combat phase that the player swi
 - When to push to the next enemy tier (manual escalation)
 - What to spend Gold on
 - Active clicking (enemies, spin boost, or both)
-- Auto-wave toggle (on = waves send automatically, off = manual)
+- Auto-wave toggle (on = the countdown runs and sends waves; off = the countdown pauses and the player sends waves manually)
 - Emergency Clear button (costs Gold, removes all latched enemies — for returning after being away)
 
 **The natural tension:**
@@ -105,8 +106,8 @@ Enemies always pressure the carousel — you cannot just idle forever without co
 ## Currency
 
 ### Gold — The Only Currency
-- **Primary source:** Ticket booth generates Gold each time the Horse mount passes it. Amount scales with carousel spin speed. Spin faster = booth passed more often = more Gold per minute.
-- **Secondary source:** Player clicking when no enemies are latched generates a small Gold burst.
+- **Primary source:** Ticket booth generates a fixed amount of Gold each time the Horse mount passes it. Spin speed scales how *often* that happens, not the amount per pass: spin faster = booth passed more often = more Gold per minute. Horse upgrades raise the per-pass amount. (Scaling payout with speed too would make income grow with speed², which is hard to balance.)
+- **Secondary source:** Clicking the play area (not an enemy) when no enemies are latched generates a small Gold burst.
 - **Combat source:** Defeated enemies drop bonus Gold. Stronger enemies in higher tiers drop more. Tier bosses give a large Gold bonus.
 - **Spent on:** Everything — spin speed, mount slots, ticket booth upgrades, carousel health, click damage, mount ability upgrades, mount tier upgrades.
 - **Feel:** Constant, steady flow with exciting spikes from combat. The heartbeat of the game.
@@ -126,16 +127,26 @@ A **Ticket Booth** sits fixed in the world just outside the carousel edge at the
 The single most important stat in the game. Affects:
 - How often each mount triggers (sweeps past enemies or ticket booth)
 - How much damage mounts deal (faster sweep = harder hit)
-- How much Gold the ticket booth generates per pass
 - How quickly the carousel recovers from latch slowdown
+
+### Clicking and Spin Boost
+- **Click an enemy:** damages it (approaching or latched).
+- **Click anywhere else in the play area:** spin boost, plus a small Gold burst if no enemies are latched.
+- **UI buttons and panels** never count as game clicks.
+- **Spin boost:** each click adds a small temporary speed bonus. Bonuses stack up to a cap and decay back to base speed over a couple of seconds (cap and decay are tunable). Rapid clicking is rewarded but never required.
 
 ### Health
 The carousel has a health bar. Enemies that successfully latch deal damage over time until removed.
 
 > **⚠️ DECISION PENDING — Death / fail state.** Current draft: at zero health the carousel stops (Game Over), and the player respawns at the start of the current tier with a Gold penalty. Open questions: Is a hard Game Over right for an idle game, especially while offline? Should zero health instead stall the carousel until repaired? How big is the penalty? **Resolve before Phase 4.** Agents: do not implement or change this without Garret's decision.
+>
+> **Temporary Phase 2 behavior (Garret's call, placeholder only):** at zero health the carousel stalls (stops spinning) until the latched enemies are cleared, then health refills a little. Mark it TEMPORARY in code; it is replaced once the real fail state is decided.
 
 ### Latch Mechanic
-When an enemy reaches the carousel edge it latches on. Visually the enemy grabs the rim and a drag effect slows the carousel. Multiple latched enemies stack their drag. The slowdown is immediately visible and tactile.
+When an enemy reaches the carousel edge it latches on. Visually the enemy grabs the rim and a drag effect slows the carousel. The slowdown is immediately visible and tactile.
+
+- **Latched enemies hold their world position.** The carousel grinds past underneath them, so every mount sweeps past each latched enemy once per rotation.
+- **Drag adds up with no floor.** Each enemy's `latch_drag` is a fraction of spin speed (Leaf 0.05 = 5% slower); three Leaves = 15% slower. Enough latched enemies can stop the carousel completely.
 
 To remove a latched enemy: click it directly, OR wait for a combat mount to sweep past it, OR use Emergency Clear.
 
@@ -159,7 +170,7 @@ Six total mounts. Unlocked progressively. Each occupies one carousel slot. Each 
 ### Horse — The Generator
 - **Type:** Stationary
 - **Role:** Primary Gold generation
-- **Behavior:** Positioned near the ticket booth pass point. Generates Gold each time it passes the booth. Gold amount scales with spin speed.
+- **Behavior:** Positioned near the ticket booth pass point. Generates a fixed amount of Gold each time it passes the booth. Faster spin means more passes per minute; upgrades raise the amount per pass.
 - **Does NOT attack enemies**
 - **Starting mount** — player begins with one Horse
 - **Art:** Classic carousel horse. Brown/chestnut. Simple side silhouette from top-down. Coin icon appears on booth pass.
@@ -171,7 +182,7 @@ Six total mounts. Unlocked progressively. Each occupies one carousel slot. Each 
 ### Wolf — The Cleaner
 - **Type:** Sweeping
 - **Role:** Primary combat — clears latched enemies
-- **Behavior:** Fires outward in a line as it rotates. Damages any enemy in its sweep path. Particularly effective against latched enemies since it passes them on every rotation.
+- **Behavior:** Fires outward in a line as it rotates. The line pierces: it damages every enemy in its path, each enemy at most once per pass. Particularly effective against latched enemies since it passes them on every rotation.
 - **Art:** Wolf silhouette top-down. Dark grey. Jaws open in attack position. Slash visual on enemy hit.
 - **Color tier:** Eye glow color changes per tier
 - **Upgrades:** Wolf Fang 1/2/3 increases damage. Pack Mentality adds an offset second sweep.
@@ -218,8 +229,11 @@ Six total mounts. Unlocked progressively. Each occupies one carousel slot. Each 
 - **Upgrades:** Prismatic Horn increases all three effects by 50%. Dream Blessing adds a chance to double Gold on sweep.
 
 ### Mount Slot Progression
-Slots unlock through the Upgrade Shop purchased with Gold:
-Start with 1 slot (Horse only). Each subsequent slot unlocks through mid-tier purchases. All 6 slots available by late mid-game.
+Start with 1 slot (Horse only). Slots are always bought with Gold in the Upgrade Shop:
+- **Slots 2 and 3:** in the shop from the start.
+- **Slots 4, 5, and 6:** appear in the shop after beating the first, second, and third tier bosses.
+
+A slot and its mount are separate purchases (e.g., buy Mount Slot 2, then buy Wolf to fill it).
 
 Mount placement is automatic — they distribute equidistantly as added. No manual placement in v1.0.
 
@@ -290,7 +304,7 @@ Implementation: Use Godot Modulate property on Sprite2D to tint the base sprite.
 | Obsidian Boulder | Rock | Splits into 2 Purple Rocks on first kill — must kill twice |
 | The Rusted King | Final Boss | See Final Boss section |
 
-Killing a boss awards a large Gold bonus, unlocks the next color tier, unlocks a new mount slot, and may unlock a new upgrade node.
+Killing a boss awards a large Gold bonus, unlocks the next color tier, makes the next mount slot available to buy (first three bosses), and may unlock a new upgrade node.
 
 ---
 
@@ -314,7 +328,7 @@ Two trees. Both cost Gold. Upgrades always show the next tier even if locked so 
 | Spin Speed 2 | +30% spin speed |
 | Spin Speed 3 | +50% spin speed |
 | Spin Speed 4 | +75% spin speed |
-| Mount Slot 2-6 | Unlocks additional mount positions |
+| Mount Slot 2-6 | Unlocks additional mount positions (4–6 require a boss first) |
 | Ticket Booth 2 | Second booth at 180 degrees — doubles Gold rate |
 | Carousel Health 1/2/3 | Max health increased |
 | Polish and Shine | +10% to all Gold generation |
@@ -361,10 +375,10 @@ Two trees. Both cost Gold. Upgrades always show the next tier even if locked so 
 - Start: Horse only, Grey Leaves approaching
 - First goal: Survive first wave by clicking
 - First purchase: Spin Speed 1 (immediate satisfaction)
-- Second purchase: Wolf (game transforms — now have auto-combat)
+- Second purchase: Mount Slot 2 + Wolf (game transforms — now have auto-combat)
 - Third purchase: Slot 3, add Turtle or Eagle (first strategic choice)
 - Boss: Leaf Storm — splits into 4 leaves on death, tests burst enemy handling
-- Reward: Green Tier unlocked, Slot 4, new combat upgrades available
+- Reward: Green Tier unlocked, Slot 4 available to buy, new combat upgrades available
 
 ### Mid Game (Green through Purple)
 - Enemies get tougher, spawn faster
@@ -409,19 +423,19 @@ The Rusted King defeated. All rust flakes away in a particle burst. The carousel
 ## UI and HUD
 
 ### Always visible
-- Gold counter (top left) with Gold per second rate shown below it
+- Gold counter (top left) with Gold per second shown below it: a rolling average of all Gold actually earned over the last ~10 seconds (booth, kills, clicks), so it visibly drops when enemies latch. The offline earning rate is shown separately (e.g., shop footer or tooltip) once offline progress exists.
 - Carousel health bar
 - Current enemy tier indicator
 - Wave countdown timer showing when next wave arrives
 
 ### Upgrade Shop
 - Panel on right side of screen
-- Two tabs: Carousel / Combat (Mount upgrades live under Combat tab)
+- May be split into 2–3 tabs (e.g., Carousel / Combat / Mounts) for readability. Every cost is in Gold; tabs organize, they never introduce a second currency.
 - Affordable upgrades highlighted, next-tier upgrades visible but locked
 - No scrolling required in early game
 
 ### Wave Controls
-- Auto Wave toggle button — when ON, next wave sends automatically after current is cleared
+- Auto Wave toggle button — when ON, the wave countdown always runs and sends the next wave when it hits zero, whether or not the last wave is cleared. When OFF, the countdown pauses.
 - Next Wave manual button — sends next wave immediately with a bonus Gold reward for early send
 - Emergency Clear button — removes all latched enemies, costs Gold, has 60 second cooldown
 
@@ -724,6 +738,6 @@ Save these for after v1.0 ships. Do not build during v1.0 development.
 
 ---
 
-*GDD Version 1.3*
+*GDD Version 1.4*
 *Created: June 2026*
 *Status: Design complete, ready for development*
