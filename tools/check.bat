@@ -26,5 +26,17 @@ if errorlevel 1 set FAIL=1
 findstr /R /C:"SCRIPT ERROR" /C:"Parse Error" /C:"ERROR:" /C:"CHECK FAIL" "%TEMP%\ic_check.log" >nul && set FAIL=1
 if not %FAIL%==0 type "%TEMP%\ic_check.log"
 
+echo == Running tests
+REM GdUnit4 CLI runner. --ignoreHeadlessMode is needed to run headless (UI input tests
+REM won't work headless). --remote-debug to a dead port keeps a parse error from
+REM dropping into Godot's interactive debugger. Reports go under .godot (gitignored).
+"%GODOT%" --headless --path . -s -d --remote-debug tcp://127.0.0.1:0 res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a res://tests -rd res://.godot/test_reports > "%TEMP%\ic_test.log" 2>&1
+if errorlevel 1 (
+  set FAIL=1
+  type "%TEMP%\ic_test.log"
+) else (
+  findstr /C:"Overall Summary" "%TEMP%\ic_test.log"
+)
+
 if %FAIL%==0 (echo == PASS) else (echo == FAIL)
 exit /b %FAIL%

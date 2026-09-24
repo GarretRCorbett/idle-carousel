@@ -27,6 +27,8 @@ scripts/autoloads/      GameState, SaveManager, AudioManager, UpgradeManager
 scripts/                gameplay scripts, Resource classes (mount_data.gd, etc.)
 resources/mounts|enemies|upgrades/   .tres data files
 assets/sprites|audio/   human-made or licensed assets only
+tests/                  GdUnit4 test suites (test_*.gd, extend GdUnitTestSuite)
+addons/gdUnit4/         GdUnit4 6.2.1 test framework (third-party; don't edit)
 tools/                  check.sh / check.bat (+ check_scripts.gd they run)
 ```
 File names snake_case; class names PascalCase; scenes PascalCase.tscn.
@@ -64,7 +66,9 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
   - When a change is small or feel-related (positions, colors, tuning), give Garret
     the steps instead of editing the file.
 - Run `tools/check.sh` (Windows: `tools\check.bat`) after every change. Don't report
-  done until it passes.
+  done until it passes. It compiles every script, loads every scene, and runs the tests.
+- New logic comes with tests in `tests/` (math, money, counting, state changes). Keep
+  test fixture numbers in the test; real balance values stay in exports or `.tres`.
 - One feature per commit. Commit messages explain what changed and why.
 - Don't push unless asked.
 - After finishing a feature, offer a short walkthrough of the diff: what each piece

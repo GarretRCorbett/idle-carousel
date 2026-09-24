@@ -36,5 +36,24 @@ if [ $code -ne 0 ] || echo "$res" | grep -qE "SCRIPT ERROR|Parse Error|ERROR:"; 
   fail=1
 fi
 
+echo "== Running tests"
+# GdUnit4 CLI runner. --ignoreHeadlessMode is needed to run headless (UI input tests
+# won't work headless). --remote-debug to a dead port keeps a parse error from
+# dropping into Godot's interactive debugger. Reports go under .godot/ (gitignored).
+res=$("$GODOT" --headless --path . -s -d --remote-debug tcp://127.0.0.1:0 \
+  res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode \
+  -a res://tests -rd res://.godot/test_reports 2>&1)
+code=$?
+clean=$(echo "$res" | sed $'s/\x1b\[[0-9;]*[A-Za-z]//g')
+if [ $code -ne 0 ]; then
+  # -A1: the expected/actual values are on the line after these labels.
+  echo "$clean" | grep -v "Remote Debugger\|remote port" \
+    | grep -E -A1 "FAILED|SCRIPT ERROR|Parse Error|Expecting|but was|Overall Summary" \
+    | grep -v "^--$"
+  fail=1
+else
+  echo "$clean" | grep -E "Overall Summary"
+fi
+
 if [ $fail -eq 0 ]; then echo "== PASS"; else echo "== FAIL"; fi
 exit $fail
