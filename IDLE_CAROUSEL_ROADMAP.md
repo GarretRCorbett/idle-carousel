@@ -36,7 +36,7 @@
 **Details:** `PHASE_2_GOALS.md`
 **Goal:** The smallest version that's actually a game: carousel spins, Horse earns Gold at the booth, Leaves latch and slow it down, Wolf clears them.
 
-- [ ] GdUnit4 test harness + headless test command in `tools/check.sh` (moved from Phase 1)
+- [x] GdUnit4 test harness + headless test command in `tools/check.sh` (moved from Phase 1)
 - [ ] Carousel spins with click-to-boost (spin speed in GameState)
 - [ ] One Horse on a slot; ticket booth detects passes and pays a fixed amount per pass (speed = more passes)
 - [ ] Gold counter and Gold/sec on the HUD via signals
@@ -133,4 +133,4 @@
 ## Next Concrete Step
 _Update this line at the end of every session._
 
-> Phase 2 Step 1: GdUnit4 test harness (see `PHASE_2_GOALS.md`).
+> Phase 2 Step 2: GameState foundation + Game scene skeleton (see `PHASE_2_GOALS.md`).

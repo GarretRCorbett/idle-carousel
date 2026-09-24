@@ -47,15 +47,17 @@ Placeholder UI text is fine while building. Mark it `# TODO(Garret): text`. Garr
 
 ---
 
-## Step 1 — Test harness (GdUnit4) (45–75 min, Claude Code)
+## ✅ Step 1 — Test harness (GdUnit4) (45–75 min, Claude Code)
 
 Moved here from Phase 1.
 
-- [ ] Review `Randroids-Dojo/Godot-Claude-Skills` and GdUnit4 before installing anything. Confirm they support Godot 4.7.
-- [ ] Install GdUnit4 into `addons/`; the check script already skips that folder.
-- [ ] One smoke test: `leaf.tres` loads and `gold_drop == 1.0`.
-- [ ] Add a headless test run to **both** `check.sh` and `check.bat`.
-- [ ] Extend `tools/check_scripts.gd` to also load every `.tscn`, so a broken scene fails the check. Claude Code will be writing scene files from now on.
+- [x] Review `Randroids-Dojo/Godot-Claude-Skills` and GdUnit4 before installing anything. Confirm they support Godot 4.7. *(GdUnit4 6.2.1 works on 4.7.2. The skills plugin was skipped: it's mostly CI and deploy tooling; revisit in Phase 7.)*
+- [x] Install GdUnit4 into `addons/`; the check script already skips that folder.
+- [x] One smoke test: `leaf.tres` loads and `gold_drop == 1.0`.
+- [x] Add a headless test run to **both** `check.sh` and `check.bat`.
+- [x] Extend `tools/check_scripts.gd` to also load every `.tscn`, so a broken scene fails the check. Claude Code will be writing scene files from now on.
+
+- [ ] **Garret:** enable the plugin in Godot: Project → Project Settings → Plugins → gdUnit4 → Enable. This adds the GdUnit test panel to the editor.
 
 **Done when:** the check runs the tests. Break the assertion on purpose and confirm the check fails, then restore it.
 

@@ -17,7 +17,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> Phase 2 Step 1: GdUnit4 test harness (see `PHASE_2_GOALS.md`).
+> Phase 2 Step 2: GameState foundation + Game scene skeleton (see `PHASE_2_GOALS.md`).
 
 ---
 
