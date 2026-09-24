@@ -117,6 +117,21 @@ func test_stall_timeout_removes_every_enemy_without_gold() -> void:
 	assert_float(GameState.get_gold()).is_equal(0.0)
 
 
+## Regression (Codex review): a Leaf one step from the rim when the safety net
+## fires must not latch on the same tick. That latch had no enemy left to kill.
+func test_leaf_cleared_by_stall_timeout_cannot_latch_the_same_tick() -> void:
+	var game := _game()
+	var enemy := _first_enemy(game)
+	var carousel := game.get_node("World/Carousel") as Carousel
+	var gap := (enemy.position - carousel.position).length() - carousel.radius - enemy.data.hitbox_radius
+	enemy.advance((gap - 0.5) / enemy.data.move_speed)  # half a pixel short of the rim
+	assert_int(GameState.get_latched_count()).is_equal(0)
+	GameState.stall_timed_out.emit()
+	game._physics_process(0.1)
+	assert_int(GameState.get_latched_count()).is_equal(0)
+	assert_float(GameState.get_total_drag()).is_equal(0.0)
+
+
 func test_bought_wolf_kills_a_latched_leaf() -> void:
 	var game := _game()
 	GameState.add_gold(1000.0)

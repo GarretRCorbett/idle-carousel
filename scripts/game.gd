@@ -70,7 +70,10 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	GameState.advance_simulation(delta)
 	for enemy: EnemyBase in _enemy_layer.get_children():
-		enemy.advance(delta)
+		# The stall safety net may have just removed it; a removed enemy must
+		# not reach the rim and latch (nothing would be left to kill).
+		if not enemy.is_queued_for_deletion():
+			enemy.advance(delta)
 	_carousel.advance_rotation(delta, GameState.get_effective_spin_speed_rad_s())
 	_carousel.set_boost_state(GameState.is_boost_maxed(), GameState.is_overdrive_active())
 
