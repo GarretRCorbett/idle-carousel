@@ -8,9 +8,12 @@ code stopped being his, so explain as you go.
 ## Read first
 - @IDLE_CAROUSEL_GDD.md — design source of truth
 - @IDLE_CAROUSEL_ROADMAP.md — phases, who does what, current next step
-- IDLE_CAROUSEL_NOTES.md — open questions and balance notes (read when relevant)
-- PHASE_2_GOALS.md — current phase detail
+- IDLE_CAROUSEL_NOTES.md — "Next Concrete Step", open questions, ideas (read when relevant)
+- `planning/phaseN/README.md` — **where the current phase stands**: decisions, step plans,
+  open questions, and which memos matter. Start a session here.
+- PHASE_2_GOALS.md — Phase 2 checklist (moves to completed_phases/ at sign-off)
 - completed_phases/ — finished phase docs (history; read only when asked)
+- README.md — map of every doc and what it's for
 
 ## Engine
 - Godot 4.7 stable. Godot 4 APIs only; never Godot 3 syntax (no `yield`, `onready var`,
@@ -25,12 +28,15 @@ code stopped being his, so explain as you go.
 scenes/                 .tscn files (drafted by Claude Code, tweaked by Garret in the editor)
 scripts/autoloads/      GameState, SaveManager, AudioManager, UpgradeManager
 scripts/                gameplay scripts, Resource classes (mount_data.gd, etc.)
-resources/mounts|enemies|upgrades/   .tres data files
-assets/sprites|audio/   human-made or licensed assets only
+resources/mounts|enemies|upgrades|config|audio/   .tres data files
+assets/sprites|audio|ui|fonts/   human-made or licensed assets only (PROVENANCE.md)
+localization/           strings.csv (every player-facing string, all languages)
+planning/phaseN/        step plans, Codex memos, per-phase README (status + decisions)
 tests/                  GdUnit4 test suites (test_*.gd, extend GdUnitTestSuite)
 addons/gdUnit4/         GdUnit4 6.2.1 test framework (third-party; don't edit)
 tools/                  check.sh / check.bat (+ check_scripts.gd they run);
-                        build_ui_theme.gd (rebuilds assets/ui/game_theme.tres)
+                        build_ui_theme.gd (rebuilds the UI theme and fonts);
+                        subset_fonts.py (rebuilds the CJK font subsets)
 ```
 
 ## Assets (Kenney, CC0)
@@ -47,7 +53,7 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
 1. GameState — single source of truth for runtime data; written only through its functions
 2. SaveManager — file I/O, offline progress. Save file: `user://save_data.json`
 3. AudioManager — persistent music/SFX players
-4. UpgradeManager — upgrade tree, can_afford/purchase/is_purchased, emits signals
+4. UpgradeManager — leveled upgrades from `upgrade_catalog.tres`, can_afford/purchase/levels, emits signals
 
 ## Architecture rules (from the GDD)
 - Enemies and projectiles live in world-space layers (EnemyLayer, ProjectileLayer),
@@ -72,12 +78,12 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
 - Plurals: when text depends on a count ("1 wave" / "3 waves"), use `tr_n(key, plural_key, n)`
   (Godot 4.6+ CSV supports plural rows) and never a hand-written `if n == 1`; many
   languages have more than two plural forms.
-- Fonts: bundled fonts only (`allow_system_fallback` is off). The UI font is
-  `assets/fonts/ui_font.tres` (Kenney Future Narrow + Rubik fallback for accents and
-  Cyrillic). Kenney has no ✓, Polish/Turkish letters, or Cyrillic. Plan when a language
-  is scheduled: swap the whole UI font per locale (Rubik for Polish/Turkish/Russian;
-  Noto Sans SC/JP/KR, 9-17 MB each, for CJK; download only then). See
-  `planning/phase2/codex_memo_k_fonts.md`.
+- Fonts: bundled fonts only (`allow_system_fallback` is off). `LocaleFonts` swaps the
+  whole UI font per language: Kenney Future Narrow + Rubik (Latin), Rubik (Russian),
+  Noto Sans SC/JP/KR subsets (CJK). The language list uses `language_list_font.tres`,
+  which chains all of them. Fonts are built by `tools/build_ui_theme.gd`; after CJK text
+  changes, re-run `python tools/subset_fonts.py` (a test fails if a glyph is missing).
+  Kenney has no ✓. Background: `planning/phase2/codex_memo_k_fonts.md`.
 - Pseudolocalization check: Project Settings → Advanced Settings on →
   Internationalization → Pseudolocalization → Use Pseudolocalization, run the game,
   look for plain English (missed) or cut-off text, then turn it off again.

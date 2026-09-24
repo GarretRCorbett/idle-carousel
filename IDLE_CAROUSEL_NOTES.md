@@ -1,5 +1,5 @@
 # 📓 Idle Carousel — Dev Notes & Thoughts
-### Version 1.3
+### Version 1.4
 
 > Running notes, to-dos, design thoughts, and things to revisit.
 > Keep the GDD clean — messy thinking goes here.
@@ -8,6 +8,7 @@
 ---
 
 ## Changelog
+- **v1.4** — Cleanup after Phase 2: removed items that are done (soft drag fixed the full-stop spiral, per-language fonts, booth/spacing issues) or now scheduled in the roadmap; kill gate moved to Phase 3; prestige is in v1.0; speedrun timer added.
 - **v1.3** — Added Next Concrete Step. Phase tracker moved to IDLE_CAROUSEL_ROADMAP.md.
 - **v1.2** — Removed Sparks. All upgrades Gold only. Updated to-dos and balance notes to reflect single currency. Removed Sparks drop rate from balance concerns.
 - **v1.0/1.1** — Initial notes
@@ -17,7 +18,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> Finish Phase 2 Step 11 (Garret's playtest notes, walkthrough, understanding check, sign-off). Then Phase 3: research is done in `planning/phase3/` (README has Claude's take on two Codex memos, a draft step list, and 24 questions). Garret answers the questions, then Claude writes `step1_plan.md`.
+> Finish Phase 2 Step 11 (Garret's playtest notes, walkthrough, understanding check, sign-off). Then Phase 3: research is done in `planning/phase3/` (README: decisions so far, Claude's take on three Codex memos, a draft step list, open questions by step). Next session: answer the Step 3 questions, then Claude writes `step1_plan.md`.
 
 ---
 
@@ -27,16 +28,10 @@ _Update at the end of every session._
 - [ ] Wolf does 1.5 per hit so a Grey Leaf takes 2 passes. Players may meet tougher Leaf tiers before buying the Wolf; revisit Wolf damage (and Wolf Fang) when tiers exist.
 
 ### Gameplay Gates
-- [ ] **Enemy kill count per tier** — need a minimum kills before boss spawns
-  - Prevents players from auto-waving straight to The Rusted King underpowered
-  - Clicker Heroes uses ~10 kills per stage as the model
-  - Simple implementation: `kills_this_tier: int` counter in GameState (already in v1.2 GameState structure)
-  - Boss spawn condition: `kills_this_tier >= required_kills[current_tier]`
-  - Can tune required kills per tier separately (early = 10, later = 20?)
-  - Add during tier system build (Phase 4) — it's a number + condition, not a system
+- [ ] **Enemy kill count per tier** — now **Phase 3** (Garret, 2026-09-24): any enemy kill in the tier counts; once met, a "Challenge boss" button starts a timed fight. Memo M's starting numbers: 60 / 80 / 100 / 120 / 140 / 160 kills (Clicker Heroes' ~10 per stage is too fast for our waves). Details in `planning/phase3/README.md`.
 
 ### Fail state direction (Garret, 2026-09-24)
-- [ ] **Core feel: idle first, pressure when pushing.** A well-upgraded tier should run safely forever; danger comes from pushing tiers and bosses. Codex's memo (`planning/phase2/codex_memo_g_fail_state.md`) argues carousel health duplicates drag and suggests a speed floor plus automatic overload recovery instead. Both rules are playable now via `fail_rule` in run_config.tres. After playtesting, Garret kept health (HEALTH_STALL) and chose memo H's Package A ("safe farm, risky push"): a stall costs the attempt and time, never Gold or unlocks; offline has no fights and booth-only income. Tuning going in with the Wolf is listed in `planning/phase2/README.md`. Update the GDD's DECISION PENDING fail state once it's confirmed in play.
+- [ ] **Core feel: idle first, pressure when pushing.** A well-upgraded tier should run safely forever; danger comes from pushing tiers and bosses. Codex's memo (`planning/phase2/codex_memo_g_fail_state.md`) argues carousel health duplicates drag and suggests a speed floor plus automatic overload recovery instead. Both rules are playable now via `fail_rule` in run_config.tres. After playtesting, Garret kept health (HEALTH_STALL) and chose memo H's Package A ("safe farm, risky push"): a stall costs the attempt and time, never Gold or unlocks; offline has no fights and booth-only income. Tuning going in with the Wolf is listed in `planning/phase2/README.md`. Update the GDD's DECISION PENDING fail state once it's confirmed in play. Boss rule for Phase 3 playtests (timed, failure costs time only, unlimited cranks): `planning/phase3/README.md`.
 
 ### Balance (tune during playtesting — don't set in stone early)
 - [ ] Gold per second at each tier
@@ -45,34 +40,32 @@ _Update at the end of every session._
 - [ ] Boss Gold bonus — should feel meaningfully larger than regular enemy drops
 - [ ] The Rusted King health pool — long but not frustrating
 - [ ] Offline Gold cap (currently 8 hours) — adjust based on playtesting
-- [ ] **Full-stop spiral (watch in Phase 2 playtest)** — drag has no floor (GDD v1.4), so enough latches stop the carousel. A stopped carousel earns no booth Gold and mounts don't sweep, so only clicks can recover. Check it feels tense, not hopeless. If hopeless, options: a drag floor, or stronger clicks while stopped.
 - [ ] **Offline rate source (decide in Phase 4)** — the HUD's Gold/sec is recent *actual* income (includes kills and clicks). Offline progress probably should use booth income only, shown separately. Decide when building offline progress.
 
 ### Localization (2026-09-24)
 - [ ] **Plurals:** use `tr_n()` + CSV plural rows the first time text depends on a count. Never `if n == 1`.
-- [ ] **Fonts per language:** when a language is scheduled, swap the whole UI font for it (Rubik for Polish/Turkish/Russian; Noto Sans SC/JP/KR for CJK, downloaded then). Today Rubik only fills missing letters, which looks mixed. Codex memo K.
 - [ ] **Review translation drafts** (added 2026-09-24, Claude drafts per the text policy): es, fr, de, pt_BR, ru, zh_CN, ja, ko columns in `localization/strings.csv`. Garret approves (or has native speakers check) before shipping.
 - [ ] **Adding a language:** add a CSV column, register its `.translation` in Project Settings (a test fails if you forget), and if it needs a new script, add a font in `LocaleFonts` + `tools/subset_fonts.py`. Re-run `python tools/subset_fonts.py` whenever CJK text changes (a test fails if a character is missing).
 
 ### Scope ideas to revisit later
-- [ ] **Roguelike element** (Garret, 2026-09-24): the itch came from wanting more mounts. Parked to protect v1.0 scope; revisit when planning prestige (a DECISION PENDING in the GDD).
+- [ ] **Roguelike element** (Garret, 2026-09-24): the itch came from wanting more mounts. Parked to protect v1.0 scope; revisit while designing prestige (Phase 5).
 
 ### Prestige is in v1.0 (Garret, 2026-09-24)
 - [ ] Design the details before Phase 5: tree nodes, prestige currency, which challenge modifiers. Direction is in the GDD (Prestige, v1.10); research in `planning/phase3/claude_memo_prestige.md`.
-- [ ] Revisit the parked **roguelike element** (below) as part of that design: challenge modifiers and new prestige unlocks may scratch the same itch.
+- [ ] Revisit the parked **roguelike element** (above) as part of that design: challenge modifiers and new prestige unlocks may scratch the same itch.
 
 ### Speedrun timer (Garret, 2026-09-24)
 - [ ] An optional run timer so players can speedrun, e.g. "fresh start to Tier 5." Garret wants to plan for it. Scope (v1.0 or later) not decided yet.
 - **Plan for it now (cheap):** GameState tracks active play time from the start of the run (memo M already suggests this for saves/stats) and records the time each boss is first beaten, so splits come for free. Keep wave randomness seeded per run so runs are comparable, and keep offline progress out of speedrun time (or disable it for a speedrun). Later: an in-game timer display with splits per tier, and maybe a "speedrun mode" toggle on New Game.
 
 ### QoL Ideas (post v1.0 unless easy)
-- [ ] **Auto-boost option** (Garret, 2026-09-24): some way to keep the boost up while fighting enemies (an auto-clicker upgrade or a hold-to-boost). Revisit once Leaves exist, since it changes how active play feels.
-- [ ] **Idle base speed feels slow** (Garret, 2026-09-24): fine for now because it encourages clicking; retune once enemies add pressure.
+- [ ] **Auto-boost option** (Garret, 2026-09-24): now in the roadmap (Phase 4, hold-to-boost) and a candidate prestige automation node.
+- [ ] **Idle base speed feels slow** (Garret, 2026-09-24): Phase 3 pricing pass tests 60°/s (Phase 3 README, question 22).
 - [ ] Tooltip on each mount showing current stats
-- [ ] Speed up button (2× game speed toggle)
-- [ ] Statistics screen (total gold, enemies killed, time played)
-- [ ] Settings panel (volume sliders, save/load buttons)
-- [ ] "Welcome back" notification showing offline Gold earned
+- [ ] Speed up button (2× game speed toggle) — careful: it conflicts with speedrun timing and the balance model
+- [ ] Statistics screen (total gold, enemies killed, time played) — roadmap Phase 6
+- [ ] Save/load buttons in Settings (volume sliders and language are done)
+- [ ] "Welcome back" notification showing offline Gold earned — part of Phase 4 offline progress
 
 ### Post v1.0 Only (don't touch until shipped)
 - [ ] Mount placement customization mode
@@ -117,9 +110,8 @@ a real retention hook.
 
 ## 🐛 Known Issues / Things To Revisit
 
-- Mount equidistant spacing — test edge cases (1 mount, 2, full 6)
-- Ticket Booth 2 trigger — Horse needs to detect BOTH booths, not just Booth 1.
-  Make trigger data-driven, not hardcoded to one position.
+- Mount spacing at 6 mounts — spacing works for any count (tested up to 3 in Phase 2);
+  re-test at 4–6 when slots 4–6 arrive in Phase 3.
 - Emergency Clear cooldown — 60 seconds might be too long for returning players.
   Consider: free but limited uses per session instead of cooldown.
 
