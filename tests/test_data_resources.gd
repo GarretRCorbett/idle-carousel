@@ -8,7 +8,7 @@ const ENEMY_DIR := "res://resources/enemies"
 func test_leaf_gold_drop() -> void:
 	var leaf := load(ENEMY_DIR.path_join("leaf.tres")) as EnemyData
 	assert_object(leaf).is_not_null()
-	assert_float(leaf.gold_drop).is_equal(1.0)
+	assert_float(leaf.gold_drop).is_equal(2.0)
 
 
 func test_all_mounts_load_as_mount_data() -> void:

@@ -3,7 +3,7 @@ extends Node2D
 ## Root of the play scene. Starts a fresh run and keeps the world centered.
 ## This is the single place that drives the simulation each tick, so the order
 ## is explicit: GameState first (boost decay, income window, later latch damage),
-## then the carousel moves at the resulting speed.
+## then enemies move, then the carousel moves at the resulting speed.
 
 @onready var _world: Node2D = $World
 @onready var _carousel: Carousel = $World/Carousel
@@ -11,6 +11,9 @@ extends Node2D
 @onready var _mount_slots: Node2D = $World/Carousel/MountSlots
 ## The booth placed in the scene; extra booths are copies of it.
 @onready var _first_booth: TicketBooth = $World/TicketBooth
+@onready var _enemy_layer: Node2D = $World/EnemyLayer
+@onready var _click_router: ClickRouter = $World/ClickRouter
+@onready var _wave_manager: WaveManager = $WaveManager
 
 var _booths: Array[TicketBooth] = []
 var _horses: Array[MountHorse] = []
@@ -22,6 +25,9 @@ func _ready() -> void:
 	_booth_radius = (_first_booth.position - _carousel.position).length()
 	_booths.append(_first_booth)
 	_hud.boost_requested.connect(GameState.add_click_boost)
+	_click_router.enemy_clicked.connect(_on_enemy_clicked)
+	_wave_manager.center = _carousel.position
+	_wave_manager.enemy_spawned.connect(_on_enemy_spawned)
 	GameState.booth_count_changed.connect(_layout_booths)
 	_setup_mounts()
 	GameState.reset_run()
@@ -32,6 +38,8 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	GameState.advance_simulation(delta)
+	for enemy: EnemyBase in _enemy_layer.get_children():
+		enemy.advance(delta)
 	_carousel.advance_rotation(delta, GameState.get_effective_spin_speed_rad_s())
 	_carousel.set_boost_state(GameState.is_boost_maxed(), GameState.is_overdrive_active())
 
@@ -71,6 +79,26 @@ func _layout_booths(count: int) -> void:
 func _on_booth_passed(horse: MountHorse, booth_index: int, pass_count: int) -> void:
 	GameState.add_gold(horse.data.base_gold_bonus * pass_count)
 	_booths[booth_index].pop()
+
+
+func _on_enemy_spawned(enemy: EnemyBase) -> void:
+	_enemy_layer.add_child(enemy)
+	enemy.setup(_carousel.position, _carousel.radius)
+	# Appearing is a jump, not travel: don't interpolate in from the origin.
+	enemy.reset_physics_interpolation()
+	enemy.died.connect(_on_enemy_died)
+	_click_router.register_enemy(enemy)
+
+
+func _on_enemy_clicked(enemy: EnemyBase) -> void:
+	enemy.take_damage(GameState.get_click_damage())
+
+
+## Runs once per enemy (EnemyBase guarantees it), so the kill pays once.
+func _on_enemy_died(enemy: EnemyBase) -> void:
+	GameState.add_gold(enemy.data.gold_drop)
+	_click_router.unregister_enemy(enemy)
+	enemy.queue_free()
 
 
 func _center_world() -> void:

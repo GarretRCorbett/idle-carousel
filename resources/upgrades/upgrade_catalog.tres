@@ -5,7 +5,8 @@
 [ext_resource type="Resource" path="res://resources/upgrades/carousel_speed.tres" id="3_speed"]
 [ext_resource type="Resource" path="res://resources/upgrades/boost_power.tres" id="4_boost"]
 [ext_resource type="Resource" path="res://resources/upgrades/ticket_booth.tres" id="5_booth"]
+[ext_resource type="Resource" path="res://resources/upgrades/click_damage.tres" id="6_click"]
 
 [resource]
 script = ExtResource("1_script")
-upgrades = Array[ExtResource("2_data")]([ExtResource("3_speed"), ExtResource("4_boost"), ExtResource("5_booth")])
+upgrades = Array[ExtResource("2_data")]([ExtResource("3_speed"), ExtResource("4_boost"), ExtResource("6_click"), ExtResource("5_booth")])

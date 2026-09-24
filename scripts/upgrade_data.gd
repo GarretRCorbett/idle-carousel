@@ -9,7 +9,7 @@ enum EffectType {
 	ADD_SPIN_BONUS,    ## effect_value added to the permanent spin bonus (0.2 = +20% of base speed)
 	ADD_BOOST_CAP,     ## effect_value added to the max boost (0.1 = +10%)
 	ADD_TICKET_BOOTH,  ## one more ticket booth per level
-	ADD_CLICK_DAMAGE,  ## Step 6
+	ADD_CLICK_DAMAGE,  ## effect_value added to click damage per level
 	ADD_MOUNT_SLOT,    ## Step 10
 	UNLOCK_MOUNT,      ## Step 10
 }

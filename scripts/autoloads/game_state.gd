@@ -36,6 +36,7 @@ var _speed_modifiers: Dictionary[StringName, float] = {}
 # Upgrade effects, summed over bought levels.
 var _spin_bonus: float = 0.0
 var _boost_cap_bonus: float = 0.0
+var _click_damage_bonus: float = 0.0
 var _booth_count: int = 1
 var _upgrade_levels: Dictionary[StringName, int] = {}
 var _purchase_in_progress: bool = false
@@ -70,6 +71,7 @@ func reset_run(config_override: RunConfig = null) -> void:
 	_speed_modifiers.clear()
 	_spin_bonus = 0.0
 	_boost_cap_bonus = 0.0
+	_click_damage_bonus = 0.0
 	_booth_count = config.starting_booths
 	_total_drag = 0.0
 	_upgrade_levels.clear()
@@ -307,6 +309,13 @@ func _emit_speed_if_changed(previous_speed: float) -> void:
 		spin_speed_changed.emit(speed)
 
 
+# --- Clicking ---------------------------------------------------------------------
+
+## Damage one enemy click deals: base plus every Click Damage level.
+func get_click_damage() -> float:
+	return _config.base_click_damage + _click_damage_bonus
+
+
 # --- Ticket booths ------------------------------------------------------------------
 
 func get_booth_count() -> int:
@@ -365,6 +374,8 @@ func try_purchase_upgrade(upgrade: UpgradeData) -> bool:
 			_boost_cap_bonus += upgrade.effect_value
 		UpgradeData.EffectType.ADD_TICKET_BOOTH:
 			_booth_count += 1
+		UpgradeData.EffectType.ADD_CLICK_DAMAGE:
+			_click_damage_bonus += upgrade.effect_value
 	# Everything is committed; now announce it.
 	gold_changed.emit(_gold, -cost)
 	_emit_speed_if_changed(previous_speed)
@@ -380,4 +391,5 @@ func _is_effect_supported(upgrade: UpgradeData) -> bool:
 		UpgradeData.EffectType.ADD_SPIN_BONUS,
 		UpgradeData.EffectType.ADD_BOOST_CAP,
 		UpgradeData.EffectType.ADD_TICKET_BOOTH,
+		UpgradeData.EffectType.ADD_CLICK_DAMAGE,
 	]

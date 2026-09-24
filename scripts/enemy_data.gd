@@ -14,6 +14,11 @@ extends Resource
 @export_range(0.0, 100.0, 0.1, "or_greater") var damage_per_second: float = 1.0
 ## Fraction of spin speed this enemy removes while latched (0.1 = 10% slower).
 @export_range(0.0, 1.0, 0.01) var latch_drag: float = 0.1
+## Physical size: where it latches on the rim, and (Step 9) what Wolf sweeps hit.
+@export_range(1.0, 256.0, 1.0, "or_greater", "suffix:px") var hitbox_radius: float = 12.0
+## How close to its center a click must land to hit it. Kept separate from the
+## hitbox so clicks can be generous without making mount hits generous too.
+@export_range(1.0, 256.0, 1.0, "or_greater", "suffix:px") var click_radius: float = 20.0
 
 @export_group("Economy")
 ## Gold awarded on kill.

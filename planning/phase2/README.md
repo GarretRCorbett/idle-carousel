@@ -2,7 +2,7 @@
 
 ## Status (2026-09-24)
 **Done:** Steps 1–5, 5b, and the pacing pass (GDD v1.6–1.7): GameState, spin, Boost button with Overdrive, Horse and booth payouts, leveled shop (Carousel Speed, Boost Power, Ticket Booth to 4), HUD labels. 78 tests pass.
-**Next:** Step 6, the first Leaf. Write its plan first (enemy scene draft, click routing via memo B §1, EnemyData click/hitbox radius, death pays Gold once, Click Damage upgrade as a leveled row), then get Garret's approval.
+**Next:** Steps 6–8 merged (Leaf, latch/stall, waves). Plan drafted in `step6_8_plan.md`, waiting on Garret's approval.
 
 ## Garret's latest playtest (after the pacing pass)
 - Fun; he bought all 4 booths. Still "a tad slow", but hold off retuning until enemies exist.
@@ -21,6 +21,7 @@
 |---|---|
 | `step2_plan.md` | Step 2 plan (done) |
 | `step3_plan.md` | Step 3 plan (done) |
+| `step6_8_plan.md` | Steps 6–8 plan: Leaf, latch/stall, waves (draft) |
 | `codex_memo_a_sweep_booth.md` | Codex: booth pass counting and Wolf sweep math (Steps 4 and 9) |
 | `codex_memo_b_input_layout.md` | Codex: click routing, HUD and scene trees, `.tscn` format (Steps 2, 3, 6) |
 | `codex_memo_c_state_speed.md` | Codex: GameState API, speed model, Gold/sec, stall, purchases (Steps 2–7, 10) |
@@ -44,6 +45,13 @@ The memos are **input, not decisions.** Each step plan lists what it takes from 
 - Zero health with nothing latched → refill right away.
 - Stopped Wolf deals no damage; placing a Wolf on an enemy gives no free hit.
 - Overlapping enemies: the one nearest the click takes it.
+
+## Decided 2026-09-24 (Garret)
+- Build Steps 6, 7, 8 together (three commits).
+- Click Damage: base 1, +0.5 per level, 10 levels, 25 Gold first level (×1.5).
+- Leaf: 2 Gold per kill, 1 damage/sec latched, health bar hidden until hit.
+- Waves: first at 10 s, then every 20 s; 3–5 Leaves clustered from one direction.
+- TEMPORARY stall refills to 25% once all latches clear.
 
 ## Design questions collected for later steps (originally asked; answers above)
 - **Step 4:** fixed booth payout confirmed. Gold/sec uses a 10-second window that starts at 0 and fills up (memo C §5).

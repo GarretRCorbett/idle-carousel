@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3]
+
+[ext_resource type="Script" path="res://scripts/upgrade_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"click_damage"
+display_name = "Click Damage"
+description = "+0.5 damage per click"
+effect_type = 3
+effect_value = 0.5
+cost_gold = 25.0
+cost_growth = 1.5
+max_level = 10

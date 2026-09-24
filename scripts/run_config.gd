@@ -38,6 +38,10 @@ extends Resource
 ## ...which multiplies speed by this until the boost is no longer maxed.
 @export_range(1.0, 10.0, 0.1) var overdrive_multiplier: float = 2.0
 
+@export_group("Clicking")
+## Damage per enemy click before Click Damage upgrades.
+@export_range(0.0, 1000.0, 0.1, "or_greater") var base_click_damage: float = 1.0
+
 @export_group("Ticket Booths")
 ## Booths at the start of a run (more are bought in the shop).
 @export_range(1, 8, 1) var starting_booths: int = 1
@@ -62,6 +66,8 @@ func get_problems() -> PackedStringArray:
 		problems.append("overdrive_multiplier must be >= 1")
 	if boost_presses_to_fill < 1:
 		problems.append("boost_presses_to_fill must be at least 1")
+	if not is_finite(base_click_damage) or base_click_damage < 0.0:
+		problems.append("base_click_damage must be a finite number >= 0")
 	if starting_booths < 1:
 		problems.append("starting_booths must be at least 1")
 	if not is_finite(click_boost_cap) or click_boost_cap < 0.0:

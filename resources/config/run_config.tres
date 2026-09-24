@@ -16,4 +16,5 @@ boost_maxed_on_fraction = 0.99
 boost_maxed_off_fraction = 0.8
 overdrive_hold_seconds = 5.0
 overdrive_multiplier = 2.0
+base_click_damage = 1.0
 starting_booths = 1

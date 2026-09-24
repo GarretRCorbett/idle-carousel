@@ -32,6 +32,10 @@ window/stretch/mode="canvas_items"
 
 enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
 
+[layer_names]
+
+2d_physics/layer_2="EnemyHurtbox"
+
 [physics]
 
 common/physics_jitter_fix=0.0

@@ -6,6 +6,9 @@
 [ext_resource type="Script" path="res://scripts/hud.gd" id="4_kiw3p"]
 [ext_resource type="PackedScene" path="res://scenes/mounts/Horse.tscn" id="6_horse"]
 [ext_resource type="Script" path="res://scripts/upgrade_shop.gd" id="7_shop"]
+[ext_resource type="Script" path="res://scripts/click_router.gd" id="8_router"]
+[ext_resource type="Script" path="res://scripts/wave_manager.gd" id="9_waves"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/Leaf.tscn" id="10_leaf"]
 
 [node name="Game" type="Node2D" unique_id=1479670653]
 script = ExtResource("1_78awf")
@@ -49,6 +52,13 @@ position = Vector2(0, -130)
 script = ExtResource("3_aug50")
 
 [node name="EnemyLayer" type="Node2D" parent="World" unique_id=1648558723]
+
+[node name="ClickRouter" type="Node2D" parent="World"]
+script = ExtResource("8_router")
+
+[node name="WaveManager" type="Node" parent="."]
+script = ExtResource("9_waves")
+enemy_scene = ExtResource("10_leaf")
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=691397781]
 script = ExtResource("4_kiw3p")
