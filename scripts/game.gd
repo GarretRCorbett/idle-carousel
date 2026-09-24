@@ -17,6 +17,7 @@ extends Node2D
 
 var _booths: Array[TicketBooth] = []
 var _horses: Array[MountHorse] = []
+var _wolves: Array[MountWolf] = []
 ## Booth distance from the carousel center, taken from the scene's booth.
 var _booth_radius: float = 0.0
 
@@ -29,7 +30,8 @@ func _ready() -> void:
 	_wave_manager.center = _carousel.position
 	_wave_manager.enemy_spawned.connect(_on_enemy_spawned)
 	_wave_manager.countdown_changed.connect(_hud.set_wave_countdown)
-	GameState.overloaded.connect(_on_overloaded)
+	GameState.stall_timed_out.connect(_on_stall_timed_out)
+	_hud.boost_held_changed.connect(GameState.set_boost_held)
 	GameState.booth_count_changed.connect(_layout_booths)
 	_setup_mounts()
 	GameState.reset_run()
@@ -55,6 +57,10 @@ func _setup_mounts() -> void:
 			if mount is MountHorse:
 				_horses.append(mount)
 				mount.booth_passed.connect(_on_booth_passed)
+			if mount is MountWolf:
+				_wolves.append(mount)
+				mount.set_enemy_layer(_enemy_layer)
+				mount.enemy_swept.connect(_on_enemy_swept)
 
 
 ## Makes exactly `count` booths, evenly spaced starting at the top. Moving a
@@ -98,6 +104,10 @@ func _on_enemy_clicked(enemy: EnemyBase) -> void:
 	enemy.take_damage(GameState.get_click_damage())
 
 
+func _on_enemy_swept(wolf: MountWolf, enemy: EnemyBase) -> void:
+	enemy.take_damage(wolf.data.base_damage)
+
+
 ## Latching: the enemy stays where it is in the world (the carousel turns
 ## underneath it) and GameState adds its drag and damage.
 func _on_enemy_reached_rim(enemy: EnemyBase) -> void:
@@ -110,17 +120,18 @@ func _on_enemy_died(enemy: EnemyBase) -> void:
 	_remove_enemy(enemy)
 
 
-## TEMPORARY (OVERLOAD_CLEAR rule): every enemy is removed, with no Gold,
-## and the next wave is a full interval away.
-func _on_overloaded() -> void:
+## TEMPORARY safety net: stalled too long, so every enemy is removed (no Gold).
+## Waves keep coming.
+func _on_stall_timed_out() -> void:
 	for enemy: EnemyBase in _enemy_layer.get_children():
 		_remove_enemy(enemy)
-	_wave_manager.restart_countdown()
 
 
 func _remove_enemy(enemy: EnemyBase) -> void:
 	GameState.unregister_latch(enemy.get_instance_id())
 	_click_router.unregister_enemy(enemy)
+	for wolf in _wolves:
+		wolf.forget_enemy(enemy)
 	enemy.queue_free()
 
 

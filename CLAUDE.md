@@ -43,7 +43,8 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
 - Enemies and projectiles live in world-space layers (EnemyLayer, ProjectileLayer),
   never as children of Carousel. Only mounts and slots rotate with the carousel.
   Use global_position / global_rotation when crossing that boundary.
-- Sweep detection uses physics space-state ray queries (avoids tunneling at high spin).
+- Sweep detection uses angle math (RotationMath.sweep_passes), not per-frame overlap, so nothing
+  tunnels at high spin. Garret chose this over physics ray queries in Step 9 (simpler, exact).
 - Signals for coupling between systems. HUD listens; gameplay never references HUD.
 - No magic numbers: every tunable is `@export` or lives in a `.tres` Resource.
 - Timer nodes for recurring events (waves, auto-save).

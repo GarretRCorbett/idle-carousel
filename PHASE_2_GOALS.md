@@ -156,7 +156,7 @@ From Garret's first playtest (see `planning/phase2/codex_memo_e_playtest_feedbac
 
 ---
 
-## Step 9 — Wolf sweep (90–150 min)
+## ✅ Step 9 — Wolf sweep (90–150 min)
 
 **Claude Code:** `mount_wolf.gd` with ray queries that cover the whole angle swept each physics tick (so it doesn't miss at high spin). It pierces and hits each enemy once per pass. A dev-only way to place a Wolf without buying it is included for testing.
 **Garret:** watch it at slow and fast spin; check the hit flash reads.

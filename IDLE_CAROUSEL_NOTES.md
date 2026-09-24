@@ -17,7 +17,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> Phase 2 Step 9 plan: Wolf sweep plus the health/stall tuning Garret chose (softer drag, regen, 0.5 DPS, latch grace, crank restart, 60 s safety net). Decisions in `planning/phase2/README.md`.
+> Garret playtests Step 9 (Wolf in slot 2, softer drag, regen, crank; checklist in `planning/phase2/step9_plan.md`). Then Step 10: a Mounts tab in the shop (buy Horse or Wolf, and mount slots). Plan first.
 
 ---
 

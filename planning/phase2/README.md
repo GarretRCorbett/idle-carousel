@@ -1,13 +1,10 @@
 # Phase 2 Planning: Start Here
 
 ## Status (2026-09-24)
-**Done:** Steps 1–8, 5b, and the pacing pass (GDD v1.6–1.7): GameState, spin, Boost button with Overdrive, Horse and booth payouts, leveled shop (Carousel Speed, Boost Power, Click Damage, Ticket Booth to 4), HUD labels, Leaves in timed waves, click damage, latch drag, and two TEMPORARY fail rules. 121 tests pass.
-**Next:** Step 9 plan: Wolf sweep plus the health/stall tuning decided below (softer drag, regen, 0.5 DPS, grace, crank, 60 s safety net).
+**Done:** Steps 1–9, 5b, and the pacing pass (GDD v1.6–1.8): GameState, spin, Boost button with Overdrive, Horse and booth payouts, leveled shop (Carousel Speed, Boost Power, Click Damage, Ticket Booth to 4), HUD labels, Leaves in timed waves, click damage, latch drag, the Wolf (hand-placed in slot 2), and the TEMPORARY health stall with crank and safety net. 140 tests pass.
+**Next:** Garret playtests Step 9 (checklist in `step9_plan.md`). Then Step 10: a **Mounts tab** in the shop (buy a Horse or a Wolf, and mount slots there), per Garret.
 
-**Fail rules (TEMPORARY, switch with `fail_rule` in `resources/config/run_config.tres`):**
-- `HEALTH_STALL` (default): latched Leaves drain health; at 0 the carousel stops until every latch is cleared, then refills to 25%.
-- `OVERLOAD_CLEAR` (Codex, memo G): no health drain; drag stops at 25% speed; 10 s stuck there removes all enemies (no Gold) and restarts the wave countdown.
-- Garret's direction: **idle first, pressure when pushing** (a mastered tier should run safely forever). The real fail state is still DECISION PENDING.
+**Fail rule (TEMPORARY):** the health stall only (OVERLOAD_CLEAR was removed in Step 9). Direction: **idle first, pressure when pushing** / Package A. The real fail state is still DECISION PENDING in the GDD.
 
 ## Garret's latest playtest (after the pacing pass)
 - Fun; he bought all 4 booths. Still "a tad slow", but hold off retuning until enemies exist.
@@ -26,7 +23,8 @@
 |---|---|
 | `step2_plan.md` | Step 2 plan (done) |
 | `step3_plan.md` | Step 3 plan (done) |
-| `step6_8_plan.md` | Steps 6–8 plan: Leaf, latch/stall, waves (draft) |
+| `step6_8_plan.md` | Steps 6–8 plan: Leaf, latch/stall, waves (done) |
+| `step9_plan.md` | Step 9 plan: Wolf + health/stall tuning (done) |
 | `codex_memo_a_sweep_booth.md` | Codex: booth pass counting and Wolf sweep math (Steps 4 and 9) |
 | `codex_memo_b_input_layout.md` | Codex: click routing, HUD and scene trees, `.tscn` format (Steps 2, 3, 6) |
 | `codex_memo_c_state_speed.md` | Codex: GameState API, speed model, Gold/sec, stall, purchases (Steps 2–7, 10) |

@@ -1,5 +1,5 @@
 # 🎠 Idle Carousel — Game Design Document
-### Version 1.7 | Working Title: Idle Carousel
+### Version 1.8 | Working Title: Idle Carousel
 > Solo dev project. Built in Godot 4.7 stable. Target: Steam release, anonymous, $4.99 (sale target ~$3.49–$3.75), with a free demo.
 > Personal motivation: daughters love carousels.
 > Influences: Cookie Clicker, Clicker Heroes, A Game About Feeding a Black Hole, Rusty's Retirement.
@@ -7,6 +7,7 @@
 ---
 
 ## Changelog
+- **v1.8** — After the first Leaf playtest (Garret): drag softens as it stacks (speed ÷ (1 + total drag)), so Boost always helps and only the stall stops the carousel. Latched enemies deal no damage for their first 2 s. Health regenerates slowly while nothing is latched. TEMPORARY stall additions: Boost cranks a stalled carousel back (restart at 15% health, enemies stay), and a 60 s safety net clears enemies. Fail-state direction: "safe farm, risky push" (a stall costs the attempt and time, never Gold or unlocks); still DECISION PENDING until confirmed in play.
 - **v1.7** — Overdrive: hold the Boost bar at max for 5 s for ×2 speed until it drops (gold glow). New Random Events section (Golden-Cookie-style pickups and surprise visitors), planned for Phase 4. Speed bonuses from any source multiply together.
 - **v1.6** — Shop pacing (Garret): upgrades have levels. Spin Speed 1–4 become **Carousel Speed** (+20% base speed per level, 10 levels); new **Boost Power** (+10% max boost per level, 10 levels); **Ticket Booth** starts at 500 Gold. Each level costs ×1.5 the last. Boost bar takes 10 presses to fill and fades over 4 s; the carousel glows while boost is maxed.
 - **v1.5** — First-playtest changes (Garret): a dedicated Spin button replaces click-anywhere boosting; clicks never pay Gold (Gold comes from Horse booth passes and enemy kills); extra Horses can be bought into empty slots (rising price) and sold back for a partial refund; up to 4 ticket booths, re-spaced evenly, rising price; only Horse passes pay at booths; HUD labels plus a Speed ×multiplier; shop keeps every row listed with a progress fill, bought rows stay marked.
@@ -142,13 +143,16 @@ The carousel has a health bar. Enemies that successfully latch deal damage over 
 
 > **⚠️ DECISION PENDING — Death / fail state.** Current draft: at zero health the carousel stops (Game Over), and the player respawns at the start of the current tier with a Gold penalty. Open questions: Is a hard Game Over right for an idle game, especially while offline? Should zero health instead stall the carousel until repaired? How big is the penalty? **Resolve before Phase 4.** Agents: do not implement or change this without Garret's decision.
 >
-> **Temporary Phase 2 behavior (Garret's call, placeholder only):** at zero health the carousel stalls (stops spinning) until the latched enemies are cleared, then health refills a little. Mark it TEMPORARY in code; it is replaced once the real fail state is decided.
+> **Temporary Phase 2 behavior (Garret's call, placeholder only):** at zero health the carousel stalls (stops spinning) until the latched enemies are cleared, then health refills a little (25%). While stalled, the Boost button cranks it back instead (restart at 15%, enemies stay). After 60 s stalled, enemies are cleared and it restarts at 25%. Mark it TEMPORARY in code; it is replaced once the real fail state is decided.
+>
+> **Direction so far (v1.8, Garret):** "safe farm, risky push." A stall costs the current attempt (a boss or pushed tier) and earning time, never saved Gold or unlocks. Offline: no fights, booth-only income, and you return to a healthy carousel. See `planning/phase2/codex_memo_h_health_offline.md`.
 
 ### Latch Mechanic
 When an enemy reaches the carousel edge it latches on. Visually the enemy grabs the rim and a drag effect slows the carousel. The slowdown is immediately visible and tactile.
 
 - **Latched enemies hold their world position.** The carousel grinds past underneath them, so every mount sweeps past each latched enemy once per rotation.
-- **Drag adds up with no floor.** Each enemy's `latch_drag` is a fraction of spin speed (Leaf 0.05 = 5% slower); three Leaves = 15% slower. Enough latched enemies can stop the carousel completely.
+- **Drag adds up and softens as it stacks (v1.8).** Speed is divided by (1 + total drag); Leaf `latch_drag` is 0.05, so four Leaves = about 17% slower and twenty = half speed. Drag alone never stops the carousel, so Boost always helps; only the zero-health stall stops it.
+- **Latch grace and regen (v1.8).** A new latch deals no damage for its first 2 seconds. Health slowly regenerates while nothing is latched.
 
 To remove a latched enemy: click it directly, OR wait for a combat mount to sweep past it, OR use Emergency Clear.
 
@@ -771,6 +775,6 @@ Save these for after v1.0 ships. Do not build during v1.0 development.
 
 ---
 
-*GDD Version 1.7*
+*GDD Version 1.8*
 *Created: June 2026*
 *Status: Design complete, ready for development*

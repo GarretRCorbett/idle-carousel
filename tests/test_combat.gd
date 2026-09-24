@@ -95,15 +95,28 @@ func test_leaf_at_the_rim_latches_and_its_kill_unlatches() -> void:
 	assert_float(GameState.get_total_drag()).is_equal(0.0)
 
 
-func test_overload_removes_every_enemy_without_gold() -> void:
-	_config.fail_rule = RunConfig.FailRule.OVERLOAD_CLEAR
+func test_stall_timeout_removes_every_enemy_without_gold() -> void:
 	var game := _game()
 	var layer := game.get_node("World/EnemyLayer")
 	(game.get_node("WaveManager") as WaveManager).spawn_wave()
 	for enemy: EnemyBase in layer.get_children():
 		enemy.advance(100.0)
-	GameState.overloaded.emit()
+	GameState.stall_timed_out.emit()
 	for enemy: EnemyBase in layer.get_children():
 		assert_bool(enemy.is_queued_for_deletion()).is_true()
 	assert_int(GameState.get_latched_count()).is_equal(0)
 	assert_float(GameState.get_gold()).is_equal(0.0)
+
+
+func test_wolf_in_slot_2_kills_a_latched_leaf_within_one_turn() -> void:
+	var game := _game()
+	var enemy := _first_enemy(game)
+	var gold_drop := enemy.data.gold_drop
+	enemy.advance(100.0)  # latch at the rim
+	var carousel := game.get_node("World/Carousel") as Carousel
+	for i in 120:
+		carousel.advance_rotation(1.0 / 60.0, TAU / 2.0)  # one turn in 2 s
+	assert_bool(enemy.can_receive_click()).is_false()
+	# The Horse also passes the booth during the turn, so Gold is at least the drop.
+	assert_float(GameState.get_gold()).is_greater_equal(gold_drop)
+	assert_int(GameState.get_latched_count()).is_equal(0)

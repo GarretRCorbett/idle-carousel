@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/mount_wolf.gd" id="1_script"]
+[ext_resource type="Resource" path="res://resources/mounts/wolf.tres" id="2_data"]
+
+[node name="Wolf" type="Node2D"]
+script = ExtResource("1_script")
+data = ExtResource("2_data")

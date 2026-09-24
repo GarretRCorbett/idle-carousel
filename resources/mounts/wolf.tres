@@ -6,9 +6,9 @@
 script = ExtResource("1_script")
 mount_name = "Wolf"
 is_stationary = false
-sweep_range = 60.0
+sweep_range = 65.0
 sweep_arc = 0.0
-base_damage = 1.0
+base_damage = 3.0
 base_gold_bonus = 0.0
 unlock_cost_gold = 50
 placeholder_color = Color(0.2902, 0.2902, 0.3137, 1)

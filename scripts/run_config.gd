@@ -4,17 +4,6 @@ extends Resource
 ## res://resources/config/run_config.tres; edit it in the Inspector.
 ## GameState reads it on reset_run(), so changes apply to the next run.
 
-## What happens when latched enemies overwhelm the carousel. BOTH ARE TEMPORARY
-## Phase 2 rules for playtesting; the real fail state is DECISION PENDING (GDD).
-enum FailRule {
-	## Latched enemies drain health. At 0 the carousel stops until every latch
-	## is cleared, then health refills to stall_recovery_fraction. Drag has no floor.
-	HEALTH_STALL,
-	## No health drain. Drag can't slow the carousel below overload_speed_floor.
-	## Stuck at that floor for overload_seconds: every enemy is removed (no Gold).
-	OVERLOAD_CLEAR,
-}
-
 @export_group("Economy")
 ## Gold the player has when a run starts.
 @export_range(0.0, 1000000.0, 1.0, "or_greater") var starting_gold: float = 0.0
@@ -27,14 +16,29 @@ enum FailRule {
 ## Carousel health when a run starts (and its maximum).
 @export_range(1.0, 100000.0, 1.0, "or_greater") var max_health: float = 100.0
 
-@export_group("Fail Rule (TEMPORARY)")
-@export var fail_rule: FailRule = FailRule.HEALTH_STALL
-## HEALTH_STALL: health after the stall ends (0.25 = 25% of max).
+@export_group("Latches and Health")
+## A new latch deals no damage for this long (its drag applies right away).
+@export_range(0.0, 30.0, 0.1, "suffix:s") var latch_grace_seconds: float = 2.0
+## Health regained per second once nothing has been latched for regen_delay_seconds.
+@export_range(0.0, 1000.0, 0.1, "or_greater") var regen_per_second: float = 2.0
+@export_range(0.0, 60.0, 0.1, "suffix:s") var regen_delay_seconds: float = 2.0
+
+@export_group("Stall (TEMPORARY)")
+## TEMPORARY Phase 2 rule; the real fail state is DECISION PENDING (GDD).
+## At 0 health the carousel stops. Clearing every latch restarts it at this
+## fraction of max health (0.25 = 25%).
 @export_range(0.01, 1.0, 0.01) var stall_recovery_fraction: float = 0.25
-## OVERLOAD_CLEAR: lowest speed drag allows, as a fraction of the drag-free speed.
-@export_range(0.0, 1.0, 0.01) var overload_speed_floor: float = 0.25
-## OVERLOAD_CLEAR: seconds stuck at the floor before enemies are cleared.
-@export_range(0.5, 120.0, 0.5, "suffix:s") var overload_seconds: float = 10.0
+## While stalled, Boost fills a crank meter instead: this many presses...
+@export_range(1, 100, 1) var crank_presses: int = 10
+## ...or holding Boost this long fills it.
+@export_range(0.1, 60.0, 0.1, "suffix:s") var crank_hold_seconds: float = 4.0
+## A full crank restarts at this fraction of max health, with enemies still latched...
+@export_range(0.01, 1.0, 0.01) var crank_restart_fraction: float = 0.15
+## ...and no latch damage for this long, so the first sweep can happen.
+@export_range(0.0, 30.0, 0.1, "suffix:s") var crank_protection_seconds: float = 3.0
+## Stalled this long: every enemy is removed (no Gold) and it restarts at
+## stall_recovery_fraction. A safety net for walking away.
+@export_range(1.0, 600.0, 1.0, "suffix:s") var stall_timeout_seconds: float = 60.0
 
 @export_group("Spin")
 ## Base spin before upgrades, boost, and drag. 45 = one turn every 8 seconds.
@@ -90,10 +94,18 @@ func get_problems() -> PackedStringArray:
 		problems.append("base_click_damage must be a finite number >= 0")
 	if not is_finite(stall_recovery_fraction) or stall_recovery_fraction <= 0.0 or stall_recovery_fraction > 1.0:
 		problems.append("stall_recovery_fraction must be in (0, 1]")
-	if not is_finite(overload_speed_floor) or overload_speed_floor < 0.0 or overload_speed_floor > 1.0:
-		problems.append("overload_speed_floor must be in [0, 1]")
-	if not is_finite(overload_seconds) or overload_seconds <= 0.0:
-		problems.append("overload_seconds must be a finite number > 0")
+	if not is_finite(crank_restart_fraction) or crank_restart_fraction <= 0.0 or crank_restart_fraction > 1.0:
+		problems.append("crank_restart_fraction must be in (0, 1]")
+	if not is_finite(crank_hold_seconds) or crank_hold_seconds <= 0.0:
+		problems.append("crank_hold_seconds must be a finite number > 0")
+	if crank_presses < 1:
+		problems.append("crank_presses must be at least 1")
+	for value: float in [latch_grace_seconds, regen_per_second, regen_delay_seconds, crank_protection_seconds]:
+		if not is_finite(value) or value < 0.0:
+			problems.append("latch grace, regen, and crank protection must be finite numbers >= 0")
+			break
+	if not is_finite(stall_timeout_seconds) or stall_timeout_seconds <= 0.0:
+		problems.append("stall_timeout_seconds must be a finite number > 0")
 	if starting_booths < 1:
 		problems.append("starting_booths must be at least 1")
 	if not is_finite(click_boost_cap) or click_boost_cap < 0.0:
