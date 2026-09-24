@@ -71,7 +71,7 @@ _Update at the end of every session._
 - [ ] "Welcome back" notification showing offline Gold earned
 
 ### Post v1.0 Only (don't touch until shipped)
-- [ ] Prestige/ascension system
+- [ ] Prestige/ascension system: **scope is DECISION PENDING** (GDD, resolve before Phase 5). Garret's idea (2026-09-24): prestige after beating every boss, start fresh with permanent boosts; maybe challenge modifiers like Slay the Spire / Wildfrost. Research: `planning/phase3/claude_memo_prestige.md`.
 - [ ] Mount placement customization mode
 - [ ] Spell/mana mount type
 - [ ] Multiple carousel skins

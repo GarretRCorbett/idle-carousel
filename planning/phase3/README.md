@@ -38,6 +38,7 @@ the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
 |---|---|
 | `claude_audit.md` | What Phase 2 code already supports, what's hard-wired to Horse/Wolf/Leaf, stale data, art inventory |
 | `codex_memo_l_mounts_enemies_bosses.md` | Codex: architecture for new mounts, statuses, tiers, bosses, multi-latch, removal safety, tests, 11-step plan, 18 questions |
+| `claude_memo_prestige.md` | Claude: prestige research (first-prestige timing, rewards players like, Slay the Spire / Wildfrost challenges), a possible shape, questions for before Phase 5 |
 | `codex_memo_n_boss_timers.md` | Codex: how Clicker Heroes, Tap Titans 2, Idle Slayer, and Melvor handle boss failure; player reactions; timed-boss proposal |
 | `codex_memo_m_tiers_pacing.md` | Codex: tier loop, kill gate, wave recipes, stat scaling, 3-hour economy model, prices, simulator, boss tuning, 12 questions |
 
