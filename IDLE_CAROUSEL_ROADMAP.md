@@ -145,4 +145,4 @@ A game gets only one Next Fest, so this is the one.
 ## Next Concrete Step
 _Update this line at the end of every session._
 
-> Garret playtests the wave controls (Step 10b), backgrounds, and Settings. Then Phase 2 Step 11: five-minute playtest + walkthrough, and plan Phase 3 (more mounts).
+> Phase 2 Step 11 wrap-up in a fresh session: follow `planning/phase2/step11_plan.md` (playtest, doc tidy, walkthrough, sign-off). Then plan Phase 3 (more mounts).
