@@ -47,6 +47,8 @@ func _ready() -> void:
 	GameState.crank_changed.connect(_on_crank_changed)
 	_boost_button_text = _boost_button.text
 	_boost_button.pressed.connect(boost_requested.emit)
+	_boost_button.pressed.connect(func() -> void:
+		AudioManager.play_sfx(&"crank" if GameState.is_stalled() else &"click"))
 	_boost_button.button_down.connect(func() -> void: _mouse_holding_boost = true)
 	_boost_button.button_up.connect(func() -> void: _mouse_holding_boost = false)
 	_boost_button.shortcut = _make_shortcut(boost_key)

@@ -142,6 +142,7 @@ func _layout_booths(count: int) -> void:
 func _on_booth_passed(horse: MountHorse, booth_index: int, pass_count: int) -> void:
 	GameState.add_gold(horse.data.base_gold_bonus * pass_count)
 	_booths[booth_index].pop()
+	AudioManager.play_sfx(&"coin")
 
 
 func _on_enemy_spawned(enemy: EnemyBase) -> void:
@@ -155,22 +156,26 @@ func _on_enemy_spawned(enemy: EnemyBase) -> void:
 
 
 func _on_enemy_clicked(enemy: EnemyBase) -> void:
+	AudioManager.play_sfx(&"hit")
 	enemy.take_damage(GameState.get_click_damage())
 
 
 func _on_enemy_swept(wolf: MountWolf, enemy: EnemyBase) -> void:
+	AudioManager.play_sfx(&"wolf_hit")
 	enemy.take_damage(wolf.data.base_damage + GameState.get_wolf_damage_bonus())
 
 
 ## Latching: the enemy stays where it is in the world (the carousel turns
 ## underneath it) and GameState adds its drag and damage.
 func _on_enemy_reached_rim(enemy: EnemyBase) -> void:
+	AudioManager.play_sfx(&"latch")
 	GameState.register_latch(enemy.get_instance_id(), enemy.data.latch_drag, enemy.data.damage_per_second)
 
 
 ## Runs once per enemy (EnemyBase guarantees it), so the kill pays once.
 func _on_enemy_died(enemy: EnemyBase) -> void:
 	GameState.add_gold(enemy.data.gold_drop)
+	AudioManager.play_sfx(&"pop")
 	_remove_enemy(enemy)
 
 

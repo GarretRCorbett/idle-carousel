@@ -1,0 +1,123 @@
+[gd_resource type="Resource" script_class="SoundBank" format=3]
+
+[ext_resource type="Script" path="res://scripts/sound_bank.gd" id="1_bank"]
+[ext_resource type="Script" path="res://scripts/sound_effect.gd" id="2_effect"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/coin_1.ogg" id="3_coin_1"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/coin_2.ogg" id="4_coin_2"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/coin_3.ogg" id="5_coin_3"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/hit_1.ogg" id="6_hit_1"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/hit_2.ogg" id="7_hit_2"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/hit_3.ogg" id="8_hit_3"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/wolf_hit_1.ogg" id="9_wolf_hit_1"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/wolf_hit_2.ogg" id="10_wolf_hit_2"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/pop_1.ogg" id="11_pop_1"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/pop_2.ogg" id="12_pop_2"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/latch_1.ogg" id="13_latch_1"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/latch_2.ogg" id="14_latch_2"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/purchase.ogg" id="15_purchase"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/sell.ogg" id="16_sell"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/stall.ogg" id="17_stall"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/restart.ogg" id="18_restart"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/click.ogg" id="19_click"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/tab.ogg" id="20_tab"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/crank.ogg" id="21_crank"]
+
+[sub_resource type="Resource" id="fx_coin"]
+script = ExtResource("2_effect")
+id = &"coin"
+streams = Array[AudioStream]([ExtResource("3_coin_1"), ExtResource("4_coin_2"), ExtResource("5_coin_3")])
+volume_db = -12.0
+random_pitch = 1.08
+max_polyphony = 4
+
+[sub_resource type="Resource" id="fx_hit"]
+script = ExtResource("2_effect")
+id = &"hit"
+streams = Array[AudioStream]([ExtResource("6_hit_1"), ExtResource("7_hit_2"), ExtResource("8_hit_3")])
+volume_db = -6.0
+random_pitch = 1.1
+max_polyphony = 6
+
+[sub_resource type="Resource" id="fx_wolf_hit"]
+script = ExtResource("2_effect")
+id = &"wolf_hit"
+streams = Array[AudioStream]([ExtResource("9_wolf_hit_1"), ExtResource("10_wolf_hit_2")])
+volume_db = -8.0
+random_pitch = 1.1
+max_polyphony = 6
+
+[sub_resource type="Resource" id="fx_pop"]
+script = ExtResource("2_effect")
+id = &"pop"
+streams = Array[AudioStream]([ExtResource("11_pop_1"), ExtResource("12_pop_2")])
+volume_db = -4.0
+random_pitch = 1.12
+max_polyphony = 6
+
+[sub_resource type="Resource" id="fx_latch"]
+script = ExtResource("2_effect")
+id = &"latch"
+streams = Array[AudioStream]([ExtResource("13_latch_1"), ExtResource("14_latch_2")])
+volume_db = -10.0
+random_pitch = 1.06
+max_polyphony = 4
+
+[sub_resource type="Resource" id="fx_purchase"]
+script = ExtResource("2_effect")
+id = &"purchase"
+streams = Array[AudioStream]([ExtResource("15_purchase")])
+volume_db = -4.0
+random_pitch = 1.0
+max_polyphony = 2
+
+[sub_resource type="Resource" id="fx_sell"]
+script = ExtResource("2_effect")
+id = &"sell"
+streams = Array[AudioStream]([ExtResource("16_sell")])
+volume_db = -6.0
+random_pitch = 1.0
+max_polyphony = 2
+
+[sub_resource type="Resource" id="fx_stall"]
+script = ExtResource("2_effect")
+id = &"stall"
+streams = Array[AudioStream]([ExtResource("17_stall")])
+volume_db = -2.0
+random_pitch = 1.0
+max_polyphony = 1
+
+[sub_resource type="Resource" id="fx_restart"]
+script = ExtResource("2_effect")
+id = &"restart"
+streams = Array[AudioStream]([ExtResource("18_restart")])
+volume_db = -4.0
+random_pitch = 1.0
+max_polyphony = 1
+
+[sub_resource type="Resource" id="fx_click"]
+script = ExtResource("2_effect")
+id = &"click"
+streams = Array[AudioStream]([ExtResource("19_click")])
+volume_db = -10.0
+random_pitch = 1.05
+max_polyphony = 4
+
+[sub_resource type="Resource" id="fx_tab"]
+script = ExtResource("2_effect")
+id = &"tab"
+streams = Array[AudioStream]([ExtResource("20_tab")])
+volume_db = -10.0
+random_pitch = 1.0
+max_polyphony = 2
+
+[sub_resource type="Resource" id="fx_crank"]
+script = ExtResource("2_effect")
+id = &"crank"
+streams = Array[AudioStream]([ExtResource("21_crank")])
+volume_db = -6.0
+random_pitch = 1.08
+max_polyphony = 4
+
+[resource]
+script = ExtResource("1_bank")
+effects = Array[ExtResource("2_effect")]([SubResource("fx_coin"), SubResource("fx_hit"), SubResource("fx_wolf_hit"), SubResource("fx_pop"), SubResource("fx_latch"), SubResource("fx_purchase"), SubResource("fx_sell"), SubResource("fx_stall"), SubResource("fx_restart"), SubResource("fx_click"), SubResource("fx_tab"), SubResource("fx_crank")])

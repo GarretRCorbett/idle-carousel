@@ -60,6 +60,7 @@ func _ready() -> void:
 		page.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		_tabs.add_child(page)
 		_pages.append(page)
+	_tabs.tab_changed.connect(func(_tab: int) -> void: AudioManager.play_sfx(&"tab"))
 	for upgrade in UpgradeManager.get_definitions():
 		_rows_by_id[upgrade.id] = _build_row(upgrade)
 	GameState.gold_changed.connect(func(_b: float, _d: float) -> void: _refresh())
