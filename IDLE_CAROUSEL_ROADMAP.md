@@ -134,4 +134,4 @@
 ## Next Concrete Step
 _Update this line at the end of every session._
 
-> Garret playtests Steps 6–8 (Leaves, latch, waves) and compares the two TEMPORARY fail rules (`fail_rule` in run_config.tres). Then Phase 2 Step 9: Wolf sweep. Status and checklist in `planning/phase2/README.md`.
+> Phase 2 Step 9 plan: Wolf sweep plus the health/stall tuning Garret chose (softer drag, regen, 0.5 DPS, latch grace, crank restart, 60 s safety net). Decisions in `planning/phase2/README.md`.

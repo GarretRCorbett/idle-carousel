@@ -1,13 +1,13 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://thxhxyveplg7"]
 
-[ext_resource type="Script" path="res://scripts/game.gd" id="1_78awf"]
-[ext_resource type="Script" path="res://scripts/carousel.gd" id="2_s0nni"]
-[ext_resource type="Script" path="res://scripts/ticket_booth.gd" id="3_aug50"]
-[ext_resource type="Script" path="res://scripts/hud.gd" id="4_kiw3p"]
+[ext_resource type="Script" uid="uid://bl4w5vavue4p2" path="res://scripts/game.gd" id="1_78awf"]
+[ext_resource type="Script" uid="uid://dyk7a0vpnrj6l" path="res://scripts/carousel.gd" id="2_s0nni"]
+[ext_resource type="Script" uid="uid://b2v1nojqh0nf6" path="res://scripts/ticket_booth.gd" id="3_aug50"]
+[ext_resource type="Script" uid="uid://brbbgddnie7l8" path="res://scripts/hud.gd" id="4_kiw3p"]
 [ext_resource type="PackedScene" path="res://scenes/mounts/Horse.tscn" id="6_horse"]
-[ext_resource type="Script" path="res://scripts/upgrade_shop.gd" id="7_shop"]
-[ext_resource type="Script" path="res://scripts/click_router.gd" id="8_router"]
-[ext_resource type="Script" path="res://scripts/wave_manager.gd" id="9_waves"]
+[ext_resource type="Script" uid="uid://cfxb46vgx1cvk" path="res://scripts/upgrade_shop.gd" id="7_shop"]
+[ext_resource type="Script" uid="uid://by8f47x4ifp4f" path="res://scripts/click_router.gd" id="8_router"]
+[ext_resource type="Script" uid="uid://blxerhlljqhwt" path="res://scripts/wave_manager.gd" id="9_waves"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/Leaf.tscn" id="10_leaf"]
 
 [node name="Game" type="Node2D" unique_id=1479670653]
@@ -25,7 +25,7 @@ script = ExtResource("2_s0nni")
 position = Vector2(0, -75)
 rotation = -1.5707964
 
-[node name="Horse" parent="World/Carousel/MountSlots/Slot1" instance=ExtResource("6_horse")]
+[node name="Horse" parent="World/Carousel/MountSlots/Slot1" unique_id=751584072 instance=ExtResource("6_horse")]
 
 [node name="Slot2" type="Marker2D" parent="World/Carousel/MountSlots" unique_id=617337684]
 position = Vector2(65, -38)
@@ -53,14 +53,14 @@ script = ExtResource("3_aug50")
 
 [node name="EnemyLayer" type="Node2D" parent="World" unique_id=1648558723]
 
-[node name="ClickRouter" type="Node2D" parent="World"]
+[node name="ClickRouter" type="Node2D" parent="World" unique_id=1011228509]
 script = ExtResource("8_router")
 
-[node name="WaveManager" type="Node" parent="."]
+[node name="WaveManager" type="Node" parent="." unique_id=1331348848]
 script = ExtResource("9_waves")
 enemy_scene = ExtResource("10_leaf")
 
-[node name="WaveTimer" type="Timer" parent="WaveManager"]
+[node name="WaveTimer" type="Timer" parent="WaveManager" unique_id=1939518674]
 process_callback = 0
 one_shot = true
 
@@ -72,6 +72,8 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 
 [node name="ScreenMargin" type="MarginContainer" parent="HUD/HUDRoot" unique_id=405876297]
@@ -122,7 +124,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SpeedLabel" type="Label" parent="HUD/HUDRoot/ScreenMargin/Columns/LeftColumn/StatsPanel/StatsMargin/StatsVBox"]
+[node name="SpeedLabel" type="Label" parent="HUD/HUDRoot/ScreenMargin/Columns/LeftColumn/StatsPanel/StatsMargin/StatsVBox" unique_id=171891629]
 unique_name_in_owner = true
 layout_mode = 2
 
@@ -137,26 +139,26 @@ show_percentage = false
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="PlayColumn" type="VBoxContainer" parent="HUD/HUDRoot/ScreenMargin/Columns"]
+[node name="PlayColumn" type="VBoxContainer" parent="HUD/HUDRoot/ScreenMargin/Columns" unique_id=1523604396]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[node name="PlaySpace" type="Control" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn"]
+[node name="PlaySpace" type="Control" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn" unique_id=994945073]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="BoostCenter" type="CenterContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn"]
+[node name="BoostCenter" type="CenterContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn" unique_id=2108022036]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="BoostColumn" type="VBoxContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter"]
+[node name="BoostColumn" type="VBoxContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter" unique_id=357125464]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 6
 
-[node name="BoostBar" type="ProgressBar" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter/BoostColumn"]
+[node name="BoostBar" type="ProgressBar" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter/BoostColumn" unique_id=810043088]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 10)
 layout_mode = 2
@@ -164,7 +166,7 @@ mouse_filter = 2
 max_value = 1.0
 show_percentage = false
 
-[node name="BoostButton" type="Button" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter/BoostColumn"]
+[node name="BoostButton" type="Button" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter/BoostColumn" unique_id=487136539]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 48)
 layout_mode = 2
@@ -172,9 +174,9 @@ focus_mode = 0
 text = "Boost"
 
 [node name="ShopPanel" type="PanelContainer" parent="HUD/HUDRoot/ScreenMargin/Columns" unique_id=1638066341]
-script = ExtResource("7_shop")
 custom_minimum_size = Vector2(260, 0)
 layout_mode = 2
+script = ExtResource("7_shop")
 
 [node name="ShopMargin" type="MarginContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/ShopPanel" unique_id=1800514674]
 layout_mode = 2

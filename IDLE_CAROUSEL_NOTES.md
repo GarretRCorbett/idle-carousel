@@ -17,7 +17,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> Garret playtests Steps 6–8 (Leaves, latch, waves) and compares the two TEMPORARY fail rules (`fail_rule` in run_config.tres). Then Phase 2 Step 9: Wolf sweep. Status and checklist in `planning/phase2/README.md`.
+> Phase 2 Step 9 plan: Wolf sweep plus the health/stall tuning Garret chose (softer drag, regen, 0.5 DPS, latch grace, crank restart, 60 s safety net). Decisions in `planning/phase2/README.md`.
 
 ---
 
@@ -33,7 +33,7 @@ _Update at the end of every session._
   - Add during tier system build (Phase 4) — it's a number + condition, not a system
 
 ### Fail state direction (Garret, 2026-09-24)
-- [ ] **Core feel: idle first, pressure when pushing.** A well-upgraded tier should run safely forever; danger comes from pushing tiers and bosses. Codex's memo (`planning/phase2/codex_memo_g_fail_state.md`) argues carousel health duplicates drag and suggests a speed floor plus automatic overload recovery instead. Both rules are playable now via `fail_rule` in run_config.tres. Decide the real rule (GDD DECISION PENDING) before Phase 4. If health goes, Unicorn's heal and the Carousel Health upgrade need rethinking.
+- [ ] **Core feel: idle first, pressure when pushing.** A well-upgraded tier should run safely forever; danger comes from pushing tiers and bosses. Codex's memo (`planning/phase2/codex_memo_g_fail_state.md`) argues carousel health duplicates drag and suggests a speed floor plus automatic overload recovery instead. Both rules are playable now via `fail_rule` in run_config.tres. After playtesting, Garret kept health (HEALTH_STALL) and chose memo H's Package A ("safe farm, risky push"): a stall costs the attempt and time, never Gold or unlocks; offline has no fights and booth-only income. Tuning going in with the Wolf is listed in `planning/phase2/README.md`. Update the GDD's DECISION PENDING fail state once it's confirmed in play.
 
 ### Balance (tune during playtesting — don't set in stone early)
 - [ ] Gold per second at each tier

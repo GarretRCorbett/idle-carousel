@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="UpgradeCatalog" format=3]
+[gd_resource type="Resource" script_class="UpgradeCatalog" format=3 uid="uid://dgmm6gkde0tm"]
 
-[ext_resource type="Script" path="res://scripts/upgrade_catalog.gd" id="1_script"]
-[ext_resource type="Script" path="res://scripts/upgrade_data.gd" id="2_data"]
+[ext_resource type="Script" uid="uid://chhav6j2ahemu" path="res://scripts/upgrade_catalog.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://en1jnt1ad7rt" path="res://scripts/upgrade_data.gd" id="2_data"]
 [ext_resource type="Resource" path="res://resources/upgrades/carousel_speed.tres" id="3_speed"]
 [ext_resource type="Resource" path="res://resources/upgrades/boost_power.tres" id="4_boost"]
 [ext_resource type="Resource" path="res://resources/upgrades/ticket_booth.tres" id="5_booth"]

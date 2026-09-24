@@ -1,24 +1,6 @@
-[gd_resource type="Resource" script_class="RunConfig" format=3]
+[gd_resource type="Resource" script_class="RunConfig" format=3 uid="uid://fxakdciecusk"]
 
-[ext_resource type="Script" path="res://scripts/run_config.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://cgadjto1kmt7x" path="res://scripts/run_config.gd" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
-starting_gold = 0.0
-income_bucket_seconds = 1.0
-income_bucket_count = 10
-max_health = 100.0
-fail_rule = 0
-stall_recovery_fraction = 0.25
-overload_speed_floor = 0.25
-overload_seconds = 10.0
-base_spin_speed_deg_s = 45.0
-click_boost_cap = 0.5
-boost_presses_to_fill = 10
-click_boost_decay_seconds = 4.0
-boost_maxed_on_fraction = 0.99
-boost_maxed_off_fraction = 0.8
-overdrive_hold_seconds = 5.0
-overdrive_multiplier = 2.0
-base_click_damage = 1.0
-starting_booths = 1
