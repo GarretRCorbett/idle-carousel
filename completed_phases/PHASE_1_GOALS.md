@@ -1,5 +1,5 @@
 # 🎯 Idle Carousel — Phase 1 Goals (Project Setup)
-### Version 1.4 — AI-First Build
+### Version 1.5 — AI-First Build · ✅ Complete (archived)
 
 > Finish the foundation and get Claude Code working on the repo with clear rules.
 > Steps 1–5 are already done. Steps 6–12 are one evening's work.
@@ -8,6 +8,7 @@
 ---
 
 ## Changelog
+- **v1.5** — Phase 1 wrapped up. Steps 6–10 and 12 done; Step 11 (GdUnit4) moved to the first task of Phase 2. `tools/check_scripts.gd` added so the check understands autoloads. Archived to `completed_phases/`.
 - **v1.4** — Switched to an AI-first build. Claude Code now writes scripts and data from Phase 1 onward (previously it started in Phase 3). Added the working model, guardrails, and CLAUDE.md rules. Fixed `.gitignore` (`.uid` and `.import` files must be committed in Godot 4.4+). Picked one save filename. Restructured the remaining steps around Claude Code.
 - **v1.3** — Rewrite with tooling (CLAUDE.md, check scripts, settings.json) and DECISION PENDING blocks.
 - **v1.2** — Removed Sparks; Gold only.
@@ -31,7 +32,7 @@
 
 ---
 
-## ✅ Steps 1–5 — Complete (not yet committed)
+## ✅ Steps 1–5 — Complete
 
 - [x] Step 1 — GitHub repo `idle-carousel` created
 - [x] Step 2 — Godot 4.7 project configured (1280×720, `canvas_items`, default `keep` aspect)
@@ -41,11 +42,11 @@
 - [x] `.gitignore` fixed (`.uid` and `.import` no longer excluded)
 - [x] Tooling added: `CLAUDE.md`, `AGENTS.md`, `tools/check.sh`, `tools/check.bat`, `.claude/settings.json`
 
-> Only the initial commit is on GitHub. Scripts, docs, and the settings above are local changes until Step 7.
+> All of this is now committed and pushed.
 
 ---
 
-## Step 6 — Open the project in Godot (10 min, by hand)
+## ✅ Step 6 — Open the project in Godot (10 min, by hand)
 
 Open Godot 4.7 → Import → `idle-carousel/project.godot`. This does three things:
 
@@ -60,11 +61,11 @@ Then set the check script's Godot path once. In Git Bash:
 export GODOT="/c/path/to/Godot_v4.7-stable_win64_console.exe"
 bash tools/check.sh
 ```
-Use the **_console** executable so output shows in the terminal. Expect `== PASS`. (Add the export line to `~/.bashrc` so it sticks.)
+Use the **_console** executable so output shows in the terminal. (The Steam build has no console exe; `godot.windows.opt.tools.64.exe` works fine. GODOT is set as a Windows user environment variable so Git Bash, PowerShell, and cmd all see it.) Expect `== PASS`. (Add the export line to `~/.bashrc` so it sticks.)
 
 ---
 
-## Step 7 — First real commit + connect (10 min, by hand)
+## ✅ Step 7 — First real commit + connect (10 min, by hand)
 
 ```bash
 git add -A
@@ -73,13 +74,13 @@ git commit -m "Phase 1 setup: autoloads, docs, agent rules, check scripts, gitig
 git push
 ```
 
-- [ ] Grant the Claude GitHub app access to `idle-carousel`: github.com/settings/installations → **Claude** → Configure → add the repo
-- [ ] Upload the current docs (this file, GDD, Notes, Roadmap) to the Claude project knowledge
-- [ ] Open the `idle-carousel` folder in VS Code and start Claude Code there (not the parent folder)
+- [x] Grant the Claude GitHub app access to `idle-carousel`: github.com/settings/installations → **Claude** → Configure → add the repo
+- [x] Upload the current docs (this file, GDD, Notes, Roadmap) to the Claude project knowledge
+- [x] Open the `idle-carousel` folder in VS Code and start Claude Code there (not the parent folder)
 
 ---
 
-## Step 8 — Review CLAUDE.md with Claude Code (10 min)
+## ✅ Step 8 — Review CLAUDE.md with Claude Code (10 min)
 
 `CLAUDE.md` holds the engine, architecture, and workflow rules. `AGENTS.md` points Codex (and any other agent) at the same rules.
 
@@ -102,7 +103,9 @@ This checks that Claude Code is picking up the file, and it gets you familiar wi
 
 ---
 
-## Step 9 — Resource scripts + data files (20 min, Claude Code)
+## ✅ Step 9 — Resource scripts + data files (20 min, Claude Code)
+
+> Built in a Claude cloud session (PR #1), reviewed by Codex. The cloud session had no Godot, so the `.uid` files were generated and committed locally afterward.
 
 Prompt:
 ```
@@ -136,47 +139,49 @@ the placeholder values below, with stats based on the GDD's relative description
 
 ---
 
-## Step 10 — Placeholder scenes (5 min, by hand in the editor)
+## ✅ Step 10 — Placeholder scenes (5 min, by hand in the editor)
 
-- [ ] `res://scenes/MainMenu.tscn` → root: Control
-- [ ] `res://scenes/Game.tscn` → root: Node2D
-- [ ] `res://scenes/GameOver.tscn` → root: CanvasLayer
-- [ ] Project Settings → Application → Run → Main Scene: `MainMenu.tscn`
-- [ ] Press F5. An empty window should open with no errors.
+- [x] `res://scenes/MainMenu.tscn` → root: Control
+- [x] `res://scenes/Game.tscn` → root: Node2D
+- [x] `res://scenes/GameOver.tscn` → root: CanvasLayer
+- [x] Project Settings → Application → Run → Main Scene: `MainMenu.tscn`
+- [x] Press F5. An empty window should open with no errors.
 
 ---
 
-## Step 11 — Test harness (20 min, Claude Code, optional tonight)
+## ➡️ Step 11 — Test harness — MOVED to the first task of Phase 2
 
-- [ ] Read through `Randroids-Dojo/Godot-Claude-Skills` before installing anything
-- [ ] Install via `/plugin marketplace add Randroids-Dojo/Godot-Claude-Skills`
-- [ ] Prompt: `Set up GdUnit4 with one test that loads leaf.tres and asserts its gold_drop is 1.0. Add a headless test command to tools/check.sh.`
+> Deferred: GdUnit4 is more useful once there's real logic to test (spin speed, Gold math).
+
+- ~~Read through `Randroids-Dojo/Godot-Claude-Skills` before installing anything~~ → Phase 2 Step 1
+- ~~Install via `/plugin marketplace add Randroids-Dojo/Godot-Claude-Skills`~~ → Phase 2 Step 1
+- ~~Prompt: `Set up GdUnit4 with one test that loads leaf.tres and asserts its gold_drop is 1.0. Add a headless test command to tools/check.sh.`~~ → Phase 2 Step 1
 
 Tests are what let you trust code you didn't write line by line. Worth doing before Phase 2 gets going.
 
 ---
 
-## Step 12 — Commit, walkthrough, and plan Phase 2 (15 min)
+## ✅ Step 12 — Commit, walkthrough, and plan Phase 2 (15 min)
 
-- [ ] Ask Claude Code: `Walk me through everything we changed tonight.`
-- [ ] Confirm on GitHub: no `.godot/` folder or exports committed, and `.uid` files are present
-- [ ] **Plan only, don't build:** In plan mode, ask for a Phase 2 plan (see `IDLE_CAROUSEL_ROADMAP.md`). Review it, adjust it, and save it for next session.
-- [ ] Write the next concrete step at the top of `IDLE_CAROUSEL_NOTES.md`
+- [x] Ask Claude Code: `Walk me through everything we changed tonight.`
+- [x] Confirm on GitHub: no `.godot/` folder or exports committed, and `.uid` files are present
+- [x] **Plan only, don't build:** → becomes `PHASE_2_GOALS.md` (Codex + Claude Code draft) In plan mode, ask for a Phase 2 plan (see `IDLE_CAROUSEL_ROADMAP.md`). Review it, adjust it, and save it for next session.
+- [x] Write the next concrete step at the top of `IDLE_CAROUSEL_NOTES.md`
 
 ---
 
 ## ✅ Phase 1 Complete When:
 
-- [ ] Autoload order fixed; `.uid`/`.import` files committed
-- [ ] Claude GitHub app has access to the repo
-- [ ] Project knowledge updated to current docs
-- [ ] CLAUDE.md reviewed with Claude Code
-- [ ] MountData + EnemyData scripts created
-- [ ] 6 mount and 3 enemy `.tres` files created
-- [ ] 3 placeholder scenes created, main scene set, F5 runs clean
-- [ ] `tools/check.sh` passes with GODOT set
-- [ ] Walkthrough done: you can explain every file in the repo
-- [ ] (Optional) GdUnit4 running with one passing test
-- [ ] Phase 2 plan drafted and reviewed
+- [x] Autoload order fixed; `.uid`/`.import` files committed
+- [x] Claude GitHub app has access to the repo
+- [x] Project knowledge updated to current docs
+- [x] CLAUDE.md reviewed with Claude Code (updated for the scene workflow and Codex brainstorms)
+- [x] MountData + EnemyData scripts created
+- [x] 6 mount and 3 enemy `.tres` files created
+- [x] 3 placeholder scenes created, main scene set, F5 runs clean
+- [x] `tools/check.sh` passes with GODOT set
+- [x] Walkthrough done: you can explain every file in the repo
+- ~~(Optional) GdUnit4 running with one passing test~~ → moved to Phase 2
+- [x] Phase 2 plan drafted and reviewed (`PHASE_2_GOALS.md`, approved)
 
 **Then move to Phase 2: Core Loop.**

@@ -17,7 +17,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> Phase 1, Step 6: open the project in Godot, fix autoload order, confirm `.uid` files, then make the first real commit.
+> Phase 2 Step 1: GdUnit4 test harness (see `PHASE_2_GOALS.md`).
 
 ---
 
@@ -39,6 +39,8 @@ _Update at the end of every session._
 - [ ] Boss Gold bonus — should feel meaningfully larger than regular enemy drops
 - [ ] The Rusted King health pool — long but not frustrating
 - [ ] Offline Gold cap (currently 8 hours) — adjust based on playtesting
+- [ ] **Full-stop spiral (watch in Phase 2 playtest)** — drag has no floor (GDD v1.4), so enough latches stop the carousel. A stopped carousel earns no booth Gold and mounts don't sweep, so only clicks can recover. Check it feels tense, not hopeless. If hopeless, options: a drag floor, or stronger clicks while stopped.
+- [ ] **Offline rate source (decide in Phase 4)** — the HUD's Gold/sec is recent *actual* income (includes kills and clicks). Offline progress probably should use booth income only, shown separately. Decide when building offline progress.
 
 ### QoL Ideas (post v1.0 unless easy)
 - [ ] Tooltip on each mount showing current stats

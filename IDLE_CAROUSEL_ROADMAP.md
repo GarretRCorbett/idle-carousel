@@ -12,40 +12,42 @@
 
 | Claude Code does | Garret does |
 |---|---|
-| GDScript, Resource scripts, `.tres` data | Scene layout in the editor |
-| Tests and tooling | Reviewing every plan before code |
+| GDScript, Resource scripts, `.tres` data | Reviewing and tweaking scene layouts in the editor |
+| Tests, tooling, and first-draft scene layouts (`.tscn`) | Reviewing every plan before code |
 | Save/load, math, balance sheets | Playtesting and feel |
 | Refactors and bug hunts | Design decisions (all DECISION PENDING items) |
 | Explaining diffs | Art, audio, and player-facing text |
 
 ---
 
-## Phase 1 — Project Setup
+## Phase 1 — Project Setup ✅
 **Goal:** Foundation plus Claude Code working on the repo with clear rules.
-**Details:** `PHASE_1_GOALS.md`
+**Details:** `completed_phases/PHASE_1_GOALS.md`
 - [x] Repo, project settings, folders, autoloads, tooling
 - [x] `.gitignore` fix, CLAUDE.md, AGENTS.md, check scripts
-- [ ] Autoload order, first real commit, Resource scripts + `.tres`, placeholder scenes
-- [ ] Optional: GdUnit4 harness
+- [x] Autoload order, first real commit, Resource scripts + `.tres`, placeholder scenes
+- [x] ~~Optional: GdUnit4 harness~~ → moved to Phase 2
 
 **Done when:** F5 runs clean, check script passes, Phase 2 plan reviewed.
 
 ---
 
 ## Phase 2 — Core Loop
+**Details:** `PHASE_2_GOALS.md`
 **Goal:** The smallest version that's actually a game: carousel spins, Horse earns Gold at the booth, Leaves latch and slow it down, Wolf clears them.
 
+- [ ] GdUnit4 test harness + headless test command in `tools/check.sh` (moved from Phase 1)
 - [ ] Carousel spins with click-to-boost (spin speed in GameState)
-- [ ] One Horse on a slot; ticket booth detects passes and pays Gold scaled by speed
+- [ ] One Horse on a slot; ticket booth detects passes and pays a fixed amount per pass (speed = more passes)
 - [ ] Gold counter and Gold/sec on the HUD via signals
 - [ ] Leaves spawn on a timer in world space, approach, and latch
 - [ ] Latch drag slows spin; latched enemies deal damage to carousel health
-- [ ] Click a latched Leaf to kill it; Gold drop on kill
+- [ ] Click a Leaf (approaching or latched) to damage it; Gold drop on kill; zero health = temporary stall
 - [ ] Wolf sweep kills Leaves (ray-query sweep detection)
-- [ ] One buyable upgrade (Spin Speed 1) to prove the purchase flow
+- [ ] Five purchases to prove the shop flow: Spin Speed 1, Spin Speed 2, Click Damage 1, Mount Slot 2, Wolf
 
-**Claude Code:** scripts for carousel, booth, mount base, Horse, Wolf, enemy base, Leaf, wave timer, HUD. Lists the nodes to add for each.
-**Garret:** builds Game.tscn, Carousel, Mount, Enemy, and HUD scenes in the editor from those lists; tunes feel in the Inspector.
+**Claude Code:** scripts for carousel, booth, mount base, Horse, Wolf, enemy base, Leaf, wave timer, HUD, plus first-draft scenes (Game, Carousel, Mount, Enemy, HUD) with proper containers and anchors.
+**Garret:** reviews and approves each scene in the editor, tweaks layout and look, tunes feel in the Inspector.
 **Understanding check:** Why do enemies live outside the Carousel node? How does the Wolf know it hit something?
 **Done when:** You can play for 5 minutes and want to keep going.
 
@@ -131,4 +133,4 @@
 ## Next Concrete Step
 _Update this line at the end of every session._
 
-> Phase 1, Step 6: open the project in Godot, fix autoload order, confirm `.uid` files, then commit.
+> Phase 2 Step 1: GdUnit4 test harness (see `PHASE_2_GOALS.md`).

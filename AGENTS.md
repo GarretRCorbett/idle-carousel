@@ -5,7 +5,7 @@ They apply to any coding agent (Codex included), not just Claude Code.
 
 Key points, in case you read nothing else:
 - Godot 4.7 stable, Godot 4 APIs only, static typing.
-- Don't create or edit `.tscn` scene files unless explicitly asked.
+- `.tscn` scene files: only as part of an approved plan, following CLAUDE.md's scene rules.
 - Never resolve items marked DECISION PENDING in IDLE_CAROUSEL_GDD.md.
 - No magic numbers: tunables go in `@export` vars or `.tres` Resources.
 - Run tools/check.sh (Windows: tools\check.bat) after every change.

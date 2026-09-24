@@ -9,7 +9,8 @@ code stopped being his, so explain as you go.
 - @IDLE_CAROUSEL_GDD.md — design source of truth
 - @IDLE_CAROUSEL_ROADMAP.md — phases, who does what, current next step
 - IDLE_CAROUSEL_NOTES.md — open questions and balance notes (read when relevant)
-- PHASE_1_GOALS.md — Phase 1 detail (read only while Phase 1 is open)
+- PHASE_2_GOALS.md — current phase detail
+- completed_phases/ — finished phase docs (history; read only when asked)
 
 ## Engine
 - Godot 4.7 stable. Godot 4 APIs only; never Godot 3 syntax (no `yield`, `onready var`,
@@ -21,7 +22,7 @@ code stopped being his, so explain as you go.
 
 ## Project layout
 ```
-scenes/                 .tscn files (built by hand in the editor)
+scenes/                 .tscn files (drafted by Claude Code, tweaked by Garret in the editor)
 scripts/autoloads/      GameState, SaveManager, AudioManager, UpgradeManager
 scripts/                gameplay scripts, Resource classes (mount_data.gd, etc.)
 resources/mounts|enemies|upgrades/   .tres data files
@@ -50,9 +51,18 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
 
 ## Workflow
 - Plan mode first for any feature bigger than a small tweak. Wait for approval.
-- Don't create or edit `.tscn` files unless Garret explicitly asks. When a script needs
-  scene nodes, end with a "Manual steps in Godot" list: node type, name, parent,
-  and properties to set.
+- Scenes: Claude Code drafts `.tscn` layouts as part of an approved plan; Garret
+  reviews them in the editor and tweaks. Rules for scene files:
+  - Show the planned node tree (types, names, parents, key properties) in the plan
+    before writing the file.
+  - UI uses containers (MarginContainer, VBox/HBox, anchors/presets, size flags)
+    instead of hand-placed positions, so Garret's tweaks don't break the layout.
+  - Re-read a `.tscn` right before editing it; Garret may have changed it in the
+    editor. Keep his changes. Ask him to save and close the scene in Godot first.
+  - Omit `uid=` and `unique_id=` on new files and nodes; Godot assigns them on save.
+  - After writing, run the check and ask Garret to open the scene and save it once.
+  - When a change is small or feel-related (positions, colors, tuning), give Garret
+    the steps instead of editing the file.
 - Run `tools/check.sh` (Windows: `tools\check.bat`) after every change. Don't report
   done until it passes.
 - One feature per commit. Commit messages explain what changed and why.
@@ -71,6 +81,15 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
 The /codex plugin's review is broken on Windows right now (its read-only sandbox
 blocks all commands). Call the Codex CLI directly instead, and only when Garret
 asks for a Codex review or a second opinion.
+
+**Ideas and planning (no code access needed):** put the relevant docs straight into
+the prompt so Codex never has to run a command, and keep it read-only:
+```
+codex exec -s read-only -o <scratch>/answer.md - < <scratch>/prompt.md
+```
+Summarize the answer for Garret, then say what you agree and disagree with.
+
+**Code reviews:** Codex needs to run commands, so it needs full access.
 
 Full access is the only sandbox mode that works on Windows, so check afterward that
 Codex changed nothing. Before running it, save a snapshot with
