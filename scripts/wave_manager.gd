@@ -27,9 +27,9 @@ signal countdown_changed(seconds_left: int)
 ## Each enemy starts up to this much further out, so they don't arrive stacked.
 @export_range(0.0, 500.0, 1.0, "suffix:px") var cluster_depth_px: float = 60.0
 
-@export_group("Debug")
-## Debug builds only: this key sends a wave right away.
-@export var debug_wave_key: Key = KEY_N
+@export_group("Controls")
+## This key sends the next wave right away (Garret wants it kept as a real control).
+@export var send_wave_key: Key = KEY_N
 
 ## Where the carousel center is, in World space. Set by Game.
 var center: Vector2 = Vector2.ZERO
@@ -78,10 +78,8 @@ func _emit_countdown_if_changed() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not OS.is_debug_build():
-		return
 	var key := event as InputEventKey
-	if key != null and key.pressed and not key.echo and key.keycode == debug_wave_key:
+	if key != null and key.pressed and not key.echo and key.keycode == send_wave_key:
 		spawn_wave()
 		get_viewport().set_input_as_handled()
 

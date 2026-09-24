@@ -65,6 +65,13 @@ func _initialize() -> void:
 	theme.set_color("font_unselected_color", "TabContainer", MUTED)
 	theme.set_color("font_hovered_color", "TabContainer", CREAM)
 
+	var track := _flat(TRACK, 4)
+	track.content_margin_top = 4
+	track.content_margin_bottom = 4
+	theme.set_stylebox("slider", "HSlider", track)
+	theme.set_stylebox("grabber_area", "HSlider", _flat(GOLD, 4))
+	theme.set_stylebox("grabber_area_highlight", "HSlider", _flat(GOLD, 4))
+
 	var err := ResourceSaver.save(theme, OUT)
 	print("Saved %s (%s)" % [OUT, error_string(err)])
 	quit(0 if err == OK else 1)

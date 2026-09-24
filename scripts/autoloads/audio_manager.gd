@@ -12,6 +12,8 @@ var _was_stalled: bool = false
 
 
 func _ready() -> void:
+	# Keep playing (menu clicks) while the game is paused.
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	for effect in BANK.effects:
 		if effect == null or effect.streams.is_empty():
 			continue
@@ -24,6 +26,7 @@ func _ready() -> void:
 		player.stream = randomizer
 		player.volume_db = effect.volume_db
 		player.max_polyphony = effect.max_polyphony
+		player.bus = &"SFX"
 		add_child(player)
 		_players[effect.id] = player
 	# UpgradeManager loads after this autoload; connect once everything exists.

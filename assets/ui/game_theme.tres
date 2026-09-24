@@ -100,13 +100,36 @@ texture_margin_right = 14.0
 texture_margin_bottom = 14.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_llapk"]
-bg_color = Color(0.48235294, 0.7019608, 0.3529412, 1)
+bg_color = Color(0.9490196, 0.7882353, 0.29803923, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f28d0"]
+bg_color = Color(0.9490196, 0.7882353, 0.29803923, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rpbut"]
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.11764706, 0.09803922, 0.08627451, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tkpob"]
+bg_color = Color(0.48235294, 0.7019608, 0.3529412, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c5wui"]
 bg_color = Color(0.16862746, 0.14117648, 0.1254902, 0.9411765)
 border_width_left = 2
 border_width_top = 2
@@ -118,24 +141,24 @@ corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rpbut"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nm723"]
 bg_color = Color(0.11764706, 0.09803922, 0.08627451, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tkpob"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bc16j"]
 bg_color = Color(0.9490196, 0.7882353, 0.29803923, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c5wui"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lkym7"]
 content_margin_top = 10.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nm723"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jltdk"]
 content_margin_left = 10.0
 content_margin_top = 4.0
 content_margin_right = 10.0
@@ -144,7 +167,7 @@ bg_color = Color(0.2901961, 0.24705882, 0.21960784, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bc16j"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nacxb"]
 content_margin_left = 10.0
 content_margin_top = 4.0
 content_margin_right = 10.0
@@ -153,7 +176,7 @@ bg_color = Color(0.95686275, 0.92156863, 0.8666667, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lkym7"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hy415"]
 content_margin_left = 10.0
 content_margin_top = 4.0
 content_margin_right = 10.0
@@ -188,16 +211,19 @@ CrankButton/styles/focus = SubResource("StyleBoxEmpty_1diyo")
 CrankButton/styles/hover = SubResource("StyleBoxTexture_ucdtf")
 CrankButton/styles/normal = SubResource("StyleBoxTexture_78m7g")
 CrankButton/styles/pressed = SubResource("StyleBoxTexture_p35wa")
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_llapk")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_f28d0")
+HSlider/styles/slider = SubResource("StyleBoxFlat_rpbut")
 HealthBar/base_type = &"ProgressBar"
-HealthBar/styles/fill = SubResource("StyleBoxFlat_llapk")
+HealthBar/styles/fill = SubResource("StyleBoxFlat_tkpob")
 Label/colors/font_color = Color(0.95686275, 0.92156863, 0.8666667, 1)
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_f28d0")
-ProgressBar/styles/background = SubResource("StyleBoxFlat_rpbut")
-ProgressBar/styles/fill = SubResource("StyleBoxFlat_tkpob")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_c5wui")
+ProgressBar/styles/background = SubResource("StyleBoxFlat_nm723")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_bc16j")
 TabContainer/colors/font_hovered_color = Color(0.95686275, 0.92156863, 0.8666667, 1)
 TabContainer/colors/font_selected_color = Color(0.23921569, 0.20784314, 0.1882353, 1)
 TabContainer/colors/font_unselected_color = Color(0.6039216, 0.5568628, 0.5176471, 1)
-TabContainer/styles/panel = SubResource("StyleBoxEmpty_c5wui")
-TabContainer/styles/tab_hovered = SubResource("StyleBoxFlat_nm723")
-TabContainer/styles/tab_selected = SubResource("StyleBoxFlat_bc16j")
-TabContainer/styles/tab_unselected = SubResource("StyleBoxFlat_lkym7")
+TabContainer/styles/panel = SubResource("StyleBoxEmpty_lkym7")
+TabContainer/styles/tab_hovered = SubResource("StyleBoxFlat_jltdk")
+TabContainer/styles/tab_selected = SubResource("StyleBoxFlat_nacxb")
+TabContainer/styles/tab_unselected = SubResource("StyleBoxFlat_hy415")

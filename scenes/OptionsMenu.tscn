@@ -1,0 +1,173 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/options_menu.gd" id="1_script"]
+[ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="2_theme"]
+
+[node name="OptionsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 20
+
+[node name="Column" type="VBoxContainer" parent="Center/Panel/Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 18
+
+[node name="OptionsTabs" type="TabContainer" parent="Center/Panel/Margin/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+current_tab = 0
+
+[node name="Settings" type="GridContainer" parent="Center/Panel/Margin/Column/OptionsTabs"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 16
+columns = 2
+metadata/_tab_index = 0
+
+[node name="MasterLabel" type="Label" parent="Center/Panel/Margin/Column/OptionsTabs/Settings"]
+layout_mode = 2
+text = "Master volume"
+
+[node name="MasterSlider" type="HSlider" parent="Center/Panel/Margin/Column/OptionsTabs/Settings"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+
+[node name="SfxLabel" type="Label" parent="Center/Panel/Margin/Column/OptionsTabs/Settings"]
+layout_mode = 2
+text = "Sound effects"
+
+[node name="SfxSlider" type="HSlider" parent="Center/Panel/Margin/Column/OptionsTabs/Settings"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+
+[node name="MusicLabel" type="Label" parent="Center/Panel/Margin/Column/OptionsTabs/Settings"]
+layout_mode = 2
+text = "Music"
+
+[node name="MusicSlider" type="HSlider" parent="Center/Panel/Margin/Column/OptionsTabs/Settings"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+
+[node name="FullscreenLabel" type="Label" parent="Center/Panel/Margin/Column/OptionsTabs/Settings"]
+layout_mode = 2
+text = "Fullscreen"
+
+[node name="FullscreenCheck" type="CheckButton" parent="Center/Panel/Margin/Column/OptionsTabs/Settings"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+focus_mode = 0
+
+[node name="Controls" type="GridContainer" parent="Center/Panel/Margin/Column/OptionsTabs"]
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/h_separation = 24
+theme_override_constants/v_separation = 12
+columns = 2
+metadata/_tab_index = 1
+
+[node name="Key0" type="Label" parent="Center/Panel/Margin/Column/OptionsTabs/Controls"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.949, 0.788, 0.298, 1)
+text = "Left click"
+
+[node name="Action0" type="Label" parent="Center/Panel/Margin/Column/OptionsTabs/Controls"]
+layout_mode = 2
+text = "Hit a Leaf"
+
+[node name="Key1" type="Label" parent="Center/Panel/Margin/Column/OptionsTabs/Controls"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.949, 0.788, 0.298, 1)
+text = "Space / Boost"
+
+[node name="Action1" type="Label" parent="Center/Panel/Margin/Column/OptionsTabs/Controls"]
+layout_mode = 2
+text = "Speed up (keep it full for Overdrive)"
+
+[node name="Key2" type="Label" parent="Center/Panel/Margin/Column/OptionsTabs/Controls"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.949, 0.788, 0.298, 1)
+text = "Space when stalled"
+
+[node name="Action2" type="Label" parent="Center/Panel/Margin/Column/OptionsTabs/Controls"]
+layout_mode = 2
+text = "Crank the carousel back"
+
+[node name="Key3" type="Label" parent="Center/Panel/Margin/Column/OptionsTabs/Controls"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.949, 0.788, 0.298, 1)
+text = "N"
+
+[node name="Action3" type="Label" parent="Center/Panel/Margin/Column/OptionsTabs/Controls"]
+layout_mode = 2
+text = "Send the next wave now"
+
+[node name="Key4" type="Label" parent="Center/Panel/Margin/Column/OptionsTabs/Controls"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.949, 0.788, 0.298, 1)
+text = "Esc"
+
+[node name="Action4" type="Label" parent="Center/Panel/Margin/Column/OptionsTabs/Controls"]
+layout_mode = 2
+text = "Settings and pause"
+
+[node name="BackButton" type="Button" parent="Center/Panel/Margin/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Back"

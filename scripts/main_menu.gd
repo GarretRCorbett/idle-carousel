@@ -1,6 +1,6 @@
 class_name MainMenu
 extends Control
-## Title screen: a slowly spinning carousel, Play, and Quit.
+## Title screen: a slowly spinning carousel, Play, Settings (with Controls), and Quit.
 ## Player-facing text is set in the scene (placeholder until Garret replaces it).
 
 const GAME_SCENE := "res://scenes/Game.tscn"
@@ -11,12 +11,18 @@ const GAME_SCENE := "res://scenes/Game.tscn"
 @onready var _carousel: Carousel = %MenuCarousel
 @onready var _carousel_spot: Control = %CarouselSpot
 @onready var _play_button: Button = %PlayButton
+@onready var _settings_button: Button = %SettingsButton
 @onready var _quit_button: Button = %QuitButton
+@onready var _options: OptionsMenu = %OptionsMenu
 
 
 func _ready() -> void:
 	_play_button.pressed.connect(_on_play_pressed)
 	_quit_button.pressed.connect(_on_quit_pressed)
+	_settings_button.pressed.connect(func() -> void:
+		AudioManager.play_sfx(&"click")
+		_options.open())
+	_options.closed.connect(_play_button.grab_focus)
 	_carousel_spot.resized.connect(_center_carousel)
 	_center_carousel()
 	_play_button.grab_focus.call_deferred()

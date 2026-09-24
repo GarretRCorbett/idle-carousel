@@ -18,6 +18,7 @@ extends Node2D
 @onready var _enemy_layer: Node2D = $World/EnemyLayer
 @onready var _click_router: ClickRouter = $World/ClickRouter
 @onready var _wave_manager: WaveManager = $WaveManager
+@onready var _options: OptionsMenu = $OptionsLayer/OptionsMenu
 
 var _booths: Array[TicketBooth] = []
 var _booth_bearings: Array[float] = []
@@ -48,6 +49,13 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_center_world)
 	_center_world()
 	_wave_manager.start()
+
+
+## Esc opens Settings (which pauses the game; Esc again closes it).
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed(&"ui_cancel") and not _options.visible:
+		_options.open()
+		get_viewport().set_input_as_handled()
 
 
 func _physics_process(delta: float) -> void:

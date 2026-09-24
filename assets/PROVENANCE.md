@@ -14,6 +14,11 @@ Downloaded packs are kept unmodified in `../kenney_assets/` (outside the repo, z
 | `ui/button_red.png` | Kenney: UI Pack | `PNG/Red/Default/button_rectangle_depth_flat.png` | CC0 1.0 | Renamed | 2026-09-24 |
 | `fonts/kenney_future_narrow.ttf` | [Kenney: Kenney Fonts](https://kenney.nl/assets/kenney-fonts) | `Fonts/Kenney Future Narrow.ttf` | CC0 1.0 | Renamed | 2026-09-24 |
 | `fonts/kenney_future.ttf` | Kenney: Kenney Fonts | `Fonts/Kenney Future.ttf` | CC0 1.0 | Renamed | 2026-09-24 |
+| `sprites/background/grass_tile.png` | [Kenney: Top-down Tanks Remastered](https://kenney.nl/assets/top-down-tanks-remastered) | `PNG/Default size/tileGrass1.png` | CC0 1.0 | Renamed; tinted darker in code | 2026-09-24 |
+| `sprites/background/tree_autumn_large.png` | Kenney: Top-down Tanks Remastered | `PNG/Default size/treeBrown_large.png` | CC0 1.0 | Renamed | 2026-09-24 |
+| `sprites/background/tree_autumn_small.png` | Kenney: Top-down Tanks Remastered | `PNG/Default size/treeBrown_small.png` | CC0 1.0 | Renamed | 2026-09-24 |
+| `sprites/background/tree_green_large.png` | Kenney: Top-down Tanks Remastered | `PNG/Default size/treeGreen_large.png` | CC0 1.0 | Renamed | 2026-09-24 |
+| `sprites/background/menu_fall.png` | [Kenney: Background Elements Remastered](https://kenney.nl/assets/background-elements-remastered) | `Backgrounds/backgroundColorFall.png` | CC0 1.0 | Renamed; dimmed in the menu scene | 2026-09-24 |
 | `ui/game_theme.tres` | Built by `tools/build_ui_theme.gd` from the files above | | (ours) | | 2026-09-24 |
 | `audio/sfx/coin_1.ogg` | [Kenney: Casino Audio](https://kenney.nl/assets/casino-audio) | `Audio/chips-collide-1.ogg` | CC0 1.0 | Renamed | 2026-09-24 |
 | `audio/sfx/coin_2.ogg` | [Kenney: Casino Audio](https://kenney.nl/assets/casino-audio) | `Audio/chips-collide-2.ogg` | CC0 1.0 | Renamed | 2026-09-24 |
