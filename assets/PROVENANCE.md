@@ -7,6 +7,14 @@ Downloaded packs are kept unmodified in `../kenney_assets/` (outside the repo, z
 |---|---|---|---|---|---|
 | `sprites/mounts/horse.png` | [Kenney: Animal Pack Remastered](https://kenney.nl/assets/animal-pack-remastered) | `PNG/Round (outline)/horse.png` | CC0 1.0 | None | 2026-09-24 |
 | `sprites/mounts/wolf.png` | [Kenney: Animal Pack Remastered](https://kenney.nl/assets/animal-pack-remastered) | `PNG/Round (outline)/dog.png` (stand-in for the Wolf) | CC0 1.0 | Renamed | 2026-09-24 |
+| `ui/button_yellow.png` | [Kenney: UI Pack](https://kenney.nl/assets/ui-pack) | `PNG/Yellow/Default/button_rectangle_depth_flat.png` | CC0 1.0 | Renamed | 2026-09-24 |
+| `ui/button_yellow_hover.png` | Kenney: UI Pack | `PNG/Yellow/Default/button_rectangle_depth_gradient.png` | CC0 1.0 | Renamed | 2026-09-24 |
+| `ui/button_yellow_pressed.png` | Kenney: UI Pack | `PNG/Yellow/Default/button_rectangle_flat.png` | CC0 1.0 | Renamed | 2026-09-24 |
+| `ui/button_grey.png` | Kenney: UI Pack | `PNG/Grey/Default/button_rectangle_depth_flat.png` | CC0 1.0 | Renamed | 2026-09-24 |
+| `ui/button_red.png` | Kenney: UI Pack | `PNG/Red/Default/button_rectangle_depth_flat.png` | CC0 1.0 | Renamed | 2026-09-24 |
+| `fonts/kenney_future_narrow.ttf` | [Kenney: Kenney Fonts](https://kenney.nl/assets/kenney-fonts) | `Fonts/Kenney Future Narrow.ttf` | CC0 1.0 | Renamed | 2026-09-24 |
+| `fonts/kenney_future.ttf` | Kenney: Kenney Fonts | `Fonts/Kenney Future.ttf` | CC0 1.0 | Renamed | 2026-09-24 |
+| `ui/game_theme.tres` | Built by `tools/build_ui_theme.gd` from the files above | | (ours) | | 2026-09-24 |
 
 ## Downloaded, not yet used (in `../kenney_assets/`)
 | Pack | URL | License |

@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://by8f47x4ifp4f" path="res://scripts/click_router.gd" id="8_router"]
 [ext_resource type="Script" uid="uid://blxerhlljqhwt" path="res://scripts/wave_manager.gd" id="9_waves"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/Leaf.tscn" id="10_leaf"]
+[ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="12_theme"]
 
 [node name="Game" type="Node2D" unique_id=1479670653]
 script = ExtResource("1_78awf")
@@ -41,6 +42,7 @@ one_shot = true
 script = ExtResource("4_kiw3p")
 
 [node name="HUDRoot" type="Control" parent="HUD" unique_id=1947639432]
+theme = ExtResource("12_theme")
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -102,6 +104,7 @@ unique_name_in_owner = true
 layout_mode = 2
 
 [node name="HealthBar" type="ProgressBar" parent="HUD/HUDRoot/ScreenMargin/Columns/LeftColumn/StatsPanel/StatsMargin/StatsVBox" unique_id=728908977]
+theme_type_variation = &"HealthBar"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
@@ -147,7 +150,7 @@ focus_mode = 0
 text = "Boost"
 
 [node name="ShopPanel" type="PanelContainer" parent="HUD/HUDRoot/ScreenMargin/Columns" unique_id=1638066341]
-custom_minimum_size = Vector2(260, 0)
+custom_minimum_size = Vector2(290, 0)
 layout_mode = 2
 script = ExtResource("7_shop")
 
@@ -163,4 +166,4 @@ theme_override_constants/margin_bottom = 12
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/side_margin = 0
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 12

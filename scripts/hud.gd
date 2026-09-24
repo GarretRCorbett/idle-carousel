@@ -87,6 +87,7 @@ func _on_overdrive_changed(_active: bool) -> void:
 ## TEMPORARY stall: the Boost button becomes the crank.
 func _on_stall_changed(stalled: bool) -> void:
 	_boost_button.text = crank_button_text if stalled else _boost_button_text
+	_boost_button.theme_type_variation = &"CrankButton" if stalled else &""
 	_refresh_boost_bar()
 
 
