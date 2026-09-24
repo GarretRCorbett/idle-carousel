@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://scripts/ticket_booth.gd" id="3_aug50"]
 [ext_resource type="Script" path="res://scripts/hud.gd" id="4_kiw3p"]
 [ext_resource type="Script" path="res://scripts/click_router.gd" id="5_click"]
+[ext_resource type="PackedScene" path="res://scenes/mounts/Horse.tscn" id="6_horse"]
 
 [node name="Game" type="Node2D" unique_id=1479670653]
 script = ExtResource("1_78awf")
@@ -20,6 +21,8 @@ script = ExtResource("2_s0nni")
 [node name="Slot1" type="Marker2D" parent="World/Carousel/MountSlots" unique_id=1765232460]
 position = Vector2(0, -75)
 rotation = -1.5707964
+
+[node name="Horse" parent="World/Carousel/MountSlots/Slot1" instance=ExtResource("6_horse")]
 
 [node name="Slot2" type="Marker2D" parent="World/Carousel/MountSlots" unique_id=617337684]
 position = Vector2(65, -38)

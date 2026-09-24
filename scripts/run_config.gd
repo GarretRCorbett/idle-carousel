@@ -7,6 +7,12 @@ extends Resource
 @export_group("Economy")
 ## Gold the player has when a run starts.
 @export_range(0.0, 1000000.0, 1.0, "or_greater") var starting_gold: float = 0.0
+## Gold from a play-area click, only while no enemies are latched.
+@export_range(0.0, 1000.0, 0.05, "or_greater") var play_area_click_gold: float = 0.25
+## Gold/sec on the HUD is actual Gold earned over the last
+## (income_bucket_count × income_bucket_seconds) seconds, about 10 s.
+@export_range(0.1, 10.0, 0.1, "suffix:s") var income_bucket_seconds: float = 1.0
+@export_range(1, 120, 1) var income_bucket_count: int = 10
 
 @export_group("Carousel")
 ## Carousel health when a run starts (and its maximum).
@@ -28,6 +34,12 @@ func get_problems() -> PackedStringArray:
 	var problems := PackedStringArray()
 	if not is_finite(starting_gold) or starting_gold < 0.0:
 		problems.append("starting_gold must be a finite number >= 0")
+	if not is_finite(play_area_click_gold) or play_area_click_gold < 0.0:
+		problems.append("play_area_click_gold must be a finite number >= 0")
+	if not is_finite(income_bucket_seconds) or income_bucket_seconds <= 0.0:
+		problems.append("income_bucket_seconds must be a finite number > 0")
+	if income_bucket_count < 1:
+		problems.append("income_bucket_count must be at least 1")
 	if not is_finite(max_health) or max_health <= 0.0:
 		problems.append("max_health must be a finite number > 0")
 	if not is_finite(base_spin_speed_deg_s) or base_spin_speed_deg_s < 0.0:

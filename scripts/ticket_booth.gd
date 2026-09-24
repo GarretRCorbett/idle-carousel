@@ -11,6 +11,21 @@ extends Node2D
 @export var roof_color: Color = Color("8f3a26")
 @export var window_color: Color = Color("f3e9d2")
 
+@export_group("Pass Feedback")
+## Quick placeholder "pop" when the Horse pays out (the coin animation comes later).
+@export var pop_scale: float = 1.3
+@export_range(0.01, 1.0, 0.01, "suffix:s") var pop_duration: float = 0.15
+
+var _pop_tween: Tween
+
+
+func pop() -> void:
+	if _pop_tween != null:
+		_pop_tween.kill()
+	scale = Vector2.ONE * pop_scale
+	_pop_tween = create_tween()
+	_pop_tween.tween_property(self, "scale", Vector2.ONE, pop_duration)
+
 
 func _draw() -> void:
 	var body := Rect2(-size / 2.0, size)

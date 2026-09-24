@@ -4,6 +4,8 @@ extends Node
 ## Balance numbers live in RunConfig (res://resources/config/run_config.tres).
 
 signal gold_changed(balance: float, delta: float)
+## Actual Gold earned per second, averaged over about the last 10 seconds.
+signal gold_per_second_changed(value: float)
 signal health_changed(current: float, maximum: float)
 ## Effective spin speed in radians/second (what Carousel applies each tick).
 signal spin_speed_changed(speed_rad_s: float)
@@ -20,6 +22,11 @@ var _boost_peak: float = 0.0
 var _boost_elapsed: float = 0.0
 # Sum of purchased spin bonuses (+0.2, +0.3, ...). Added in Step 5.
 var _spin_bonus: float = 0.0
+# Gold/sec: Gold earned per time bucket in a ring (bucket = epoch % count).
+var _income_buckets := PackedFloat64Array()
+var _income_epoch: int = 0
+var _recent_income: float = 0.0
+var _elapsed: float = 0.0
 # Sum of latched enemies' drag, deliberately NOT clamped at 1.0. Added in Step 7.
 var _total_drag: float = 0.0
 
@@ -42,9 +49,15 @@ func reset_run(config_override: RunConfig = null) -> void:
 	_boost_elapsed = 0.0
 	_spin_bonus = 0.0
 	_total_drag = 0.0
+	_income_buckets = PackedFloat64Array()
+	_income_buckets.resize(config.income_bucket_count)
+	_income_epoch = 0
+	_recent_income = 0.0
+	_elapsed = 0.0
 	# Set everything first so listeners never see a half-reset run.
 	run_reset.emit()
 	gold_changed.emit(_gold, 0.0)
+	gold_per_second_changed.emit(get_recent_gold_per_second())
 	health_changed.emit(_health, get_max_health())
 	spin_speed_changed.emit(get_effective_spin_speed_rad_s())
 
@@ -60,7 +73,16 @@ func add_gold(amount: float) -> void:
 	if not is_finite(amount) or amount <= 0.0:
 		return
 	_gold += amount
+	_income_buckets[_income_epoch % _income_buckets.size()] += amount
+	_recent_income += amount
 	gold_changed.emit(_gold, amount)
+	gold_per_second_changed.emit(get_recent_gold_per_second())
+
+
+## Actual Gold earned per second over the income window. Spending doesn't lower it.
+## Starts from zero and fills up over the first window (no spike from one payout).
+func get_recent_gold_per_second() -> float:
+	return _recent_income / (_config.income_bucket_count * _config.income_bucket_seconds)
 
 
 func can_afford(cost: float) -> bool:
@@ -109,6 +131,38 @@ func advance_simulation(delta: float) -> void:
 	var previous_speed := get_effective_spin_speed_rad_s()
 	_boost_elapsed = minf(_config.click_boost_decay_seconds, _boost_elapsed + delta)
 	_emit_speed_if_changed(previous_speed)
+	_elapsed += delta
+	_advance_income_window()
+
+
+## A click on the open play area: spin boost, plus a small Gold burst if no
+## enemies are latched. Both happen together so nothing can slip in between.
+func register_play_area_click() -> void:
+	add_click_boost()
+	if get_latched_count() == 0:
+		add_gold(_config.play_area_click_gold)
+
+
+## Latched enemies (registry arrives in Step 7).
+func get_latched_count() -> int:
+	return 0
+
+
+func _advance_income_window() -> void:
+	var epoch := floori(_elapsed / _config.income_bucket_seconds)
+	if epoch == _income_epoch:
+		return
+	var count := _income_buckets.size()
+	if epoch - _income_epoch >= count:
+		_income_buckets.fill(0.0)
+		_recent_income = 0.0
+	else:
+		for e in range(_income_epoch + 1, epoch + 1):
+			_recent_income -= _income_buckets[e % count]
+			_income_buckets[e % count] = 0.0
+		_recent_income = maxf(0.0, _recent_income)  # guard against float drift
+	_income_epoch = epoch
+	gold_per_second_changed.emit(get_recent_gold_per_second())
 
 
 # --- Spin speed ------------------------------------------------------------------
