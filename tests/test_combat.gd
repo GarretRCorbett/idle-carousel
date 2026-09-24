@@ -82,3 +82,28 @@ func test_clicks_kill_a_leaf_for_its_gold() -> void:
 	# Once dead it takes no more clicks, so it can't pay twice.
 	assert_bool(router.route_click(spot)).is_false()
 	assert_float(GameState.get_gold()).is_equal(gold_drop)
+
+
+func test_leaf_at_the_rim_latches_and_its_kill_unlatches() -> void:
+	var game := _game()
+	var enemy := _first_enemy(game)
+	enemy.advance(100.0)  # far enough to reach the rim in one step
+	assert_int(GameState.get_latched_count()).is_equal(1)
+	assert_float(GameState.get_total_drag()).is_equal_approx(enemy.data.latch_drag, 0.00001)
+	enemy.take_damage(100.0)
+	assert_int(GameState.get_latched_count()).is_equal(0)
+	assert_float(GameState.get_total_drag()).is_equal(0.0)
+
+
+func test_overload_removes_every_enemy_without_gold() -> void:
+	_config.fail_rule = RunConfig.FailRule.OVERLOAD_CLEAR
+	var game := _game()
+	var layer := game.get_node("World/EnemyLayer")
+	(game.get_node("WaveManager") as WaveManager).spawn_wave()
+	for enemy: EnemyBase in layer.get_children():
+		enemy.advance(100.0)
+	GameState.overloaded.emit()
+	for enemy: EnemyBase in layer.get_children():
+		assert_bool(enemy.is_queued_for_deletion()).is_true()
+	assert_int(GameState.get_latched_count()).is_equal(0)
+	assert_float(GameState.get_gold()).is_equal(0.0)

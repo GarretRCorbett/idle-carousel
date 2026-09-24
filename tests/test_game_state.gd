@@ -76,7 +76,12 @@ func test_spend_rejects_negative_and_nan() -> void:
 	assert_float(GameState.get_gold()).is_equal(5.0)
 
 
+## Uses the no-stall rule: under HEALTH_STALL, 0 health with nothing latched
+## refills right away (covered in test_latch.gd).
 func test_damage_clamps_at_zero() -> void:
+	_config.fail_rule = RunConfig.FailRule.OVERLOAD_CLEAR
+	GameState.reset_run(_config)
+	_health_events.clear()
 	GameState.damage_carousel(30.0)
 	assert_float(GameState.get_health()).is_equal(70.0)
 	GameState.damage_carousel(150.0)

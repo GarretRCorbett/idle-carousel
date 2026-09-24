@@ -4,6 +4,17 @@ extends Resource
 ## res://resources/config/run_config.tres; edit it in the Inspector.
 ## GameState reads it on reset_run(), so changes apply to the next run.
 
+## What happens when latched enemies overwhelm the carousel. BOTH ARE TEMPORARY
+## Phase 2 rules for playtesting; the real fail state is DECISION PENDING (GDD).
+enum FailRule {
+	## Latched enemies drain health. At 0 the carousel stops until every latch
+	## is cleared, then health refills to stall_recovery_fraction. Drag has no floor.
+	HEALTH_STALL,
+	## No health drain. Drag can't slow the carousel below overload_speed_floor.
+	## Stuck at that floor for overload_seconds: every enemy is removed (no Gold).
+	OVERLOAD_CLEAR,
+}
+
 @export_group("Economy")
 ## Gold the player has when a run starts.
 @export_range(0.0, 1000000.0, 1.0, "or_greater") var starting_gold: float = 0.0
@@ -15,6 +26,15 @@ extends Resource
 @export_group("Carousel")
 ## Carousel health when a run starts (and its maximum).
 @export_range(1.0, 100000.0, 1.0, "or_greater") var max_health: float = 100.0
+
+@export_group("Fail Rule (TEMPORARY)")
+@export var fail_rule: FailRule = FailRule.HEALTH_STALL
+## HEALTH_STALL: health after the stall ends (0.25 = 25% of max).
+@export_range(0.01, 1.0, 0.01) var stall_recovery_fraction: float = 0.25
+## OVERLOAD_CLEAR: lowest speed drag allows, as a fraction of the drag-free speed.
+@export_range(0.0, 1.0, 0.01) var overload_speed_floor: float = 0.25
+## OVERLOAD_CLEAR: seconds stuck at the floor before enemies are cleared.
+@export_range(0.5, 120.0, 0.5, "suffix:s") var overload_seconds: float = 10.0
 
 @export_group("Spin")
 ## Base spin before upgrades, boost, and drag. 45 = one turn every 8 seconds.
@@ -68,6 +88,12 @@ func get_problems() -> PackedStringArray:
 		problems.append("boost_presses_to_fill must be at least 1")
 	if not is_finite(base_click_damage) or base_click_damage < 0.0:
 		problems.append("base_click_damage must be a finite number >= 0")
+	if not is_finite(stall_recovery_fraction) or stall_recovery_fraction <= 0.0 or stall_recovery_fraction > 1.0:
+		problems.append("stall_recovery_fraction must be in (0, 1]")
+	if not is_finite(overload_speed_floor) or overload_speed_floor < 0.0 or overload_speed_floor > 1.0:
+		problems.append("overload_speed_floor must be in [0, 1]")
+	if not is_finite(overload_seconds) or overload_seconds <= 0.0:
+		problems.append("overload_seconds must be a finite number > 0")
 	if starting_booths < 1:
 		problems.append("starting_booths must be at least 1")
 	if not is_finite(click_boost_cap) or click_boost_cap < 0.0:

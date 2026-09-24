@@ -16,8 +16,25 @@ signal boost_maxed_changed(maxed: bool)
 signal overdrive_changed(active: bool)
 ## An upgrade level was bought and fully applied (Gold, level, and effect).
 signal upgrade_applied(id: StringName, level: int)
+## Number of latched enemies changed.
+signal latch_count_changed(count: int)
+## TEMPORARY (HEALTH_STALL rule): the carousel stalled at 0 health (true) or recovered.
+signal stall_changed(stalled: bool)
+## TEMPORARY (OVERLOAD_CLEAR rule): stuck at the drag floor too long. Latches are
+## already cleared; Game removes every enemy (no Gold).
+signal overloaded
 ## Emitted after every value has been reset, before the fresh values are re-announced.
 signal run_reset
+
+## One latched enemy's share of drag and damage.
+class Latch:
+	var drag: float
+	var damage_per_second: float
+
+	func _init(drag_amount: float, dps: float) -> void:
+		drag = drag_amount
+		damage_per_second = dps
+
 
 const DEFAULT_CONFIG: RunConfig = preload("res://resources/config/run_config.tres")
 
@@ -45,8 +62,15 @@ var _income_buckets := PackedFloat64Array()
 var _income_epoch: int = 0
 var _recent_income: float = 0.0
 var _elapsed: float = 0.0
-# Sum of latched enemies' drag, deliberately NOT clamped at 1.0. Added in Step 7.
+# Latched enemies by instance ID. Totals are recomputed from this, so removing
+# one enemy removes exactly its share.
+var _latches: Dictionary[int, Latch] = {}
+# Sum of latched enemies' drag, deliberately NOT clamped at 1.0.
 var _total_drag: float = 0.0
+var _total_latch_dps: float = 0.0
+# TEMPORARY fail rules (see RunConfig.FailRule).
+var _stalled: bool = false
+var _overload_elapsed: float = 0.0
 
 
 func _ready() -> void:
@@ -73,7 +97,11 @@ func reset_run(config_override: RunConfig = null) -> void:
 	_boost_cap_bonus = 0.0
 	_click_damage_bonus = 0.0
 	_booth_count = config.starting_booths
+	_latches.clear()
 	_total_drag = 0.0
+	_total_latch_dps = 0.0
+	_stalled = false
+	_overload_elapsed = 0.0
 	_upgrade_levels.clear()
 	_income_buckets = PackedFloat64Array()
 	_income_buckets.resize(config.income_bucket_count)
@@ -89,6 +117,8 @@ func reset_run(config_override: RunConfig = null) -> void:
 	booth_count_changed.emit(_booth_count)
 	boost_maxed_changed.emit(false)
 	overdrive_changed.emit(false)
+	latch_count_changed.emit(0)
+	stall_changed.emit(false)
 
 
 # --- Gold -------------------------------------------------------------------
@@ -139,15 +169,122 @@ func get_max_health() -> float:
 	return _config.max_health
 
 
-## Lowers health, never below zero. (The TEMPORARY stall at zero arrives in Step 7.)
+## Lowers health, never below zero. Under HEALTH_STALL, zero health stalls
+## the carousel (TEMPORARY).
 func damage_carousel(amount: float) -> void:
 	if not is_finite(amount) or amount <= 0.0:
 		return
 	var new_health := maxf(0.0, _health - amount)
 	if new_health == _health:
 		return
+	var previous_speed := get_effective_spin_speed_rad_s()
 	_health = new_health
+	var stall_flipped := _evaluate_temporary_stall()
 	health_changed.emit(_health, get_max_health())
+	if stall_flipped:
+		stall_changed.emit(_stalled)
+	_emit_speed_if_changed(previous_speed)
+
+
+func is_stalled() -> bool:
+	return _stalled
+
+
+# --- Latches -------------------------------------------------------------------------
+
+## An enemy grabbed the rim. Returns false (and changes nothing) if it's already latched.
+func register_latch(enemy_id: int, drag: float, damage_per_second: float) -> bool:
+	if _latches.has(enemy_id) or not is_finite(drag) or not is_finite(damage_per_second):
+		return false
+	var previous_speed := get_effective_spin_speed_rad_s()
+	_latches[enemy_id] = Latch.new(maxf(0.0, drag), maxf(0.0, damage_per_second))
+	_recompute_latch_totals()
+	latch_count_changed.emit(_latches.size())
+	_emit_speed_if_changed(previous_speed)
+	return true
+
+
+## A latched enemy is gone. Safe to call twice or for an enemy that never latched.
+func unregister_latch(enemy_id: int) -> bool:
+	if not _latches.has(enemy_id):
+		return false
+	var previous_speed := get_effective_spin_speed_rad_s()
+	_latches.erase(enemy_id)
+	_recompute_latch_totals()
+	var stall_flipped := _evaluate_temporary_stall()
+	latch_count_changed.emit(_latches.size())
+	if stall_flipped:
+		health_changed.emit(_health, get_max_health())
+		stall_changed.emit(_stalled)
+	_emit_speed_if_changed(previous_speed)
+	return true
+
+
+func get_latched_count() -> int:
+	return _latches.size()
+
+
+func get_total_latch_dps() -> float:
+	return _total_latch_dps
+
+
+func _recompute_latch_totals() -> void:
+	_total_drag = 0.0
+	_total_latch_dps = 0.0
+	for latch in _latches.values():
+		_total_drag += latch.drag
+		_total_latch_dps += latch.damage_per_second
+	if _latches.is_empty():
+		_overload_elapsed = 0.0
+
+
+# --- TEMPORARY Phase 2 fail rules ----------------------------------------------------
+# Replace once Garret decides the GDD's DECISION PENDING fail state.
+# Both rules live here so switching RunConfig.fail_rule changes nothing else.
+
+## HEALTH_STALL: stall at 0 health; recover once nothing is latched (0 health
+## with nothing latched recovers right away). Returns true if the stall flipped.
+func _evaluate_temporary_stall() -> bool:
+	if _config.fail_rule != RunConfig.FailRule.HEALTH_STALL:
+		return false
+	var was_stalled := _stalled
+	if _health <= 0.0:
+		_stalled = true
+	if _stalled and _latches.is_empty():
+		_health = get_max_health() * _config.stall_recovery_fraction
+		_stalled = false
+	return _stalled != was_stalled
+
+
+## HEALTH_STALL: latched enemies drain health. OVERLOAD_CLEAR: time spent at
+## the drag floor adds up, and too long clears every latch.
+func _advance_fail_rule(delta: float) -> void:
+	match _config.fail_rule:
+		RunConfig.FailRule.HEALTH_STALL:
+			damage_carousel(_total_latch_dps * delta)
+		RunConfig.FailRule.OVERLOAD_CLEAR:
+			if 1.0 - _total_drag > _config.overload_speed_floor:
+				_overload_elapsed = 0.0
+				return
+			_overload_elapsed += delta
+			if _overload_elapsed >= _config.overload_seconds:
+				_trigger_overload()
+
+
+func _trigger_overload() -> void:
+	var previous_speed := get_effective_spin_speed_rad_s()
+	_latches.clear()
+	_recompute_latch_totals()
+	latch_count_changed.emit(0)
+	_emit_speed_if_changed(previous_speed)
+	overloaded.emit()
+
+
+## Lowest the drag factor may go: 0 (no floor) unless OVERLOAD_CLEAR sets one.
+func _drag_floor() -> float:
+	if _config.fail_rule == RunConfig.FailRule.OVERLOAD_CLEAR:
+		return _config.overload_speed_floor
+	return 0.0
 
 
 # --- Simulation ----------------------------------------------------------------
@@ -161,6 +298,7 @@ func advance_simulation(delta: float) -> void:
 	_boost_elapsed = minf(_config.click_boost_decay_seconds, _boost_elapsed + delta)
 	_update_boost_status(delta)
 	_emit_speed_if_changed(previous_speed)
+	_advance_fail_rule(delta)
 	_elapsed += delta
 	_advance_income_window()
 
@@ -185,9 +323,11 @@ func _advance_income_window() -> void:
 # --- Spin speed ------------------------------------------------------------------
 
 ## base × upgrades × (1 + click boost) × modifiers (Overdrive, events) × (1 − drag),
-## never below zero.
+## never below zero (or the OVERLOAD_CLEAR floor). 0 while stalled (TEMPORARY).
 func get_effective_spin_speed_rad_s() -> float:
-	var drag_factor := maxf(0.0, 1.0 - _total_drag)
+	if _stalled:
+		return 0.0
+	var drag_factor := maxf(_drag_floor(), 1.0 - _total_drag)
 	return (deg_to_rad(_config.base_spin_speed_deg_s)
 			* get_spin_upgrade_multiplier()
 			* (1.0 + get_click_boost())

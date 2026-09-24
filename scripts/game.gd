@@ -28,6 +28,7 @@ func _ready() -> void:
 	_click_router.enemy_clicked.connect(_on_enemy_clicked)
 	_wave_manager.center = _carousel.position
 	_wave_manager.enemy_spawned.connect(_on_enemy_spawned)
+	GameState.overloaded.connect(_on_overloaded)
 	GameState.booth_count_changed.connect(_layout_booths)
 	_setup_mounts()
 	GameState.reset_run()
@@ -86,6 +87,7 @@ func _on_enemy_spawned(enemy: EnemyBase) -> void:
 	enemy.setup(_carousel.position, _carousel.radius)
 	# Appearing is a jump, not travel: don't interpolate in from the origin.
 	enemy.reset_physics_interpolation()
+	enemy.reached_rim.connect(_on_enemy_reached_rim)
 	enemy.died.connect(_on_enemy_died)
 	_click_router.register_enemy(enemy)
 
@@ -94,9 +96,26 @@ func _on_enemy_clicked(enemy: EnemyBase) -> void:
 	enemy.take_damage(GameState.get_click_damage())
 
 
+## Latching: the enemy stays where it is in the world (the carousel turns
+## underneath it) and GameState adds its drag and damage.
+func _on_enemy_reached_rim(enemy: EnemyBase) -> void:
+	GameState.register_latch(enemy.get_instance_id(), enemy.data.latch_drag, enemy.data.damage_per_second)
+
+
 ## Runs once per enemy (EnemyBase guarantees it), so the kill pays once.
 func _on_enemy_died(enemy: EnemyBase) -> void:
 	GameState.add_gold(enemy.data.gold_drop)
+	_remove_enemy(enemy)
+
+
+## TEMPORARY (OVERLOAD_CLEAR rule): every enemy is removed, with no Gold.
+func _on_overloaded() -> void:
+	for enemy: EnemyBase in _enemy_layer.get_children():
+		_remove_enemy(enemy)
+
+
+func _remove_enemy(enemy: EnemyBase) -> void:
+	GameState.unregister_latch(enemy.get_instance_id())
 	_click_router.unregister_enemy(enemy)
 	enemy.queue_free()
 
