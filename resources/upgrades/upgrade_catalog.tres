@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="UpgradeCatalog" format=3]
+
+[ext_resource type="Script" path="res://scripts/upgrade_catalog.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/upgrade_data.gd" id="2_data"]
+[ext_resource type="Resource" path="res://resources/upgrades/spin_speed_1.tres" id="3_s1"]
+[ext_resource type="Resource" path="res://resources/upgrades/spin_speed_2.tres" id="4_s2"]
+
+[resource]
+script = ExtResource("1_script")
+upgrades = Array[ExtResource("2_data")]([ExtResource("3_s1"), ExtResource("4_s2")])

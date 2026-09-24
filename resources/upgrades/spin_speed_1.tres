@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3]
+
+[ext_resource type="Script" path="res://scripts/upgrade_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"spin_speed_1"
+display_name = "Spin Speed 1"
+description = "+20% spin speed"
+cost_gold = 30.0
+prerequisite_id = &""
+effect_type = 0
+effect_value = 0.2

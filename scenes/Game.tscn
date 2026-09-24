@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/hud.gd" id="4_kiw3p"]
 [ext_resource type="Script" path="res://scripts/click_router.gd" id="5_click"]
 [ext_resource type="PackedScene" path="res://scenes/mounts/Horse.tscn" id="6_horse"]
+[ext_resource type="Script" path="res://scripts/upgrade_shop.gd" id="7_shop"]
 
 [node name="Game" type="Node2D" unique_id=1479670653]
 script = ExtResource("1_78awf")
@@ -128,6 +129,7 @@ size_flags_horizontal = 3
 mouse_filter = 2
 
 [node name="ShopPanel" type="PanelContainer" parent="HUD/HUDRoot/ScreenMargin/Columns" unique_id=1638066341]
+script = ExtResource("7_shop")
 custom_minimum_size = Vector2(260, 0)
 layout_mode = 2
 

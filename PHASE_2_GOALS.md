@@ -63,7 +63,7 @@ Moved here from Phase 1.
 
 ---
 
-## Step 2 — GameState foundation + Game scene skeleton (45–60 min)
+## ✅ Step 2 — GameState foundation + Game scene skeleton (45–60 min)
 
 **Claude Code:** GameState functions and signals for Gold, spin speed, and carousel health, plus `reset_run()` so every test and playthrough starts clean. It also drafts `Game.tscn`:
 
@@ -87,7 +87,7 @@ Game (Node2D)                      game.gd
 
 ---
 
-## Step 3 — Spin + click boost (45–75 min)
+## ✅ Step 3 — Spin + click boost (45–75 min)
 
 **Claude Code:** rotation in `_physics_process`, using an effective speed of base × upgrades × boost × (1 − drag), calculated in one place. The stacking, decaying click boost and click routing (enemy / play area / UI) come in this step too. Every tunable is `@export`.
 **Garret:** tune the base speed, boost size, cap, and decay in the Inspector until it feels good.
@@ -96,7 +96,7 @@ Game (Node2D)                      game.gd
 
 ---
 
-## Step 4 — Horse, ticket booth, Gold HUD (60–90 min)
+## ✅ Step 4 — Horse, ticket booth, Gold HUD (60–90 min)
 
 **Claude Code:** `mount_base.gd` and `mount_horse.gd`, booth pass detection that tracks angle travelled rather than the wrapped angle, a fixed payout per pass, the Gold burst on play-area clicks, the Gold and Gold/sec labels, and a coin pop placeholder.
 **Garret:** position the booth, check that the pop reads, and tune the payout.
@@ -105,7 +105,7 @@ Game (Node2D)                      game.gd
 
 ---
 
-## Step 5 — Upgrade shop: Spin Speed 1 and 2 (45–60 min)
+## ✅ Step 5 — Upgrade shop: Spin Speed 1 and 2 (45–60 min)
 
 **Claude Code:** `upgrade_data.gd` Resource plus `.tres` files, a minimal UpgradeManager (`can_afford`, `purchase`, `is_purchased`, `upgrade_purchased` signal), and a ShopPanel draft (VBox of upgrade rows; affordable rows highlighted).
 **Garret:** upgrade names and descriptions, button text, shop look.

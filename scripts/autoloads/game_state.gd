@@ -9,6 +9,8 @@ signal gold_per_second_changed(value: float)
 signal health_changed(current: float, maximum: float)
 ## Effective spin speed in radians/second (what Carousel applies each tick).
 signal spin_speed_changed(speed_rad_s: float)
+## An upgrade was bought and fully applied (Gold, ownership, and effect).
+signal upgrade_applied(id: StringName)
 ## Emitted after every value has been reset, before the fresh values are re-announced.
 signal run_reset
 
@@ -22,6 +24,8 @@ var _boost_peak: float = 0.0
 var _boost_elapsed: float = 0.0
 # Sum of purchased spin bonuses (+0.2, +0.3, ...). Added in Step 5.
 var _spin_bonus: float = 0.0
+var _upgrades_purchased: Dictionary[StringName, bool] = {}
+var _purchase_in_progress: bool = false
 # Gold/sec: Gold earned per time bucket in a ring (bucket = epoch % count).
 var _income_buckets := PackedFloat64Array()
 var _income_epoch: int = 0
@@ -49,6 +53,7 @@ func reset_run(config_override: RunConfig = null) -> void:
 	_boost_elapsed = 0.0
 	_spin_bonus = 0.0
 	_total_drag = 0.0
+	_upgrades_purchased.clear()
 	_income_buckets = PackedFloat64Array()
 	_income_buckets.resize(config.income_bucket_count)
 	_income_epoch = 0
@@ -203,3 +208,47 @@ func _emit_speed_if_changed(previous_speed: float) -> void:
 	var speed := get_effective_spin_speed_rad_s()
 	if speed != previous_speed:
 		spin_speed_changed.emit(speed)
+
+
+# --- Upgrades --------------------------------------------------------------------
+
+func is_upgrade_purchased(id: StringName) -> bool:
+	return _upgrades_purchased.has(id)
+
+
+## True if this upgrade could be bought right now (funds, prerequisite, not owned,
+## effect supported). UpgradeManager.purchase() is the normal entry point.
+func can_purchase_upgrade(upgrade: UpgradeData) -> bool:
+	if upgrade == null or not upgrade.get_problems().is_empty():
+		return false
+	if is_upgrade_purchased(upgrade.id):
+		return false
+	if upgrade.prerequisite_id != &"" and not is_upgrade_purchased(upgrade.prerequisite_id):
+		return false
+	if not _is_effect_supported(upgrade):
+		return false
+	return can_afford(upgrade.cost_gold)
+
+
+## Charges, records, and applies the upgrade, all before any signal fires, so a
+## listener can never see (or trigger) a half-finished purchase.
+func try_purchase_upgrade(upgrade: UpgradeData) -> bool:
+	if _purchase_in_progress or not can_purchase_upgrade(upgrade):
+		return false
+	_purchase_in_progress = true
+	var previous_speed := get_effective_spin_speed_rad_s()
+	_gold -= upgrade.cost_gold
+	_upgrades_purchased[upgrade.id] = true
+	match upgrade.effect_type:
+		UpgradeData.EffectType.ADD_SPIN_BONUS:
+			_spin_bonus += upgrade.effect_value
+	# Everything is committed; now announce it.
+	gold_changed.emit(_gold, -upgrade.cost_gold)
+	_emit_speed_if_changed(previous_speed)
+	upgrade_applied.emit(upgrade.id)
+	_purchase_in_progress = false
+	return true
+
+
+func _is_effect_supported(upgrade: UpgradeData) -> bool:
+	return upgrade.effect_type == UpgradeData.EffectType.ADD_SPIN_BONUS

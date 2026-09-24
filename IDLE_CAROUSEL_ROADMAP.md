@@ -133,4 +133,4 @@
 ## Next Concrete Step
 _Update this line at the end of every session._
 
-> Phase 2 Step 2: GameState foundation + Game scene skeleton (see `PHASE_2_GOALS.md`).
+> Phase 2 Step 6: One Leaf (approach, click damage, death) + Click Damage 1. Steps 2–5 done; plans and design memos in `planning/phase2/`.
