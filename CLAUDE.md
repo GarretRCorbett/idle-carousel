@@ -61,6 +61,9 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
 - `call_deferred()` when changing scenes from physics callbacks.
 - Offline progress uses `Time.get_unix_time_from_system()` with an 8-hour clamp.
 - Gold is the only currency.
+- Localization-ready: wrap every player-facing string in `tr()` with a key (e.g.,
+  `tr("UI_GOLD")`) and keep keys in a translations CSV. Format large numbers with one
+  shared helper function, never inline.
 
 ## Workflow
 - Plan mode first for any feature bigger than a small tweak. Wait for approval.

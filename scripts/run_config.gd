@@ -72,6 +72,13 @@ extends Resource
 ## Horses at the start of a run. They can't be sold, so you always keep an income.
 @export_range(1, 6, 1) var starting_horses: int = 1
 
+@export_group("Emergency Clear")
+## Price = this many seconds of normal booth income (unboosted, no drag)...
+@export_range(0.0, 600.0, 1.0, "suffix:s") var emergency_clear_income_seconds: float = 20.0
+## ...but never less than this.
+@export_range(0.0, 100000.0, 1.0, "or_greater") var emergency_clear_min_cost: float = 25.0
+@export_range(0.0, 600.0, 1.0, "suffix:s") var emergency_clear_cooldown_seconds: float = 60.0
+
 @export_group("Ticket Booths")
 ## Booths at the start of a run (more are bought in the shop).
 @export_range(1, 8, 1) var starting_booths: int = 1

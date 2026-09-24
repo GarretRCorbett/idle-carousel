@@ -11,6 +11,8 @@ const DEFAULTS: Dictionary[StringName, Variant] = {
 	&"sfx_volume": 0.8,
 	&"music_volume": 0.8,
 	&"fullscreen": false,
+	## Waves arrive on their own; off = the countdown pauses until you send one.
+	&"auto_wave": true,
 }
 ## Which audio bus each volume setting drives.
 const VOLUME_BUSES: Dictionary[StringName, StringName] = {

@@ -37,6 +37,15 @@ func _initialize() -> void:
 	theme.set_color("font_focus_color", "CrankButton", CREAM)
 	theme.set_color("font_hover_pressed_color", "CrankButton", CREAM)
 
+	# Toggles (Auto waves, Fullscreen): plain text plus the switch, not a button.
+	for state in ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]:
+		var empty := StyleBoxEmpty.new()
+		empty.content_margin_top = 4.0
+		empty.content_margin_bottom = 4.0
+		theme.set_stylebox(state, "CheckButton", empty)
+	for color in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
+		theme.set_color(color, "CheckButton", CREAM)
+
 	var panel := _flat(PANEL, 12)
 	panel.border_color = PANEL_BORDER
 	panel.set_border_width_all(2)

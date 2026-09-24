@@ -1,5 +1,5 @@
 # 🎠 Idle Carousel — Game Design Document
-### Version 1.8 | Working Title: Idle Carousel
+### Version 1.9 | Working Title: Idle Carousel
 > Solo dev project. Built in Godot 4.7 stable. Target: Steam release, anonymous, $4.99 (sale target ~$3.49–$3.75), with a free demo.
 > Personal motivation: daughters love carousels.
 > Influences: Cookie Clicker, Clicker Heroes, A Game About Feeding a Black Hole, Rusty's Retirement.
@@ -7,6 +7,7 @@
 ---
 
 ## Changelog
+- **v1.9** — Wave controls pulled into Phase 2 (Garret): Next Wave button + N key with a +50% kill-Gold early-send bonus and a full countdown restart; Auto Wave toggle; Emergency Clear priced from normal booth income (20 s, min 25, 60 s cooldown). Settings and Controls screen; backgrounds (top-down park for play, fall landscape for the menu).
 - **v1.8** — After the first Leaf playtest (Garret): drag softens as it stacks (speed ÷ (1 + total drag)), so Boost always helps and only the stall stops the carousel. Latched enemies deal no damage for their first 2 s. Health regenerates slowly while nothing is latched. TEMPORARY stall additions: Boost cranks a stalled carousel back (restart at 15% health, enemies stay), and a 60 s safety net clears enemies. Fail-state direction: "safe farm, risky push" (a stall costs the attempt and time, never Gold or unlocks); still DECISION PENDING until confirmed in play.
 - **v1.7** — Overdrive: hold the Boost bar at max for 5 s for ×2 speed until it drops (gold glow). New Random Events section (Golden-Cookie-style pickups and surprise visitors), planned for Phase 4. Speed bonuses from any source multiply together.
 - **v1.6** — Shop pacing (Garret): upgrades have levels. Spin Speed 1–4 become **Carousel Speed** (+20% base speed per level, 10 levels); new **Boost Power** (+10% max boost per level, 10 levels); **Ticket Booth** starts at 500 Gold. Each level costs ×1.5 the last. Boost bar takes 10 presses to fill and fades over 4 s; the carousel glows while boost is maxed.
@@ -472,9 +473,10 @@ The Rusted King defeated. All rust flakes away in a particle burst. The carousel
 - No scrolling required in early game
 
 ### Wave Controls
-- Auto Wave toggle button — when ON, the wave countdown always runs and sends the next wave when it hits zero, whether or not the last wave is cleared. When OFF, the countdown pauses.
-- Next Wave manual button — sends next wave immediately with a bonus Gold reward for early send
-- Emergency Clear button — removes all latched enemies, costs Gold, has 60 second cooldown
+Built in Phase 2 (v1.9), in the stats panel:
+- Auto Wave toggle button — when ON, the wave countdown always runs and sends the next wave when it hits zero, whether or not the last wave is cleared. When OFF, the countdown pauses. Remembered between sessions (default ON).
+- Next Wave manual button (also the N key) — shows the countdown and sends the next wave immediately. **Early-send bonus (v1.9):** that wave's enemies drop +50% Gold, paid only on kills, so sending waves can't be farmed. The countdown then restarts at a full interval, so waves never pile up by accident.
+- Emergency Clear button — removes all latched enemies (no kill Gold) and ends a stall. **Price (v1.9):** 20 seconds of normal booth income (unboosted, no drag, so latches can't discount it), minimum 25 Gold; 60 second cooldown; usable only while something is latched.
 
 ### Mount Info
 - Clicking a mount slot shows a small popup with mount name, current tier, stats, and upgrade button
@@ -775,6 +777,6 @@ Save these for after v1.0 ships. Do not build during v1.0 development.
 
 ---
 
-*GDD Version 1.8*
+*GDD Version 1.9*
 *Created: June 2026*
 *Status: Design complete, ready for development*

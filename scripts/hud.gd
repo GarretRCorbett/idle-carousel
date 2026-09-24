@@ -7,13 +7,26 @@ extends CanvasLayer
 signal boost_requested
 ## The Boost button (or its key) started or stopped being held. Holding cranks a stall.
 signal boost_held_changed(held: bool)
+signal send_wave_requested
+signal auto_wave_toggled(on: bool)
+signal emergency_clear_requested
 
 # Label wording (Garret's text).
 @export var gold_format: String = "Gold: %d"
 @export var gold_per_second_format: String = "Gold per sec: %.1f"
 @export var speed_format: String = "Speed: ×%.2f"
 # TODO(Garret): text
-@export var wave_countdown_format: String = "Next wave: %d"
+## Send button while the countdown runs; %d is seconds left.
+@export var wave_countdown_format: String = "Send wave (%d)"
+# TODO(Garret): text
+## Send button while auto waves are off.
+@export var wave_paused_text: String = "Send wave"
+# TODO(Garret): text
+## Emergency Clear when ready; %d is the price.
+@export var emergency_ready_format: String = "Clear latched (%d)"
+# TODO(Garret): text
+## Emergency Clear on cooldown; %d is seconds left.
+@export var emergency_cooldown_format: String = "Clear ready in %ds"
 ## Boost bar tint during Overdrive.
 @export var overdrive_bar_modulate: Color = Color(1.6, 1.3, 0.35)
 ## While stalled, the Boost bar shows the crank meter in this tint...
@@ -28,13 +41,16 @@ signal boost_held_changed(held: bool)
 @onready var _gold_per_sec_label: Label = %GoldPerSecLabel
 @onready var _speed_label: Label = %SpeedLabel
 @onready var _health_bar: ProgressBar = %HealthBar
-@onready var _wave_countdown_label: Label = %WaveCountdownLabel
+@onready var _wave_button: Button = %WaveButton
+@onready var _auto_wave_check: CheckButton = %AutoWaveCheck
+@onready var _emergency_button: Button = %EmergencyButton
 @onready var _boost_bar: ProgressBar = %BoostBar
 @onready var _boost_button: Button = %BoostButton
 
 var _boost_button_text: String = ""
 var _mouse_holding_boost: bool = false
 var _boost_held: bool = false
+var _wave_seconds: int = 0
 
 
 func _ready() -> void:
@@ -46,6 +62,13 @@ func _ready() -> void:
 	GameState.stall_changed.connect(_on_stall_changed)
 	GameState.crank_changed.connect(_on_crank_changed)
 	_boost_button_text = _boost_button.text
+	_wave_button.pressed.connect(func() -> void:
+		AudioManager.play_sfx(&"click")
+		send_wave_requested.emit())
+	_auto_wave_check.toggled.connect(func(on: bool) -> void:
+		AudioManager.play_sfx(&"click")
+		auto_wave_toggled.emit(on))
+	_emergency_button.pressed.connect(emergency_clear_requested.emit)
 	_boost_button.pressed.connect(boost_requested.emit)
 	_boost_button.pressed.connect(func() -> void:
 		AudioManager.play_sfx(&"crank" if GameState.is_stalled() else &"click"))
@@ -62,6 +85,7 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	_refresh_emergency_button()
 	var held := _mouse_holding_boost or Input.is_key_pressed(boost_key)
 	if held != _boost_held:
 		_boost_held = held
@@ -114,7 +138,27 @@ func _on_health_changed(current: float, maximum: float) -> void:
 
 ## Game forwards WaveManager's countdown here.
 func set_wave_countdown(seconds_left: int) -> void:
-	_wave_countdown_label.text = wave_countdown_format % seconds_left
+	_wave_seconds = seconds_left
+	_refresh_wave_button()
+
+
+## Game forwards the auto-wave state here (and the toggle reports changes back).
+func set_auto_wave(on: bool) -> void:
+	_auto_wave_check.set_pressed_no_signal(on)
+	_refresh_wave_button()
+
+
+func _refresh_wave_button() -> void:
+	_wave_button.text = wave_countdown_format % _wave_seconds if _auto_wave_check.button_pressed else wave_paused_text
+
+
+func _refresh_emergency_button() -> void:
+	var cooldown := GameState.get_emergency_clear_cooldown()
+	if cooldown > 0.0:
+		_emergency_button.text = emergency_cooldown_format % ceili(cooldown)
+	else:
+		_emergency_button.text = emergency_ready_format % GameState.get_emergency_clear_cost()
+	_emergency_button.disabled = not GameState.can_emergency_clear()
 
 
 func _make_shortcut(key: Key) -> Shortcut:

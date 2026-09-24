@@ -116,6 +116,17 @@
 
 ---
 
+## Target Timeline (Steam Next Fest June 2027)
+A game gets only one Next Fest, so this is the one.
+- **Jan 2027:** Steam store page live as "Coming Soon" (capsule art, screenshots, one strong GIF). Start collecting wishlists and share the first build on r/incremental_games.
+- **Apr 25, 2027:** Next Fest registration deadline.
+- **May 17, 2027:** Demo and store page ready for the press preview.
+- **June 14–21, 2027:** Steam Next Fest.
+- **After Next Fest:** Launch at $4.99 while the wishlists are fresh.
+- **Stretch:** Localize the store page first, then the game (common idle-game markets: Simplified Chinese, Japanese, Korean, German, Brazilian Portuguese, Russian).
+
+---
+
 ## Phase 7 — Ship
 **Goal:** On Steam with a free demo.
 
@@ -134,4 +145,4 @@
 ## Next Concrete Step
 _Update this line at the end of every session._
 
-> Garret playtests Step 10 and the overnight additions (Wolf Fang, UI reskin, sound effects, main menu; see `planning/phase2/README.md`). Then Phase 2 Step 11: five-minute playtest + walkthrough.
+> Garret playtests the wave controls (Step 10b), backgrounds, and Settings. Then Phase 2 Step 11: five-minute playtest + walkthrough, and plan Phase 3 (more mounts).

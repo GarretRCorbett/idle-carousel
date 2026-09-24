@@ -23,6 +23,9 @@ enum State { APPROACHING, AT_RIM, DEAD }
 ## Gap between the top of the enemy and its health bar.
 @export_range(0.0, 32.0, 1.0, "suffix:px") var health_bar_gap: float = 4.0
 
+## Kill Gold is data.gold_drop times this (1.5 for early-sent waves).
+var gold_multiplier: float = 1.0
+
 var _state: State = State.APPROACHING
 var _health: float = 0.0
 var _center: Vector2 = Vector2.ZERO

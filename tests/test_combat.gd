@@ -54,10 +54,19 @@ func _game() -> Game:
 	return game
 
 
+## Spawns a wave and keeps only its first Leaf, so random spawn spots can't
+## put a second Leaf under the same click.
 func _first_enemy(game: Game) -> EnemyBase:
 	var waves := game.get_node("WaveManager") as WaveManager
 	waves.spawn_wave()
-	return game.get_node("World/EnemyLayer").get_child(0) as EnemyBase
+	var layer := game.get_node("World/EnemyLayer")
+	var router := game.get_node("World/ClickRouter") as ClickRouter
+	for i in range(layer.get_child_count() - 1, 0, -1):
+		var extra := layer.get_child(i) as EnemyBase
+		router.unregister_enemy(extra)
+		layer.remove_child(extra)
+		extra.free()
+	return layer.get_child(0) as EnemyBase
 
 
 func test_kill_pays_gold_once_even_if_hit_twice_in_one_frame() -> void:
@@ -200,3 +209,28 @@ func test_wolf_fang_level_1_kills_a_grey_leaf_in_one_pass() -> void:
 	var fang := UpgradeManager.get_definition(&"wolf_fang")
 	assert_float(wolf.base_damage).is_less(leaf.base_health)  # two passes without it
 	assert_float(wolf.base_damage + fang.effect_value).is_greater_equal(leaf.base_health)
+
+
+func test_early_sent_leaf_pays_bonus_gold() -> void:
+	var game := _game()
+	var waves := game.get_node("WaveManager") as WaveManager
+	waves.send_wave_now()
+	var enemy := game.get_node("World/EnemyLayer").get_child(0) as EnemyBase
+	enemy.take_damage(100.0)
+	assert_float(GameState.get_gold()).is_equal_approx(enemy.data.gold_drop * waves.early_send_gold_multiplier, 0.0001)
+
+
+func test_emergency_clear_removes_only_latched_enemies() -> void:
+	var game := _game()
+	var layer := game.get_node("World/EnemyLayer")
+	(game.get_node("WaveManager") as WaveManager).spawn_wave()
+	var enemies: Array[EnemyBase] = []
+	for child: EnemyBase in layer.get_children():
+		enemies.append(child)
+	enemies[0].advance(100.0)  # only the first one latches
+	GameState.add_gold(1000.0)
+	var gold := GameState.get_gold()
+	assert_bool(GameState.try_emergency_clear()).is_true()
+	assert_bool(enemies[0].is_queued_for_deletion()).is_true()
+	assert_bool(enemies[1].is_queued_for_deletion()).is_false()
+	assert_float(GameState.get_gold()).is_equal(gold - GameState.get_emergency_clear_cost())

@@ -39,6 +39,15 @@ func _ready() -> void:
 	_wave_manager.center = _carousel.position
 	_wave_manager.enemy_spawned.connect(_on_enemy_spawned)
 	_wave_manager.countdown_changed.connect(_hud.set_wave_countdown)
+	_wave_manager.auto_changed.connect(_hud.set_auto_wave)
+	_wave_manager.set_auto(SaveManager.get_setting(&"auto_wave"))
+	_hud.set_auto_wave(_wave_manager.is_auto())
+	_hud.send_wave_requested.connect(_wave_manager.send_wave_now)
+	_hud.auto_wave_toggled.connect(func(on: bool) -> void:
+		_wave_manager.set_auto(on)
+		SaveManager.set_setting(&"auto_wave", on))
+	_hud.emergency_clear_requested.connect(GameState.try_emergency_clear)
+	GameState.emergency_cleared.connect(_on_emergency_cleared)
 	GameState.stall_timed_out.connect(_on_stall_timed_out)
 	_hud.boost_held_changed.connect(GameState.set_boost_held)
 	GameState.booth_count_changed.connect(_layout_booths)
@@ -182,7 +191,7 @@ func _on_enemy_reached_rim(enemy: EnemyBase) -> void:
 
 ## Runs once per enemy (EnemyBase guarantees it), so the kill pays once.
 func _on_enemy_died(enemy: EnemyBase) -> void:
-	GameState.add_gold(enemy.data.gold_drop)
+	GameState.add_gold(enemy.data.gold_drop * enemy.gold_multiplier)
 	AudioManager.play_sfx(&"pop")
 	_remove_enemy(enemy)
 
@@ -192,6 +201,15 @@ func _on_enemy_died(enemy: EnemyBase) -> void:
 func _on_stall_timed_out() -> void:
 	for enemy: EnemyBase in _enemy_layer.get_children():
 		_remove_enemy(enemy)
+
+
+## Emergency Clear: every latched enemy is removed, with no Gold. Enemies still
+## flying in stay.
+func _on_emergency_cleared() -> void:
+	AudioManager.play_sfx(&"restart")
+	for enemy: EnemyBase in _enemy_layer.get_children():
+		if enemy.is_at_rim():
+			_remove_enemy(enemy)
 
 
 func _remove_enemy(enemy: EnemyBase) -> void:

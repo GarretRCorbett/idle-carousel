@@ -8,6 +8,8 @@ extends Node
 signal enemy_spawned(enemy: EnemyBase)
 ## Whole seconds until the next wave, rounded up. Emitted when it changes.
 signal countdown_changed(seconds_left: int)
+## Auto waves turned on or off.
+signal auto_changed(on: bool)
 
 @export var enemy_scene: PackedScene
 
@@ -16,6 +18,8 @@ signal countdown_changed(seconds_left: int)
 @export_range(0.0, 600.0, 0.5, "suffix:s") var first_wave_delay: float = 10.0
 ## Seconds between waves after that.
 @export_range(1.0, 600.0, 0.5, "suffix:s") var wave_interval: float = 20.0
+## Leaves in a wave you send early drop this much Gold (1.5 = +50%).
+@export_range(1.0, 10.0, 0.05) var early_send_gold_multiplier: float = 1.5
 
 @export_group("Wave Shape")
 @export_range(1, 50, 1) var min_group: int = 3
@@ -35,6 +39,7 @@ signal countdown_changed(seconds_left: int)
 var center: Vector2 = Vector2.ZERO
 var rng := RandomNumberGenerator.new()
 var _shown_seconds: int = -1
+var _auto: bool = true
 
 @onready var _timer: Timer = $WaveTimer
 
@@ -47,13 +52,36 @@ func _ready() -> void:
 ## Starts the countdown to the first wave. Game calls this when a run starts.
 func start() -> void:
 	_timer.start(first_wave_delay)
+	_timer.paused = not _auto
 	_emit_countdown_if_changed()
 
 
 ## Restarts the countdown at a full wave_interval without sending a wave.
 func restart_countdown() -> void:
 	_timer.start(wave_interval)
+	_timer.paused = not _auto
 	_emit_countdown_if_changed()
+
+
+## Sends the next wave right now (Send button or N). Its Leaves drop bonus
+## Gold, and the countdown restarts, so waves never pile up by accident.
+func send_wave_now() -> int:
+	var count := spawn_wave(early_send_gold_multiplier)
+	restart_countdown()
+	return count
+
+
+## Off: the countdown pauses and waves only come when sent.
+func set_auto(on: bool) -> void:
+	if on == _auto:
+		return
+	_auto = on
+	_timer.paused = not on
+	auto_changed.emit(on)
+
+
+func is_auto() -> bool:
+	return _auto
 
 
 func get_seconds_left() -> float:
@@ -66,8 +94,7 @@ func _process(_delta: float) -> void:
 
 func _on_wave_timer_timeout() -> void:
 	spawn_wave()
-	_timer.start(wave_interval)
-	_emit_countdown_if_changed()
+	restart_countdown()
 
 
 func _emit_countdown_if_changed() -> void:
@@ -80,17 +107,18 @@ func _emit_countdown_if_changed() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	var key := event as InputEventKey
 	if key != null and key.pressed and not key.echo and key.keycode == send_wave_key:
-		spawn_wave()
+		send_wave_now()
 		get_viewport().set_input_as_handled()
 
 
 ## Creates one wave and announces each enemy. Returns how many were sent.
-func spawn_wave() -> int:
+func spawn_wave(gold_multiplier: float = 1.0) -> int:
 	var positions := plan_wave(rng, center, min_group, max_group,
 			spawn_radius, deg_to_rad(cluster_spread_deg), cluster_depth_px)
 	for spawn_position in positions:
 		var enemy := enemy_scene.instantiate() as EnemyBase
 		enemy.position = spawn_position
+		enemy.gold_multiplier = gold_multiplier
 		enemy_spawned.emit(enemy)
 	return positions.size()
 

@@ -17,7 +17,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> Garret playtests Step 10 and the overnight additions (Wolf Fang, UI reskin, sound effects, main menu; see `planning/phase2/README.md`). Then Phase 2 Step 11: five-minute playtest + walkthrough.
+> Garret playtests the wave controls (Step 10b), backgrounds, and Settings. Then Phase 2 Step 11: five-minute playtest + walkthrough, and plan Phase 3 (more mounts).
 
 ---
 
@@ -47,6 +47,9 @@ _Update at the end of every session._
 - [ ] Offline Gold cap (currently 8 hours) — adjust based on playtesting
 - [ ] **Full-stop spiral (watch in Phase 2 playtest)** — drag has no floor (GDD v1.4), so enough latches stop the carousel. A stopped carousel earns no booth Gold and mounts don't sweep, so only clicks can recover. Check it feels tense, not hopeless. If hopeless, options: a drag floor, or stronger clicks while stopped.
 - [ ] **Offline rate source (decide in Phase 4)** — the HUD's Gold/sec is recent *actual* income (includes kills and clicks). Offline progress probably should use booth income only, shown separately. Decide when building offline progress.
+
+### Scope ideas to revisit later
+- [ ] **Roguelike element** (Garret, 2026-09-24): the itch came from wanting more mounts. Parked to protect v1.0 scope; revisit when planning prestige (a DECISION PENDING in the GDD).
 
 ### QoL Ideas (post v1.0 unless easy)
 - [ ] **Auto-boost option** (Garret, 2026-09-24): some way to keep the boost up while fighting enemies (an auto-clicker upgrade or a hold-to-boost). Revisit once Leaves exist, since it changes how active play feels.

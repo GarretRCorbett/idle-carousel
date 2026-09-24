@@ -92,3 +92,40 @@ func test_restart_countdown_sends_no_wave() -> void:
 	waves.restart_countdown()
 	assert_int(_sent).is_equal(0)
 	assert_float(waves.get_seconds_left()).is_equal_approx(15.0, 0.001)
+
+
+func test_sending_early_restarts_the_countdown_and_marks_bonus_gold() -> void:
+	var waves := _running_waves()
+	var multipliers: Array[float] = []
+	waves.enemy_spawned.connect(func(e: EnemyBase) -> void: multipliers.append(e.gold_multiplier))
+	waves.start()
+	_sent = 0
+	var count := waves.send_wave_now()
+	assert_int(_sent).is_equal(count)
+	assert_float(waves.get_seconds_left()).is_equal_approx(15.0, 0.001)
+	for m in multipliers:
+		assert_float(m).is_equal(waves.early_send_gold_multiplier)
+
+
+func test_timed_waves_have_no_bonus() -> void:
+	var waves := _running_waves()
+	var multipliers: Array[float] = []
+	waves.enemy_spawned.connect(func(e: EnemyBase) -> void: multipliers.append(e.gold_multiplier))
+	waves.start()
+	waves._on_wave_timer_timeout()
+	for m in multipliers:
+		assert_float(m).is_equal(1.0)
+
+
+func test_auto_off_pauses_the_countdown() -> void:
+	var waves := _running_waves()
+	var seen: Array[bool] = []
+	waves.auto_changed.connect(func(on: bool) -> void: seen.append(on))
+	waves.start()
+	waves.set_auto(false)
+	assert_bool((waves.get_node("WaveTimer") as Timer).paused).is_true()
+	waves.send_wave_now()  # sending still works, and the new countdown stays paused
+	assert_bool((waves.get_node("WaveTimer") as Timer).paused).is_true()
+	waves.set_auto(true)
+	assert_bool((waves.get_node("WaveTimer") as Timer).paused).is_false()
+	assert_array(seen).is_equal([false, true])

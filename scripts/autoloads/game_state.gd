@@ -31,6 +31,8 @@ signal crank_changed(fraction: float)
 ## TEMPORARY: stalled too long. Latches are already cleared and health restored;
 ## Game removes every enemy (no Gold).
 signal stall_timed_out
+## Emergency Clear removed every latch. Game removes the latched enemies (no Gold).
+signal emergency_cleared
 ## Emitted after every value has been reset, before the fresh values are re-announced.
 signal run_reset
 
@@ -48,6 +50,8 @@ class Latch:
 
 ## The mount a run starts with (RunConfig.starting_horses of them).
 const STARTING_MOUNT: StringName = &"horse"
+## Horse payout per booth pass, for pricing Emergency Clear from normal income.
+const HORSE_DATA: MountData = preload("res://resources/mounts/horse.tres")
 const DEFAULT_CONFIG: RunConfig = preload("res://resources/config/run_config.tres")
 
 var _config: RunConfig = DEFAULT_CONFIG
@@ -92,6 +96,7 @@ var _stall_seconds: float = 0.0
 var _crank: float = 0.0
 var _boost_held: bool = false
 var _protection_left: float = 0.0
+var _emergency_cooldown: float = 0.0
 
 
 func _ready() -> void:
@@ -132,6 +137,7 @@ func reset_run(config_override: RunConfig = null) -> void:
 	_crank = 0.0
 	_boost_held = false
 	_protection_left = 0.0
+	_emergency_cooldown = 0.0
 	_upgrade_levels.clear()
 	_income_buckets = PackedFloat64Array()
 	_income_buckets.resize(config.income_bucket_count)
@@ -308,6 +314,50 @@ func _recompute_latch_totals() -> void:
 		_total_latch_dps += latch.damage_per_second
 
 
+# --- Emergency Clear ------------------------------------------------------------
+
+## Normal booth income per second: every Horse passing every booth at the
+## unboosted, drag-free speed. Drag and boost don't change prices.
+func get_normal_booth_income_per_second() -> float:
+	var horses := _mount_roster.count(STARTING_MOUNT)
+	var turns_per_second := deg_to_rad(_config.base_spin_speed_deg_s) * get_spin_upgrade_multiplier() / TAU
+	return horses * _booth_count * HORSE_DATA.base_gold_bonus * turns_per_second
+
+
+func get_emergency_clear_cost() -> float:
+	return maxf(_config.emergency_clear_min_cost,
+			roundf(get_normal_booth_income_per_second() * _config.emergency_clear_income_seconds))
+
+
+## Seconds until Emergency Clear can be used again (0 = ready).
+func get_emergency_clear_cooldown() -> float:
+	return _emergency_cooldown
+
+
+func can_emergency_clear() -> bool:
+	return _emergency_cooldown <= 0.0 and not _latches.is_empty() and can_afford(get_emergency_clear_cost())
+
+
+## Pays, removes every latch (a stall ends as if they were cleared), and starts
+## the cooldown. Game then removes the latched enemies, with no Gold.
+func try_emergency_clear() -> bool:
+	if not can_emergency_clear():
+		return false
+	spend_gold(get_emergency_clear_cost())
+	_emergency_cooldown = _config.emergency_clear_cooldown_seconds
+	var previous_speed := get_effective_spin_speed_rad_s()
+	_latches.clear()
+	_recompute_latch_totals()
+	var stall_flipped := _evaluate_temporary_stall()
+	latch_count_changed.emit(0)
+	if stall_flipped:
+		health_changed.emit(_health, get_max_health())
+		stall_changed.emit(_stalled)
+	_emit_speed_if_changed(previous_speed)
+	emergency_cleared.emit()
+	return true
+
+
 # --- TEMPORARY Phase 2 stall ----------------------------------------------------------
 # Replace once Garret decides the GDD's DECISION PENDING fail state
 # (direction so far: planning/phase2/README.md, "Package A").
@@ -375,6 +425,7 @@ func advance_simulation(delta: float) -> void:
 	_update_boost_status(delta)
 	_emit_speed_if_changed(previous_speed)
 	_advance_health(delta)
+	_emergency_cooldown = maxf(0.0, _emergency_cooldown - delta)
 	_elapsed += delta
 	_advance_income_window()
 
