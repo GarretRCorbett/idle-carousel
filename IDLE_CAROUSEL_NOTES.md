@@ -17,7 +17,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> Phase 2 Step 6: One Leaf (approach, click damage, death) + Click Damage 1. Steps 2–5 done; plans and design memos in `planning/phase2/`.
+> Phase 2 Step 6: the first Leaf (approach, click damage, death pays Gold) + Click Damage as a leveled shop row. Plan first. Steps 1–5b and the pacing pass (leveled shop, booths, Overdrive) are done; status and playtest notes in `planning/phase2/README.md`.
 
 ---
 
@@ -43,6 +43,8 @@ _Update at the end of every session._
 - [ ] **Offline rate source (decide in Phase 4)** — the HUD's Gold/sec is recent *actual* income (includes kills and clicks). Offline progress probably should use booth income only, shown separately. Decide when building offline progress.
 
 ### QoL Ideas (post v1.0 unless easy)
+- [ ] **Auto-boost option** (Garret, 2026-09-24): some way to keep the boost up while fighting enemies (an auto-clicker upgrade or a hold-to-boost). Revisit once Leaves exist, since it changes how active play feels.
+- [ ] **Idle base speed feels slow** (Garret, 2026-09-24): fine for now because it encourages clicking; retune once enemies add pressure.
 - [ ] Tooltip on each mount showing current stats
 - [ ] Speed up button (2× game speed toggle)
 - [ ] Statistics screen (total gold, enemies killed, time played)
