@@ -74,5 +74,7 @@ func test_options_lists_english_by_its_own_name() -> void:
 	add_child(menu)
 	auto_free(menu)
 	var languages := menu.get_node("%LanguageOption") as OptionButton
-	assert_int(languages.item_count).is_greater_equal(1)
-	assert_str(languages.get_item_text(0)).is_equal("English")
+	var names: Array[String] = []
+	for i in languages.item_count:
+		names.append(languages.get_item_text(i))
+	assert_array(names).contains(["English", "Español", "简体中文", "日本語"])
