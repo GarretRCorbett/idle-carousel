@@ -17,7 +17,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> Phase 2 Step 11 wrap-up in a fresh session: follow `planning/phase2/step11_plan.md` (playtest, doc tidy, walkthrough, sign-off). Then plan Phase 3 (more mounts).
+> Finish Phase 2 Step 11 (Garret's playtest notes, walkthrough, understanding check, sign-off). Then Phase 3: research is done in `planning/phase3/` (README has Claude's take on two Codex memos, a draft step list, and 24 questions). Garret answers the questions, then Claude writes `step1_plan.md`.
 
 ---
 
