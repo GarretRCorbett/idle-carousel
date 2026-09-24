@@ -6,6 +6,9 @@ extends Control
 
 signal closed
 
+## Built by tools/build_ui_theme.gd: UI font plus every script's fallback.
+const LANGUAGE_LIST_FONT: Font = preload("res://assets/fonts/language_list_font.tres")
+
 ## The game sets this so play stops while the menu is open.
 @export var pause_game_while_open: bool = false
 
@@ -67,6 +70,9 @@ func _unhandled_input(event: InputEvent) -> void:
 func _setup_language_list() -> void:
 	# Names are already in their own language; don't translate them again.
 	_language_option.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+	# Each name is in its own script, so one UI font can't draw them all.
+	_language_option.add_theme_font_override(&"font", LANGUAGE_LIST_FONT)
+	_language_option.get_popup().add_theme_font_override(&"font", LANGUAGE_LIST_FONT)
 	_locales = TranslationServer.get_loaded_locales()
 	_locales.sort()
 	if _locales.is_empty():

@@ -168,6 +168,19 @@ func _any_has(fonts: Array[Font], code: int) -> bool:
 	return false
 
 
+## The Settings language list shows every language in its own name at once, in
+## any UI language, so its font must draw all of them (Codex review).
+func test_language_list_font_draws_every_native_name() -> void:
+	var fonts := _font_chain(OptionsMenu.LANGUAGE_LIST_FONT)
+	var missing := ""
+	for locale in TranslationServer.get_loaded_locales():
+		var native := String(TranslationServer.get_translation_object(locale).get_message(&"LANGUAGE_NATIVE_NAME"))
+		for c in native:
+			if c != " " and not _any_has(fonts, c.unicode_at(0)) and not c in missing:
+				missing += c
+	assert_str(missing).override_failure_message("language list font is missing: %s" % missing).is_empty()
+
+
 func test_language_fonts() -> void:
 	assert_object(LocaleFonts.ui_font("zh_CN")).is_not_null()
 	assert_str(LocaleFonts.ui_font("es").resource_path).is_equal(LocaleFonts.DEFAULT_UI)

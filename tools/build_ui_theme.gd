@@ -48,6 +48,14 @@ func _initialize() -> void:
 		cjk.base_font = load("res://assets/fonts/noto_sans_%s_subset.ttf" % file_code)
 		cjk.fallbacks = [ui_font]
 		ResourceSaver.save(cjk, "res://assets/fonts/ui_font_%s.tres" % lang)
+	# The language list shows every language in its own script at once, whatever
+	# the UI language is, so it needs every font in one chain.
+	var language_list := FontVariation.new()
+	language_list.base_font = load("res://assets/fonts/kenney_future_narrow.ttf")
+	language_list.fallbacks = [fallback]
+	for file_code in ["sc", "jp", "kr"]:
+		language_list.fallbacks.append(load("res://assets/fonts/noto_sans_%s_subset.ttf" % file_code))
+	ResourceSaver.save(language_list, "res://assets/fonts/language_list_font.tres")
 
 	var theme := Theme.new()
 	theme.default_font = load(UI_FONT_OUT)

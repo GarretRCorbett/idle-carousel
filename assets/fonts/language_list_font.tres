@@ -1,0 +1,17 @@
+[gd_resource type="FontVariation" format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/kenney_future_narrow.ttf" id="1_oko50"]
+[ext_resource type="FontFile" path="res://assets/fonts/rubik_variable.ttf" id="2_whvav"]
+[ext_resource type="FontFile" path="res://assets/fonts/noto_sans_sc_subset.ttf" id="3_tdlsl"]
+[ext_resource type="FontFile" path="res://assets/fonts/noto_sans_jp_subset.ttf" id="4_2ywrl"]
+[ext_resource type="FontFile" path="res://assets/fonts/noto_sans_kr_subset.ttf" id="5_i8785"]
+
+[sub_resource type="FontVariation" id="FontVariation_mf27e"]
+base_font = ExtResource("2_whvav")
+variation_opentype = {
+2003265652: 600
+}
+
+[resource]
+fallbacks = Array[Font]([SubResource("FontVariation_mf27e"), ExtResource("3_tdlsl"), ExtResource("4_2ywrl"), ExtResource("5_i8785")])
+base_font = ExtResource("1_oko50")
