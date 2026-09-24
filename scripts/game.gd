@@ -159,7 +159,7 @@ func _on_enemy_clicked(enemy: EnemyBase) -> void:
 
 
 func _on_enemy_swept(wolf: MountWolf, enemy: EnemyBase) -> void:
-	enemy.take_damage(wolf.data.base_damage)
+	enemy.take_damage(wolf.data.base_damage + GameState.get_wolf_damage_bonus())
 
 
 ## Latching: the enemy stays where it is in the world (the carousel turns

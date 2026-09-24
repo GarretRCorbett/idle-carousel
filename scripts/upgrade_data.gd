@@ -12,6 +12,7 @@ enum EffectType {
 	ADD_CLICK_DAMAGE,  ## effect_value added to click damage per level
 	ADD_MOUNT_SLOT,    ## one more mount slot per level
 	BUY_MOUNT,         ## one mount_scene per level, placed in the next free slot
+	ADD_WOLF_DAMAGE,   ## effect_value added to Wolf damage per hit, per level
 }
 
 ## Which shop tab the row appears on.

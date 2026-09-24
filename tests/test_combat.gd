@@ -180,3 +180,23 @@ func test_respacing_never_pays_a_booth_pass() -> void:
 	carousel.advance_rotation(1.0, 0.01)
 	var spent := UpgradeManager.get_definition(&"mount_slot").cost_gold + UpgradeManager.get_definition(&"horse").cost_gold
 	assert_float(GameState.get_gold()).is_equal(gold - spent)
+
+
+func test_wolf_fang_needs_the_wolf_and_adds_damage() -> void:
+	GameState.add_gold(10000.0)
+	assert_bool(UpgradeManager.purchase(&"wolf_fang")).is_false()
+	assert_int(UpgradeShop.get_row_state(&"wolf_fang")).is_equal(UpgradeShop.RowState.LOCKED)
+	UpgradeManager.purchase(&"mount_slot")
+	UpgradeManager.purchase(&"wolf")
+	assert_bool(UpgradeManager.purchase(&"wolf_fang")).is_true()
+	var fang := UpgradeManager.get_definition(&"wolf_fang")
+	assert_int(fang.tab).is_equal(UpgradeData.Tab.COMBAT)
+	assert_float(GameState.get_wolf_damage_bonus()).is_equal_approx(fang.effect_value, 0.00001)
+
+
+func test_wolf_fang_level_1_kills_a_grey_leaf_in_one_pass() -> void:
+	var wolf := load("res://resources/mounts/wolf.tres") as MountData
+	var leaf := load("res://resources/enemies/leaf.tres") as EnemyData
+	var fang := UpgradeManager.get_definition(&"wolf_fang")
+	assert_float(wolf.base_damage).is_less(leaf.base_health)  # two passes without it
+	assert_float(wolf.base_damage + fang.effect_value).is_greater_equal(leaf.base_health)

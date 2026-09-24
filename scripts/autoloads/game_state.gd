@@ -66,6 +66,7 @@ var _speed_modifiers: Dictionary[StringName, float] = {}
 var _spin_bonus: float = 0.0
 var _boost_cap_bonus: float = 0.0
 var _click_damage_bonus: float = 0.0
+var _wolf_damage_bonus: float = 0.0
 var _booth_count: int = 1
 # Mounts: ids (the BUY_MOUNT upgrade id, e.g. &"horse") in placement order.
 var _mount_roster: Array[StringName] = []
@@ -116,6 +117,7 @@ func reset_run(config_override: RunConfig = null) -> void:
 	_spin_bonus = 0.0
 	_boost_cap_bonus = 0.0
 	_click_damage_bonus = 0.0
+	_wolf_damage_bonus = 0.0
 	_booth_count = config.starting_booths
 	_mount_slots = config.starting_mount_slots
 	_mount_roster.clear()
@@ -534,6 +536,11 @@ func get_click_damage() -> float:
 	return _config.base_click_damage + _click_damage_bonus
 
 
+## Extra damage per Wolf hit from Wolf Fang levels (added to MountData.base_damage).
+func get_wolf_damage_bonus() -> float:
+	return _wolf_damage_bonus
+
+
 # --- Ticket booths ------------------------------------------------------------------
 
 func get_booth_count() -> int:
@@ -652,6 +659,8 @@ func try_purchase_upgrade(upgrade: UpgradeData) -> bool:
 			_mount_slots += 1
 		UpgradeData.EffectType.BUY_MOUNT:
 			_mount_roster.append(upgrade.id)
+		UpgradeData.EffectType.ADD_WOLF_DAMAGE:
+			_wolf_damage_bonus += upgrade.effect_value
 	# Everything is committed; now announce it.
 	gold_changed.emit(_gold, -cost)
 	_emit_speed_if_changed(previous_speed)
@@ -674,4 +683,5 @@ func _is_effect_supported(upgrade: UpgradeData) -> bool:
 		UpgradeData.EffectType.ADD_CLICK_DAMAGE,
 		UpgradeData.EffectType.ADD_MOUNT_SLOT,
 		UpgradeData.EffectType.BUY_MOUNT,
+		UpgradeData.EffectType.ADD_WOLF_DAMAGE,
 	]
