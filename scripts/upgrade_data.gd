@@ -20,7 +20,7 @@ enum Tab { CAROUSEL, COMBAT, MOUNTS }
 
 ## Internal key. Never shown to the player; don't rename after release.
 @export var id: StringName = &""
-## Shop name and description (Garret's text).
+## Shop name and description: translation keys (localization/strings.csv).
 @export var display_name: String = ""
 @export_multiline var description: String = ""
 @export var effect_type: EffectType = EffectType.ADD_SPIN_BONUS

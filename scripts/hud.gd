@@ -11,29 +11,21 @@ signal send_wave_requested
 signal auto_wave_toggled(on: bool)
 signal emergency_clear_requested
 
-# Label wording (Garret's text).
-@export var gold_format: String = "Gold: %d"
-@export var gold_per_second_format: String = "Gold per sec: %.1f"
-@export var speed_format: String = "Speed: ×%.2f"
-# TODO(Garret): text
-## Send button while the countdown runs; %d is seconds left.
-@export var wave_countdown_format: String = "Send wave (%d)"
-# TODO(Garret): text
-## Send button while auto waves are off.
-@export var wave_paused_text: String = "Send wave"
-# TODO(Garret): text
-## Emergency Clear when ready; %d is the price.
-@export var emergency_ready_format: String = "Clear latched (%d)"
-# TODO(Garret): text
-## Emergency Clear on cooldown; %d is seconds left.
-@export var emergency_cooldown_format: String = "Clear ready in %ds"
+# Wording: translation keys in localization/strings.csv. Placeholders are {0}, {1}...
+# (numbered, so pseudolocalization and translators can't mangle them).
+@export var gold_key: String = "HUD_GOLD"
+@export var gold_per_second_key: String = "HUD_GOLD_PER_SEC"
+@export var speed_key: String = "HUD_SPEED"
+@export var wave_countdown_key: String = "HUD_SEND_WAVE_COUNTDOWN"
+@export var wave_paused_key: String = "HUD_SEND_WAVE"
+@export var emergency_ready_key: String = "HUD_CLEAR_READY"
+@export var emergency_cooldown_key: String = "HUD_CLEAR_COOLDOWN"
 ## Boost bar tint during Overdrive.
 @export var overdrive_bar_modulate: Color = Color(1.6, 1.3, 0.35)
 ## While stalled, the Boost bar shows the crank meter in this tint...
 @export var crank_bar_modulate: Color = Color(1.5, 0.6, 0.5)
-# TODO(Garret): text
-## ...and the Boost button shows this label.
-@export var crank_button_text: String = "Crank!"
+## ...and the Boost button shows this label (a translation key).
+@export var crank_button_key: String = "HUD_CRANK"
 ## Keyboard shortcut for the Boost button.
 @export var boost_key: Key = KEY_SPACE
 
@@ -62,6 +54,10 @@ func _ready() -> void:
 	GameState.stall_changed.connect(_on_stall_changed)
 	GameState.crank_changed.connect(_on_crank_changed)
 	_boost_button_text = _boost_button.text
+	# These show text built in code with tr(); don't translate it a second time.
+	for node: Control in [_gold_label, _gold_per_sec_label, _speed_label, _wave_button, _emergency_button, _boost_button]:
+		node.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+	_boost_button.text = tr(_boost_button_text)
 	_wave_button.pressed.connect(func() -> void:
 		AudioManager.play_sfx(&"click")
 		send_wave_requested.emit())
@@ -93,16 +89,16 @@ func _process(_delta: float) -> void:
 
 
 func _on_gold_changed(balance: float, _delta: float) -> void:
-	_gold_label.text = gold_format % floorf(balance)
+	_gold_label.text = tr(gold_key).format([NumberFormat.gold(balance)])
 
 
 func _on_gold_per_second_changed(value: float) -> void:
-	_gold_per_sec_label.text = gold_per_second_format % value
+	_gold_per_sec_label.text = tr(gold_per_second_key).format([NumberFormat.decimal(value, 1)])
 
 
 ## Fires every tick while the boost fades, so the bar drains smoothly.
 func _on_spin_speed_changed(_speed_rad_s: float) -> void:
-	_speed_label.text = speed_format % GameState.get_speed_multiplier()
+	_speed_label.text = tr(speed_key).format([NumberFormat.decimal(GameState.get_speed_multiplier(), 2)])
 	_refresh_boost_bar()
 
 
@@ -112,7 +108,7 @@ func _on_overdrive_changed(_active: bool) -> void:
 
 ## TEMPORARY stall: the Boost button becomes the crank.
 func _on_stall_changed(stalled: bool) -> void:
-	_boost_button.text = crank_button_text if stalled else _boost_button_text
+	_boost_button.text = tr(crank_button_key) if stalled else tr(_boost_button_text)
 	_boost_button.theme_type_variation = &"CrankButton" if stalled else &""
 	_refresh_boost_bar()
 
@@ -149,15 +145,16 @@ func set_auto_wave(on: bool) -> void:
 
 
 func _refresh_wave_button() -> void:
-	_wave_button.text = wave_countdown_format % _wave_seconds if _auto_wave_check.button_pressed else wave_paused_text
+	_wave_button.text = (tr(wave_countdown_key).format([_wave_seconds])
+			if _auto_wave_check.button_pressed else tr(wave_paused_key))
 
 
 func _refresh_emergency_button() -> void:
 	var cooldown := GameState.get_emergency_clear_cooldown()
 	if cooldown > 0.0:
-		_emergency_button.text = emergency_cooldown_format % ceili(cooldown)
+		_emergency_button.text = tr(emergency_cooldown_key).format([ceili(cooldown)])
 	else:
-		_emergency_button.text = emergency_ready_format % GameState.get_emergency_clear_cost()
+		_emergency_button.text = tr(emergency_ready_key).format([NumberFormat.gold(GameState.get_emergency_clear_cost())])
 	_emergency_button.disabled = not GameState.can_emergency_clear()
 
 

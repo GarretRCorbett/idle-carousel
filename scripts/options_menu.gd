@@ -28,6 +28,9 @@ func _ready() -> void:
 		SaveManager.set_setting(&"fullscreen", on)
 		AudioManager.play_sfx(&"click"))
 	_back_button.pressed.connect(close)
+	# Keys: the tab bar translates titles itself.
+	_tabs.set_tab_title(0, "OPT_TAB_SETTINGS")
+	_tabs.set_tab_title(1, "OPT_TAB_CONTROLS")
 	_tabs.tab_changed.connect(func(_tab: int) -> void: AudioManager.play_sfx(&"tab"))
 
 

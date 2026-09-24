@@ -12,22 +12,14 @@ extends PanelContainer
 
 enum RowState { LOCKED, SAVING, AFFORDABLE, MAXED }
 
-# Wording (Garret's text).
-## Buy button text; %d is the next level's price.
-@export var cost_format: String = "%d"
-## Shown on locked rows; %s is the prerequisite's name.
-@export var requires_format: String = "Requires %s"
-## Button text once every level is bought.
-@export var maxed_mark: String = "✓"
-# TODO(Garret): text
-## Shown on mount rows when every slot is full.
-@export var needs_slot_text: String = "Needs an empty slot"
-# TODO(Garret): text
-## Sell button text on sellable mounts; %d is the refund.
-@export var sell_format: String = "Sell %d"
-# TODO(Garret): text
+# Wording: translation keys in localization/strings.csv. Placeholders are {0}, {1}...
+@export var cost_key: String = "SHOP_COST"
+@export var requires_key: String = "SHOP_REQUIRES"
+@export var maxed_key: String = "SHOP_MAXED"
+@export var needs_slot_key: String = "SHOP_NEEDS_SLOT"
+@export var sell_key: String = "SHOP_SELL"
 ## Tab titles, in UpgradeData.Tab order.
-@export var tab_titles: PackedStringArray = ["Carousel", "Combat", "Mounts"]
+@export var tab_title_keys: PackedStringArray = ["SHOP_TAB_CAROUSEL", "SHOP_TAB_COMBAT", "SHOP_TAB_MOUNTS"]
 
 @export_group("Look")
 @export var locked_modulate: Color = Color(1.0, 1.0, 1.0, 0.55)
@@ -55,10 +47,12 @@ class ShopRow:
 func _ready() -> void:
 	for i in UpgradeData.Tab.size():
 		var page := VBoxContainer.new()
-		page.name = tab_titles[i] if i < tab_titles.size() else str(i)
+		page.name = "Tab%d" % i
 		page.add_theme_constant_override("separation", row_list_separation)
 		page.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		_tabs.add_child(page)
+		# A key: the tab bar translates titles itself.
+		_tabs.set_tab_title(i, tab_title_keys[i] if i < tab_title_keys.size() else str(i))
 		_pages.append(page)
 	_tabs.tab_changed.connect(func(_tab: int) -> void: AudioManager.play_sfx(&"tab"))
 	for upgrade in UpgradeManager.get_definitions():
@@ -104,8 +98,8 @@ func _build_row(upgrade: UpgradeData) -> ShopRow:
 	var text := VBoxContainer.new()
 	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	text.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	text.add_child(_label(upgrade.display_name, false))
-	text.add_child(_label(upgrade.description, true))
+	text.add_child(_label(tr(upgrade.display_name), false))
+	text.add_child(_label(tr(upgrade.description), true))
 	row.pips = LevelPips.new()
 	row.pips.max_level = upgrade.max_level
 	row.pips.visible = upgrade.max_level > 1
@@ -114,6 +108,7 @@ func _build_row(upgrade: UpgradeData) -> ShopRow:
 	text.add_child(row.status)
 
 	row.button = Button.new()
+	row.button.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	row.button.custom_minimum_size = Vector2(72, 0)
 	row.button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.button.focus_mode = Control.FOCUS_NONE
@@ -124,6 +119,7 @@ func _build_row(upgrade: UpgradeData) -> ShopRow:
 	buttons.add_child(row.button)
 	if upgrade.sell_refund_fraction > 0.0:
 		row.sell_button = Button.new()
+		row.sell_button.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 		row.sell_button.focus_mode = Control.FOCUS_NONE
 		row.sell_button.pressed.connect(UpgradeManager.sell.bind(upgrade.id))
 		buttons.add_child(row.sell_button)
@@ -144,6 +140,8 @@ func _build_row(upgrade: UpgradeData) -> ShopRow:
 
 func _label(text: String, wraps: bool) -> Label:
 	var label := Label.new()
+	# Text arrives already translated; don't let the label translate it again.
+	label.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	label.text = text
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if wraps:
@@ -161,19 +159,19 @@ func _refresh() -> void:
 		var cost := UpgradeManager.get_cost(id)
 		row.pips.level = UpgradeManager.get_level(id)
 		row.button.disabled = state != RowState.AFFORDABLE
-		row.button.text = maxed_mark if state == RowState.MAXED else cost_format % cost
+		row.button.text = tr(maxed_key) if state == RowState.MAXED else tr(cost_key).format([NumberFormat.gold(cost)])
 		row.progress.visible = state != RowState.MAXED
 		row.progress.value = clampf(GameState.get_gold() / cost, 0.0, 1.0) if cost > 0.0 else 1.0
 		row.status.visible = state == RowState.LOCKED
 		if state == RowState.LOCKED:
 			if _locked_reason(id) == LockReason.NO_SLOT:
-				row.status.text = needs_slot_text
+				row.status.text = tr(needs_slot_key)
 			else:
 				var prerequisite := UpgradeManager.get_definition(upgrade.prerequisite_id)
-				row.status.text = requires_format % prerequisite.display_name
+				row.status.text = tr(requires_key).format([tr(prerequisite.display_name)])
 		if row.sell_button != null:
 			row.sell_button.disabled = not UpgradeManager.can_sell(id)
-			row.sell_button.text = sell_format % UpgradeManager.get_sell_refund(id)
+			row.sell_button.text = tr(sell_key).format([NumberFormat.gold(UpgradeManager.get_sell_refund(id))])
 		match state:
 			RowState.LOCKED:
 				row.root.modulate = locked_modulate

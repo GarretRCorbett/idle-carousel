@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_script")
 id = &"carousel_speed"
-display_name = "Carousel Speed"
-description = "+20% base speed"
+display_name = "UPG_CAROUSEL_SPEED_NAME"
+description = "UPG_CAROUSEL_SPEED_DESC"
 effect_type = 0
 effect_value = 0.2
 cost_gold = 30.0

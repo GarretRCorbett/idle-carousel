@@ -6,8 +6,8 @@
 [resource]
 script = ExtResource("1_script")
 id = &"horse"
-display_name = "Horse"
-description = "Another Horse to pay at the booths"
+display_name = "UPG_HORSE_NAME"
+description = "UPG_HORSE_DESC"
 effect_type = 5
 effect_value = 1.0
 tab = 2

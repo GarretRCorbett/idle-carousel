@@ -1,0 +1,63 @@
+keys,en
+NUM_THOUSANDS_SEP,","
+NUM_DECIMAL_SEP,.
+NUM_SUFFIX_K,K
+NUM_SUFFIX_M,M
+NUM_SUFFIX_B,B
+NUM_SUFFIX_T,T
+MENU_TITLE,Idle Carousel
+MENU_PLAY,Play
+MENU_SETTINGS,Settings
+MENU_QUIT,Quit
+OPT_TAB_SETTINGS,Settings
+OPT_TAB_CONTROLS,Controls
+OPT_MASTER_VOLUME,Master volume
+OPT_SFX_VOLUME,Sound effects
+OPT_MUSIC_VOLUME,Music
+OPT_FULLSCREEN,Fullscreen
+OPT_BACK,Back
+CTRL_KEY_CLICK,Left click
+CTRL_HIT_LEAF,Hit a Leaf
+CTRL_KEY_BOOST,Space / Boost
+CTRL_BOOST,Speed up (keep it full for Overdrive)
+CTRL_KEY_STALLED,Space when stalled
+CTRL_CRANK,Crank the carousel back
+CTRL_KEY_SEND_WAVE,N
+CTRL_SEND_WAVE,Send the next wave now
+CTRL_KEY_PAUSE,Esc
+CTRL_PAUSE,Settings and pause
+HUD_GOLD,Gold: {0}
+HUD_GOLD_PER_SEC,Gold per sec: {0}
+HUD_SPEED,Speed: ×{0}
+HUD_BOOST,Boost
+HUD_CRANK,Crank!
+HUD_SEND_WAVE_COUNTDOWN,Send wave ({0})
+HUD_SEND_WAVE,Send wave
+HUD_AUTO_WAVES,Auto waves
+HUD_CLEAR_LATCHED,Clear latched
+HUD_CLEAR_READY,Clear latched ({0})
+HUD_CLEAR_COOLDOWN,Clear ready in {0}s
+SHOP_TAB_CAROUSEL,Carousel
+SHOP_TAB_COMBAT,Combat
+SHOP_TAB_MOUNTS,Mounts
+SHOP_COST,{0}
+SHOP_MAXED,✓
+SHOP_REQUIRES,Requires {0}
+SHOP_NEEDS_SLOT,Needs an empty slot
+SHOP_SELL,Sell {0}
+UPG_CAROUSEL_SPEED_NAME,Carousel Speed
+UPG_CAROUSEL_SPEED_DESC,+20% base speed
+UPG_BOOST_POWER_NAME,Boost Power
+UPG_BOOST_POWER_DESC,+10% max boost
+UPG_CLICK_DAMAGE_NAME,Click Damage
+UPG_CLICK_DAMAGE_DESC,+0.5 damage per click
+UPG_WOLF_FANG_NAME,Wolf Fang
+UPG_WOLF_FANG_DESC,+0.5 Wolf damage per hit
+UPG_TICKET_BOOTH_NAME,Ticket Booth
+UPG_TICKET_BOOTH_DESC,Another booth for the Horse to pass
+UPG_MOUNT_SLOT_NAME,Mount Slot
+UPG_MOUNT_SLOT_DESC,Room for one more mount
+UPG_WOLF_NAME,Wolf
+UPG_WOLF_DESC,Sweeps enemies as the carousel turns
+UPG_HORSE_NAME,Horse
+UPG_HORSE_DESC,Another Horse to pay at the booths

@@ -127,14 +127,14 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 focus_mode = 0
-text = "Send wave"
+text = "HUD_SEND_WAVE"
 
 [node name="AutoWaveCheck" type="CheckButton" parent="HUD/HUDRoot/ScreenMargin/Columns/LeftColumn/StatsPanel/StatsMargin/StatsVBox"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 button_pressed = true
-text = "Auto waves"
+text = "HUD_AUTO_WAVES"
 
 [node name="EmergencyButton" type="Button" parent="HUD/HUDRoot/ScreenMargin/Columns/LeftColumn/StatsPanel/StatsMargin/StatsVBox"]
 unique_name_in_owner = true
@@ -142,7 +142,7 @@ custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 theme_type_variation = &"CrankButton"
 focus_mode = 0
-text = "Clear latched"
+text = "HUD_CLEAR_LATCHED"
 
 [node name="PlayColumn" type="VBoxContainer" parent="HUD/HUDRoot/ScreenMargin/Columns" unique_id=1523604396]
 layout_mode = 2
@@ -176,7 +176,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 48)
 layout_mode = 2
 focus_mode = 0
-text = "Boost"
+text = "HUD_BOOST"
 
 [node name="ShopPanel" type="PanelContainer" parent="HUD/HUDRoot/ScreenMargin/Columns" unique_id=1638066341]
 custom_minimum_size = Vector2(290, 0)

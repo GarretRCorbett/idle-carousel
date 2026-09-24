@@ -61,9 +61,17 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
 - `call_deferred()` when changing scenes from physics callbacks.
 - Offline progress uses `Time.get_unix_time_from_system()` with an 8-hour clamp.
 - Gold is the only currency.
-- Localization-ready: wrap every player-facing string in `tr()` with a key (e.g.,
-  `tr("UI_GOLD")`) and keep keys in a translations CSV. Format large numbers with one
-  shared helper function, never inline.
+- Localization-ready: every player-facing string is a key in `localization/strings.csv`
+  (`keys,en`). Scene text holds the key (auto-translated); code uses
+  `tr(KEY).format([value])` with numbered placeholders `{0}` (named ones get mangled
+  by pseudolocalization) and sets `auto_translate_mode = DISABLED` on nodes whose text
+  it builds, so nothing is translated twice. Tab titles: pass the key to
+  `set_tab_title()`. Numbers only through `NumberFormat.gold()` / `.decimal()`.
+  Upgrade names/descriptions in `.tres` are keys too. `tests/test_localization.gd`
+  fails if a scene or upgrade uses text that isn't a key.
+- Pseudolocalization check: Project Settings → Advanced Settings on →
+  Internationalization → Pseudolocalization → Use Pseudolocalization, run the game,
+  look for plain English (missed) or cut-off text, then turn it off again.
 
 ## Workflow
 - Plan mode first for any feature bigger than a small tweak. Wait for approval.
@@ -91,8 +99,11 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
 - If the GDD is ambiguous, ask instead of guessing.
 
 ## Hard limits
-- No AI-generated art, audio, voice, or player-facing text (UI copy, store page,
-  dialogue). Placeholder shapes drawn in code are fine.
+- No AI-generated art, audio, or voice. Placeholder shapes drawn in code are fine.
+- Text (Garret, 2026-09-24): Claude may draft player-facing text (UI labels, tooltips,
+  upgrade names and descriptions) and machine-translation drafts. Garret reviews and
+  approves all of it before it ships. Store page copy, trailer text, and credits stay
+  Garret's.
 - Don't add features outside the GDD's v1.0 scope. Put ideas in IDLE_CAROUSEL_NOTES.md.
 
 ## Second opinions from Codex (GPT)

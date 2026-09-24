@@ -627,7 +627,7 @@ Top-down 2D. Simple readable silhouettes. Autumn park color palette. Charming no
 Use Godot Modulate property on Sprite2D to tint the base sprite with the tier color. Same sprite, different modulate = different tier. This keeps art to ONE sprite per enemy type while supporting all six tiers with no extra art work.
 
 ### Asset & AI Policy
-- AI tools are used for code only. No AI-generated images, audio, voice, or player-facing text anywhere, including the Steam capsule, screenshots, and trailer.
+- AI tools are used for code, and (since 2026-09-24) for drafting in-game text (UI labels, tooltips, upgrade names and descriptions) and machine-translation drafts, which Garret reviews and approves before anything ships. No AI-generated images, audio, or voice anywhere, including the Steam capsule, screenshots, and trailer. Store page copy, trailer text, and credits are Garret's.
 - Art base: Kenney.nl (CC0) and game-icons.net (CC BY 3.0, credit line required), recolored to one custom palette. Centerpiece sprites (carousel, horses, key upgrades) drawn by hand in Aseprite/LibreSprite.
 - Fonts: Google Fonts (OFL). SFX: Kenney audio and Sonniss GDC bundles.
 - Other itch.io/OpenGameArt assets only from long-standing creators, marked non-AI, CC0/CC-BY only (no GPL or ShareAlike).

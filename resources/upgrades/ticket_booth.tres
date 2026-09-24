@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_script")
 id = &"ticket_booth"
-display_name = "Ticket Booth"
-description = "Another booth for the Horse to pass"
+display_name = "UPG_TICKET_BOOTH_NAME"
+description = "UPG_TICKET_BOOTH_DESC"
 effect_type = 2
 effect_value = 1.0
 cost_gold = 500.0

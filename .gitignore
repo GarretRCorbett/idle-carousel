@@ -16,3 +16,6 @@ Thumbs.db
 # GdUnit4 output from editor test runs
 /reports/
 addons/gdUnit4/GdUnitRunner.cfg
+
+# Generated from localization/*.csv on import
+localization/*.translation

@@ -52,7 +52,7 @@ theme_override_colors/font_outline_color = Color(0.239, 0.208, 0.188, 1)
 theme_override_constants/outline_size = 12
 theme_override_fonts/font = ExtResource("4_title_font")
 theme_override_font_sizes/font_size = 48
-text = "Idle Carousel"
+text = "MENU_TITLE"
 horizontal_alignment = 1
 
 [node name="CarouselSpot" type="Control" parent="Center/Column"]
@@ -80,19 +80,19 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(240, 56)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "Play"
+text = "MENU_PLAY"
 
 [node name="SettingsButton" type="Button" parent="Center/Column/Buttons"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(240, 48)
 layout_mode = 2
-text = "Settings"
+text = "MENU_SETTINGS"
 
 [node name="QuitButton" type="Button" parent="Center/Column/Buttons"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(240, 48)
 layout_mode = 2
-text = "Quit"
+text = "MENU_QUIT"
 
 [node name="OptionsMenu" parent="." instance=ExtResource("6_options")]
 unique_name_in_owner = true

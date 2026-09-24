@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_script")
 id = &"boost_power"
-display_name = "Boost Power"
-description = "+10% max boost"
+display_name = "UPG_BOOST_POWER_NAME"
+description = "UPG_BOOST_POWER_DESC"
 effect_type = 1
 effect_value = 0.1
 cost_gold = 40.0

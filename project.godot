@@ -32,6 +32,13 @@ window/stretch/mode="canvas_items"
 
 enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://localization/strings.en.translation")
+locale/fallback="en"
+pseudolocalization/expansion_ratio=0.3
+pseudolocalization/fake_bidi=false
+
 [layer_names]
 
 2d_physics/layer_2="EnemyHurtbox"

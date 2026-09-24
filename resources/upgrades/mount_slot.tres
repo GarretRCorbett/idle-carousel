@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_script")
 id = &"mount_slot"
-display_name = "Mount Slot"
-description = "Room for one more mount"
+display_name = "UPG_MOUNT_SLOT_NAME"
+description = "UPG_MOUNT_SLOT_DESC"
 effect_type = 4
 effect_value = 1.0
 tab = 2

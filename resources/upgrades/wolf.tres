@@ -6,8 +6,8 @@
 [resource]
 script = ExtResource("1_script")
 id = &"wolf"
-display_name = "Wolf"
-description = "Sweeps enemies as the carousel turns"
+display_name = "UPG_WOLF_NAME"
+description = "UPG_WOLF_DESC"
 effect_type = 5
 effect_value = 1.0
 tab = 2

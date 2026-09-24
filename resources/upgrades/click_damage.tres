@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_script")
 id = &"click_damage"
-display_name = "Click Damage"
-description = "+0.5 damage per click"
+display_name = "UPG_CLICK_DAMAGE_NAME"
+description = "UPG_CLICK_DAMAGE_DESC"
 effect_type = 3
 effect_value = 0.5
 cost_gold = 25.0

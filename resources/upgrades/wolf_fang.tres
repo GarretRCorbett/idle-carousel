@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_script")
 id = &"wolf_fang"
-display_name = "Wolf Fang"
-description = "+0.5 Wolf damage per hit"
+display_name = "UPG_WOLF_FANG_NAME"
+description = "UPG_WOLF_FANG_DESC"
 effect_type = 6
 effect_value = 0.5
 tab = 1
