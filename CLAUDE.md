@@ -26,7 +26,7 @@ scripts/autoloads/      GameState, SaveManager, AudioManager, UpgradeManager
 scripts/                gameplay scripts, Resource classes (mount_data.gd, etc.)
 resources/mounts|enemies|upgrades/   .tres data files
 assets/sprites|audio/   human-made or licensed assets only
-tools/                  check.sh / check.bat
+tools/                  check.sh / check.bat (+ check_scripts.gd they run)
 ```
 File names snake_case; class names PascalCase; scenes PascalCase.tscn.
 

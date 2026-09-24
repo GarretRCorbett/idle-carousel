@@ -18,21 +18,13 @@ echo == Importing project
 findstr /R /C:"SCRIPT ERROR" /C:"Parse Error" /C:"ERROR:" "%TEMP%\ic_import.log" && set FAIL=1
 
 echo == Checking scripts
-for /R %%F in (*.gd) do (
-  set "P=%%F"
-  echo !P! | findstr /I /C:"\.godot\" /C:"\addons\" >nul
-  if errorlevel 1 (
-    set "R=!P:%CD%\=!"
-    set "R=!R:\=/!"
-    "%GODOT%" --headless --path . --check-only --script "res://!R!" > "%TEMP%\ic_check.log" 2>&1
-    findstr /R /C:"SCRIPT ERROR" /C:"Parse Error" /C:"ERROR:" "%TEMP%\ic_check.log" >nul
-    if not errorlevel 1 (
-      echo FAIL !R!
-      type "%TEMP%\ic_check.log"
-      set FAIL=1
-    )
-  )
-)
+REM One project-aware run so autoload singletons and class_names resolve.
+REM check_scripts.gd skips .godot and addons itself. --quit-after stops a
+REM broken checker from hanging instead of failing.
+"%GODOT%" --headless --path . --quit-after 600 -s res://tools/check_scripts.gd > "%TEMP%\ic_check.log" 2>&1
+if errorlevel 1 set FAIL=1
+findstr /R /C:"SCRIPT ERROR" /C:"Parse Error" /C:"ERROR:" /C:"CHECK FAIL" "%TEMP%\ic_check.log" >nul && set FAIL=1
+if not %FAIL%==0 type "%TEMP%\ic_check.log"
 
 if %FAIL%==0 (echo == PASS) else (echo == FAIL)
 exit /b %FAIL%

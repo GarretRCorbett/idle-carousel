@@ -27,14 +27,14 @@ if echo "$out" | grep -qE "SCRIPT ERROR|Parse Error|ERROR:"; then
 fi
 
 echo "== Checking scripts"
-while IFS= read -r -d '' f; do
-  res=$("$GODOT" --headless --path . --check-only --script "res://${f#./}" 2>&1)
-  if echo "$res" | grep -qE "SCRIPT ERROR|Parse Error|ERROR:"; then
-    echo "FAIL $f"
-    echo "$res" | grep -E "SCRIPT ERROR|Parse Error|ERROR:|at:"
-    fail=1
-  fi
-done < <(find . -name "*.gd" -not -path "./.godot/*" -not -path "./addons/*" -print0)
+# One project-aware run so autoload singletons and class_names resolve.
+# --quit-after stops a broken checker from hanging instead of failing.
+res=$("$GODOT" --headless --path . --quit-after 600 -s res://tools/check_scripts.gd 2>&1)
+code=$?
+if [ $code -ne 0 ] || echo "$res" | grep -qE "SCRIPT ERROR|Parse Error|ERROR:"; then
+  echo "$res" | grep -E "SCRIPT ERROR|Parse Error|ERROR:|CHECK FAIL|at:"
+  fail=1
+fi
 
 if [ $fail -eq 0 ]; then echo "== PASS"; else echo "== FAIL"; fi
 exit $fail
