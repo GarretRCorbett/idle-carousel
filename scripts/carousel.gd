@@ -3,6 +3,11 @@ extends Node2D
 ## The spinning platform. Only mounts and slots are children; enemies live in
 ## World/EnemyLayer. Draws a code placeholder until real art exists.
 
+## Emitted once per tick after rotating. previous_angle is the unwrapped angle
+## before this tick (it never wraps at 360°), so mounts can count booth passes
+## and sweep exactly the arc travelled, even across many turns.
+signal rotation_advanced(previous_angle: float, delta_angle: float)
+
 @export_group("Placeholder Visuals")
 @export_range(10.0, 400.0, 1.0, "suffix:px") var radius: float = 100.0
 @export_range(1.0, 50.0, 1.0, "suffix:px") var rim_width: float = 8.0
@@ -13,6 +18,24 @@ extends Node2D
 @export var base_color: Color = Color("4a7a3d")
 @export var rim_color: Color = Color("2d5a25")
 @export var hub_color: Color = Color("2d5a25")
+
+var _unwrapped_angle: float = 0.0
+
+
+## Called by Game once per physics tick; Carousel never moves itself.
+## Positive speed turns clockwise on screen.
+func advance_rotation(delta: float, speed_rad_s: float) -> void:
+	var step := speed_rad_s * delta
+	if step == 0.0 or not is_finite(step):
+		return
+	var previous := _unwrapped_angle
+	_unwrapped_angle += step
+	rotation = wrapf(_unwrapped_angle, -PI, PI)
+	rotation_advanced.emit(previous, step)
+
+
+func get_unwrapped_angle() -> float:
+	return _unwrapped_angle
 
 
 func _draw() -> void:

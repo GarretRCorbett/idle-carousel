@@ -5,6 +5,8 @@ extends Node
 
 signal gold_changed(balance: float, delta: float)
 signal health_changed(current: float, maximum: float)
+## Effective spin speed in radians/second (what Carousel applies each tick).
+signal spin_speed_changed(speed_rad_s: float)
 ## Emitted after every value has been reset, before the fresh values are re-announced.
 signal run_reset
 
@@ -13,6 +15,13 @@ const DEFAULT_CONFIG: RunConfig = preload("res://resources/config/run_config.tre
 var _config: RunConfig = DEFAULT_CONFIG
 var _gold: float = 0.0
 var _health: float = 0.0
+# Click boost: the bonus at the latest click, fading linearly to 0 over the decay time.
+var _boost_peak: float = 0.0
+var _boost_elapsed: float = 0.0
+# Sum of purchased spin bonuses (+0.2, +0.3, ...). Added in Step 5.
+var _spin_bonus: float = 0.0
+# Sum of latched enemies' drag, deliberately NOT clamped at 1.0. Added in Step 7.
+var _total_drag: float = 0.0
 
 
 func _ready() -> void:
@@ -29,10 +38,15 @@ func reset_run(config_override: RunConfig = null) -> void:
 	_config = config
 	_gold = config.starting_gold
 	_health = config.max_health
+	_boost_peak = 0.0
+	_boost_elapsed = 0.0
+	_spin_bonus = 0.0
+	_total_drag = 0.0
 	# Set everything first so listeners never see a half-reset run.
 	run_reset.emit()
 	gold_changed.emit(_gold, 0.0)
 	health_changed.emit(_health, get_max_health())
+	spin_speed_changed.emit(get_effective_spin_speed_rad_s())
 
 
 # --- Gold -------------------------------------------------------------------
@@ -83,3 +97,55 @@ func damage_carousel(amount: float) -> void:
 		return
 	_health = new_health
 	health_changed.emit(_health, get_max_health())
+
+
+# --- Simulation ----------------------------------------------------------------
+
+## Advances time-based state by one physics tick. Game calls this once per tick,
+## before moving the carousel, so everything updates in one known order.
+func advance_simulation(delta: float) -> void:
+	if not is_finite(delta) or delta <= 0.0:
+		return
+	var previous_speed := get_effective_spin_speed_rad_s()
+	_boost_elapsed = minf(_config.click_boost_decay_seconds, _boost_elapsed + delta)
+	_emit_speed_if_changed(previous_speed)
+
+
+# --- Spin speed ------------------------------------------------------------------
+
+## base × upgrades × (1 + click boost) × (1 − drag), never below zero.
+func get_effective_spin_speed_rad_s() -> float:
+	var drag_factor := maxf(0.0, 1.0 - _total_drag)
+	return (deg_to_rad(_config.base_spin_speed_deg_s)
+			* get_spin_upgrade_multiplier()
+			* (1.0 + get_click_boost())
+			* drag_factor)
+
+
+## 1.0 plus every purchased spin bonus, added together (+20% and +30% = 1.5).
+func get_spin_upgrade_multiplier() -> float:
+	return 1.0 + _spin_bonus
+
+
+func get_total_drag() -> float:
+	return _total_drag
+
+
+## Current click bonus as a fraction (0.3 = +30%).
+func get_click_boost() -> float:
+	var remaining := maxf(0.0, 1.0 - _boost_elapsed / _config.click_boost_decay_seconds)
+	return _boost_peak * remaining
+
+
+## One play-area click: stack the bonus (up to the cap) and restart the fade.
+func add_click_boost() -> void:
+	var previous_speed := get_effective_spin_speed_rad_s()
+	_boost_peak = minf(_config.click_boost_cap, get_click_boost() + _config.click_boost_increment)
+	_boost_elapsed = 0.0
+	_emit_speed_if_changed(previous_speed)
+
+
+func _emit_speed_if_changed(previous_speed: float) -> void:
+	var speed := get_effective_spin_speed_rad_s()
+	if speed != previous_speed:
+		spin_speed_changed.emit(speed)

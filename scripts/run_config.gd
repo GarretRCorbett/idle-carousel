@@ -12,6 +12,16 @@ extends Resource
 ## Carousel health when a run starts (and its maximum).
 @export_range(1.0, 100000.0, 1.0, "or_greater") var max_health: float = 100.0
 
+@export_group("Spin")
+## Base spin before upgrades, boost, and drag. 45 = one turn every 8 seconds.
+@export_range(1.0, 720.0, 1.0, "or_greater", "suffix:°/s") var base_spin_speed_deg_s: float = 45.0
+## Speed bonus added per play-area click (0.1 = +10%).
+@export_range(0.0, 2.0, 0.01) var click_boost_increment: float = 0.10
+## Most the click bonus can stack to (0.5 = +50%).
+@export_range(0.0, 10.0, 0.01) var click_boost_cap: float = 0.50
+## After the latest click, the bonus fades to zero over this many seconds.
+@export_range(0.05, 30.0, 0.05, "suffix:s") var click_boost_decay_seconds: float = 2.0
+
 
 ## Returns a list of problems; empty means the config is usable.
 func get_problems() -> PackedStringArray:
@@ -20,4 +30,12 @@ func get_problems() -> PackedStringArray:
 		problems.append("starting_gold must be a finite number >= 0")
 	if not is_finite(max_health) or max_health <= 0.0:
 		problems.append("max_health must be a finite number > 0")
+	if not is_finite(base_spin_speed_deg_s) or base_spin_speed_deg_s < 0.0:
+		problems.append("base_spin_speed_deg_s must be a finite number >= 0")
+	if not is_finite(click_boost_increment) or click_boost_increment < 0.0:
+		problems.append("click_boost_increment must be a finite number >= 0")
+	if not is_finite(click_boost_cap) or click_boost_cap < 0.0:
+		problems.append("click_boost_cap must be a finite number >= 0")
+	if not is_finite(click_boost_decay_seconds) or click_boost_decay_seconds <= 0.0:
+		problems.append("click_boost_decay_seconds must be a finite number > 0")
 	return problems
