@@ -13,3 +13,6 @@
 # OS files
 .DS_Store
 Thumbs.db
+# GdUnit4 output from editor test runs
+/reports/
+addons/gdUnit4/GdUnitRunner.cfg
