@@ -28,9 +28,11 @@ the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
     (A one-rescue limit can be tried later.) The 60 s safety net must never remove the
     boss or count as a win during a fight.
   - **Bosses need active play at first.** Near-idle wins only when truly maxed. Garret:
-    "maybe after a prestige or two." Prestige is still DECISION PENDING and outside v1.0
-    scope in the GDD; this is noted as input to that decision, not a decision.
+    "maybe after a prestige or two." Prestige is now in v1.0 (GDD v1.10, Phase 5).
   - **Retries are manual and free:** press Challenge again whenever you like.
+- **Prestige ships in v1.0** (GDD v1.10), built in Phase 5. For Phase 3 that means: keep run
+  state separate from anything permanent, keep numbers in data with multipliers (future
+  challenge modifiers), and track run times.
 - **Speedrun-friendly** (Garret, see NOTES): track active run time and each boss's first-clear time in GameState; seed wave randomness per run.
 
 ## What's in this folder

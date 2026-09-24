@@ -1,5 +1,5 @@
 # 🎠 Idle Carousel — Game Design Document
-### Version 1.9 | Working Title: Idle Carousel
+### Version 1.10 | Working Title: Idle Carousel
 > Solo dev project. Built in Godot 4.7 stable. Target: Steam release, anonymous, $4.99 (sale target ~$3.49–$3.75), with a free demo.
 > Personal motivation: daughters love carousels.
 > Influences: Cookie Clicker, Clicker Heroes, A Game About Feeding a Black Hole, Rusty's Retirement.
@@ -7,6 +7,7 @@
 ---
 
 ## Changelog
+- **v1.10** — Prestige is **in v1.0** (Garret): after beating the Rusted King you can prestige, start a fresh run, and keep permanent boosts. Direction: a small permanent upgrade tree (starting kits, automation, multipliers, a couple of new things) and optional challenge modifiers after the first win (Wildfrost Storm Bells / Slay the Spire Ascension style) that raise prestige rewards. Details are designed before Phase 5. Resolves the prestige-scope DECISION PENDING. Also: bosses are timed challenges reached through a per-tier kill gate (TEMPORARY rule for Phase 3 playtests; see `planning/phase3/README.md`).
 - **v1.9** — Wave controls pulled into Phase 2 (Garret): Next Wave button + N key with a +50% kill-Gold early-send bonus and a full countdown restart; Auto Wave toggle; Emergency Clear priced from normal booth income (20 s, min 25, 60 s cooldown). Settings and Controls screen; backgrounds (top-down park for play, fall landscape for the menu).
 - **v1.8** — After the first Leaf playtest (Garret): drag softens as it stacks (speed ÷ (1 + total drag)), so Boost always helps and only the stall stops the carousel. Latched enemies deal no damage for their first 2 s. Health regenerates slowly while nothing is latched. TEMPORARY stall additions: Boost cranks a stalled carousel back (restart at 15% health, enemies stay), and a 60 s safety net clears enemies. Fail-state direction: "safe farm, risky push" (a stall costs the attempt and time, never Gold or unlocks); still DECISION PENDING until confirmed in play.
 - **v1.7** — Overdrive: hold the Boost bar at max for 5 s for ×2 speed until it drops (gold glow). New Random Events section (Golden-Cookie-style pickups and surprise visitors), planned for Phase 4. Speed bonuses from any source multiply together.
@@ -29,15 +30,17 @@
 6. Mounts
 7. Enemies
 8. Upgrade Trees
-9. Progression & Tier System
-10. Final Boss
-11. UI & HUD
-12. Save System
-13. Audio
-14. Art Direction
-15. Technical Architecture
-16. Scope Definition
-17. Post-Launch Ideas
+9. Random Events
+10. Progression & Tier System
+11. Final Boss
+12. Prestige
+13. UI & HUD
+14. Save System
+15. Audio
+16. Art Direction
+17. Technical Architecture
+18. Scope Definition
+19. Post-Launch Ideas
 
 ---
 
@@ -455,6 +458,22 @@ The Rusted King defeated. All rust flakes away in a particle burst. The carousel
 
 **The emotional note:** The ending is a restoration. For a dad whose daughters love carousels, this is the payoff — something beautiful that was forgotten is brought back to life.
 
+After the victory screen the player can **prestige** (see Prestige) and start a new, faster run.
+
+---
+
+## Prestige
+
+**Decided (v1.10, Garret):** prestige ships in v1.0. **Details are designed before Phase 5**; research and a first shape are in `planning/phase3/claude_memo_prestige.md`.
+
+- **When:** after beating the Rusted King. The first run stays a complete game on its own (2.5–3.5 h); prestige is the reason to keep playing, not where the best part is hidden.
+- **What carries over:** a prestige currency earned from the run (e.g. from bosses beaten), spent in a small **permanent upgrade tree** (roughly 15–25 nodes). Direction for the tree: starting kits (e.g. begin with Slot 2 and the Wolf), automation (e.g. auto-boost, auto-challenge bosses), Gold/damage multipliers, and one or two new things the first run didn't have.
+- **What resets:** the run: Gold, tiers, kills, mounts, and run upgrades.
+- **Feel:** prestige must feel like acceleration, never punishment. Run 2 should clear Grey in minutes; target roughly 60–90 min for run 2, faster after.
+- **Challenge modifiers (direction):** after the first win, optional modifiers that make a run harder and raise its prestige reward, in the style of Wildfrost's Storm Bells (pick your own, each worth points) or Slay the Spire's Ascension (a stacking ladder). Mostly built from data that already exists: enemy tier multipliers, wave sizes, boss timers, prices.
+- **Bosses:** near-idle boss wins are meant to come only after a prestige or two, or a truly maxed build.
+- **Speedruns:** run time and first-clear times are tracked from Phase 3, so prestige runs and challenge modifiers double as speedrun categories later.
+
 ---
 
 ## UI and HUD
@@ -738,15 +757,15 @@ v1.0 is complete when a player can:
 5. Defeat the Rusted King
 6. See the victory and restoration screen
 7. Return to main menu with their high score saved
-8. Return the next day and have offline Gold waiting for them
-9. Earn Steam Achievements for milestones (via the GodotSteam addon; achievement list TBD by Garret)
+8. Prestige after the victory and start a faster run with permanent upgrades
+9. Return the next day and have offline Gold waiting for them
+10. Earn Steam Achievements for milestones (via the GodotSteam addon; achievement list TBD by Garret)
 
 Target playtime for a complete first run: 2.5 to 3.5 hours.
 
-> **⚠️ DECISION PENDING — Prestige loop scope.** Prestige is currently out of v1.0 scope. Open question: with a 2.5–3.5 hour first run, does the game need a light prestige/replay loop at launch to hold players (and reviews), or does it ship as a complete one-run experience? **Resolve before Phase 5.** Agents: do not implement or change this without Garret's decision.
+> **Prestige scope (resolved v1.10, Garret):** prestige ships in v1.0, after the Rusted King. See Prestige. Its details (tree nodes, currency, challenge modifiers) are designed before Phase 5.
 
 ### Explicitly NOT in v1.0
-- Prestige or ascension system
 - Multiple carousel types or skins
 - Free mount placement
 - Mount doubling or stacking (exception, v1.5: extra Horses)
@@ -765,18 +784,18 @@ Target playtime for a complete first run: 2.5 to 3.5 hours.
 
 Save these for after v1.0 ships. Do not build during v1.0 development.
 
-- Prestige system with permanent multipliers and new carousel skin on prestige
+- Carousel skins as prestige rewards (prestige itself is in v1.0)
 - Free mount placement mode unlocked after first clear
 - Mount doubling mode — stack same type for specialized builds
 - Mana/spell mount with AoE burst damage and long cooldown
 - Second carousel — harder parallel run with different enemies
 - Seasonal event skins (Halloween, winter)
 - Steam Cloud saves
-- Speedrun mode with leaderboard
+- Speedrun mode with leaderboard (Garret wants a run timer planned; v1.0 scope not decided. Run and split times are tracked from Phase 3.)
 - Desktop overlay mode (Rusty's Retirement style)
 
 ---
 
-*GDD Version 1.9*
+*GDD Version 1.10*
 *Created: June 2026*
 *Status: Design complete, ready for development*

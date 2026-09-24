@@ -57,6 +57,10 @@ _Update at the end of every session._
 ### Scope ideas to revisit later
 - [ ] **Roguelike element** (Garret, 2026-09-24): the itch came from wanting more mounts. Parked to protect v1.0 scope; revisit when planning prestige (a DECISION PENDING in the GDD).
 
+### Prestige is in v1.0 (Garret, 2026-09-24)
+- [ ] Design the details before Phase 5: tree nodes, prestige currency, which challenge modifiers. Direction is in the GDD (Prestige, v1.10); research in `planning/phase3/claude_memo_prestige.md`.
+- [ ] Revisit the parked **roguelike element** (below) as part of that design: challenge modifiers and new prestige unlocks may scratch the same itch.
+
 ### Speedrun timer (Garret, 2026-09-24)
 - [ ] An optional run timer so players can speedrun, e.g. "fresh start to Tier 5." Garret wants to plan for it. Scope (v1.0 or later) not decided yet.
 - **Plan for it now (cheap):** GameState tracks active play time from the start of the run (memo M already suggests this for saves/stats) and records the time each boss is first beaten, so splits come for free. Keep wave randomness seeded per run so runs are comparable, and keep offline progress out of speedrun time (or disable it for a speedrun). Later: an in-game timer display with splits per tier, and maybe a "speedrun mode" toggle on New Game.
@@ -71,7 +75,6 @@ _Update at the end of every session._
 - [ ] "Welcome back" notification showing offline Gold earned
 
 ### Post v1.0 Only (don't touch until shipped)
-- [ ] Prestige/ascension system: **scope is DECISION PENDING** (GDD, resolve before Phase 5). Garret's idea (2026-09-24): prestige after beating every boss, start fresh with permanent boosts; maybe challenge modifiers like Slay the Spire / Wildfrost. Research: `planning/phase3/claude_memo_prestige.md`.
 - [ ] Mount placement customization mode
 - [ ] Spell/mana mount type
 - [ ] Multiple carousel skins

@@ -2,12 +2,14 @@
 
 Garret asked: is prestige planned, is a 2.5–3.5 h first loop too long before the first
 prestige, what rewards do players like, upgrade tree or challenges (Slay the Spire,
-Wildfrost)? Web research by Claude (Codex was out of usage). **Input, not a decision:**
-prestige scope is DECISION PENDING in the GDD ("resolve before Phase 5").
+Wildfrost)? Web research by Claude (Codex was out of usage).
+
+**Update, same day: Garret decided prestige ships in v1.0** and liked the shape below
+(GDD v1.10, Prestige section). The details (tree nodes, currency, modifiers) are designed
+before Phase 5; the questions at the end are still open except question 1.
 
 ## Where it stands
-- GDD: prestige is **out of v1.0** and **DECISION PENDING** ("does the game need a light
-  prestige/replay loop at launch… or ship as a complete one-run experience?").
+- GDD (before v1.10): prestige was out of v1.0 and DECISION PENDING.
 - GDD post-launch ideas: "Prestige system with permanent multipliers and new carousel skin."
 - NOTES: roguelike element parked "to revisit when planning prestige."
 - Garret's idea (2026-09-24): after beating every boss you can prestige, start fresh, and
@@ -90,7 +92,7 @@ Phase 3 (enemy tier multipliers, wave sizes, boss timers, prices, drag). Example
 - Track run time and first-clear times (already planned for the speedrun timer).
 
 ## Questions for Garret (before Phase 5)
-1. Prestige in v1.0? ★ a light version at launch (victory prestige + small tree) / post-launch update / not at all.
+1. ~~Prestige in v1.0?~~ **Decided: yes** (GDD v1.10).
 2. When is the first prestige? ★ at victory (end of the 2.5–3.5 h run) / also a small early one mid-run.
 3. Challenges? ★ Wildfrost-style pick-your-own modifiers / Slay the Spire ladder / none at launch.
 4. Reward mix? ★ tree with starting kits + automation + a couple of new things / mostly multipliers.

@@ -1,5 +1,6 @@
 # 🗺️ Idle Carousel — Roadmap & Phase Tracker
-### Version 1.0 — AI-First Build
+### Version 1.1 — AI-First Build
+*v1.1 (2026-09-24): Phase 2 items ticked; Phase 3 gains minimal tier progression, timed bosses, and the simulator; prestige added to Phase 5 (GDD v1.10).*
 
 > Replaces the Phase Goals Tracker in IDLE_CAROUSEL_NOTES.md.
 > Each phase lists the goal, who does what, and a done-when check.
@@ -16,7 +17,7 @@
 | Tests, tooling, and first-draft scene layouts (`.tscn`) | Reviewing every plan before code |
 | Save/load, math, balance sheets | Playtesting and feel |
 | Refactors and bug hunts | Design decisions (all DECISION PENDING items) |
-| Explaining diffs | Art, audio, and player-facing text |
+| Explaining diffs; drafting player-facing text and translations | Art and audio; approving all player-facing text; store page, trailer text, credits |
 
 ---
 
@@ -62,6 +63,12 @@
 - [ ] Six color tiers via Modulate, tier data in `.tres`
 - [ ] Boss base class plus the six tier bosses
 - [ ] Mount slots 4–6 (slots 2–3 and equidistant spacing were built in Phase 2)
+- [ ] Minimal tier progression (pulled from Phase 4, Garret 2026-09-24): per-tier kill gate, "Challenge boss" button, timed boss fights (TEMPORARY rule), pick any unlocked tier to farm
+- [ ] Mount Tier 2 upgrades, enough to unlock the Unicorn
+- [ ] Run time and first-clear times tracked in GameState (speedrun timer and prestige later)
+- [ ] Balance simulator v1 (economy only) and a pricing pass
+
+**Plan:** `planning/phase3/README.md` (decisions, draft steps, open questions).
 
 **Claude Code:** most of this; it's pattern replication once Phase 2's base classes exist.
 **Garret:** playtest each mount against each enemy; pick placeholder shapes/colors.
@@ -74,8 +81,8 @@
 
 - [ ] UpgradeManager: full tree from data, can_afford/purchase/is_unlocked, signals
 - [ ] Upgrade Shop UI with the visibility states (affordable / almost / locked / hidden)
-- [ ] Kill-count gate before each boss, visible in the HUD
-- [ ] Save system: auto, milestone, manual; `user://save_data.json`
+- [ ] Kill-count gate HUD polish (the gate itself is built in Phase 3)
+- [ ] Save system: auto, milestone, manual; `user://save_data.json`; keeps permanent (prestige) state separate from the current run
 - [ ] Offline progress with the 8-hour clamp and "Welcome back" popup
 - [x] Wave controls: auto-wave toggle, next wave, Emergency Clear *(built in Phase 2, Step 10b)*
 - [ ] Hold-to-boost automation (from Garret's playtest idea; see NOTES)
@@ -89,15 +96,18 @@
 ---
 
 ## Phase 5 — Endgame
-**Goal:** Beat the Rusted King and see the restoration.
+**Goal:** Beat the Rusted King, see the restoration, then prestige into a faster run.
 
 - [ ] Rusted King: multi-latch, Rust Breath, summons, enrage
 - [ ] Victory sequence: rust particle burst, palette brighten, Restoration Complete screen
 - [ ] High score saved; return to main menu
 - [ ] First full playthrough, timed (target 2.5–3.5 hours)
+- [ ] Prestige (in v1.0, GDD v1.10): reset after the Rusted King, prestige currency, small permanent upgrade tree (starting kits, automation, multipliers, a couple of new things)
+- [ ] Challenge modifiers after the first win (Wildfrost Storm Bells / Slay the Spire Ascension style) that raise prestige rewards
+- [ ] Second-run playtest: run 2 should feel much faster (target ~60–90 min)
 
-**⚠️ Resolve before starting:** DECISION PENDING — prestige loop scope relative to playtime.
-**Claude Code:** boss behavior, victory sequence logic, a balance spreadsheet/sim of the full run.
+**Before starting:** Garret designs the prestige details (tree nodes, currency, which modifiers). Research: `planning/phase3/claude_memo_prestige.md`.
+**Claude Code:** boss behavior, victory sequence logic, prestige reset and tree, extending the Phase 3 balance simulator to the full run and run 2.
 **Garret:** full playtest; tune the curve.
 
 ---
