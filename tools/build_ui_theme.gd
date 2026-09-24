@@ -34,6 +34,8 @@ func _initialize() -> void:
 	theme.set_color("font_color", "CrankButton", CREAM)
 	theme.set_color("font_hover_color", "CrankButton", CREAM)
 	theme.set_color("font_pressed_color", "CrankButton", CREAM)
+	theme.set_color("font_focus_color", "CrankButton", CREAM)
+	theme.set_color("font_hover_pressed_color", "CrankButton", CREAM)
 
 	var panel := _flat(PANEL, 12)
 	panel.border_color = PANEL_BORDER
@@ -79,6 +81,8 @@ func _button(theme: Theme, type: String, normal: String, hover: String, pressed:
 	theme.set_color("font_color", type, INK)
 	theme.set_color("font_hover_color", type, INK)
 	theme.set_color("font_pressed_color", type, INK)
+	theme.set_color("font_focus_color", type, INK)
+	theme.set_color("font_hover_pressed_color", type, INK)
 	theme.set_color("font_disabled_color", type, MUTED)
 
 

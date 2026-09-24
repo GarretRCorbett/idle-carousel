@@ -29,8 +29,18 @@ resources/mounts|enemies|upgrades/   .tres data files
 assets/sprites|audio/   human-made or licensed assets only
 tests/                  GdUnit4 test suites (test_*.gd, extend GdUnitTestSuite)
 addons/gdUnit4/         GdUnit4 6.2.1 test framework (third-party; don't edit)
-tools/                  check.sh / check.bat (+ check_scripts.gd they run)
+tools/                  check.sh / check.bat (+ check_scripts.gd they run);
+                        build_ui_theme.gd (rebuilds assets/ui/game_theme.tres)
 ```
+
+## Assets (Kenney, CC0)
+- Downloaded packs live unmodified in `../kenney_assets/` (outside the repo; zips in `_zips/`).
+  Download there first, unzip, then copy only the files the game uses into `assets/`.
+- Log every copied file in `assets/PROVENANCE.md` (file, source pack/URL, original name,
+  license, changes, date). Keep doing this for every new asset.
+- UI look: edit `tools/build_ui_theme.gd` and re-run it; don't hand-edit `game_theme.tres`.
+- Sounds: add files to `assets/audio/sfx/`, list them in `resources/audio/sound_bank.tres`,
+  play with `AudioManager.play_sfx(&"id")`.
 File names snake_case; class names PascalCase; scenes PascalCase.tscn.
 
 ## Autoloads (load order matters)

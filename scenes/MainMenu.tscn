@@ -1,5 +1,72 @@
 [gd_scene format=3 uid="uid://b2157w4eh3amx"]
 
+[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_menu"]
+[ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="2_theme"]
+[ext_resource type="Script" path="res://scripts/carousel.gd" id="3_carousel"]
+[ext_resource type="FontFile" path="res://assets/fonts/kenney_future.ttf" id="4_title_font"]
+[ext_resource type="PackedScene" path="res://scenes/mounts/Horse.tscn" id="5_horse"]
+
 [node name="MainMenu" type="Control" unique_id=1196148949]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_menu")
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Column" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="Center/Column"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.949, 0.788, 0.298, 1)
+theme_override_fonts/font = ExtResource("4_title_font")
+theme_override_font_sizes/font_size = 48
+text = "Idle Carousel"
+horizontal_alignment = 1
+
+[node name="CarouselSpot" type="Control" parent="Center/Column"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 240)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="MenuCarousel" type="Node2D" parent="Center/Column/CarouselSpot"]
+unique_name_in_owner = true
+script = ExtResource("3_carousel")
+
+[node name="Horse" parent="Center/Column/CarouselSpot/MenuCarousel" instance=ExtResource("5_horse")]
+position = Vector2(0, -75)
+rotation = -1.5707964
+
+[node name="Buttons" type="VBoxContainer" parent="Center/Column"]
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="PlayButton" type="Button" parent="Center/Column/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Play"
+
+[node name="QuitButton" type="Button" parent="Center/Column/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 48)
+layout_mode = 2
+text = "Quit"

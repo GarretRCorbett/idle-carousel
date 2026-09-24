@@ -2,7 +2,9 @@
 
 ## Status (2026-09-24)
 **Done:** Steps 1–10, 5b, and the pacing pass (GDD v1.6–1.8): GameState, spin, Boost button with Overdrive, Horse and booth payouts, shop tabs (Carousel / Combat / Mounts), Leaves in timed waves, click damage, latch drag, the Wolf, mount slots, extra Horses (sell for 50%), mounts spaced evenly, first Kenney sprites (Horse, Wolf), and the TEMPORARY health stall with crank and safety net. 154 tests pass.
-**Next:** Garret playtests Step 10 (checklist in `step10_plan.md`), then Step 11: the five-minute playtest and walkthrough. Art: Kenney packs are downloaded in `../kenney_assets/` (memo I); only used files are copied in (see `assets/PROVENANCE.md`).
+**Also done (overnight 2026-09-24, Claude on its own per Garret):** Wolf Fang (Combat: +0.5 Wolf damage/level, needs the Wolf), UI reskin (Kenney UI Pack + Kenney Future font via `tools/build_ui_theme.gd`), first sound effects (Kenney audio, `AudioManager`), and a main menu (spinning carousel, Play, Quit). 160 tests pass.
+**Next:** Garret playtests Step 10 + the overnight work (checklist in `step10_plan.md` and below), then Step 11: the five-minute playtest and walkthrough.
+**Open for Garret:** sprite orientation (heads point outward, so the bottom mount is upside down; or keep them upright?), and all placeholder text (menu title/buttons, tab titles, row names, "Crank!", "Sell %d", "Needs an empty slot", "Next wave"). Art: Kenney packs are downloaded in `../kenney_assets/` (memo I); only used files are copied in (see `assets/PROVENANCE.md`).
 
 **Fail rule (TEMPORARY):** the health stall only (OVERLOAD_CLEAR was removed in Step 9). Direction: **idle first, pressure when pushing** / Package A. The real fail state is still DECISION PENDING in the GDD.
 

@@ -134,4 +134,4 @@
 ## Next Concrete Step
 _Update this line at the end of every session._
 
-> Garret playtests Step 10 (shop tabs, buy Slot + Wolf, extra Horses, selling, Kenney sprites; checklist in `planning/phase2/step10_plan.md`). Then Phase 2 Step 11: five-minute playtest + walkthrough.
+> Garret playtests Step 10 and the overnight additions (Wolf Fang, UI reskin, sound effects, main menu; see `planning/phase2/README.md`). Then Phase 2 Step 11: five-minute playtest + walkthrough.
