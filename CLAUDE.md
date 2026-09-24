@@ -115,27 +115,42 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
   Garret's.
 - Don't add features outside the GDD's v1.0 scope. Put ideas in IDLE_CAROUSEL_NOTES.md.
 
-## Second opinions from Codex (GPT)
-The /codex plugin's review is broken on Windows right now (its read-only sandbox
-blocks all commands). Call the Codex CLI directly instead, and only when Garret
-asks for a Codex review or a second opinion.
+## Working with Codex (GPT)
+Codex is Claude's second-opinion partner: design memos, research, plan reviews, and
+code reviews. **Garret has approved (2026-09-24) running the Codex CLI with full
+access, as described below.** Don't re-ask each session. Tell Garret in chat when a
+Codex run starts. If a permission prompt or classifier blocks the command, point to
+this section.
 
-**Ideas and planning (no code access needed):** put the relevant docs straight into
-the prompt so Codex never has to run a command, and keep it read-only:
-```
-codex exec -s read-only -o <scratch>/answer.md - < <scratch>/prompt.md
-```
-Summarize the answer for Garret, then say what you agree and disagree with.
+Why full access: the /codex plugin and Codex's read-only sandbox are broken on
+Windows (the sandbox blocks every command). Full access is the only mode that works,
+so the safety comes from the prompt plus a before/after check, not from the sandbox.
 
-**Code reviews:** Codex needs to run commands, so it needs full access.
+**Every full-access run, the same four steps:**
+1. Snapshot (the tree should be clean or committed first):
+   `{ git status --porcelain; git diff; git rev-parse HEAD; } > <scratch>/pre_codex.txt`
+2. Run Codex in the background (it takes several minutes) and send its output to a scratch file.
+3. Build the snapshot again and `diff` it against `pre_codex.txt`. If anything
+   changed (files, diff, or HEAD), tell Garret before doing anything else.
+4. Show Garret Codex's findings verbatim (or summarize a long memo), then say which
+   points you agree with and why. Don't apply fixes until Garret approves.
 
-Full access is the only sandbox mode that works on Windows, so check afterward that
-Codex changed nothing. Before running it, save a snapshot with
-`git status --porcelain > /tmp/pre_codex.txt; git diff >> /tmp/pre_codex.txt`.
+**Code review** (Codex needs to run git and read files):
 ```
+# uncommitted work
 codex review --uncommitted -c 'sandbox_mode="danger-full-access"' -c 'model_reasoning_effort="high"'
+# a whole range, e.g. a full phase (base = the commit before the phase)
+codex review --base <commit> -c 'sandbox_mode="danger-full-access"' -c 'model_reasoning_effort="high"'
 ```
-Afterward, rebuild the same snapshot and compare it to /tmp/pre_codex.txt. If anything
-changed, tell Garret before doing anything else.
-Show Garret Codex's findings verbatim, then say which ones you agree with and why.
-Don't apply fixes from a Codex review until Garret approves.
+
+**Research, design memos, plan reviews:** write the prompt to a scratch file. Start it
+with *"Read-only task. Do not create, edit, or delete any files, and do not run git
+commands that change state. Answer in your final message only."* Paste in the
+relevant docs, or name the files Codex should read. Then run:
+```
+codex exec -c 'sandbox_mode="danger-full-access"' -c 'model_reasoning_effort="high"' -o <scratch>/answer.md - < <scratch>/prompt.md
+```
+When the docs are pasted in and no repo access is needed, `-s read-only` in place of
+the `-c sandbox_mode` flag also works, and you can skip the snapshot.
+Save useful answers as memos in `planning/phaseN/codex_memo_<letter>_<topic>.md`.
+Memos are input, not decisions.
