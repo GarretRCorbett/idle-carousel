@@ -6,6 +6,12 @@ extends SceneTree
 ## (Or edit game_theme.tres in the Inspector; re-running overwrites those edits.)
 
 const OUT := "res://assets/ui/game_theme.tres"
+## Kenney Future with Rubik behind it for letters Kenney lacks (Polish/Turkish
+## accents, Cyrillic). CJK will swap the whole font per language later.
+const UI_FONT_OUT := "res://assets/fonts/ui_font.tres"
+const TITLE_FONT_OUT := "res://assets/fonts/title_font.tres"
+## Rubik weight to sit next to Kenney Future's heavy strokes.
+const FALLBACK_WEIGHT := 600
 
 # GDD palette plus UI neutrals.
 const CREAM := Color("f4ebdd")
@@ -21,8 +27,20 @@ const TAB_HOVER := Color("4a3f38")
 
 
 func _initialize() -> void:
+	var fallback := FontVariation.new()
+	fallback.base_font = load("res://assets/fonts/rubik_variable.ttf")
+	fallback.variation_opentype = {TextServerManager.get_primary_interface().name_to_tag("wght"): FALLBACK_WEIGHT}
+	var ui_font := FontVariation.new()
+	ui_font.base_font = load("res://assets/fonts/kenney_future_narrow.ttf")
+	ui_font.fallbacks = [fallback]
+	ResourceSaver.save(ui_font, UI_FONT_OUT)
+	var title_font := FontVariation.new()
+	title_font.base_font = load("res://assets/fonts/kenney_future.ttf")
+	title_font.fallbacks = [fallback]
+	ResourceSaver.save(title_font, TITLE_FONT_OUT)
+
 	var theme := Theme.new()
-	theme.default_font = load("res://assets/fonts/kenney_future_narrow.ttf")
+	theme.default_font = load(UI_FONT_OUT)
 	theme.default_font_size = 15
 
 	theme.set_color("font_color", "Label", CREAM)

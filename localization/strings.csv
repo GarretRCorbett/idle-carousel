@@ -15,6 +15,9 @@ OPT_MASTER_VOLUME,Master volume
 OPT_SFX_VOLUME,Sound effects
 OPT_MUSIC_VOLUME,Music
 OPT_FULLSCREEN,Fullscreen
+OPT_LANGUAGE,Language
+OPT_PSEUDO,Test translations (debug)
+LANGUAGE_NATIVE_NAME,English
 OPT_BACK,Back
 CTRL_KEY_CLICK,Left click
 CTRL_HIT_LEAF,Hit a Leaf
@@ -41,7 +44,7 @@ SHOP_TAB_CAROUSEL,Carousel
 SHOP_TAB_COMBAT,Combat
 SHOP_TAB_MOUNTS,Mounts
 SHOP_COST,{0}
-SHOP_MAXED,✓
+SHOP_MAXED,Max
 SHOP_REQUIRES,Requires {0}
 SHOP_NEEDS_SLOT,Needs an empty slot
 SHOP_SELL,Sell {0}

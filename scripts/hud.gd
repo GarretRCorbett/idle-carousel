@@ -80,6 +80,17 @@ func _ready() -> void:
 	_on_stall_changed(GameState.is_stalled())
 
 
+## Language changed: rebuild the text this script fills in (scene text updates itself).
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready():
+		_on_gold_changed(GameState.get_gold(), 0.0)
+		_on_gold_per_second_changed(GameState.get_recent_gold_per_second())
+		_on_spin_speed_changed(GameState.get_effective_spin_speed_rad_s())
+		_on_stall_changed(GameState.is_stalled())
+		_refresh_wave_button()
+		_refresh_emergency_button()
+
+
 func _process(_delta: float) -> void:
 	_refresh_emergency_button()
 	var held := _mouse_holding_boost or Input.is_key_pressed(boost_key)

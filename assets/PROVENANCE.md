@@ -19,6 +19,8 @@ Downloaded packs are kept unmodified in `../kenney_assets/` (outside the repo, z
 | `sprites/background/tree_autumn_small.png` | Kenney: Top-down Tanks Remastered | `PNG/Default size/treeBrown_small.png` | CC0 1.0 | Renamed | 2026-09-24 |
 | `sprites/background/tree_green_large.png` | Kenney: Top-down Tanks Remastered | `PNG/Default size/treeGreen_large.png` | CC0 1.0 | Renamed | 2026-09-24 |
 | `sprites/background/menu_fall.png` | [Kenney: Background Elements Remastered](https://kenney.nl/assets/background-elements-remastered) | `Backgrounds/backgroundColorFall.png` | CC0 1.0 | Renamed; dimmed in the menu scene | 2026-09-24 |
+| `fonts/rubik_variable.ttf` | [Google Fonts: Rubik](https://fonts.google.com/specimen/Rubik) (`github.com/google/fonts/ofl/rubik/Rubik[wght].ttf`) | `Rubik[wght].ttf` | **SIL OFL 1.1** (ship `fonts/rubik_OFL.txt` with the game; credit optional) | Renamed | 2026-09-24 |
+| `fonts/ui_font.tres`, `fonts/title_font.tres` | Built by `tools/build_ui_theme.gd`: Kenney Future (Narrow) with Rubik as fallback | | (ours) | | 2026-09-24 |
 | `ui/game_theme.tres` | Built by `tools/build_ui_theme.gd` from the files above | | (ours) | | 2026-09-24 |
 | `audio/sfx/coin_1.ogg` | [Kenney: Casino Audio](https://kenney.nl/assets/casino-audio) | `Audio/chips-collide-1.ogg` | CC0 1.0 | Renamed | 2026-09-24 |
 | `audio/sfx/coin_2.ogg` | [Kenney: Casino Audio](https://kenney.nl/assets/casino-audio) | `Audio/chips-collide-2.ogg` | CC0 1.0 | Renamed | 2026-09-24 |

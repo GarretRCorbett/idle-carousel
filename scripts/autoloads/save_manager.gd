@@ -13,6 +13,10 @@ const DEFAULTS: Dictionary[StringName, Variant] = {
 	&"fullscreen": false,
 	## Waves arrive on their own; off = the countdown pauses until you send one.
 	&"auto_wave": true,
+	## Locale code, e.g. "en". Falls back to English if that language isn't loaded.
+	&"language": "en",
+	## Debug builds only: Godot's fake-accented text, to spot untranslated or cut-off text.
+	&"pseudolocalization": false,
 }
 ## Which audio bus each volume setting drives.
 const VOLUME_BUSES: Dictionary[StringName, StringName] = {
@@ -74,6 +78,16 @@ func _apply(key: StringName) -> void:
 		if bus >= 0:
 			AudioServer.set_bus_volume_db(bus, linear_to_db(maxf(float(value), 0.0001)))
 			AudioServer.set_bus_mute(bus, float(value) <= 0.0)
+	elif key == &"language":
+		var locale := String(value)
+		TranslationServer.set_locale(locale if locale in TranslationServer.get_loaded_locales() else "en")
+	elif key == &"pseudolocalization":
+		var on := bool(value) and OS.is_debug_build()
+		if TranslationServer.pseudolocalization_enabled != on:
+			TranslationServer.pseudolocalization_enabled = on
+			# Tell every node to re-translate (set_locale does this itself; this doesn't).
+			if is_inside_tree():
+				get_tree().root.propagate_notification(NOTIFICATION_TRANSLATION_CHANGED)
 	elif key == &"fullscreen" and DisplayServer.get_name() != "headless":
 		DisplayServer.window_set_mode(
 				DisplayServer.WINDOW_MODE_FULLSCREEN if value else DisplayServer.WINDOW_MODE_WINDOWED)

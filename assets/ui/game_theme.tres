@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" path="res://assets/ui/button_yellow.png" id="3_k4r43"]
 [ext_resource type="Texture2D" path="res://assets/ui/button_yellow_pressed.png" id="4_o3vha"]
 [ext_resource type="Texture2D" path="res://assets/ui/button_red.png" id="5_d0g1g"]
-[ext_resource type="FontFile" path="res://assets/fonts/kenney_future_narrow.ttf" id="6_wxud7"]
+[ext_resource type="FontVariation" path="res://assets/fonts/ui_font.tres" id="6_wxud7"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wjpio"]
 content_margin_left = 12.0

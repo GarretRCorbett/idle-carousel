@@ -48,6 +48,11 @@ _Update at the end of every session._
 - [ ] **Full-stop spiral (watch in Phase 2 playtest)** — drag has no floor (GDD v1.4), so enough latches stop the carousel. A stopped carousel earns no booth Gold and mounts don't sweep, so only clicks can recover. Check it feels tense, not hopeless. If hopeless, options: a drag floor, or stronger clicks while stopped.
 - [ ] **Offline rate source (decide in Phase 4)** — the HUD's Gold/sec is recent *actual* income (includes kills and clicks). Offline progress probably should use booth income only, shown separately. Decide when building offline progress.
 
+### Localization (2026-09-24)
+- [ ] **Plurals:** use `tr_n()` + CSV plural rows the first time text depends on a count. Never `if n == 1`.
+- [ ] **Fonts per language:** when a language is scheduled, swap the whole UI font for it (Rubik for Polish/Turkish/Russian; Noto Sans SC/JP/KR for CJK, downloaded then). Today Rubik only fills missing letters, which looks mixed. Codex memo K.
+- [ ] **First real translation:** add a column to `localization/strings.csv`; it appears in Settings → Language automatically (named by `LANGUAGE_NATIVE_NAME`).
+
 ### Scope ideas to revisit later
 - [ ] **Roguelike element** (Garret, 2026-09-24): the itch came from wanting more mounts. Parked to protect v1.0 scope; revisit when planning prestige (a DECISION PENDING in the GDD).
 

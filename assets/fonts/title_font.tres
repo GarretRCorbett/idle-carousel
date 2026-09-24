@@ -1,0 +1,14 @@
+[gd_resource type="FontVariation" format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/kenney_future.ttf" id="1_5rad7"]
+[ext_resource type="FontFile" path="res://assets/fonts/rubik_variable.ttf" id="2_7nqt0"]
+
+[sub_resource type="FontVariation" id="FontVariation_mf27e"]
+base_font = ExtResource("2_7nqt0")
+variation_opentype = {
+2003265652: 600
+}
+
+[resource]
+fallbacks = Array[Font]([SubResource("FontVariation_mf27e")])
+base_font = ExtResource("1_5rad7")

@@ -69,7 +69,16 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
   `set_tab_title()`. Numbers only through `NumberFormat.gold()` / `.decimal()`.
   Upgrade names/descriptions in `.tres` are keys too. `tests/test_localization.gd`
   fails if a scene or upgrade uses text that isn't a key.
-- Pseudolocalization check: Project Settings → Advanced Settings on →
+- Plurals: when text depends on a count ("1 wave" / "3 waves"), use `tr_n(key, plural_key, n)`
+  (Godot 4.6+ CSV supports plural rows) and never a hand-written `if n == 1`; many
+  languages have more than two plural forms.
+- Fonts: bundled fonts only (`allow_system_fallback` is off). The UI font is
+  `assets/fonts/ui_font.tres` (Kenney Future Narrow + Rubik fallback for accents and
+  Cyrillic). Kenney has no ✓, Polish/Turkish letters, or Cyrillic. Plan when a language
+  is scheduled: swap the whole UI font per locale (Rubik for Polish/Turkish/Russian;
+  Noto Sans SC/JP/KR, 9-17 MB each, for CJK; download only then). See
+  `planning/phase2/codex_memo_k_fonts.md`.
+- Pseudolocalization check (also a debug-only toggle in Settings): Project Settings → Advanced Settings on →
   Internationalization → Pseudolocalization → Use Pseudolocalization, run the game,
   look for plain English (missed) or cut-off text, then turn it off again.
 

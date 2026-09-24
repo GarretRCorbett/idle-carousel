@@ -98,8 +98,9 @@ func _build_row(upgrade: UpgradeData) -> ShopRow:
 	var text := VBoxContainer.new()
 	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	text.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	text.add_child(_label(tr(upgrade.display_name), false))
-	text.add_child(_label(tr(upgrade.description), true))
+	# Keys: these labels translate themselves, including on a language change.
+	text.add_child(_label(upgrade.display_name, false, true))
+	text.add_child(_label(upgrade.description, true, true))
 	row.pips = LevelPips.new()
 	row.pips.max_level = upgrade.max_level
 	row.pips.visible = upgrade.max_level > 1
@@ -138,10 +139,12 @@ func _build_row(upgrade: UpgradeData) -> ShopRow:
 	return row
 
 
-func _label(text: String, wraps: bool) -> Label:
+## `translates`: the text is a key the label translates itself. Otherwise the
+## text arrives already translated and must not be translated again.
+func _label(text: String, wraps: bool, translates: bool = false) -> Label:
 	var label := Label.new()
-	# Text arrives already translated; don't let the label translate it again.
-	label.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+	if not translates:
+		label.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	label.text = text
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if wraps:
@@ -149,6 +152,12 @@ func _label(text: String, wraps: bool) -> Label:
 	else:
 		label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	return label
+
+
+## Language changed: rebuild the prices, status lines, and sell buttons.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready() and not _rows_by_id.is_empty():
+		_refresh()
 
 
 func _refresh() -> void:

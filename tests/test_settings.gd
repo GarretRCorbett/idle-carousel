@@ -53,3 +53,26 @@ func test_options_menu_has_both_tabs_and_starts_hidden() -> void:
 	assert_bool(menu.visible).is_true()
 	menu.close()
 	assert_bool(menu.visible).is_false()
+
+
+func test_language_setting_sets_the_locale() -> void:
+	SaveManager.set_setting(&"language", "en")
+	assert_str(TranslationServer.get_locale()).starts_with("en")
+	SaveManager.set_setting(&"language", "xx")  # not loaded: falls back to English
+	assert_str(TranslationServer.get_locale()).starts_with("en")
+
+
+func test_pseudolocalization_toggle() -> void:
+	SaveManager.set_setting(&"pseudolocalization", true)
+	assert_bool(TranslationServer.pseudolocalization_enabled).is_equal(OS.is_debug_build())
+	SaveManager.set_setting(&"pseudolocalization", false)
+	assert_bool(TranslationServer.pseudolocalization_enabled).is_false()
+
+
+func test_options_lists_english_by_its_own_name() -> void:
+	var menu := (load("res://scenes/OptionsMenu.tscn") as PackedScene).instantiate() as OptionsMenu
+	add_child(menu)
+	auto_free(menu)
+	var languages := menu.get_node("%LanguageOption") as OptionButton
+	assert_int(languages.item_count).is_greater_equal(1)
+	assert_str(languages.get_item_text(0)).is_equal("English")
