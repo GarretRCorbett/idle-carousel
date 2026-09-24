@@ -37,14 +37,15 @@
 **Goal:** The smallest version that's actually a game: carousel spins, Horse earns Gold at the booth, Leaves latch and slow it down, Wolf clears them.
 
 - [x] GdUnit4 test harness + headless test command in `tools/check.sh` (moved from Phase 1)
-- [ ] Carousel spins with click-to-boost (spin speed in GameState)
-- [ ] One Horse on a slot; ticket booth detects passes and pays a fixed amount per pass (speed = more passes)
-- [ ] Gold counter and Gold/sec on the HUD via signals
-- [ ] Leaves spawn on a timer in world space, approach, and latch
-- [ ] Latch drag slows spin; latched enemies deal damage to carousel health
-- [ ] Click a Leaf (approaching or latched) to damage it; Gold drop on kill; zero health = temporary stall
-- [ ] Wolf sweep kills Leaves (ray-query sweep detection)
-- [ ] Five purchases to prove the shop flow: Spin Speed 1, Spin Speed 2, Click Damage 1, Mount Slot 2, Wolf
+- [x] Carousel spins with a Boost button (spin speed in GameState)
+- [x] One Horse on a slot; ticket booth detects passes and pays a fixed amount per pass (speed = more passes)
+- [x] Gold counter and Gold/sec on the HUD via signals
+- [x] Leaves spawn on a timer in world space, approach, and latch
+- [x] Latch drag slows spin; latched enemies deal damage to carousel health
+- [x] Click a Leaf (approaching or latched) to damage it; Gold drop on kill; zero health = temporary stall (crank + safety net)
+- [x] Wolf sweep kills Leaves (angle-math sweep detection, same idea as booth passes)
+- [x] Leveled shop in three tabs (replaces the original "five purchases"): Carousel Speed, Boost Power, Ticket Booths 2–4, Click Damage, Wolf Fang, Mount Slots, Wolf, extra Horses (sell for 50%)
+- [x] Extras built early: sprites (Horse, Wolf), UI theme, sound effects, main menu, backgrounds, Settings/Controls, wave controls (Send wave, Auto waves, Emergency Clear), 9 draft languages
 
 **Claude Code:** scripts for carousel, booth, mount base, Horse, Wolf, enemy base, Leaf, wave timer, HUD, plus first-draft scenes (Game, Carousel, Mount, Enemy, HUD) with proper containers and anchors.
 **Garret:** reviews and approves each scene in the editor, tweaks layout and look, tunes feel in the Inspector.
@@ -60,7 +61,7 @@
 - [ ] Stick and Rock enemies
 - [ ] Six color tiers via Modulate, tier data in `.tres`
 - [ ] Boss base class plus the six tier bosses
-- [ ] Mount slots 2–6 and equidistant spacing (test 1, 2, and 6 mounts)
+- [ ] Mount slots 4–6 (slots 2–3 and equidistant spacing were built in Phase 2)
 
 **Claude Code:** most of this; it's pattern replication once Phase 2's base classes exist.
 **Garret:** playtest each mount against each enemy; pick placeholder shapes/colors.
@@ -76,7 +77,8 @@
 - [ ] Kill-count gate before each boss, visible in the HUD
 - [ ] Save system: auto, milestone, manual; `user://save_data.json`
 - [ ] Offline progress with the 8-hour clamp and "Welcome back" popup
-- [ ] Wave controls: auto-wave toggle, next wave, Emergency Clear
+- [x] Wave controls: auto-wave toggle, next wave, Emergency Clear *(built in Phase 2, Step 10b)*
+- [ ] Hold-to-boost automation (from Garret's playtest idea; see NOTES)
 - [ ] Random Events (GDD): clickable pickups (speed/Gold surges, Lucky Ticket) and surprise visitors (Wandering Horse, Pop-up Booth), data-driven
 
 **⚠️ Resolve before starting:** DECISION PENDING — death/fail state design.

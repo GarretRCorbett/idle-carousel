@@ -1,5 +1,5 @@
 # 🎯 Idle Carousel — Phase 2 Goals (Core Loop)
-### Version 1.0 — Approved
+### Version 1.2 — Approved (wrap-up tidy)
 
 > The smallest version that's actually a game: the carousel spins, the Horse earns Gold
 > at the booth, Leaves latch on and slow it down, and the Wolf clears them.
@@ -8,6 +8,7 @@
 ---
 
 ## Changelog
+- **v1.2** — Step 11 tidy: docs now match the build. Softer drag curve, crank + safety-net stall, wave controls already built (Step 10b), Wolf uses angle math (not ray queries), Step 4 click Gold removed, the leveled shop replaces the "five purchases".
 - **v1.1** — First-playtest changes (GDD v1.5): new Step 5b (smooth spin, Spin button, HUD labels, no click Gold, shop redesign). Step 10 now also covers extra Horses and Ticket Booths 2–4.
 - **v1.0** — Approved by Garret. First draft. Built from the roadmap, Codex's Phase 2 brainstorm, and Garret's design decisions (GDD v1.4).
 
@@ -39,10 +40,10 @@ Placeholder UI text is fine while building. Mark it `# TODO(Garret): text`. Garr
 | Clicks | **Spin button** boosts spin (v1.5). Clicking an enemy damages it. Empty space does nothing. Clicks never pay Gold. |
 | Spin boost | Each click adds a small bonus. Bonuses stack up to a cap and decay back to base. |
 | Latch | Latched enemies hold their world position; the carousel grinds past underneath. |
-| Drag | Adds up with **no floor**. Enough latches stop the carousel. |
-| Zero health | **TEMPORARY** stall until latches are cleared, then a small refill. The real fail state is still DECISION PENDING. |
+| Drag | Adds up with no cap, on a soft curve: speed × 1 / (1 + drag). Boost always helps; only a stall fully stops the carousel (Step 9). |
+| Zero health | **TEMPORARY** stall. Clearing every latch refills to 25%; cranking (Boost presses or hold) restarts at 15% with latches still on; after 60 s a safety net clears enemies (no Gold) and restarts at 25%. The real fail state is still DECISION PENDING. |
 | Wolf | Pierces: hits every enemy in its line, each one once per pass. |
-| Waves | The countdown always runs; auto-wave OFF pauses it (the toggle arrives in Phase 4). |
+| Waves | Countdown on the HUD. Auto waves toggle, Send wave (+50% kill Gold), and Emergency Clear were built early in Step 10b. |
 | Gold/sec | Rolling average of actual Gold earned over roughly the last 10 seconds. |
 | Phase 2 shop | Leveled upgrades (GDD v1.6): Carousel Speed and Boost Power (10 levels each), Ticket Booth (to 4 booths), Click Damage, Mount Slot 2, Wolf, extra Horses. Each level ×1.5 the price. |
 | Income | Horse booth passes + enemy kills. Horses × booths multiply; each extra Horse/booth costs more. |
@@ -59,9 +60,9 @@ Moved here from Phase 1.
 - [x] Add a headless test run to **both** `check.sh` and `check.bat`.
 - [x] Extend `tools/check_scripts.gd` to also load every `.tscn`, so a broken scene fails the check. Claude Code will be writing scene files from now on.
 
-- [ ] **Garret:** enable the plugin in Godot: Project → Project Settings → Plugins → gdUnit4 → Enable. This adds the GdUnit test panel to the editor.
+- [x] **Garret:** enable the plugin in Godot: Project → Project Settings → Plugins → gdUnit4 → Enable. This adds the GdUnit test panel to the editor.
 
-**Done when:** the check runs the tests. Break the assertion on purpose and confirm the check fails, then restore it.
+**Done when:** the check runs the tests. Break the assertion on purpose and confirm the check fails, then restore it. *(Shown 2026-09-24: a broken assertion gave FAIL and exit code 1.)*
 
 ---
 
@@ -100,7 +101,7 @@ Game (Node2D)                      game.gd
 
 ## ✅ Step 4 — Horse, ticket booth, Gold HUD (60–90 min)
 
-**Claude Code:** `mount_base.gd` and `mount_horse.gd`, booth pass detection that tracks angle travelled rather than the wrapped angle, a fixed payout per pass, the Gold burst on play-area clicks, the Gold and Gold/sec labels, and a coin pop placeholder.
+**Claude Code:** `mount_base.gd` and `mount_horse.gd`, booth pass detection that tracks angle travelled rather than the wrapped angle, a fixed payout per pass, the Gold and Gold/sec labels, and a coin pop placeholder.
 **Garret:** position the booth, check that the pop reads, and tune the payout.
 **Tests:** a 359°→1° wrap pays exactly once; sitting near the booth doesn't pay repeatedly; one tick spanning two turns pays twice; placing a mount pays nothing.
 **Done when:** Gold climbs at a steady rhythm and Gold/sec looks right.
@@ -158,7 +159,7 @@ From Garret's first playtest (see `planning/phase2/codex_memo_e_playtest_feedbac
 
 ## ✅ Step 9 — Wolf sweep (90–150 min)
 
-**Claude Code:** `mount_wolf.gd` with ray queries that cover the whole angle swept each physics tick (so it doesn't miss at high spin). It pierces and hits each enemy once per pass. A dev-only way to place a Wolf without buying it is included for testing.
+**Claude Code:** `mount_wolf.gd` with angle math that covers the whole angle swept each physics tick (so it doesn't miss at high spin). *(Planned as ray queries; built with the same angle math as booth passes.)* It pierces and hits each enemy once per pass. A dev-only way to place a Wolf without buying it is included for testing.
 **Garret:** watch it at slow and fast spin; check the hit flash reads.
 **Tests:** a Leaf between last tick's and this tick's angle still gets hit; several rays touching one Leaf count as one hit; two Leaves in line both get hit.
 **Done when:** the Wolf reliably clears latched Leaves at every speed.
@@ -188,7 +189,7 @@ From Garret's first playtest (see `planning/phase2/codex_memo_e_playtest_feedbac
 - [ ] The carousel spins; clicks boost; the Horse earns at the booth; Gold/sec is shown
 - [ ] Leaves arrive on a countdown, latch, drag, and deal damage; the TEMPORARY stall works
 - [ ] Clicking and the Wolf both kill Leaves, and each kill pays once
-- [ ] All five purchases work
+- [ ] The leveled shop works (Carousel, Combat, and Mounts tabs; replaces the original "five purchases")
 - [ ] **Understanding check:** Why do enemies live outside the Carousel node? How does the Wolf know it hit something? Why can't a booth pass be counted twice?
 - [ ] You play for 5 minutes and want to keep going
 

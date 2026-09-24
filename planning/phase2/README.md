@@ -1,15 +1,20 @@
 # Phase 2 Planning: Start Here
 
-## Status (2026-09-24)
-**Done:** Steps 1–10, 5b, and the pacing pass (GDD v1.6–1.8): GameState, spin, Boost button with Overdrive, Horse and booth payouts, shop tabs (Carousel / Combat / Mounts), Leaves in timed waves, click damage, latch drag, the Wolf, mount slots, extra Horses (sell for 50%), mounts spaced evenly, first Kenney sprites (Horse, Wolf), and the TEMPORARY health stall with crank and safety net. 154 tests pass.
-**Also done (overnight 2026-09-24, Claude on its own per Garret):** Wolf Fang (Combat: +0.5 Wolf damage/level, needs the Wolf), UI reskin (Kenney UI Pack + Kenney Future font via `tools/build_ui_theme.gd`), first sound effects (Kenney audio, `AudioManager`), and a main menu (spinning carousel, Play, Quit). 160 tests pass.
-**Also done (2026-09-24, later):** backgrounds, Settings + Controls screen (Esc in game), and Step 10b wave controls (Send wave + N with +50% kill Gold, Auto waves, Emergency Clear). 174 tests pass.
-**Next (fresh session):** Step 11 wrap-up, planned in `step11_plan.md`: Garret's 5-min active + 5-min hands-off playtest, doc tidy (roadmap boxes, goals doc, README status), full Phase 2 walkthrough, understanding check, then sign-off. Also done since: 9 draft languages with per-language fonts (186 tests).
-**Open for Garret:** sprite orientation (heads point outward, so the bottom mount is upside down; or keep them upright?), and all placeholder text (menu title/buttons, tab titles, row names, "Crank!", "Sell %d", "Needs an empty slot", "Next wave"). Art: Kenney packs are downloaded in `../kenney_assets/` (memo I); only used files are copied in (see `assets/PROVENANCE.md`).
+## Status (2026-09-24, Step 11 wrap-up)
+**Built:** Steps 1–10, 5b, 10b, and the pacing pass (GDD v1.6–1.8). Core loop: GameState, spin, Boost button with Overdrive, Horse and booth payouts, Gold/sec, leveled shop in three tabs (Carousel / Combat / Mounts), Leaves in timed waves, click damage, latch drag, the Wolf, Wolf Fang, mount slots 2–3, extra Horses (sell for 50%), Ticket Booths 2–4, even spacing, and the TEMPORARY health stall with crank and safety net.
+**Extras built early:** Kenney sprites (Horse, Wolf), UI theme (Kenney UI Pack + Future font via `tools/build_ui_theme.gd`), sound effects (`AudioManager`), main menu, backgrounds, Settings + Controls (Esc in game), wave controls (Send wave / N with +50% kill Gold, Auto waves, Emergency Clear), localization (string keys, number formatter, 9 languages with per-language fonts).
+**Check:** passes, **186 tests**. The Step 1 deliberate-failure check was shown on 2026-09-24 (FAIL, exit 1). The gdUnit4 editor plugin is enabled.
+**Step 11 remaining:** Garret's playtest (5 min active + 5 min hands-off), full Phase 2 diff review, understanding check, then sign-off.
+
+**Parked (Garret, 2026-09-24):**
+- **Sprite orientation:** heads point outward, so the bottom mount is upside down. Parked for the Phase 6 art pass; hand-drawn art may change the answer.
+- **Placeholder text:** all English text is Claude's draft or Garret's placeholder, not approved copy. That covers everything in `localization/strings.csv`: menu title/buttons, Settings/Controls labels, HUD labels ("Crank!", "Send wave", "Clear latched"), tab titles, upgrade names and descriptions, "Sell {0}", "Needs an empty slot", "Requires {0}". The 8 non-English columns are **machine-translation drafts**. Garret approves final copy before shipping, not before this milestone.
+
+Art: Kenney packs are downloaded in `../kenney_assets/` (memo I); only used files are copied in (see `assets/PROVENANCE.md`).
 
 **Fail rule (TEMPORARY):** the health stall only (OVERLOAD_CLEAR was removed in Step 9). Direction: **idle first, pressure when pushing** / Package A. The real fail state is still DECISION PENDING in the GDD.
 
-## Garret's latest playtest (after the pacing pass)
+## Garret's playtest after the pacing pass (historical; pacing reassessed in Step 11)
 - Fun; he bought all 4 booths. Still "a tad slow", but hold off retuning until enemies exist.
 - Base speed feels too slow when idling. Fine for now (it encourages clicking); revisit after Leaves.
 - Idea: an auto-clicker style option to hold boost while fighting (see NOTES).
@@ -30,7 +35,7 @@
 | `step9_plan.md` | Step 9 plan: Wolf + health/stall tuning (done) |
 | `step10_plan.md` | Step 10 plan: Mounts tab, slots, Horses, selling, first sprites (done) |
 | `step10b_plan.md` | Step 10b: wave controls: Send wave, early bonus, Auto waves, Emergency Clear (done) |
-| `step11_plan.md` | Step 11: Phase 2 wrap-up and sign-off checklist (next) |
+| `step11_plan.md` | Step 11: Phase 2 wrap-up and sign-off checklist (in progress) |
 | `codex_memo_a_sweep_booth.md` | Codex: booth pass counting and Wolf sweep math (Steps 4 and 9) |
 | `codex_memo_b_input_layout.md` | Codex: click routing, HUD and scene trees, `.tscn` format (Steps 2, 3, 6) |
 | `codex_memo_c_state_speed.md` | Codex: GameState API, speed model, Gold/sec, stall, purchases (Steps 2–7, 10) |
