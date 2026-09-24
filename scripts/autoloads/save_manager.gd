@@ -80,7 +80,11 @@ func _apply(key: StringName) -> void:
 			AudioServer.set_bus_mute(bus, float(value) <= 0.0)
 	elif key == &"language":
 		var locale := String(value)
-		TranslationServer.set_locale(locale if locale in TranslationServer.get_loaded_locales() else "en")
+		if not locale in TranslationServer.get_loaded_locales():
+			locale = "en"
+		# Font first, so the re-translate that set_locale triggers draws with it.
+		LocaleFonts.apply(locale)
+		TranslationServer.set_locale(locale)
 	elif key == &"pseudolocalization":
 		var on := bool(value) and OS.is_debug_build()
 		if TranslationServer.pseudolocalization_enabled != on:

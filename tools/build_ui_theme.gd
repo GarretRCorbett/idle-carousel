@@ -38,6 +38,16 @@ func _initialize() -> void:
 	title_font.base_font = load("res://assets/fonts/kenney_future.ttf")
 	title_font.fallbacks = [fallback]
 	ResourceSaver.save(title_font, TITLE_FONT_OUT)
+	# Whole-UI fonts for languages Kenney Future can't write (see LocaleFonts).
+	var cyrillic := fallback.duplicate() as FontVariation
+	cyrillic.fallbacks = [ui_font]
+	ResourceSaver.save(cyrillic, "res://assets/fonts/ui_font_cyrillic.tres")
+	for lang in ["zh", "ja", "ko"]:
+		var cjk := FontVariation.new()
+		var file_code: String = {"zh": "sc", "ja": "jp", "ko": "kr"}[lang]
+		cjk.base_font = load("res://assets/fonts/noto_sans_%s_subset.ttf" % file_code)
+		cjk.fallbacks = [ui_font]
+		ResourceSaver.save(cjk, "res://assets/fonts/ui_font_%s.tres" % lang)
 
 	var theme := Theme.new()
 	theme.default_font = load(UI_FONT_OUT)

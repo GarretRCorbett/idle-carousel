@@ -51,7 +51,8 @@ _Update at the end of every session._
 ### Localization (2026-09-24)
 - [ ] **Plurals:** use `tr_n()` + CSV plural rows the first time text depends on a count. Never `if n == 1`.
 - [ ] **Fonts per language:** when a language is scheduled, swap the whole UI font for it (Rubik for Polish/Turkish/Russian; Noto Sans SC/JP/KR for CJK, downloaded then). Today Rubik only fills missing letters, which looks mixed. Codex memo K.
-- [ ] **First real translation:** add a column to `localization/strings.csv`; it appears in Settings → Language automatically (named by `LANGUAGE_NATIVE_NAME`).
+- [ ] **Review translation drafts** (added 2026-09-24, Claude drafts per the text policy): es, fr, de, pt_BR, ru, zh_CN, ja, ko columns in `localization/strings.csv`. Garret approves (or has native speakers check) before shipping.
+- [ ] **Adding a language:** add a CSV column, register its `.translation` in Project Settings (a test fails if you forget), and if it needs a new script, add a font in `LocaleFonts` + `tools/subset_fonts.py`. Re-run `python tools/subset_fonts.py` whenever CJK text changes (a test fails if a character is missing).
 
 ### Scope ideas to revisit later
 - [ ] **Roguelike element** (Garret, 2026-09-24): the itch came from wanting more mounts. Parked to protect v1.0 scope; revisit when planning prestige (a DECISION PENDING in the GDD).

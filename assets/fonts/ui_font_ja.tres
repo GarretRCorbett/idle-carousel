@@ -1,0 +1,19 @@
+[gd_resource type="FontVariation" format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/noto_sans_jp_subset.ttf" id="1_x4aap"]
+[ext_resource type="FontFile" path="res://assets/fonts/kenney_future_narrow.ttf" id="2_tdsrh"]
+[ext_resource type="FontFile" path="res://assets/fonts/rubik_variable.ttf" id="3_x2vgu"]
+
+[sub_resource type="FontVariation" id="FontVariation_mf27e"]
+base_font = ExtResource("3_x2vgu")
+variation_opentype = {
+2003265652: 600
+}
+
+[sub_resource type="FontVariation" id="FontVariation_8ou4j"]
+fallbacks = Array[Font]([SubResource("FontVariation_mf27e")])
+base_font = ExtResource("2_tdsrh")
+
+[resource]
+fallbacks = Array[Font]([SubResource("FontVariation_8ou4j")])
+base_font = ExtResource("1_x4aap")

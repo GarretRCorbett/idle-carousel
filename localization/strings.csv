@@ -1,66 +1,66 @@
-keys,en
-NUM_THOUSANDS_SEP,","
-NUM_DECIMAL_SEP,.
-NUM_SUFFIX_K,K
-NUM_SUFFIX_M,M
-NUM_SUFFIX_B,B
-NUM_SUFFIX_T,T
-MENU_TITLE,Idle Carousel
-MENU_PLAY,Play
-MENU_SETTINGS,Settings
-MENU_QUIT,Quit
-OPT_TAB_SETTINGS,Settings
-OPT_TAB_CONTROLS,Controls
-OPT_MASTER_VOLUME,Master volume
-OPT_SFX_VOLUME,Sound effects
-OPT_MUSIC_VOLUME,Music
-OPT_FULLSCREEN,Fullscreen
-OPT_LANGUAGE,Language
-OPT_PSEUDO,Test translations (debug)
-LANGUAGE_NATIVE_NAME,English
-OPT_BACK,Back
-CTRL_KEY_CLICK,Left click
-CTRL_HIT_LEAF,Hit a Leaf
-CTRL_KEY_BOOST,Space / Boost
-CTRL_BOOST,Speed up (keep it full for Overdrive)
-CTRL_KEY_STALLED,Space when stalled
-CTRL_CRANK,Crank the carousel back
-CTRL_KEY_SEND_WAVE,N
-CTRL_SEND_WAVE,Send the next wave now
-CTRL_KEY_PAUSE,Esc
-CTRL_PAUSE,Settings and pause
-HUD_GOLD,Gold: {0}
-HUD_GOLD_PER_SEC,Gold per sec: {0}
-HUD_SPEED,Speed: ×{0}
-HUD_BOOST,Boost
-HUD_CRANK,Crank!
-HUD_SEND_WAVE_COUNTDOWN,Send wave ({0})
-HUD_SEND_WAVE,Send wave
-HUD_AUTO_WAVES,Auto waves
-HUD_CLEAR_LATCHED,Clear latched
-HUD_CLEAR_READY,Clear latched ({0})
-HUD_CLEAR_COOLDOWN,Clear ready in {0}s
-SHOP_TAB_CAROUSEL,Carousel
-SHOP_TAB_COMBAT,Combat
-SHOP_TAB_MOUNTS,Mounts
-SHOP_COST,{0}
-SHOP_MAXED,Max
-SHOP_REQUIRES,Requires {0}
-SHOP_NEEDS_SLOT,Needs an empty slot
-SHOP_SELL,Sell {0}
-UPG_CAROUSEL_SPEED_NAME,Carousel Speed
-UPG_CAROUSEL_SPEED_DESC,+20% base speed
-UPG_BOOST_POWER_NAME,Boost Power
-UPG_BOOST_POWER_DESC,+10% max boost
-UPG_CLICK_DAMAGE_NAME,Click Damage
-UPG_CLICK_DAMAGE_DESC,+0.5 damage per click
-UPG_WOLF_FANG_NAME,Wolf Fang
-UPG_WOLF_FANG_DESC,+0.5 Wolf damage per hit
-UPG_TICKET_BOOTH_NAME,Ticket Booth
-UPG_TICKET_BOOTH_DESC,Another booth for the Horse to pass
-UPG_MOUNT_SLOT_NAME,Mount Slot
-UPG_MOUNT_SLOT_DESC,Room for one more mount
-UPG_WOLF_NAME,Wolf
-UPG_WOLF_DESC,Sweeps enemies as the carousel turns
-UPG_HORSE_NAME,Horse
-UPG_HORSE_DESC,Another Horse to pay at the booths
+keys,en,es,fr,de,pt_BR,ru,zh_CN,ja,ko
+NUM_THOUSANDS_SEP,",",., ,.,., ,",",",",","
+NUM_DECIMAL_SEP,.,",",",",",",",",",",.,.,.
+NUM_SUFFIX_K,K,K,K,K,K,K,K,K,K
+NUM_SUFFIX_M,M,M,M,M,M,M,M,M,M
+NUM_SUFFIX_B,B,B,Md,Mrd,B,B,B,B,B
+NUM_SUFFIX_T,T,T,T,T,T,T,T,T,T
+MENU_TITLE,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel
+MENU_PLAY,Play,Jugar,Jouer,Spielen,Jogar,Играть,开始游戏,プレイ,플레이
+MENU_SETTINGS,Settings,Ajustes,Paramètres,Einstellungen,Configurações,Настройки,设置,設定,설정
+MENU_QUIT,Quit,Salir,Quitter,Beenden,Sair,Выход,退出,終了,종료
+OPT_TAB_SETTINGS,Settings,Ajustes,Paramètres,Einstellungen,Configurações,Настройки,设置,設定,설정
+OPT_TAB_CONTROLS,Controls,Controles,Commandes,Steuerung,Controles,Управление,操作,操作,조작
+OPT_MASTER_VOLUME,Master volume,Volumen general,Volume général,Gesamtlautstärke,Volume geral,Общая громкость,总音量,マスター音量,전체 음량
+OPT_SFX_VOLUME,Sound effects,Efectos de sonido,Effets sonores,Soundeffekte,Efeitos sonoros,Звуковые эффекты,音效,効果音,효과음
+OPT_MUSIC_VOLUME,Music,Música,Musique,Musik,Música,Музыка,音乐,音楽,음악
+OPT_FULLSCREEN,Fullscreen,Pantalla completa,Plein écran,Vollbild,Tela cheia,Полный экран,全屏,フルスクリーン,전체 화면
+OPT_LANGUAGE,Language,Idioma,Langue,Sprache,Idioma,Язык,语言,言語,언어
+OPT_PSEUDO,Test translations (debug),Probar traducciones (depuración),Tester les traductions (débogage),Übersetzungen testen (Debug),Testar traduções (depuração),Проверка переводов (отладка),测试翻译（调试）,翻訳テスト（デバッグ）,번역 테스트 (디버그)
+LANGUAGE_NATIVE_NAME,English,Español,Français,Deutsch,Português (Brasil),Русский,简体中文,日本語,한국어
+OPT_BACK,Back,Volver,Retour,Zurück,Voltar,Назад,返回,戻る,뒤로
+CTRL_KEY_CLICK,Left click,Clic izquierdo,Clic gauche,Linksklick,Clique esquerdo,Левый клик,鼠标左键,左クリック,왼쪽 클릭
+CTRL_HIT_LEAF,Hit a Leaf,Golpear una hoja,Frapper une feuille,Ein Blatt treffen,Acertar uma folha,Ударить лист,击打落叶,葉っぱを叩く,나뭇잎 치기
+CTRL_KEY_BOOST,Space / Boost,Espacio / Impulso,Espace / Boost,Leertaste / Boost,Espaço / Impulso,Пробел / Ускорение,空格 / 加速,スペース / ブースト,스페이스 / 부스트
+CTRL_BOOST,Speed up (keep it full for Overdrive),Acelerar (mantenlo lleno para Sobremarcha),Accélérer (gardez-le plein pour la Surmultipliée),Beschleunigen (voll halten für Overdrive),Acelerar (mantenha cheio para Sobrecarga),Ускориться (держите полным для Форсажа),加速（保持满格触发超速）,加速（満タンを保つとオーバードライブ）,가속 (가득 유지하면 오버드라이브)
+CTRL_KEY_STALLED,Space when stalled,Espacio al detenerse,Espace à l'arrêt,Leertaste im Stillstand,Espaço quando parado,Пробел при остановке,停转时按空格,停止中にスペース,멈췄을 때 스페이스
+CTRL_CRANK,Crank the carousel back,Dar manivela al carrusel,Relancer le manège à la manivelle,Das Karussell ankurbeln,Girar a manivela do carrossel,Раскрутить карусель рукояткой,摇动曲柄重启旋转木马,クランクでメリーゴーラウンドを再始動,크랭크로 회전목마 재가동
+CTRL_KEY_SEND_WAVE,N,N,N,N,N,N,N,N,N
+CTRL_SEND_WAVE,Send the next wave now,Enviar la siguiente oleada ya,Envoyer la prochaine vague,Nächste Welle jetzt senden,Enviar a próxima onda agora,Отправить следующую волну,立即发送下一波,次のウェーブを今すぐ送る,다음 웨이브 바로 보내기
+CTRL_KEY_PAUSE,Esc,Esc,Esc,Esc,Esc,Esc,Esc,Esc,Esc
+CTRL_PAUSE,Settings and pause,Ajustes y pausa,Paramètres et pause,Einstellungen und Pause,Configurações e pausa,Настройки и пауза,设置并暂停,設定と一時停止,설정 및 일시정지
+HUD_GOLD,Gold: {0},Oro: {0},Or : {0},Gold: {0},Ouro: {0},Золото: {0},金币：{0},ゴールド：{0},골드: {0}
+HUD_GOLD_PER_SEC,Gold per sec: {0},Oro por seg: {0},Or par sec : {0},Gold pro Sek.: {0},Ouro por seg: {0},Золото/сек: {0},每秒金币：{0},毎秒ゴールド：{0},초당 골드: {0}
+HUD_SPEED,Speed: ×{0},Velocidad: ×{0},Vitesse : ×{0},Tempo: ×{0},Velocidade: ×{0},Скорость: ×{0},速度：×{0},速度：×{0},속도: ×{0}
+HUD_BOOST,Boost,Impulso,Boost,Boost,Impulso,Ускорение,加速,ブースト,부스트
+HUD_CRANK,Crank!,¡Manivela!,Manivelle !,Kurbeln!,Manivela!,Крутить!,摇曲柄！,クランク！,크랭크!
+HUD_SEND_WAVE_COUNTDOWN,Send wave ({0}),Enviar oleada ({0}),Envoyer la vague ({0}),Welle senden ({0}),Enviar onda ({0}),Волна ({0}),发送波次（{0}）,ウェーブ送信（{0}）,웨이브 보내기 ({0})
+HUD_SEND_WAVE,Send wave,Enviar oleada,Envoyer la vague,Welle senden,Enviar onda,Отправить волну,发送波次,ウェーブ送信,웨이브 보내기
+HUD_AUTO_WAVES,Auto waves,Oleadas automáticas,Vagues auto,Auto-Wellen,Ondas automáticas,Автоволны,自动波次,自動ウェーブ,자동 웨이브
+HUD_CLEAR_LATCHED,Clear latched,Quitar enganchados,Retirer les accrochés,Festhänger entfernen,Remover presos,Сбросить прицепившихся,清除附着,しがみつきを除去,달라붙은 것 제거
+HUD_CLEAR_READY,Clear latched ({0}),Quitar enganchados ({0}),Retirer les accrochés ({0}),Festhänger entfernen ({0}),Remover presos ({0}),Сбросить ({0}),清除附着（{0}）,しがみつき除去（{0}）,달라붙은 것 제거 ({0})
+HUD_CLEAR_COOLDOWN,Clear ready in {0}s,Listo en {0} s,Prêt dans {0} s,Bereit in {0} s,Pronto em {0} s,Готово через {0} с,{0} 秒后可用,あと{0}秒で使用可,{0}초 후 사용 가능
+SHOP_TAB_CAROUSEL,Carousel,Carrusel,Manège,Karussell,Carrossel,Карусель,旋转木马,メリーゴーラウンド,회전목마
+SHOP_TAB_COMBAT,Combat,Combate,Combat,Kampf,Combate,Бой,战斗,戦闘,전투
+SHOP_TAB_MOUNTS,Mounts,Monturas,Montures,Reittiere,Montarias,Скакуны,坐骑,乗り物,탈것
+SHOP_COST,{0},{0},{0},{0},{0},{0},{0},{0},{0}
+SHOP_MAXED,Max,Máx,Max,Max,Máx,Макс,已满,最大,최대
+SHOP_REQUIRES,Requires {0},Requiere {0},Nécessite {0},Benötigt {0},Requer {0},Нужно: {0},需要 {0},{0}が必要,{0} 필요
+SHOP_NEEDS_SLOT,Needs an empty slot,Necesita un espacio libre,Nécessite un emplacement libre,Braucht einen freien Platz,Precisa de um espaço livre,Нужно свободное место,需要一个空位,空きスロットが必要,빈 슬롯 필요
+SHOP_SELL,Sell {0},Vender {0},Vendre {0},Verkaufen {0},Vender {0},Продать {0},出售 {0},売却 {0},판매 {0}
+UPG_CAROUSEL_SPEED_NAME,Carousel Speed,Velocidad del carrusel,Vitesse du manège,Karussell-Tempo,Velocidade do carrossel,Скорость карусели,旋转速度,回転速度,회전목마 속도
+UPG_CAROUSEL_SPEED_DESC,+20% base speed,+20% de velocidad base,+20 % de vitesse de base,+20 % Grundtempo,+20% de velocidade base,+20% к базовой скорости,基础速度 +20%,基本速度 +20%,기본 속도 +20%
+UPG_BOOST_POWER_NAME,Boost Power,Potencia de impulso,Puissance du boost,Boost-Stärke,Força do impulso,Сила ускорения,加速强度,ブースト強化,부스트 강화
+UPG_BOOST_POWER_DESC,+10% max boost,+10% de impulso máximo,+10 % de boost max,+10 % max. Boost,+10% de impulso máximo,+10% к макс. ускорению,最大加速 +10%,最大ブースト +10%,최대 부스트 +10%
+UPG_CLICK_DAMAGE_NAME,Click Damage,Daño por clic,Dégâts par clic,Klickschaden,Dano por clique,Урон от клика,点击伤害,クリックダメージ,클릭 피해
+UPG_CLICK_DAMAGE_DESC,+0.5 damage per click,"+0,5 de daño por clic","+0,5 dégât par clic","+0,5 Schaden pro Klick","+0,5 de dano por clique","+0,5 урона за клик",每次点击伤害 +0.5,クリックごとのダメージ +0.5,클릭당 피해 +0.5
+UPG_WOLF_FANG_NAME,Wolf Fang,Colmillo de lobo,Croc du loup,Wolfszahn,Presa do lobo,Волчий клык,狼牙,オオカミの牙,늑대 송곳니
+UPG_WOLF_FANG_DESC,+0.5 Wolf damage per hit,"+0,5 de daño del lobo por golpe","+0,5 dégât du loup par coup","+0,5 Wolfschaden pro Treffer","+0,5 de dano do lobo por golpe","+0,5 урона волка за удар",狼每次攻击伤害 +0.5,オオカミの一撃ダメージ +0.5,늑대 타격당 피해 +0.5
+UPG_TICKET_BOOTH_NAME,Ticket Booth,Taquilla,Guichet,Ticketschalter,Bilheteria,Билетная касса,售票亭,チケット売り場,매표소
+UPG_TICKET_BOOTH_DESC,Another booth for the Horse to pass,Otra taquilla por la que pasa el caballo,Un autre guichet devant lequel passe le cheval,"Ein weiterer Schalter, an dem das Pferd vorbeikommt",Outra bilheteria para o cavalo passar,Ещё одна касса на пути лошади,再建一个售票亭，让马经过,ウマが通る売り場をもう1つ,말이 지나갈 매표소 하나 더
+UPG_MOUNT_SLOT_NAME,Mount Slot,Espacio de montura,Emplacement de monture,Reittierplatz,Espaço de montaria,Место для скакуна,坐骑位,乗り物スロット,탈것 슬롯
+UPG_MOUNT_SLOT_DESC,Room for one more mount,Espacio para una montura más,Place pour une monture de plus,Platz für ein weiteres Reittier,Espaço para mais uma montaria,Место ещё для одного скакуна,可多放一个坐骑,乗り物をもう1体置ける,탈것 하나 더 배치
+UPG_WOLF_NAME,Wolf,Lobo,Loup,Wolf,Lobo,Волк,狼,オオカミ,늑대
+UPG_WOLF_DESC,Sweeps enemies as the carousel turns,Barre enemigos mientras gira el carrusel,Balaie les ennemis quand le manège tourne,"Fegt Gegner weg, während sich das Karussell dreht",Varre inimigos enquanto o carrossel gira,"Сметает врагов, пока карусель крутится",随旋转木马转动横扫敌人,メリーゴーラウンドの回転で敵をなぎ払う,회전목마가 돌 때 적을 쓸어버림
+UPG_HORSE_NAME,Horse,Caballo,Cheval,Pferd,Cavalo,Лошадь,马,ウマ,말
+UPG_HORSE_DESC,Another Horse to pay at the booths,Otro caballo que cobra en las taquillas,Un autre cheval qui rapporte aux guichets,"Ein weiteres Pferd, das an den Schaltern kassiert",Outro cavalo para faturar nas bilheterias,"Ещё одна лошадь, приносящая доход у касс",再添一匹马，在售票亭赚钱,売り場で稼ぐウマをもう1頭,매표소에서 돈을 버는 말 한 마리 더

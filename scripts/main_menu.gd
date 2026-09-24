@@ -9,6 +9,7 @@ const GAME_SCENE := "res://scenes/Game.tscn"
 @export_range(0.0, 360.0, 1.0, "suffix:°/s") var carousel_spin_deg_s: float = 20.0
 
 @onready var _carousel: Carousel = %MenuCarousel
+@onready var _title: Label = $Center/Column/Title
 @onready var _carousel_spot: Control = %CarouselSpot
 @onready var _play_button: Button = %PlayButton
 @onready var _settings_button: Button = %SettingsButton
@@ -23,9 +24,16 @@ func _ready() -> void:
 		AudioManager.play_sfx(&"click")
 		_options.open())
 	_options.closed.connect(_play_button.grab_focus)
+	_title.add_theme_font_override(&"font", LocaleFonts.title_font(TranslationServer.get_locale()))
 	_carousel_spot.resized.connect(_center_carousel)
 	_center_carousel()
 	_play_button.grab_focus.call_deferred()
+
+
+## Language changed: the title uses that language's title font.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready():
+		_title.add_theme_font_override(&"font", LocaleFonts.title_font(TranslationServer.get_locale()))
 
 
 func _process(delta: float) -> void:

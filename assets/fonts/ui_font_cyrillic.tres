@@ -1,0 +1,21 @@
+[gd_resource type="FontVariation" format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/rubik_variable.ttf" id="1_b37vy"]
+[ext_resource type="FontFile" path="res://assets/fonts/kenney_future_narrow.ttf" id="2_k5bc3"]
+
+[sub_resource type="FontVariation" id="FontVariation_mf27e"]
+base_font = ExtResource("1_b37vy")
+variation_opentype = {
+2003265652: 600
+}
+
+[sub_resource type="FontVariation" id="FontVariation_8ou4j"]
+fallbacks = Array[Font]([SubResource("FontVariation_mf27e")])
+base_font = ExtResource("2_k5bc3")
+
+[resource]
+fallbacks = Array[Font]([SubResource("FontVariation_8ou4j")])
+base_font = ExtResource("1_b37vy")
+variation_opentype = {
+2003265652: 600
+}

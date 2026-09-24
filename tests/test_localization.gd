@@ -19,7 +19,9 @@ func _csv_keys() -> Dictionary:
 func test_csv_keys_are_unique_and_filled() -> void:
 	var seen := {}
 	var file := FileAccess.open(CSV, FileAccess.READ)
-	assert_array(Array(file.get_csv_line())).is_equal(["keys", "en"])
+	var header := file.get_csv_line()
+	assert_str(header[0]).is_equal("keys")
+	assert_str(header[1]).is_equal("en")
 	while not file.eof_reached():
 		var row := file.get_csv_line()
 		if row.size() < 2 or row[0] == "":
@@ -75,3 +77,83 @@ func test_gold_numbers() -> void:
 func test_decimals() -> void:
 	assert_str(NumberFormat.decimal(3.0, 1)).is_equal("3.0")
 	assert_str(NumberFormat.decimal(1.234, 2)).is_equal("1.23")
+
+
+## Every translation keeps the English placeholders ({0}, {1}...).
+func test_translations_keep_placeholders() -> void:
+	var file := FileAccess.open(CSV, FileAccess.READ)
+	var header := file.get_csv_line()
+	var regex := RegEx.create_from_string("[{][0-9]+[}]")
+	while not file.eof_reached():
+		var row := file.get_csv_line()
+		if row.size() < header.size():
+			continue
+		var expected := _placeholders(regex, row[1])
+		for i in range(2, header.size()):
+			assert_array(_placeholders(regex, row[i])).override_failure_message(
+					"%s [%s] placeholders differ" % [row[0], header[i]]).is_equal(expected)
+
+
+func _placeholders(regex: RegEx, text: String) -> Array:
+	var found := []
+	for m in regex.search_all(text):
+		found.append(m.get_string())
+	found.sort()
+	return found
+
+
+## Every character each language uses exists in that language's font (or its
+## fallbacks). Fails when strings change without re-running tools/subset_fonts.py.
+func test_every_language_can_draw_its_text() -> void:
+	var file := FileAccess.open(CSV, FileAccess.READ)
+	var header := file.get_csv_line()
+	var rows: Array[PackedStringArray] = []
+	while not file.eof_reached():
+		var row := file.get_csv_line()
+		if row.size() == header.size():
+			rows.append(row)
+	for i in range(1, header.size()):
+		var fonts := _font_chain(LocaleFonts.ui_font(header[i]))
+		var missing := ""
+		for row in rows:
+			for c in row[i]:
+				if c != " " and not _any_has(fonts, c.unicode_at(0)) and not c in missing:
+					missing += c
+		assert_str(missing).override_failure_message("%s font is missing: %s" % [header[i], missing]).is_empty()
+
+
+func _font_chain(font: Font) -> Array[Font]:
+	var chain: Array[Font] = []
+	var queue: Array[Font] = [font]
+	while not queue.is_empty():
+		var f: Font = queue.pop_front()
+		if f == null or f in chain:
+			continue
+		chain.append(f)
+		if f is FontVariation:
+			queue.append((f as FontVariation).base_font)
+		queue.append_array(f.fallbacks)
+	return chain
+
+
+func _any_has(fonts: Array[Font], code: int) -> bool:
+	for f in fonts:
+		if f is FontFile and f.has_char(code):
+			return true
+	return false
+
+
+func test_language_fonts() -> void:
+	assert_object(LocaleFonts.ui_font("zh_CN")).is_not_null()
+	assert_str(LocaleFonts.ui_font("es").resource_path).is_equal(LocaleFonts.DEFAULT_UI)
+	assert_str(LocaleFonts.ui_font("ru").resource_path).contains("cyrillic")
+
+
+## Every language column in the CSV is registered in Project Settings, so it
+## loads and shows up in Settings -> Language.
+func test_every_csv_language_is_loaded() -> void:
+	var header := FileAccess.open(CSV, FileAccess.READ).get_csv_line()
+	var loaded := TranslationServer.get_loaded_locales()
+	for i in range(1, header.size()):
+		assert_bool(header[i] in loaded).override_failure_message(
+				"%s isn't in Project Settings > Localization > Translations" % header[i]).is_true()
