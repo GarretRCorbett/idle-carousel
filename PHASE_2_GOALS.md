@@ -44,7 +44,7 @@ Placeholder UI text is fine while building. Mark it `# TODO(Garret): text`. Garr
 | Wolf | Pierces: hits every enemy in its line, each one once per pass. |
 | Waves | The countdown always runs; auto-wave OFF pauses it (the toggle arrives in Phase 4). |
 | Gold/sec | Rolling average of actual Gold earned over roughly the last 10 seconds. |
-| Phase 2 shop | Spin Speed 1, Spin Speed 2, Click Damage 1, Mount Slot 2, Wolf, plus extra Horses and Ticket Booths 2–4 (v1.5). |
+| Phase 2 shop | Leveled upgrades (GDD v1.6): Carousel Speed and Boost Power (10 levels each), Ticket Booth (to 4 booths), Click Damage, Mount Slot 2, Wolf, extra Horses. Each level ×1.5 the price. |
 | Income | Horse booth passes + enemy kills. Horses × booths multiply; each extra Horse/booth costs more. |
 
 ---

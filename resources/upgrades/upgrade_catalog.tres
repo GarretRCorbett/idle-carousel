@@ -2,9 +2,10 @@
 
 [ext_resource type="Script" path="res://scripts/upgrade_catalog.gd" id="1_script"]
 [ext_resource type="Script" path="res://scripts/upgrade_data.gd" id="2_data"]
-[ext_resource type="Resource" path="res://resources/upgrades/spin_speed_1.tres" id="3_s1"]
-[ext_resource type="Resource" path="res://resources/upgrades/spin_speed_2.tres" id="4_s2"]
+[ext_resource type="Resource" path="res://resources/upgrades/carousel_speed.tres" id="3_speed"]
+[ext_resource type="Resource" path="res://resources/upgrades/boost_power.tres" id="4_boost"]
+[ext_resource type="Resource" path="res://resources/upgrades/ticket_booth.tres" id="5_booth"]
 
 [resource]
 script = ExtResource("1_script")
-upgrades = Array[ExtResource("2_data")]([ExtResource("3_s1"), ExtResource("4_s2")])
+upgrades = Array[ExtResource("2_data")]([ExtResource("3_speed"), ExtResource("4_boost"), ExtResource("5_booth")])

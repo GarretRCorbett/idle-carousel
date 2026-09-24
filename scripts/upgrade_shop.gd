@@ -1,26 +1,27 @@
 class_name UpgradeShop
 extends PanelContainer
 ## One row per upgrade from the catalog, always listed in catalog order so rows
-## never shift under the cursor. Each row is in one state:
+## never shift under the cursor. Upgrades have levels (e.g. 1 to 10); each row
+## shows level pips, the next level's price, and a fill bar toward that price.
+## Row states:
 ##   LOCKED      prerequisite not bought: dimmed, shows what it needs
-##   SAVING      Gold below cost: fill bar shows progress toward the cost
+##   SAVING      Gold below the next price: fill bar shows progress
 ##   AFFORDABLE  buy button enabled, bar full
-##   BOUGHT      compact, marked bought; no bar
-## GDD v1.5: every row shows a fill bar; bought rows stay marked.
+##   MAXED       every level bought: marked done, no bar
 
-enum RowState { LOCKED, SAVING, AFFORDABLE, BOUGHT }
+enum RowState { LOCKED, SAVING, AFFORDABLE, MAXED }
 
 # Wording (Garret's text).
-## Buy button text; %d is the cost.
+## Buy button text; %d is the next level's price.
 @export var cost_format: String = "%d"
 ## Shown on locked rows; %s is the prerequisite's name.
 @export var requires_format: String = "Requires %s"
-## Shown on the button of a bought row.
-@export var bought_mark: String = "✓"
+## Button text once every level is bought.
+@export var maxed_mark: String = "✓"
 
 @export_group("Look")
 @export var locked_modulate: Color = Color(1.0, 1.0, 1.0, 0.55)
-@export var bought_modulate: Color = Color(1.0, 1.0, 1.0, 0.7)
+@export var maxed_modulate: Color = Color(1.0, 1.0, 1.0, 0.7)
 @export var row_separation: int = 4
 @export var progress_bar_height: float = 6.0
 
@@ -32,6 +33,7 @@ var _rows_by_id: Dictionary[StringName, ShopRow] = {}
 class ShopRow:
 	var root: VBoxContainer
 	var status: Label
+	var pips: LevelPips
 	var button: Button
 	var progress: ProgressBar
 
@@ -47,8 +49,8 @@ func _ready() -> void:
 
 ## The state a row should show right now.
 static func get_row_state(id: StringName) -> RowState:
-	if UpgradeManager.is_purchased(id):
-		return RowState.BOUGHT
+	if UpgradeManager.is_maxed(id):
+		return RowState.MAXED
 	var upgrade := UpgradeManager.get_definition(id)
 	if upgrade.prerequisite_id != &"" and not UpgradeManager.is_purchased(upgrade.prerequisite_id):
 		return RowState.LOCKED
@@ -69,6 +71,10 @@ func _build_row(upgrade: UpgradeData) -> ShopRow:
 	text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	text.add_child(_label(upgrade.display_name, false))
 	text.add_child(_label(upgrade.description, true))
+	row.pips = LevelPips.new()
+	row.pips.max_level = upgrade.max_level
+	row.pips.visible = upgrade.max_level > 1
+	text.add_child(row.pips)
 	row.status = _label("", true)
 	text.add_child(row.status)
 
@@ -108,10 +114,12 @@ func _refresh() -> void:
 		var row := _rows_by_id[id]
 		var upgrade := UpgradeManager.get_definition(id)
 		var state := get_row_state(id)
+		var cost := UpgradeManager.get_cost(id)
+		row.pips.level = UpgradeManager.get_level(id)
 		row.button.disabled = state != RowState.AFFORDABLE
-		row.button.text = bought_mark if state == RowState.BOUGHT else cost_format % upgrade.cost_gold
-		row.progress.visible = state != RowState.BOUGHT
-		row.progress.value = clampf(GameState.get_gold() / upgrade.cost_gold, 0.0, 1.0) if upgrade.cost_gold > 0.0 else 1.0
+		row.button.text = maxed_mark if state == RowState.MAXED else cost_format % cost
+		row.progress.visible = state != RowState.MAXED
+		row.progress.value = clampf(GameState.get_gold() / cost, 0.0, 1.0) if cost > 0.0 else 1.0
 		row.status.visible = state == RowState.LOCKED
 		if state == RowState.LOCKED:
 			var prerequisite := UpgradeManager.get_definition(upgrade.prerequisite_id)
@@ -119,7 +127,7 @@ func _refresh() -> void:
 		match state:
 			RowState.LOCKED:
 				row.root.modulate = locked_modulate
-			RowState.BOUGHT:
-				row.root.modulate = bought_modulate
+			RowState.MAXED:
+				row.root.modulate = maxed_modulate
 			_:
 				row.root.modulate = Color.WHITE

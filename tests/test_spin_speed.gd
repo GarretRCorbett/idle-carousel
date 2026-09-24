@@ -7,8 +7,8 @@ var _config: RunConfig
 func before_test() -> void:
 	_config = RunConfig.new()
 	_config.base_spin_speed_deg_s = 90.0
-	_config.click_boost_increment = 0.2
 	_config.click_boost_cap = 0.5
+	_config.boost_presses_to_fill = 5  # 0.1 per press
 	_config.click_boost_decay_seconds = 2.0
 	GameState.reset_run(_config)
 
@@ -21,20 +21,28 @@ func test_base_speed_converts_degrees_to_radians() -> void:
 	assert_float(GameState.get_effective_spin_speed_rad_s()).is_equal_approx(deg_to_rad(90.0), 0.00001)
 
 
-func test_one_click_adds_the_increment() -> void:
+func test_one_press_adds_cap_over_presses_to_fill() -> void:
 	GameState.add_click_boost()
-	assert_float(GameState.get_click_boost()).is_equal_approx(0.2, 0.00001)
-	assert_float(GameState.get_effective_spin_speed_rad_s()).is_equal_approx(deg_to_rad(90.0) * 1.2, 0.00001)
+	assert_float(GameState.get_click_boost()).is_equal_approx(0.1, 0.00001)
+	assert_float(GameState.get_effective_spin_speed_rad_s()).is_equal_approx(deg_to_rad(90.0) * 1.1, 0.00001)
+
+
+func test_presses_to_fill_exactly_fills_the_bar() -> void:
+	for i in 4:
+		GameState.add_click_boost()
+	assert_float(GameState.get_click_boost_fraction()).is_less(1.0)
+	GameState.add_click_boost()
+	assert_float(GameState.get_click_boost_fraction()).is_equal_approx(1.0, 0.00001)
 
 
 func test_clicks_stack_to_the_cap() -> void:
-	for i in 5:
+	for i in 9:
 		GameState.add_click_boost()
 	assert_float(GameState.get_click_boost()).is_equal_approx(0.5, 0.00001)
 
 
 func test_boost_fades_linearly_after_last_click() -> void:
-	for i in 3:
+	for i in 5:
 		GameState.add_click_boost()  # capped at 0.5
 	GameState.advance_simulation(1.0)
 	assert_float(GameState.get_click_boost()).is_equal_approx(0.25, 0.00001)
@@ -45,29 +53,30 @@ func test_boost_fades_linearly_after_last_click() -> void:
 
 
 func test_click_during_fade_adds_to_what_is_left() -> void:
+	GameState.add_click_boost()
 	GameState.add_click_boost()  # 0.2
 	GameState.advance_simulation(1.0)  # 0.1 left
-	GameState.add_click_boost()  # 0.1 + 0.2
-	assert_float(GameState.get_click_boost()).is_equal_approx(0.3, 0.00001)
+	GameState.add_click_boost()  # 0.1 + 0.1
+	assert_float(GameState.get_click_boost()).is_equal_approx(0.2, 0.00001)
 
 
 func test_click_at_cap_refreshes_the_fade() -> void:
-	for i in 3:
+	for i in 5:
 		GameState.add_click_boost()
 	GameState.advance_simulation(1.5)
-	for i in 3:
+	for i in 5:
 		GameState.add_click_boost()
 	GameState.advance_simulation(1.0)
 	assert_float(GameState.get_click_boost()).is_equal_approx(0.25, 0.00001)
 
 
 func test_fade_is_frame_rate_independent() -> void:
-	for i in 3:
+	for i in 5:
 		GameState.add_click_boost()
 	GameState.advance_simulation(1.0)
 	var one_big_step := GameState.get_click_boost()
 	GameState.reset_run(_config)
-	for i in 3:
+	for i in 5:
 		GameState.add_click_boost()
 	for i in 60:
 		GameState.advance_simulation(1.0 / 60.0)
@@ -78,7 +87,7 @@ func test_invalid_delta_is_ignored() -> void:
 	GameState.add_click_boost()
 	GameState.advance_simulation(-1.0)
 	GameState.advance_simulation(NAN)
-	assert_float(GameState.get_click_boost()).is_equal_approx(0.2, 0.00001)
+	assert_float(GameState.get_click_boost()).is_equal_approx(0.1, 0.00001)
 
 
 func test_speed_signal_on_click_and_reset() -> void:

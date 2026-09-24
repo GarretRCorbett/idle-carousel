@@ -1,11 +1,14 @@
 class_name UpgradeData
 extends Resource
-## One buyable upgrade. One .tres per upgrade in res://resources/upgrades/,
+## One upgrade in the shop. One .tres per upgrade in res://resources/upgrades/,
 ## listed in upgrade_catalog.tres (which also sets the shop order).
-## All upgrades cost Gold and are bought once.
+## Upgrades have levels: max_level 1 = a one-time purchase. Each level costs
+## cost_gold × cost_growth^(levels already bought) and adds effect_value again.
 
 enum EffectType {
-	ADD_SPIN_BONUS,    ## effect_value is added to the spin bonus (0.2 = +20% of base speed)
+	ADD_SPIN_BONUS,    ## effect_value added to the permanent spin bonus (0.2 = +20% of base speed)
+	ADD_BOOST_CAP,     ## effect_value added to the max boost (0.1 = +10%)
+	ADD_TICKET_BOOTH,  ## one more ticket booth per level
 	ADD_CLICK_DAMAGE,  ## Step 6
 	ADD_MOUNT_SLOT,    ## Step 10
 	UNLOCK_MOUNT,      ## Step 10
@@ -16,11 +19,24 @@ enum EffectType {
 ## Shop name and description (Garret's text).
 @export var display_name: String = ""
 @export_multiline var description: String = ""
-@export_range(0.0, 1000000.0, 1.0, "or_greater") var cost_gold: float = 0.0
-## Must be bought first. Empty = no prerequisite.
-@export var prerequisite_id: StringName = &""
 @export var effect_type: EffectType = EffectType.ADD_SPIN_BONUS
+## Added once per level.
 @export var effect_value: float = 0.0
+
+@export_group("Price and Levels")
+## Price of the first level.
+@export_range(0.0, 1000000.0, 1.0, "or_greater") var cost_gold: float = 0.0
+## Each level costs this much more than the last (1.5 = +50% per level).
+@export_range(1.0, 10.0, 0.01) var cost_growth: float = 1.5
+## How many times it can be bought. 1 = one-time.
+@export_range(1, 100, 1) var max_level: int = 1
+## Must have at least one level of this first. Empty = no prerequisite.
+@export var prerequisite_id: StringName = &""
+
+
+## Price of the next level when `owned_levels` are already bought.
+func get_cost_for_level(owned_levels: int) -> float:
+	return roundf(cost_gold * pow(cost_growth, owned_levels))
 
 
 func get_problems() -> PackedStringArray:
@@ -29,6 +45,10 @@ func get_problems() -> PackedStringArray:
 		problems.append("id is empty")
 	if not is_finite(cost_gold) or cost_gold < 0.0:
 		problems.append("%s: cost_gold must be a finite number >= 0" % id)
+	if not is_finite(cost_growth) or cost_growth < 1.0:
+		problems.append("%s: cost_growth must be >= 1" % id)
+	if max_level < 1:
+		problems.append("%s: max_level must be at least 1" % id)
 	if not is_finite(effect_value):
 		problems.append("%s: effect_value must be finite" % id)
 	if prerequisite_id == id and id != &"":

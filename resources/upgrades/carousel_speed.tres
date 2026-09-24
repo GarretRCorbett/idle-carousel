@@ -4,10 +4,11 @@
 
 [resource]
 script = ExtResource("1_script")
-id = &"spin_speed_2"
-display_name = "Spin Speed 2"
-description = "+30% spin speed"
-cost_gold = 110.0
-prerequisite_id = &"spin_speed_1"
+id = &"carousel_speed"
+display_name = "Carousel Speed"
+description = "+20% base speed"
 effect_type = 0
-effect_value = 0.3
+effect_value = 0.2
+cost_gold = 30.0
+cost_growth = 1.5
+max_level = 10

@@ -106,18 +106,41 @@ func test_catalog_is_valid() -> void:
 	assert_array(catalog.get_problems()).is_empty()
 
 
-func test_shop_flow_spin_1_then_spin_2() -> void:
-	assert_bool(UpgradeManager.is_visible_in_shop(&"spin_speed_1")).is_true()
-	assert_bool(UpgradeManager.is_visible_in_shop(&"spin_speed_2")).is_false()
-	GameState.add_gold(30.0)
-	assert_bool(UpgradeManager.purchase(&"spin_speed_1")).is_true()
-	assert_float(GameState.get_gold()).is_equal(0.0)
-	assert_bool(UpgradeManager.is_visible_in_shop(&"spin_speed_1")).is_false()
-	assert_bool(UpgradeManager.is_visible_in_shop(&"spin_speed_2")).is_true()
-	assert_bool(UpgradeManager.can_purchase(&"spin_speed_2")).is_false()
-	GameState.add_gold(110.0)
-	assert_bool(UpgradeManager.purchase(&"spin_speed_2")).is_true()
-	assert_float(GameState.get_spin_upgrade_multiplier()).is_equal_approx(1.5, 0.00001)
+func test_levels_cost_more_each_time() -> void:
+	var speed := UpgradeManager.get_definition(&"carousel_speed")
+	assert_float(UpgradeManager.get_cost(&"carousel_speed")).is_equal(30.0)
+	GameState.add_gold(1000.0)
+	UpgradeManager.purchase(&"carousel_speed")
+	assert_int(UpgradeManager.get_level(&"carousel_speed")).is_equal(1)
+	assert_float(UpgradeManager.get_cost(&"carousel_speed")).is_equal(45.0)
+	UpgradeManager.purchase(&"carousel_speed")
+	assert_float(UpgradeManager.get_cost(&"carousel_speed")).is_equal(roundf(30.0 * 1.5 * 1.5))
+	assert_float(GameState.get_spin_upgrade_multiplier()).is_equal_approx(1.4, 0.00001)
+	assert_int(speed.max_level).is_equal(10)
+
+
+func test_boost_power_raises_the_cap_but_not_presses_to_fill() -> void:
+	var cap_before := GameState.get_boost_cap()
+	GameState.add_gold(1000.0)
+	UpgradeManager.purchase(&"boost_power")
+	assert_float(GameState.get_boost_cap()).is_equal_approx(cap_before + 0.1, 0.00001)
+	for i in _config.boost_presses_to_fill:
+		GameState.add_click_boost()
+	assert_float(GameState.get_click_boost_fraction()).is_equal_approx(1.0, 0.00001)
+	assert_float(GameState.get_click_boost()).is_equal_approx(cap_before + 0.1, 0.00001)
+
+
+func test_ticket_booth_adds_a_booth_up_to_four() -> void:
+	var counts: Array = []
+	GameState.booth_count_changed.connect(func(c: int) -> void: counts.append(c))
+	assert_int(GameState.get_booth_count()).is_equal(1)
+	assert_float(UpgradeManager.get_cost(&"ticket_booth")).is_equal(500.0)
+	GameState.add_gold(100000.0)
+	for i in 3:
+		assert_bool(UpgradeManager.purchase(&"ticket_booth")).is_true()
+	assert_bool(UpgradeManager.purchase(&"ticket_booth")).is_false()
+	assert_int(GameState.get_booth_count()).is_equal(4)
+	assert_array(counts).is_equal([2, 3, 4])
 
 
 func test_unknown_id_is_harmless() -> void:

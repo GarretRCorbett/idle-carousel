@@ -8,8 +8,8 @@ var _config: RunConfig
 func before_test() -> void:
 	_config = RunConfig.new()
 	_config.base_spin_speed_deg_s = 45.0
-	_config.click_boost_increment = 0.1
 	_config.click_boost_cap = 0.5
+	_config.boost_presses_to_fill = 5  # 0.1 per press
 	GameState.reset_run(_config)
 
 
@@ -25,7 +25,7 @@ func test_speed_multiplier_is_relative_to_base() -> void:
 
 func test_speed_multiplier_includes_upgrades() -> void:
 	GameState.add_gold(30.0)
-	UpgradeManager.purchase(&"spin_speed_1")
+	UpgradeManager.purchase(&"carousel_speed")
 	assert_float(GameState.get_speed_multiplier()).is_equal_approx(1.2, 0.00001)
 
 
@@ -40,19 +40,35 @@ func test_boost_fraction_fills_toward_cap() -> void:
 
 # --- Shop row states --------------------------------------------------------------
 
-func test_row_states_follow_gold_and_prerequisites() -> void:
-	assert_int(UpgradeShop.get_row_state(&"spin_speed_1")).is_equal(UpgradeShop.RowState.SAVING)
-	assert_int(UpgradeShop.get_row_state(&"spin_speed_2")).is_equal(UpgradeShop.RowState.LOCKED)
+func test_row_states_follow_gold_and_levels() -> void:
+	assert_int(UpgradeShop.get_row_state(&"carousel_speed")).is_equal(UpgradeShop.RowState.SAVING)
 	GameState.add_gold(30.0)
-	assert_int(UpgradeShop.get_row_state(&"spin_speed_1")).is_equal(UpgradeShop.RowState.AFFORDABLE)
-	UpgradeManager.purchase(&"spin_speed_1")
-	assert_int(UpgradeShop.get_row_state(&"spin_speed_1")).is_equal(UpgradeShop.RowState.BOUGHT)
-	assert_int(UpgradeShop.get_row_state(&"spin_speed_2")).is_equal(UpgradeShop.RowState.SAVING)
+	assert_int(UpgradeShop.get_row_state(&"carousel_speed")).is_equal(UpgradeShop.RowState.AFFORDABLE)
+	UpgradeManager.purchase(&"carousel_speed")
+	# Level 1 of 10 bought: still buyable, now saving toward level 2.
+	assert_int(UpgradeShop.get_row_state(&"carousel_speed")).is_equal(UpgradeShop.RowState.SAVING)
 
 
-func test_locked_row_stays_locked_even_with_enough_gold() -> void:
-	GameState.add_gold(1000.0)
-	assert_int(UpgradeShop.get_row_state(&"spin_speed_2")).is_equal(UpgradeShop.RowState.LOCKED)
+func test_row_is_maxed_after_every_level() -> void:
+	GameState.add_gold(1000000.0)
+	for i in 10:
+		assert_bool(UpgradeManager.purchase(&"carousel_speed")).is_true()
+	assert_int(UpgradeShop.get_row_state(&"carousel_speed")).is_equal(UpgradeShop.RowState.MAXED)
+	assert_bool(UpgradeManager.purchase(&"carousel_speed")).is_false()
+
+
+# --- Carousel glow ---------------------------------------------------------------
+
+func test_glow_turns_on_at_max_and_holds_between_presses() -> void:
+	var carousel: Carousel = auto_free(Carousel.new())
+	carousel.set_boost_fraction(0.9)
+	assert_bool(carousel.is_glowing()).is_false()
+	carousel.set_boost_fraction(1.0)
+	assert_bool(carousel.is_glowing()).is_true()
+	carousel.set_boost_fraction(0.85)  # dipping between presses keeps it on
+	assert_bool(carousel.is_glowing()).is_true()
+	carousel.set_boost_fraction(0.5)
+	assert_bool(carousel.is_glowing()).is_false()
 
 
 # --- Click blocking -----------------------------------------------------------------

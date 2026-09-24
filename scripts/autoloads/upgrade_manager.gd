@@ -32,10 +32,9 @@ func is_purchased(id: StringName) -> bool:
 	return GameState.is_upgrade_purchased(id)
 
 
-## Enough Gold, ignoring prerequisites.
+## Enough Gold for the next level, ignoring prerequisites.
 func can_afford(id: StringName) -> bool:
-	var upgrade := get_definition(id)
-	return upgrade != null and GameState.can_afford(upgrade.cost_gold)
+	return GameState.can_afford(get_cost(id))
 
 
 ## Everything needed to buy it right now.
@@ -43,12 +42,18 @@ func can_purchase(id: StringName) -> bool:
 	return GameState.can_purchase_upgrade(get_definition(id))
 
 
-## Whether it should appear in the shop: not bought yet, prerequisite met.
-func is_visible_in_shop(id: StringName) -> bool:
+func get_level(id: StringName) -> int:
+	return GameState.get_upgrade_level(id)
+
+
+func is_maxed(id: StringName) -> bool:
+	return GameState.is_upgrade_maxed(get_definition(id))
+
+
+## Price of the next level.
+func get_cost(id: StringName) -> float:
 	var upgrade := get_definition(id)
-	if upgrade == null or is_purchased(id):
-		return false
-	return upgrade.prerequisite_id == &"" or is_purchased(upgrade.prerequisite_id)
+	return GameState.get_upgrade_cost(upgrade) if upgrade != null else INF
 
 
 func purchase(id: StringName) -> bool:

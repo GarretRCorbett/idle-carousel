@@ -8,14 +8,24 @@ extends Node2D
 @onready var _world: Node2D = $World
 @onready var _carousel: Carousel = $World/Carousel
 @onready var _hud: Hud = $HUD
-@onready var _booth: TicketBooth = $World/TicketBooth
 @onready var _mount_slots: Node2D = $World/Carousel/MountSlots
+## The booth placed in the scene; extra booths are copies of it.
+@onready var _first_booth: TicketBooth = $World/TicketBooth
+
+var _booths: Array[TicketBooth] = []
+var _horses: Array[MountHorse] = []
+## Booth distance from the carousel center, taken from the scene's booth.
+var _booth_radius: float = 0.0
 
 
 func _ready() -> void:
-	GameState.reset_run()
-	_hud.boost_requested.connect(_on_boost_requested)
+	_booth_radius = (_first_booth.position - _carousel.position).length()
+	_booths.append(_first_booth)
+	_hud.boost_requested.connect(GameState.add_click_boost)
+	GameState.booth_count_changed.connect(_layout_booths)
 	_setup_mounts()
+	GameState.reset_run()
+	_layout_booths(GameState.get_booth_count())
 	get_viewport().size_changed.connect(_center_world)
 	_center_world()
 
@@ -23,27 +33,44 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	GameState.advance_simulation(delta)
 	_carousel.advance_rotation(delta, GameState.get_effective_spin_speed_rad_s())
+	_carousel.set_boost_fraction(GameState.get_click_boost_fraction())
 
 
 func _setup_mounts() -> void:
-	var booth_bearing := (_booth.position - _carousel.position).angle()
 	for slot in _mount_slots.get_children():
 		for mount in slot.get_children():
 			if mount is MountBase:
 				mount.setup(_carousel)
 			if mount is MountHorse:
-				mount.set_booth_bearing(booth_bearing)
+				_horses.append(mount)
 				mount.booth_passed.connect(_on_booth_passed)
 
 
-func _on_boost_requested() -> void:
-	GameState.add_click_boost()
-	_carousel.pulse()
+## Makes exactly `count` booths, evenly spaced starting at the top. Moving a
+## booth is a jump, not travel, so it never pays Gold.
+func _layout_booths(count: int) -> void:
+	while _booths.size() < count:
+		var booth := _first_booth.duplicate() as TicketBooth
+		_first_booth.get_parent().add_child(booth)
+		_booths.append(booth)
+	while _booths.size() > count and _booths.size() > 1:
+		_booths.pop_back().queue_free()
+	var bearings: Array[float] = []
+	for i in _booths.size():
+		var bearing := -PI / 2.0 + TAU * i / _booths.size()
+		# Whole pixels: from_angle(-PI/2) gives x ≈ 1e-14, not 0, which would sit a
+		# hair off a Horse starting at the top and pay on the very first tick.
+		_booths[i].position = (_carousel.position + Vector2.from_angle(bearing) * _booth_radius).round()
+		_booths[i].reset_physics_interpolation()
+		# Read the bearing back from the position, exactly as mounts read slot angles.
+		bearings.append((_booths[i].position - _carousel.position).angle())
+	for horse in _horses:
+		horse.set_booth_bearings(bearings)
 
 
-func _on_booth_passed(horse: MountHorse, pass_count: int) -> void:
+func _on_booth_passed(horse: MountHorse, booth_index: int, pass_count: int) -> void:
 	GameState.add_gold(horse.data.base_gold_bonus * pass_count)
-	_booth.pop()
+	_booths[booth_index].pop()
 
 
 func _center_world() -> void:

@@ -7,6 +7,7 @@
 ---
 
 ## Changelog
+- **v1.6** — Shop pacing (Garret): upgrades have levels. Spin Speed 1–4 become **Carousel Speed** (+20% base speed per level, 10 levels); new **Boost Power** (+10% max boost per level, 10 levels); **Ticket Booth** starts at 500 Gold. Each level costs ×1.5 the last. Boost bar takes 10 presses to fill and fades over 4 s; the carousel glows while boost is maxed.
 - **v1.5** — First-playtest changes (Garret): a dedicated Spin button replaces click-anywhere boosting; clicks never pay Gold (Gold comes from Horse booth passes and enemy kills); extra Horses can be bought into empty slots (rising price) and sold back for a partial refund; up to 4 ticket booths, re-spaced evenly, rising price; only Horse passes pay at booths; HUD labels plus a Speed ×multiplier; shop keeps every row listed with a progress fill, bought rows stay marked.
 - **v1.4** — Phase 2 design decisions: booth pays a fixed amount per pass (spin speed scales frequency only, not payout); click rules and stacking spin boost defined; latched enemies hold their world position; latch drag adds up and can stop the carousel; Wolf pierces, hitting each enemy once per pass; slots 2–3 buyable from the start, slots 4–6 unlocked by bosses then bought with Gold; wave countdown always runs; shop may use tabs, Gold stays the only currency; HUD Gold/sec is recent actual income; temporary zero-health stall for Phase 2 (fail state still pending).
 - **v1.3** — Steam Achievements moved into v1.0 scope. Price set to $4.99. Added Asset & AI Policy section. Marked the two open design questions (fail state, prestige scope) as DECISION PENDING. Fixed Godot version note.
@@ -329,12 +330,10 @@ Two trees. Both cost Gold. Upgrades always show the next tier even if locked so 
 
 | Upgrade | Effect |
 |---|---|
-| Spin Speed 1 | +20% spin speed — immediate visual feedback |
-| Spin Speed 2 | +30% spin speed |
-| Spin Speed 3 | +50% spin speed |
-| Spin Speed 4 | +75% spin speed |
+| Carousel Speed (levels 1–10) | +20% base spin speed per level — immediate visual feedback |
+| Boost Power (levels 1–10) | +10% max Boost per level |
 | Mount Slot 2-6 | Unlocks additional mount positions (4–6 require a boss first) |
-| Ticket Booths 2–4 | Extra booths, re-spaced evenly; each costs more than the last |
+| Ticket Booths 2–4 | Extra booths, re-spaced evenly; first costs 500, each ×1.5 the last |
 | Carousel Health 1/2/3 | Max health increased |
 | Polish and Shine | +10% to all Gold generation |
 | Gilded Rims | Cosmetic glow plus +5% Gold |
@@ -379,7 +378,7 @@ Two trees. Both cost Gold. Upgrades always show the next tier even if locked so 
 ### Early Game (Grey Tier — first 15-20 minutes)
 - Start: Horse only, Grey Leaves approaching
 - First goal: Survive first wave by clicking
-- First purchase: Spin Speed 1 (immediate satisfaction)
+- First purchase: Carousel Speed level 1 (immediate satisfaction)
 - Second purchase: Mount Slot 2 + Wolf (game transforms — now have auto-combat)
 - Third purchase: Slot 3, add Turtle or Eagle (first strategic choice)
 - Boss: Leaf Storm — splits into 4 leaves on death, tests burst enemy handling

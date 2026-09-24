@@ -9,8 +9,9 @@ signal gold_per_second_changed(value: float)
 signal health_changed(current: float, maximum: float)
 ## Effective spin speed in radians/second (what Carousel applies each tick).
 signal spin_speed_changed(speed_rad_s: float)
-## An upgrade was bought and fully applied (Gold, ownership, and effect).
-signal upgrade_applied(id: StringName)
+signal booth_count_changed(count: int)
+## An upgrade level was bought and fully applied (Gold, level, and effect).
+signal upgrade_applied(id: StringName, level: int)
 ## Emitted after every value has been reset, before the fresh values are re-announced.
 signal run_reset
 
@@ -19,12 +20,14 @@ const DEFAULT_CONFIG: RunConfig = preload("res://resources/config/run_config.tre
 var _config: RunConfig = DEFAULT_CONFIG
 var _gold: float = 0.0
 var _health: float = 0.0
-# Click boost: the bonus at the latest click, fading linearly to 0 over the decay time.
+# Click boost: the bonus at the latest press, fading linearly to 0 over the decay time.
 var _boost_peak: float = 0.0
 var _boost_elapsed: float = 0.0
-# Sum of purchased spin bonuses (+0.2, +0.3, ...). Added in Step 5.
+# Upgrade effects, summed over bought levels.
 var _spin_bonus: float = 0.0
-var _upgrades_purchased: Dictionary[StringName, bool] = {}
+var _boost_cap_bonus: float = 0.0
+var _booth_count: int = 1
+var _upgrade_levels: Dictionary[StringName, int] = {}
 var _purchase_in_progress: bool = false
 # Gold/sec: Gold earned per time bucket in a ring (bucket = epoch % count).
 var _income_buckets := PackedFloat64Array()
@@ -52,8 +55,10 @@ func reset_run(config_override: RunConfig = null) -> void:
 	_boost_peak = 0.0
 	_boost_elapsed = 0.0
 	_spin_bonus = 0.0
+	_boost_cap_bonus = 0.0
+	_booth_count = config.starting_booths
 	_total_drag = 0.0
-	_upgrades_purchased.clear()
+	_upgrade_levels.clear()
 	_income_buckets = PackedFloat64Array()
 	_income_buckets.resize(config.income_bucket_count)
 	_income_epoch = 0
@@ -65,6 +70,7 @@ func reset_run(config_override: RunConfig = null) -> void:
 	gold_per_second_changed.emit(get_recent_gold_per_second())
 	health_changed.emit(_health, get_max_health())
 	spin_speed_changed.emit(get_effective_spin_speed_rad_s())
+	booth_count_changed.emit(_booth_count)
 
 
 # --- Gold -------------------------------------------------------------------
@@ -175,7 +181,7 @@ func get_speed_multiplier() -> float:
 	return get_effective_spin_speed_rad_s() / base if base > 0.0 else 0.0
 
 
-## 1.0 plus every purchased spin bonus, added together (+20% and +30% = 1.5).
+## 1.0 plus every purchased spin bonus, added together (+20% twice = 1.4).
 func get_spin_upgrade_multiplier() -> float:
 	return 1.0 + _spin_bonus
 
@@ -184,21 +190,29 @@ func get_total_drag() -> float:
 	return _total_drag
 
 
+## Max boost as a fraction (0.5 = +50%), including Boost Power levels.
+func get_boost_cap() -> float:
+	return _config.click_boost_cap + _boost_cap_bonus
+
+
 ## Current click bonus as a fraction (0.3 = +30%).
 func get_click_boost() -> float:
 	var remaining := maxf(0.0, 1.0 - _boost_elapsed / _config.click_boost_decay_seconds)
 	return _boost_peak * remaining
 
 
-## How full the boost is, 0..1 (for the boost bar).
+## How full the boost bar is, 0..1.
 func get_click_boost_fraction() -> float:
-	return get_click_boost() / _config.click_boost_cap if _config.click_boost_cap > 0.0 else 0.0
+	var cap := get_boost_cap()
+	return get_click_boost() / cap if cap > 0.0 else 0.0
 
 
-## One Boost press: stack the bonus (up to the cap) and restart the fade.
+## One Boost press: add 1/presses_to_fill of the cap, stack up to the cap, and
+## restart the fade.
 func add_click_boost() -> void:
 	var previous_speed := get_effective_spin_speed_rad_s()
-	_boost_peak = minf(_config.click_boost_cap, get_click_boost() + _config.click_boost_increment)
+	var cap := get_boost_cap()
+	_boost_peak = minf(cap, get_click_boost() + cap / _config.boost_presses_to_fill)
 	_boost_elapsed = 0.0
 	_emit_speed_if_changed(previous_speed)
 
@@ -209,45 +223,77 @@ func _emit_speed_if_changed(previous_speed: float) -> void:
 		spin_speed_changed.emit(speed)
 
 
+# --- Ticket booths ------------------------------------------------------------------
+
+func get_booth_count() -> int:
+	return _booth_count
+
+
 # --- Upgrades --------------------------------------------------------------------
 
+## Levels bought (0 = not bought).
+func get_upgrade_level(id: StringName) -> int:
+	return _upgrade_levels.get(id, 0)
+
+
 func is_upgrade_purchased(id: StringName) -> bool:
-	return _upgrades_purchased.has(id)
+	return get_upgrade_level(id) > 0
 
 
-## True if this upgrade could be bought right now (funds, prerequisite, not owned,
-## effect supported). UpgradeManager.purchase() is the normal entry point.
+func is_upgrade_maxed(upgrade: UpgradeData) -> bool:
+	return upgrade != null and get_upgrade_level(upgrade.id) >= upgrade.max_level
+
+
+## Price of the next level.
+func get_upgrade_cost(upgrade: UpgradeData) -> float:
+	return upgrade.get_cost_for_level(get_upgrade_level(upgrade.id))
+
+
+## True if the next level could be bought right now (funds, prerequisite, not
+## maxed, effect supported). UpgradeManager.purchase() is the normal entry point.
 func can_purchase_upgrade(upgrade: UpgradeData) -> bool:
 	if upgrade == null or not upgrade.get_problems().is_empty():
 		return false
-	if is_upgrade_purchased(upgrade.id):
+	if is_upgrade_maxed(upgrade):
 		return false
 	if upgrade.prerequisite_id != &"" and not is_upgrade_purchased(upgrade.prerequisite_id):
 		return false
 	if not _is_effect_supported(upgrade):
 		return false
-	return can_afford(upgrade.cost_gold)
+	return can_afford(get_upgrade_cost(upgrade))
 
 
-## Charges, records, and applies the upgrade, all before any signal fires, so a
+## Charges, records, and applies one level, all before any signal fires, so a
 ## listener can never see (or trigger) a half-finished purchase.
 func try_purchase_upgrade(upgrade: UpgradeData) -> bool:
 	if _purchase_in_progress or not can_purchase_upgrade(upgrade):
 		return false
 	_purchase_in_progress = true
+	var cost := get_upgrade_cost(upgrade)
 	var previous_speed := get_effective_spin_speed_rad_s()
-	_gold -= upgrade.cost_gold
-	_upgrades_purchased[upgrade.id] = true
+	var previous_booths := _booth_count
+	_gold -= cost
+	_upgrade_levels[upgrade.id] = get_upgrade_level(upgrade.id) + 1
 	match upgrade.effect_type:
 		UpgradeData.EffectType.ADD_SPIN_BONUS:
 			_spin_bonus += upgrade.effect_value
+		UpgradeData.EffectType.ADD_BOOST_CAP:
+			_boost_cap_bonus += upgrade.effect_value
+		UpgradeData.EffectType.ADD_TICKET_BOOTH:
+			_booth_count += 1
 	# Everything is committed; now announce it.
-	gold_changed.emit(_gold, -upgrade.cost_gold)
+	gold_changed.emit(_gold, -cost)
 	_emit_speed_if_changed(previous_speed)
-	upgrade_applied.emit(upgrade.id)
+	if _booth_count != previous_booths:
+		booth_count_changed.emit(_booth_count)
+	upgrade_applied.emit(upgrade.id, get_upgrade_level(upgrade.id))
 	_purchase_in_progress = false
 	return true
 
 
 func _is_effect_supported(upgrade: UpgradeData) -> bool:
-	return upgrade.effect_type == UpgradeData.EffectType.ADD_SPIN_BONUS
+	return upgrade.effect_type in [
+		UpgradeData.EffectType.ADD_SPIN_BONUS,
+		UpgradeData.EffectType.ADD_BOOST_CAP,
+		UpgradeData.EffectType.ADD_TICKET_BOOTH,
+	]

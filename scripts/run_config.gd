@@ -19,12 +19,18 @@ extends Resource
 @export_group("Spin")
 ## Base spin before upgrades, boost, and drag. 45 = one turn every 8 seconds.
 @export_range(1.0, 720.0, 1.0, "or_greater", "suffix:°/s") var base_spin_speed_deg_s: float = 45.0
-## Speed bonus added per Boost press (0.1 = +10%).
-@export_range(0.0, 2.0, 0.01) var click_boost_increment: float = 0.10
-## Most the click bonus can stack to (0.5 = +50%).
+## Max boost before Boost Power upgrades (0.5 = +50% speed at a full bar).
 @export_range(0.0, 10.0, 0.01) var click_boost_cap: float = 0.50
+## Presses from empty to a full boost bar. Each press adds cap / this, so
+## Boost Power makes each press stronger without changing how many it takes.
+@export_range(1, 100, 1) var boost_presses_to_fill: int = 10
 ## After the latest press, the bonus fades to zero over this many seconds.
-@export_range(0.05, 30.0, 0.05, "suffix:s") var click_boost_decay_seconds: float = 2.0
+## Holding the bar full takes about presses_to_fill / this presses per second.
+@export_range(0.05, 30.0, 0.05, "suffix:s") var click_boost_decay_seconds: float = 4.0
+
+@export_group("Ticket Booths")
+## Booths at the start of a run (more are bought in the shop).
+@export_range(1, 8, 1) var starting_booths: int = 1
 
 
 ## Returns a list of problems; empty means the config is usable.
@@ -40,8 +46,10 @@ func get_problems() -> PackedStringArray:
 		problems.append("max_health must be a finite number > 0")
 	if not is_finite(base_spin_speed_deg_s) or base_spin_speed_deg_s < 0.0:
 		problems.append("base_spin_speed_deg_s must be a finite number >= 0")
-	if not is_finite(click_boost_increment) or click_boost_increment < 0.0:
-		problems.append("click_boost_increment must be a finite number >= 0")
+	if boost_presses_to_fill < 1:
+		problems.append("boost_presses_to_fill must be at least 1")
+	if starting_booths < 1:
+		problems.append("starting_booths must be at least 1")
 	if not is_finite(click_boost_cap) or click_boost_cap < 0.0:
 		problems.append("click_boost_cap must be a finite number >= 0")
 	if not is_finite(click_boost_decay_seconds) or click_boost_decay_seconds <= 0.0:

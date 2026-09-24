@@ -4,10 +4,11 @@
 
 [resource]
 script = ExtResource("1_script")
-id = &"spin_speed_1"
-display_name = "Spin Speed 1"
-description = "+20% spin speed"
-cost_gold = 30.0
-prerequisite_id = &""
-effect_type = 0
-effect_value = 0.2
+id = &"ticket_booth"
+display_name = "Ticket Booth"
+description = "Another booth for the Horse to pass"
+effect_type = 2
+effect_value = 1.0
+cost_gold = 500.0
+cost_growth = 1.5
+max_level = 3

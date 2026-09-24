@@ -19,12 +19,17 @@ signal rotation_advanced(previous_angle: float, delta_angle: float)
 @export var rim_color: Color = Color("2d5a25")
 @export var hub_color: Color = Color("2d5a25")
 
-@export_group("Boost Feedback")
-## Brief brighten when Boost is pressed, so the press visibly lands on the carousel.
-@export var pulse_modulate: Color = Color(1.35, 1.35, 1.35)
-@export_range(0.01, 1.0, 0.01, "suffix:s") var pulse_duration: float = 0.2
+@export_group("Boost Glow")
+## The carousel glows while the boost bar is maxed out.
+@export var boost_glow_modulate: Color = Color(1.3, 1.3, 1.1)
+## Glow turns on when the bar reaches this fraction...
+@export_range(0.0, 1.0, 0.01) var glow_on_fraction: float = 0.99
+## ...and stays on until it drops below this, so it doesn't flicker between presses.
+@export_range(0.0, 1.0, 0.01) var glow_off_fraction: float = 0.8
+## Seconds to fade the glow in or out.
+@export_range(0.01, 2.0, 0.01, "suffix:s") var glow_fade_seconds: float = 0.25
 
-var _pulse_tween: Tween
+var _glowing: bool = false
 
 var _unwrapped_angle: float = 0.0
 
@@ -45,12 +50,21 @@ func get_unwrapped_angle() -> float:
 	return _unwrapped_angle
 
 
-func pulse() -> void:
-	if _pulse_tween != null:
-		_pulse_tween.kill()
-	modulate = pulse_modulate
-	_pulse_tween = create_tween()
-	_pulse_tween.tween_property(self, "modulate", Color.WHITE, pulse_duration)
+## Called each tick with how full the boost bar is (0..1).
+func set_boost_fraction(fraction: float) -> void:
+	if fraction >= glow_on_fraction:
+		_glowing = true
+	elif fraction < glow_off_fraction:
+		_glowing = false
+
+
+func is_glowing() -> bool:
+	return _glowing
+
+
+func _process(delta: float) -> void:
+	var target := boost_glow_modulate if _glowing else Color.WHITE
+	modulate = modulate.lerp(target, clampf(delta / glow_fade_seconds, 0.0, 1.0))
 
 
 func _draw() -> void:
