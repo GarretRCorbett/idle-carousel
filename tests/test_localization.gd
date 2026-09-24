@@ -5,6 +5,24 @@ const CSV := "res://localization/strings.csv"
 const SCENES: Array[String] = ["res://scenes/Game.tscn", "res://scenes/MainMenu.tscn", "res://scenes/OptionsMenu.tscn"]
 
 
+var _saved_locale: String
+var _saved_pseudo: bool
+
+
+## These tests expect English. Switch to it (without touching the settings file)
+## so a developer's saved language or pseudolocalization can't break them.
+func before_test() -> void:
+	_saved_locale = TranslationServer.get_locale()
+	_saved_pseudo = TranslationServer.pseudolocalization_enabled
+	TranslationServer.pseudolocalization_enabled = false
+	TranslationServer.set_locale("en")
+
+
+func after_test() -> void:
+	TranslationServer.set_locale(_saved_locale)
+	TranslationServer.pseudolocalization_enabled = _saved_pseudo
+
+
 func _csv_keys() -> Dictionary:
 	var keys := {}
 	var file := FileAccess.open(CSV, FileAccess.READ)
@@ -72,6 +90,13 @@ func test_gold_numbers() -> void:
 	assert_str(NumberFormat.gold(4567890.0)).is_equal("4.56M")
 	assert_str(NumberFormat.gold(7.89e9)).is_equal("7.89B")
 	assert_str(NumberFormat.gold(-1500.0)).is_equal("-1,500")
+	# Boundaries where float math used to drop a digit (Codex review).
+	assert_str(NumberFormat.gold(1130000.0)).is_equal("1.13M")
+	assert_str(NumberFormat.gold(1140000.0)).is_equal("1.14M")
+	assert_str(NumberFormat.gold(10000.0)).is_equal("10.0K")
+	assert_str(NumberFormat.gold(999999.0)).is_equal("999K")
+	assert_str(NumberFormat.gold(1000000.0)).is_equal("1.00M")
+	assert_str(NumberFormat.gold(2.5e12)).is_equal("2.50T")
 
 
 func test_decimals() -> void:

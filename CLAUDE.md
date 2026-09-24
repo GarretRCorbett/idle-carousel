@@ -78,7 +78,7 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
   is scheduled: swap the whole UI font per locale (Rubik for Polish/Turkish/Russian;
   Noto Sans SC/JP/KR, 9-17 MB each, for CJK; download only then). See
   `planning/phase2/codex_memo_k_fonts.md`.
-- Pseudolocalization check (also a debug-only toggle in Settings): Project Settings → Advanced Settings on →
+- Pseudolocalization check: Project Settings → Advanced Settings on →
   Internationalization → Pseudolocalization → Use Pseudolocalization, run the game,
   look for plain English (missed) or cut-off text, then turn it off again.
 

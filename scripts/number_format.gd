@@ -17,16 +17,20 @@ static func gold(value: float) -> String:
 	var amount := floorf(absf(value))
 	if amount < COMPACT_FROM:
 		return sign + _group_thousands(str(int(amount)))
+	# Whole-number math only: float division here once showed 1,130,000 as "1.12M".
+	var whole := int(amount)
 	var tier := 0
-	while amount >= 1000.0 and tier < SUFFIX_KEYS.size():
-		amount /= 1000.0
+	var divisor := 1
+	while whole / (divisor * 1000) >= 1 and tier < SUFFIX_KEYS.size():
+		divisor *= 1000
 		tier += 1
 	# Three significant digits: 12.3K, 123K; truncated so it never rounds up past the real value.
-	var places := 0 if amount >= 100.0 else (1 if amount >= 10.0 else 2)
-	var scale := pow(10.0, places)
-	var text := String.num(floorf(amount * scale) / scale, places)
+	var units := whole / divisor
+	var places := 0 if units >= 100 else (1 if units >= 10 else 2)
+	var scaled := whole * int(pow(10, places)) / divisor
+	var text := str(scaled)
 	if places > 0:
-		text = text.replace(".", TranslationServer.translate("NUM_DECIMAL_SEP"))
+		text = text.left(text.length() - places) + TranslationServer.translate("NUM_DECIMAL_SEP") + text.right(places)
 	return sign + text + TranslationServer.translate(SUFFIX_KEYS[tier - 1])
 
 

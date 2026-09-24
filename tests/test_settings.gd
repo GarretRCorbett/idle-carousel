@@ -62,13 +62,6 @@ func test_language_setting_sets_the_locale() -> void:
 	assert_str(TranslationServer.get_locale()).starts_with("en")
 
 
-func test_pseudolocalization_toggle() -> void:
-	SaveManager.set_setting(&"pseudolocalization", true)
-	assert_bool(TranslationServer.pseudolocalization_enabled).is_equal(OS.is_debug_build())
-	SaveManager.set_setting(&"pseudolocalization", false)
-	assert_bool(TranslationServer.pseudolocalization_enabled).is_false()
-
-
 func test_options_lists_english_by_its_own_name() -> void:
 	var menu := (load("res://scenes/OptionsMenu.tscn") as PackedScene).instantiate() as OptionsMenu
 	add_child(menu)

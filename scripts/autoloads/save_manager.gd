@@ -15,8 +15,6 @@ const DEFAULTS: Dictionary[StringName, Variant] = {
 	&"auto_wave": true,
 	## Locale code, e.g. "en". Falls back to English if that language isn't loaded.
 	&"language": "en",
-	## Debug builds only: Godot's fake-accented text, to spot untranslated or cut-off text.
-	&"pseudolocalization": false,
 }
 ## Which audio bus each volume setting drives.
 const VOLUME_BUSES: Dictionary[StringName, StringName] = {
@@ -85,13 +83,6 @@ func _apply(key: StringName) -> void:
 		# Font first, so the re-translate that set_locale triggers draws with it.
 		LocaleFonts.apply(locale)
 		TranslationServer.set_locale(locale)
-	elif key == &"pseudolocalization":
-		var on := bool(value) and OS.is_debug_build()
-		if TranslationServer.pseudolocalization_enabled != on:
-			TranslationServer.pseudolocalization_enabled = on
-			# Tell every node to re-translate (set_locale does this itself; this doesn't).
-			if is_inside_tree():
-				get_tree().root.propagate_notification(NOTIFICATION_TRANSLATION_CHANGED)
 	elif key == &"fullscreen" and DisplayServer.get_name() != "headless":
 		DisplayServer.window_set_mode(
 				DisplayServer.WINDOW_MODE_FULLSCREEN if value else DisplayServer.WINDOW_MODE_WINDOWED)

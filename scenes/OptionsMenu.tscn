@@ -122,17 +122,6 @@ layout_mode = 2
 size_flags_horizontal = 0
 focus_mode = 0
 
-[node name="PseudoLabel" type="Label" parent="Center/Panel/Margin/Column/OptionsTabs/Settings"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "OPT_PSEUDO"
-
-[node name="PseudoCheck" type="CheckButton" parent="Center/Panel/Margin/Column/OptionsTabs/Settings"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 0
-focus_mode = 0
-
 [node name="Controls" type="GridContainer" parent="Center/Panel/Margin/Column/OptionsTabs"]
 visible = false
 layout_mode = 2

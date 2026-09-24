@@ -14,8 +14,6 @@ signal closed
 @onready var _music_slider: HSlider = %MusicSlider
 @onready var _fullscreen_check: CheckButton = %FullscreenCheck
 @onready var _language_option: OptionButton = %LanguageOption
-@onready var _pseudo_label: Label = %PseudoLabel
-@onready var _pseudo_check: CheckButton = %PseudoCheck
 
 ## Locale codes in the same order as the Language list.
 var _locales: PackedStringArray = []
@@ -34,13 +32,6 @@ func _ready() -> void:
 		SaveManager.set_setting(&"fullscreen", on)
 		AudioManager.play_sfx(&"click"))
 	_setup_language_list()
-	# Pseudolocalization is a developer check, so players never see it.
-	_pseudo_label.visible = OS.is_debug_build()
-	_pseudo_check.visible = OS.is_debug_build()
-	_pseudo_check.button_pressed = SaveManager.get_setting(&"pseudolocalization")
-	_pseudo_check.toggled.connect(func(on: bool) -> void:
-		SaveManager.set_setting(&"pseudolocalization", on)
-		AudioManager.play_sfx(&"click"))
 	_back_button.pressed.connect(close)
 	# Keys: the tab bar translates titles itself.
 	_tabs.set_tab_title(0, "OPT_TAB_SETTINGS")
