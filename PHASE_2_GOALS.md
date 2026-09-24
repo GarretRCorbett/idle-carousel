@@ -8,6 +8,7 @@
 ---
 
 ## Changelog
+- **v1.1** — First-playtest changes (GDD v1.5): new Step 5b (smooth spin, Spin button, HUD labels, no click Gold, shop redesign). Step 10 now also covers extra Horses and Ticket Booths 2–4.
 - **v1.0** — Approved by Garret. First draft. Built from the roadmap, Codex's Phase 2 brainstorm, and Garret's design decisions (GDD v1.4).
 
 ---
@@ -35,7 +36,7 @@ Placeholder UI text is fine while building. Mark it `# TODO(Garret): text`. Garr
 | Topic | Decision |
 |---|---|
 | Booth income | Fixed amount per Horse pass. Speed means more passes, not bigger payouts. |
-| Clicks | Clicking an enemy damages it. Clicking anywhere else gives a spin boost, plus a small Gold burst when nothing is latched. UI clicks never count. |
+| Clicks | **Spin button** boosts spin (v1.5). Clicking an enemy damages it. Empty space does nothing. Clicks never pay Gold. |
 | Spin boost | Each click adds a small bonus. Bonuses stack up to a cap and decay back to base. |
 | Latch | Latched enemies hold their world position; the carousel grinds past underneath. |
 | Drag | Adds up with **no floor**. Enough latches stop the carousel. |
@@ -43,7 +44,8 @@ Placeholder UI text is fine while building. Mark it `# TODO(Garret): text`. Garr
 | Wolf | Pierces: hits every enemy in its line, each one once per pass. |
 | Waves | The countdown always runs; auto-wave OFF pauses it (the toggle arrives in Phase 4). |
 | Gold/sec | Rolling average of actual Gold earned over roughly the last 10 seconds. |
-| Phase 2 shop | Spin Speed 1, Spin Speed 2, Click Damage 1, Mount Slot 2, Wolf. |
+| Phase 2 shop | Spin Speed 1, Spin Speed 2, Click Damage 1, Mount Slot 2, Wolf, plus extra Horses and Ticket Booths 2–4 (v1.5). |
+| Income | Horse booth passes + enemy kills. Horses × booths multiply; each extra Horse/booth costs more. |
 
 ---
 
@@ -114,6 +116,20 @@ Game (Node2D)                      game.gd
 
 ---
 
+## Step 5b — First-playtest fixes (Claude Code + Garret)
+
+From Garret's first playtest (see `planning/phase2/codex_memo_e_playtest_feedback.md`).
+
+- [ ] **Smooth spin:** turn on physics interpolation, so the carousel draws smoothly on 60 Hz and 120 Hz screens without changing any gameplay math. *(Garret flips one project setting; code handles the rest.)*
+- [ ] **Spin button** below the carousel with a boost bar. Empty-space clicks do nothing. The Space key also presses it.
+- [ ] **No click Gold.** Gold comes from Horse passes (and kills from Step 6).
+- [ ] **HUD labels:** "Gold", "Gold per sec", "Speed ×1.35" (the multiplier of base speed).
+- [ ] **Shop:** every row stays listed with a fill bar toward its cost. Locked rows show what they need; bought rows stay in place, marked as bought.
+
+**Done when:** the spin looks smooth, the Spin button clearly speeds it up, and the shop always shows what you're saving toward.
+
+---
+
 ## Step 6 — One Leaf: approach, click damage, death (45–75 min)
 
 **Claude Code:** `enemy_base.gd` and `enemy_leaf.gd` reading `leaf.tres`, a placeholder polygon plus health bar in an `Enemy.tscn` draft, approach movement, clicking to damage, dying exactly once, and a Gold drop. The **Click Damage 1** upgrade also goes in here.
@@ -149,10 +165,10 @@ Game (Node2D)                      game.gd
 
 ---
 
-## Step 10 — Mount Slot 2 + Wolf purchases (45–75 min)
+## Step 10 — Slots, Wolf, extra Horses, Ticket Booths (2–3 hours)
 
-**Claude Code:** Mount Slot 2 and Wolf as shop items (two purchases), and equal spacing for 1–2 mounts. Moving the Horse to make room must not trigger a payout. The dev-only Wolf shortcut is removed.
-**Done when:** buying Slot 2 then Wolf works, and the Horse keeps earning after the move.
+**Claude Code:** Mount Slot 2 (and 3) and Wolf as shop items, plus **extra Horses** (bought into empty slots, rising price, sell back for a partial refund) and **Ticket Booths 2–4** (rising price, re-spaced evenly). Mounts space themselves evenly by count. Moving a Horse or a booth never pays Gold. The dev-only Wolf shortcut is removed.
+**Done when:** buying Slot 2 then Wolf works; buying a second Horse and Booth 2 roughly quadruples booth income; selling a Horse frees its slot; nothing pays from being moved.
 
 ---
 

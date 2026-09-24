@@ -1,5 +1,5 @@
 # 🎠 Idle Carousel — Game Design Document
-### Version 1.4 | Working Title: Idle Carousel
+### Version 1.5 | Working Title: Idle Carousel
 > Solo dev project. Built in Godot 4.7 stable. Target: Steam release, anonymous, $4.99 (sale target ~$3.49–$3.75), with a free demo.
 > Personal motivation: daughters love carousels.
 > Influences: Cookie Clicker, Clicker Heroes, A Game About Feeding a Black Hole, Rusty's Retirement.
@@ -7,6 +7,7 @@
 ---
 
 ## Changelog
+- **v1.5** — First-playtest changes (Garret): a dedicated Spin button replaces click-anywhere boosting; clicks never pay Gold (Gold comes from Horse booth passes and enemy kills); extra Horses can be bought into empty slots (rising price) and sold back for a partial refund; up to 4 ticket booths, re-spaced evenly, rising price; only Horse passes pay at booths; HUD labels plus a Speed ×multiplier; shop keeps every row listed with a progress fill, bought rows stay marked.
 - **v1.4** — Phase 2 design decisions: booth pays a fixed amount per pass (spin speed scales frequency only, not payout); click rules and stacking spin boost defined; latched enemies hold their world position; latch drag adds up and can stop the carousel; Wolf pierces, hitting each enemy once per pass; slots 2–3 buyable from the start, slots 4–6 unlocked by bosses then bought with Gold; wave countdown always runs; shop may use tabs, Gold stays the only currency; HUD Gold/sec is recent actual income; temporary zero-health stall for Phase 2 (fail state still pending).
 - **v1.3** — Steam Achievements moved into v1.0 scope. Price set to $4.99. Added Asset & AI Policy section. Marked the two open design questions (fail state, prestige scope) as DECISION PENDING. Fixed Godot version note.
 - **v1.2** — Removed Sparks currency. All upgrades now cost Gold only. Simplified to single-currency economy. Removed Combat Tree as a separate tab — combat upgrades merged into a unified Upgrade Shop. GameState updated to remove sparks variable.
@@ -107,7 +108,7 @@ Enemies always pressure the carousel — you cannot just idle forever without co
 
 ### Gold — The Only Currency
 - **Primary source:** Ticket booth generates a fixed amount of Gold each time the Horse mount passes it. Spin speed scales how *often* that happens, not the amount per pass: spin faster = booth passed more often = more Gold per minute. Horse upgrades raise the per-pass amount. (Scaling payout with speed too would make income grow with speed², which is hard to balance.)
-- **Secondary source:** Clicking the play area (not an enemy) when no enemies are latched generates a small Gold burst.
+- **No click Gold:** clicking never pays Gold directly. The Spin button speeds the carousel up, which makes the Horses pass booths sooner.
 - **Combat source:** Defeated enemies drop bonus Gold. Stronger enemies in higher tiers drop more. Tier bosses give a large Gold bonus.
 - **Spent on:** Everything — spin speed, mount slots, ticket booth upgrades, carousel health, click damage, mount ability upgrades, mount tier upgrades.
 - **Feel:** Constant, steady flow with exciting spikes from combat. The heartbeat of the game.
@@ -128,11 +129,10 @@ The single most important stat in the game. Affects:
 - How often each mount triggers (sweeps past enemies or ticket booth). Like booth Gold, mount damage per hit is fixed; faster spin means more hits per minute, not harder hits (upgrades like Wolf Fang raise damage per hit)
 - How quickly the carousel recovers from latch slowdown
 
-### Clicking and Spin Boost
-- **Click an enemy:** damages it (approaching or latched).
-- **Click anywhere else in the play area:** spin boost, plus a small Gold burst if no enemies are latched.
-- **UI buttons and panels** never count as game clicks.
-- **Spin boost:** each click adds a small temporary speed bonus. Bonuses stack up to a cap and decay back to base speed over a couple of seconds (cap and decay are tunable). Rapid clicking is rewarded but never required.
+### Spin Button and Clicking
+- **Spin button** (below the carousel, with a boost bar): each press adds a small temporary speed bonus. Bonuses stack up to a cap and decay back to base speed over a couple of seconds (cap and decay are tunable). Rapid pressing is rewarded but never required.
+- **Click an enemy:** damages it (approaching or latched). Clicking an enemy never boosts spin.
+- **Clicking empty space** does nothing. **UI buttons and panels** never count as game clicks.
 
 ### Health
 The carousel has a health bar. Enemies that successfully latch deal damage over time until removed.
@@ -149,8 +149,11 @@ When an enemy reaches the carousel edge it latches on. Visually the enemy grabs 
 
 To remove a latched enemy: click it directly, OR wait for a combat mount to sweep past it, OR use Emergency Clear.
 
-### Ticket Booth 2
-A second booth appears at the opposite side of the screen (180 degrees from the first). Now every mount pass collects Gold twice as often. This is a major Gold generation upgrade and one of the most satisfying visual moments in the game.
+### Ticket Booths (up to 4)
+The game starts with one booth at the top. More booths are bought in the shop, up to 4, each costing more than the last. Booths re-space evenly as they're added (2 = opposite sides, 3 = 120° apart, 4 = 90° apart); moving a booth never pays Gold. Only **Horse** passes pay at booths. Booth 2 is a major Gold generation upgrade and one of the most satisfying visual moments in the game.
+
+### Income Formula
+Gold/sec from booths = Horses × booths × turns per second × Gold per pass. Horses and booths multiply each other, which is why both get more expensive with each purchase.
 
 ---
 
@@ -172,6 +175,7 @@ Six total mounts. Unlocked progressively. Each occupies one carousel slot. Each 
 - **Behavior:** Positioned near the ticket booth pass point. Generates a fixed amount of Gold each time it passes the booth. Faster spin means more passes per minute; upgrades raise the amount per pass.
 - **Does NOT attack enemies**
 - **Starting mount** — player begins with one Horse
+- **Extra Horses (v1.5):** more Horses can be bought into empty mount slots, each costing more than the last. A Horse can be sold back for a partial refund to free its slot. Every slot is a choice: another Horse for income, or a combat mount for defense.
 - **Art:** Classic carousel horse. Brown/chestnut. Simple side silhouette from top-down. Coin icon appears on booth pass.
 - **Color tier:** Saddle color changes per tier (grey → green → blue → purple → gold → red)
 - **Upgrades:** Tier 2 doubles Gold per pass. Tier 3 generates Gold on every sweep not just booth passes. Lucky Horseshoe adds a small triple-Gold chance.
@@ -316,6 +320,8 @@ Two trees. Both cost Gold. Upgrades always show the next tier even if locked so 
 - **Almost affordable (within 20% of cost):** Visible, greyed out, shows cost and current amount
 - **Locked (requires previous upgrade):** Visible as silhouette, shows requirement text
 - **Hidden (far future):** Completely hidden until prerequisites met — surprise unlocks feel like discoveries
+- **Progress fill (v1.5):** every visible row shows a fill bar of current Gold toward its cost
+- **Bought:** the row stays in place, compact and marked as bought, so rows never shift under the cursor
 
 ---
 
@@ -328,7 +334,7 @@ Two trees. Both cost Gold. Upgrades always show the next tier even if locked so 
 | Spin Speed 3 | +50% spin speed |
 | Spin Speed 4 | +75% spin speed |
 | Mount Slot 2-6 | Unlocks additional mount positions (4–6 require a boss first) |
-| Ticket Booth 2 | Second booth at 180 degrees — doubles Gold rate |
+| Ticket Booths 2–4 | Extra booths, re-spaced evenly; each costs more than the last |
 | Carousel Health 1/2/3 | Max health increased |
 | Polish and Shine | +10% to all Gold generation |
 | Gilded Rims | Cosmetic glow plus +5% Gold |
@@ -381,7 +387,7 @@ Two trees. Both cost Gold. Upgrades always show the next tier even if locked so 
 
 ### Mid Game (Green through Purple)
 - Enemies get tougher, spawn faster
-- Ticket Booth 2 unlocks (major Gold surge moment)
+- Extra ticket booths come online (major Gold surge moments)
 - Eagle and Lion come online
 - Click Combo upgrade changes active play feel
 - Boss types introduce new behaviors
@@ -422,7 +428,8 @@ The Rusted King defeated. All rust flakes away in a particle burst. The carousel
 ## UI and HUD
 
 ### Always visible
-- Gold counter (top left) with Gold per second shown below it: a rolling average of all Gold actually earned over the last ~10 seconds (booth, kills, clicks), so it visibly drops when enemies latch. The offline earning rate is shown separately (e.g., shop footer or tooltip) once offline progress exists.
+- Speed shown as a multiplier of base speed (e.g. Speed ×1.35), so upgrades, the Spin button, and drag are visible at a glance
+- Gold counter (top left) with Gold per second shown below it: a rolling average of all Gold actually earned over the last ~10 seconds (booth passes and kills), so it visibly drops when enemies latch. The offline earning rate is shown separately (e.g., shop footer or tooltip) once offline progress exists.
 - Carousel health bar
 - Current enemy tier indicator
 - Wave countdown timer showing when next wave arrives
@@ -709,11 +716,11 @@ Target playtime for a complete first run: 2.5 to 3.5 hours.
 - Prestige or ascension system
 - Multiple carousel types or skins
 - Free mount placement
-- Mount doubling or stacking
+- Mount doubling or stacking (exception, v1.5: extra Horses)
 - Mobile support
 - Multiplayer
 - More than 6 enemy tiers
-- More than 6 mounts
+- More than 6 mount slots
 - More than 3 base enemy types
 - Story or dialogue
 - Animated sprites (static sprites only)
@@ -737,6 +744,6 @@ Save these for after v1.0 ships. Do not build during v1.0 development.
 
 ---
 
-*GDD Version 1.4*
+*GDD Version 1.5*
 *Created: June 2026*
 *Status: Design complete, ready for development*
