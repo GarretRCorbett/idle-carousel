@@ -66,6 +66,9 @@ var _outline_color: Color = Color(1.0, 1.0, 1.0, 0.0)
 var _sprite_scale: Vector2 = Vector2.ONE
 ## Slow (and later freeze): timed effects that change how it moves.
 var _status := EnemyStatus.new()
+## True while _status has something running. Most enemies are never slowed,
+## so advance() skips the status bookkeeping for them (it runs every tick).
+var _status_running: bool = false
 
 ## Hit flash (modulate) and tumble (rotation). Tier tint and squash are on Sprite.
 @onready var _visual: Node2D = $Visual
@@ -113,7 +116,8 @@ func apply_slow(multiplier: float, seconds: float) -> void:
 	if not is_active():
 		return
 	_status.apply_slow(multiplier, seconds)
-	_slow_icon.visible = _status.is_slowed()
+	_status_running = _status.is_slowed()
+	_slow_icon.visible = _status_running
 
 
 ## Normal enemies pay Gold and count toward the tier's kill gate; encounter
@@ -195,10 +199,13 @@ func advance(delta: float) -> void:
 		return
 	# This tick moves at the speed it started with, then effects count down,
 	# so a 3 s slow covers exactly 3 s of movement.
-	var speed_factor := _status.get_speed_factor()
-	_status.advance(delta)
-	if _slow_icon.visible and not _status.is_slowed():
-		_slow_icon.visible = false
+	var speed_factor := 1.0
+	if _status_running:
+		speed_factor = _status.get_speed_factor()
+		_status.advance(delta)
+		if not _status.is_slowed():
+			_status_running = false
+			_slow_icon.visible = false
 	if _state != State.APPROACHING:
 		return
 	var offset := position - _center

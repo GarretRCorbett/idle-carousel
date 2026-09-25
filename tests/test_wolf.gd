@@ -259,3 +259,39 @@ func test_wedge_hits_what_a_line_would_not_yet() -> void:
 	_turn(0.3, 6)
 	assert_array(_hits).contains_exactly([enemy2])
 	enemy.free()
+
+
+## The sweep's shortcuts (ring check, angle pre-check) must never change the
+## result: compare against the plain window math on random enemies and turns.
+func test_shortcuts_match_the_plain_math() -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 12345
+	var snapshot := EnemySnapshot.new()
+	var enemies: Array[EnemyBase] = []
+	for i in 300:
+		var enemy := LEAF_SCENE.instantiate() as EnemyBase
+		enemies.append(enemy)
+		snapshot.enemies.append(enemy)
+		snapshot.bearings.append(rng.randf_range(-20.0, 20.0))
+		snapshot.distances.append(rng.randf_range(5.0, 400.0))
+		snapshot.radii.append(rng.randf_range(4.0, 40.0))
+	for trial in 200:
+		var sweep := MountSweep.new()
+		sweep.inner_radius = rng.randf_range(0.0, 120.0)
+		sweep.reach = rng.randf_range(20.0, 300.0)
+		sweep.half_arc = 0.0 if trial % 2 == 0 else rng.randf_range(0.0, 1.2)
+		var start := rng.randf_range(-50.0, 50.0)
+		var delta := rng.randf_range(0.001, 3.0) if trial % 10 != 0 else rng.randf_range(3.0, 20.0)
+		var got: Dictionary = {}
+		for enemy in sweep.collect(snapshot, start, delta):
+			got[enemy] = got.get(enemy, 0) + 1
+		for i in enemies.size():
+			var half := MountSweep.line_half_window(snapshot.distances[i], snapshot.radii[i],
+					sweep.inner_radius, sweep.inner_radius + sweep.reach)
+			var expected := 0
+			if half >= 0.0:
+				var passes := RotationMath.sweep_passes(start, delta, snapshot.bearings[i], half + sweep.half_arc)
+				expected = maxi(0, passes.y - passes.x + 1)
+			assert_int(got.get(enemies[i], 0)).override_failure_message("trial %d enemy %d" % [trial, i]).is_equal(expected)
+	for enemy in enemies:
+		enemy.free()

@@ -50,8 +50,10 @@ Before = commit cdbead7 (with sound). After = end of Step 2 (silent, `--audio-dr
   is meant to show with several sweeping mounts (Giraffe, Elephant, Panda); re-measure at Step 5.
 - Spawns now join at the next tick, so the stress tool admits a whole stage in one tick. That
   tick is setup, and the tool no longer samples it (it showed as fake 27–64 ms spikes).
-- Open, minor: the tool sometimes prints "4 resources still in use at exit" since Step 2 (not
-  sound-related; the game itself doesn't show it). Look at it with `--verbose` when convenient.
+- Explained (2026-09-25): the "N resources still in use at exit" message comes from **sound
+  playbacks still running when the app quits** (`--verbose` lists only .ogg streams). With the
+  Dummy audio driver the audio thread never releases them; stopping the players on exit didn't
+  change it. Engine shutdown quirk, not a leak in game code; harmless.
 
 ### Step 4 run (Horse + Wolf + Giraffe, silent, 2026-09-25): not comparable
 | Leaves | FPS | Tick avg | Tick max |
@@ -66,6 +68,21 @@ Step 2 run), so it was likely on battery or throttled. Also, the Giraffe's 325 p
 tool's whole enemy band, so every enemy takes an extra hit (flash, health bar, sound) each pass;
 the higher tick time is mostly hit handling, not sweep math. **To do:** a paired run on a cool,
 plugged-in laptop: `-- 0,300,1000,2000 wolf` then `-- 0,300,1000,2000 wolf,giraffe`, back to back.
+
+### Optimization pass after Step 6 (headless, CPU only, 2026-09-25)
+`--headless` stress runs (no rendering, so no GPU heat; tick times still valid), Horse + Wolf +
+Giraffe (the Giraffe's ring covers every stress enemy, the worst case for the sweep):
+
+| Enemies | Tick avg before | After | Tick max before → after |
+|---|---|---|---|
+| 1,000 | 5.89 ms | **3.02 ms** (−49%) | 10.9 → 5.7 |
+| 2,000 | 11.97 ms | **5.77 ms** (−52%) | 19.2 → 10.6 |
+
+What changed: the sweep skips the trig for enemies nowhere near its line this tick, using a
+bound that is always at least the real window (a randomized test checks it against the plain
+math, and fails if the bound is weakened); the ring check happens before any function call;
+latched, unslowed enemies skip the slow bookkeeping; the snapshot sizes its arrays once per tick;
+Game's loop drops a duplicate check.
 
 ## Decided 2026-09-25 (Garret, after seeing Step 3)
 - **More Sticks and Rocks early:** Grey waves 80 / 20 / 5 (Leaf / Stick / Rock), Sticks after 20

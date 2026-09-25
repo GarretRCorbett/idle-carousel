@@ -28,7 +28,23 @@ func collect(snapshot: EnemySnapshot, start_angle: float, delta_angle: float) ->
 	var found: Array[EnemyBase] = []
 	if delta_angle <= 0.0:
 		return found
+	var outer := inner_radius + reach
+	var distances := snapshot.distances
+	var radii := snapshot.radii
 	for i in snapshot.size():
+		# Most enemies are outside this mount's ring: reject them before any
+		# function call (this loop runs for every mount, every tick).
+		var d := distances[i]
+		var r := radii[i]
+		if d + r < inner_radius or d - r > outer or d <= r:
+			continue
+		# Most of the rest are nowhere near the line this tick. `bound` is at
+		# least the real half-window (asin(x) <= x·PI/2, and the tips are
+		# narrower still), so this skips the trig without ever dropping a hit.
+		var bound := r / d * (PI / 2.0) + half_arc
+		var span := delta_angle + 2.0 * bound
+		if span < TAU and fposmod(snapshot.bearings[i] - start_angle + bound, TAU) > span:
+			continue
 		var half := _half_window_at(snapshot, i)
 		if half < 0.0:
 			continue

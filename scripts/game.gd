@@ -146,11 +146,10 @@ func _exit_tree() -> void:
 func _physics_process(delta: float) -> void:
 	_admit_pending_spawns()
 	GameState.advance_simulation(delta)
+	# advance() does nothing for a dead or removed enemy (the stall safety net
+	# may have just removed it; it must not reach the rim and latch).
 	for enemy: EnemyBase in _enemy_layer.get_children():
-		# The stall safety net may have just removed it; a removed enemy must
-		# not reach the rim and latch (nothing would be left to kill).
-		if enemy.is_active():
-			enemy.advance(delta)
+		enemy.advance(delta)
 	_encounter.advance(delta)
 	_snapshot.rebuild(_enemy_layer, _carousel.global_position)
 	_carousel.advance_rotation(delta, GameState.get_effective_spin_speed_rad_s())

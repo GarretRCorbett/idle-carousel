@@ -23,19 +23,28 @@ var center: Vector2 = Vector2.ZERO
 ## Measures every live enemy in `layer` from `from_center`.
 func rebuild(layer: Node, from_center: Vector2) -> void:
 	center = from_center
-	enemies.clear()
-	bearings.clear()
-	distances.clear()
-	radii.clear()
-	for child in layer.get_children():
+	# Sized once for every child, then trimmed: cheaper than growing four
+	# arrays one enemy at a time, every tick.
+	var children := layer.get_children()
+	enemies.resize(children.size())
+	bearings.resize(children.size())
+	distances.resize(children.size())
+	radii.resize(children.size())
+	var count := 0
+	for child in children:
 		var enemy := child as EnemyBase
 		if enemy == null or not enemy.is_active():
 			continue
 		var offset := enemy.global_position - center
-		enemies.append(enemy)
-		bearings.append(enemy.update_bearing(offset.angle()))
-		distances.append(offset.length())
-		radii.append(enemy.get_hitbox_radius())
+		enemies[count] = enemy
+		bearings[count] = enemy.update_bearing(offset.angle())
+		distances[count] = offset.length()
+		radii[count] = enemy.get_hitbox_radius()
+		count += 1
+	enemies.resize(count)
+	bearings.resize(count)
+	distances.resize(count)
+	radii.resize(count)
 
 
 func size() -> int:
