@@ -341,3 +341,29 @@ func test_two_wolves_can_be_bought_and_one_sold() -> void:
 	assert_float(GameState.get_gold() - gold_before).is_equal(expected_refund)
 	wolves = _mounts(game).filter(func(m: MountBase) -> bool: return m is MountSweeper)
 	assert_int(wolves.size()).is_equal(1)
+
+
+## The Giraffe's long line hits an enemy still flying in, far outside the
+## Wolf's reach, through real ticks (memo O10's long-reach test).
+func test_giraffe_hits_an_approaching_enemy_far_out() -> void:
+	var game := _game()
+	(game.get_node("WaveManager") as WaveManager).set_auto(false)
+	GameState.add_gold(10000.0)
+	UpgradeManager.purchase(&"mount_slot")
+	assert_bool(UpgradeManager.purchase(&"giraffe")).is_true()
+	var giraffe := _mounts(game)[1]
+	assert_float(giraffe.data.sweep_range).is_greater(200.0)
+	var carousel := game.get_node("World/Carousel") as Carousel
+	var enemy := (load("res://scenes/enemies/Leaf.tscn") as PackedScene).instantiate() as EnemyBase
+	var data := (load("res://resources/enemies/leaf.tres") as EnemyData).duplicate() as EnemyData
+	data.base_health = 100.0
+	data.move_speed = 0.0  # holds still, 250 px out: only the Giraffe can reach it
+	enemy.data = data
+	enemy.position = carousel.position + Vector2.from_angle(1.0) * 250.0
+	game._on_enemy_spawned(enemy)
+	for i in 600:
+		game._physics_process(1.0 / 60.0)
+		if enemy.get_health() < 100.0:
+			break
+	assert_float(100.0 - enemy.get_health()).is_equal_approx(GameState.get_mount_damage(giraffe.data), 0.0001)
+	assert_bool(enemy.is_at_rim()).is_false()
