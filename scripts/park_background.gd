@@ -53,14 +53,14 @@ extends Node2D
 ## them clear of the planters.
 @export var walkways: Array[PackedVector2Array] = [
 	PackedVector2Array([Vector2(0.0, 100.0), Vector2(0.0, 250.0), Vector2(0.0, 330.0), Vector2(0.0, 420.0)]),
-	PackedVector2Array([Vector2(-110.0, -35.0), Vector2(-400.0, -55.0), Vector2(-470.0, 40.0), Vector2(-700.0, 190.0)]),
+	PackedVector2Array([Vector2(-110.0, -30.0), Vector2(-350.0, -75.0), Vector2(-520.0, -45.0), Vector2(-700.0, 50.0)]),
 	PackedVector2Array([Vector2(150.0, 0.0), Vector2(300.0, -20.0), Vector2(360.0, 60.0), Vector2(720.0, 40.0)]),
 	PackedVector2Array([Vector2(90.0, -120.0), Vector2(170.0, -230.0), Vector2(160.0, -300.0), Vector2(300.0, -440.0)]),
 ]
 @export_range(4.0, 160.0, 1.0, "suffix:px") var path_width: float = 62.0
 ## Per-walkway widths, in walkway order (missing = path_width). The walkway
 ## down toward the Boost button is the wide main one.
-@export var walkway_widths: PackedFloat32Array = PackedFloat32Array([110.0])
+@export var walkway_widths: PackedFloat32Array = PackedFloat32Array([110.0, 85.0])
 ## Each walkway flares out where it meets the ring, like a plaza opening up.
 @export_range(4.0, 400.0, 1.0, "suffix:px") var flare_width: float = 170.0
 ## How far along the walkway the flare narrows to path_width (0 = no flare).
