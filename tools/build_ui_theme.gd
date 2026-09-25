@@ -68,7 +68,9 @@ func _initialize() -> void:
 
 	theme.set_color("font_color", "Label", CREAM)
 
-	_button(theme, "Button", "button_yellow", "button_yellow_hover", "button_yellow_pressed")
+	# Every button is royal blue with ivory text (Garret: the Send wave blue
+	# for Play, Boost, Challenge and buying too, instead of yellow).
+	_blue_button(theme, "Button")
 	# The Boost button while stalled ("Crank!").
 	theme.set_type_variation("CrankButton", "Button")
 	_button(theme, "CrankButton", "button_red", "button_red", "button_red")
@@ -77,14 +79,9 @@ func _initialize() -> void:
 	theme.set_color("font_pressed_color", "CrankButton", CREAM)
 	theme.set_color("font_focus_color", "CrankButton", CREAM)
 	theme.set_color("font_hover_pressed_color", "CrankButton", CREAM)
-	# Secondary actions (Settings, Quit, Back, Send wave, Sell): royal blue
-	# with ivory text. Main actions (Play, Boost, Challenge, buying) stay gold.
+	# Kept so scenes that name it still work; it now matches the default.
 	theme.set_type_variation("BlueButton", "Button")
-	_button(theme, "BlueButton", "button_blue", "button_blue_hover", "button_blue_pressed")
-	for state in ["normal", "hover", "pressed"]:
-		(theme.get_stylebox(state, "BlueButton") as StyleBoxTexture).modulate_color = ROYAL_TINT
-	for color in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
-		theme.set_color(color, "BlueButton", CREAM)
+	_blue_button(theme, "BlueButton")
 
 	# Toggles (Auto waves, Fullscreen): plain text plus the switch, not a button.
 	for state in ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]:
@@ -137,6 +134,14 @@ func _initialize() -> void:
 
 ## Kenney buttons: 9-sliced, with a 4 px "depth" lip at the bottom that
 ## disappears when pressed, so the label shifts down to look pushed in.
+func _blue_button(theme: Theme, type: String) -> void:
+	_button(theme, type, "button_blue", "button_blue_hover", "button_blue_pressed")
+	for state in ["normal", "hover", "pressed"]:
+		(theme.get_stylebox(state, type) as StyleBoxTexture).modulate_color = ROYAL_TINT
+	for color in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
+		theme.set_color(color, type, CREAM)
+
+
 func _button(theme: Theme, type: String, normal: String, hover: String, pressed: String) -> void:
 	theme.set_stylebox("normal", type, _texture(normal, 6, 10))
 	theme.set_stylebox("hover", type, _texture(hover, 6, 10))

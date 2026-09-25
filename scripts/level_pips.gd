@@ -2,7 +2,8 @@ class_name LevelPips
 extends Control
 ## A row of small segments showing levels bought out of the max (e.g. 3 of 10).
 
-@export var filled_color: Color = Color("f2c94c")
+## Light royal blue, the Send wave blue brightened to read on the navy panel.
+@export var filled_color: Color = Color("7aa2ff")
 @export var empty_color: Color = Color(1.0, 1.0, 1.0, 0.18)
 @export var pip_size: Vector2 = Vector2(12.0, 6.0)
 @export var gap: float = 3.0
