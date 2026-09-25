@@ -2,7 +2,9 @@ class_name ParkBackground
 extends Node2D
 ## The play-field backdrop, a theme-park plaza (Garret: "more concrete like
 ## a theme park, less grass"): warm pavement in big slabs, a stone plaza under
-## the carousel with a brick ring and two brick walkways, grass only in curbed
+## the carousel with a brick ring and four curving brick walkways (laid out
+## like a theme-park carousel's: one down toward the Boost button, one to
+## each side, one to the top right), grass only in curbed
 ## planters, flower beds with benches, a few lamps, a cart and two trees.
 ## Everything but the trees is drawn in code; nothing moves or looks like an
 ## enemy, and the middle stays quiet so Leaves and mounts are easy to see.
@@ -12,8 +14,9 @@ extends Node2D
 ## Warm concrete, like a theme park's walkways; big enough to cover the screen.
 @export var pavement_color: Color = Color("e2d6bf")
 @export var pavement_half_size: Vector2 = Vector2(1100.0, 700.0)
-## Square slabs with faint joints.
-@export_range(16.0, 256.0, 1.0, "suffix:px") var slab_size: float = 80.0
+## Slabs with faint joints; each row is offset by half a slab, like real
+## pavement.
+@export var slab_size: Vector2 = Vector2(96.0, 64.0)
 @export var slab_joint_color: Color = Color(0.45, 0.36, 0.25, 0.14)
 
 @export_group("Planters")
@@ -41,10 +44,16 @@ extends Node2D
 @export var paving_color: Color = Color("d49c83")
 @export var edging_color: Color = Color("fff4dc")
 @export var joint_color: Color = Color(0.45, 0.2, 0.15, 0.18)
-## Directions of the paths leading off the ring (degrees, 0 = right, 90 = down).
-@export var path_angles_deg: PackedFloat32Array = PackedFloat32Array([130.0, -50.0])
-@export_range(4.0, 100.0, 1.0, "suffix:px") var path_width: float = 30.0
-@export_range(0.0, 1000.0, 1.0, "suffix:px") var path_length: float = 700.0
+## Walkways leading off the ring, each a curve through 4 points (a cubic
+## Bezier from the carousel center outward; the ring hides the start). Keep
+## them clear of the planters.
+@export var walkways: Array[PackedVector2Array] = [
+	PackedVector2Array([Vector2(0.0, 150.0), Vector2(10.0, 260.0), Vector2(-60.0, 300.0), Vector2(-40.0, 420.0)]),
+	PackedVector2Array([Vector2(-150.0, 0.0), Vector2(-300.0, 10.0), Vector2(-380.0, 80.0), Vector2(-720.0, 60.0)]),
+	PackedVector2Array([Vector2(150.0, 0.0), Vector2(300.0, -20.0), Vector2(360.0, 60.0), Vector2(720.0, 40.0)]),
+	PackedVector2Array([Vector2(90.0, -120.0), Vector2(170.0, -230.0), Vector2(160.0, -300.0), Vector2(300.0, -440.0)]),
+]
+@export_range(4.0, 120.0, 1.0, "suffix:px") var path_width: float = 44.0
 
 @export_group("Flower beds and benches")
 ## Bed centers (from the carousel center); each gets a bench beside it.
@@ -60,14 +69,15 @@ extends Node2D
 @export_group("Umbrella cart")
 ## A concession cart under a striped umbrella (a little carousel echo).
 ## Empty = none.
-@export var carts: PackedVector2Array = PackedVector2Array([Vector2(215.0, -250.0)])
+@export var carts: PackedVector2Array = PackedVector2Array([Vector2(-70.0, -245.0)])
 @export var cart_color: Color = Color("405d83")
 @export var umbrella_colors: Array[Color] = [Color("fff4dc"), Color("70568b")]
 @export_range(8.0, 60.0, 1.0, "suffix:px") var umbrella_radius: float = 22.0
 
 @export_group("Lamps")
 ## Lamp posts just outside the ring (degrees round the plaza).
-@export var lamp_angles_deg: PackedFloat32Array = PackedFloat32Array([20.0, 160.0, 200.0, 340.0])
+## Placed to flank the walkways.
+@export var lamp_angles_deg: PackedFloat32Array = PackedFloat32Array([20.0, 70.0, 110.0, 160.0, 200.0, 340.0])
 @export var lamp_color: Color = Color("fff4dc")
 @export var lamp_rim_color: Color = Color("ddb96a")
 @export var lamp_glow_color: Color = Color(1.0, 0.85, 0.55, 0.25)
@@ -90,7 +100,7 @@ func _ready() -> void:
 func _draw() -> void:
 	_draw_pavement()
 	var ring_outer := clearing_radius + ring_width
-	_draw_paths(ring_outer)
+	_draw_paths()
 	for planter in planters:
 		_draw_planter(planter)
 	# The ring path, then the plaza on top of its inner half.
@@ -120,14 +130,16 @@ func _draw() -> void:
 func _draw_pavement() -> void:
 	var half := pavement_half_size
 	draw_rect(Rect2(-half, half * 2.0), pavement_color)
-	var x := -floorf(half.x / slab_size) * slab_size
-	while x <= half.x:
-		draw_line(Vector2(x, -half.y), Vector2(x, half.y), slab_joint_color, 1.0)
-		x += slab_size
-	var y := -floorf(half.y / slab_size) * slab_size
+	var row := 0
+	var y := -ceilf(half.y / slab_size.y) * slab_size.y
 	while y <= half.y:
 		draw_line(Vector2(-half.x, y), Vector2(half.x, y), slab_joint_color, 1.0)
-		y += slab_size
+		var x := -ceilf(half.x / slab_size.x) * slab_size.x + (slab_size.x / 2.0 if row % 2 == 1 else 0.0)
+		while x <= half.x:
+			draw_line(Vector2(x, y), Vector2(x, y + slab_size.y), slab_joint_color, 1.0)
+			x += slab_size.x
+		y += slab_size.y
+		row += 1
 
 
 ## A lawn with an ivory curb and rounded corners.
@@ -141,13 +153,23 @@ func _draw_planter(rect: Rect2) -> void:
 	draw_style_box(box, rect)
 
 
-func _draw_paths(ring_outer: float) -> void:
-	for angle in path_angles_deg:
-		var direction := Vector2.from_angle(deg_to_rad(angle))
-		var from := direction * (ring_outer - 4.0)
-		var to := direction * path_length
-		draw_line(from, to, edging_color, path_width + 6.0)
-		draw_line(from, to, paving_color, path_width)
+func _draw_paths() -> void:
+	for walkway in walkways:
+		if walkway.size() != 4:
+			continue
+		var points := PackedVector2Array()
+		for i in 33:
+			points.append(_bezier(walkway, i / 32.0))
+		draw_polyline(points, edging_color, path_width + 6.0, true)
+		draw_polyline(points, paving_color, path_width, true)
+		# Round the joints so the curve never shows notches.
+		for point in points:
+			draw_circle(point, path_width / 2.0, paving_color, true, -1.0, true)
+
+
+static func _bezier(p: PackedVector2Array, t: float) -> Vector2:
+	var u := 1.0 - t
+	return p[0] * u * u * u + p[1] * 3.0 * u * u * t + p[2] * 3.0 * u * t * t + p[3] * t * t * t
 
 
 ## A rounded bed of blooms with a bench on the side nearer the plaza.
