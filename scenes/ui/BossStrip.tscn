@@ -21,14 +21,14 @@ theme_override_constants/separation = 10
 
 [node name="BossName" type="Label" parent="Margin/Row"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 0)
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 clip_text = true
 text_overrun_behavior = 3
 
 [node name="Progress" type="Label" parent="Margin/Row"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(96, 0)
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 horizontal_alignment = 1
@@ -37,7 +37,7 @@ text_overrun_behavior = 3
 
 [node name="Bar" type="ProgressBar" parent="Margin/Row"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(110, 14)
+custom_minimum_size = Vector2(60, 14)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -47,7 +47,7 @@ show_percentage = false
 
 [node name="ActionButton" type="Button" parent="Margin/Row"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(130, 34)
+custom_minimum_size = Vector2(124, 34)
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 14

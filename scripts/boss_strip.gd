@@ -22,7 +22,7 @@ signal tier_selected(rank: int)
 @export var no_boss_key: String = "BOSS_NONE"
 
 @export_group("Pips")
-@export_range(12.0, 48.0, 1.0, "suffix:px") var pip_size: float = 26.0
+@export_range(12.0, 48.0, 1.0, "suffix:px") var pip_size: float = 24.0
 @export var selected_border_color: Color = Color.WHITE
 ## Locked tiers are dimmed to this.
 @export var locked_modulate: Color = Color(1.0, 1.0, 1.0, 0.3)

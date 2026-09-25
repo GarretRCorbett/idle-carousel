@@ -136,3 +136,14 @@ func test_shop_never_outgrows_the_screen() -> void:
 		tabs.current_tab = i
 		assert_bool(tabs.get_tab_control(i) is ScrollContainer).is_true()
 		assert_float(shop.get_combined_minimum_size().y).is_less(screen_height - 32.0)
+
+
+## The whole HUD (left panel, boss strip, shop) fits the 1280 px screen. The
+## boss strip's fixed widths once added up to more than the middle column.
+func test_hud_fits_the_screen_width() -> void:
+	var game := (load("res://scenes/Game.tscn") as PackedScene).instantiate() as Game
+	add_child(game)
+	auto_free(game)
+	var columns := game.find_child("Columns", true, false) as Control
+	var screen_width := float(ProjectSettings.get_setting("display/window/size/viewport_width"))
+	assert_float(columns.get_combined_minimum_size().x).is_less_equal(screen_width - 32.0)
