@@ -71,3 +71,14 @@ func test_options_lists_english_by_its_own_name() -> void:
 	for i in languages.item_count:
 		names.append(languages.get_item_text(i))
 	assert_array(names).contains(["English", "Español", "简体中文", "日本語"])
+
+
+## Main menu and Quit show only when Settings is opened in the game.
+func test_main_menu_and_quit_show_only_in_game() -> void:
+	for in_game: bool in [false, true]:
+		var menu := (load("res://scenes/OptionsMenu.tscn") as PackedScene).instantiate() as OptionsMenu
+		menu.pause_game_while_open = in_game
+		add_child(menu)
+		auto_free(menu)
+		assert_bool((menu.get_node("%MainMenuButton") as Button).visible).is_equal(in_game)
+		assert_bool((menu.get_node("%QuitButton") as Button).visible).is_equal(in_game)

@@ -6,6 +6,8 @@ extends Control
 
 signal closed
 
+const MAIN_MENU_SCENE := "res://scenes/MainMenu.tscn"
+
 ## Built by tools/build_ui_theme.gd: UI font plus every script's fallback.
 const LANGUAGE_LIST_FONT: Font = preload("res://assets/fonts/language_list_font.tres")
 
@@ -21,6 +23,8 @@ const LANGUAGE_LIST_FONT: Font = preload("res://assets/fonts/language_list_font.
 ## Locale codes in the same order as the Language list.
 var _locales: PackedStringArray = []
 @onready var _back_button: Button = %BackButton
+@onready var _main_menu_button: Button = %MainMenuButton
+@onready var _quit_button: Button = %QuitButton
 @onready var _tabs: TabContainer = %OptionsTabs
 
 
@@ -36,6 +40,12 @@ func _ready() -> void:
 		AudioManager.play_sfx(&"click"))
 	_setup_language_list()
 	_back_button.pressed.connect(close)
+	# Only in the game (the main menu has its own Quit). No save system yet
+	# (Phase 4), so leaving ends the run.
+	_main_menu_button.visible = pause_game_while_open
+	_quit_button.visible = pause_game_while_open
+	_main_menu_button.pressed.connect(_on_main_menu_pressed)
+	_quit_button.pressed.connect(func() -> void: get_tree().quit())
 	# Keys: the tab bar translates titles itself.
 	_tabs.set_tab_title(0, "OPT_TAB_SETTINGS")
 	_tabs.set_tab_title(1, "OPT_TAB_CONTROLS")
@@ -47,6 +57,12 @@ func open() -> void:
 	if pause_game_while_open:
 		get_tree().paused = true
 	_back_button.grab_focus.call_deferred()
+
+
+func _on_main_menu_pressed() -> void:
+	AudioManager.play_sfx(&"click")
+	get_tree().paused = false
+	get_tree().change_scene_to_file(MAIN_MENU_SCENE)
 
 
 func close() -> void:

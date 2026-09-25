@@ -176,9 +176,27 @@ text = "CTRL_KEY_PAUSE"
 layout_mode = 2
 text = "CTRL_PAUSE"
 
-[node name="BackButton" type="Button" parent="Center/Panel/Margin/Column"]
+[node name="ButtonRow" type="HBoxContainer" parent="Center/Panel/Margin/Column"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="BackButton" type="Button" parent="Center/Panel/Margin/Column/ButtonRow"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 44)
 layout_mode = 2
-size_flags_horizontal = 4
 text = "OPT_BACK"
+
+[node name="MainMenuButton" type="Button" parent="Center/Panel/Margin/Column/ButtonRow"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+text = "OPT_MAIN_MENU"
+
+[node name="QuitButton" type="Button" parent="Center/Panel/Margin/Column/ButtonRow"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+text = "MENU_QUIT"
