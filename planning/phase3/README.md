@@ -73,6 +73,14 @@ plugged-in laptop: `-- 0,300,1000,2000 wolf` then `-- 0,300,1000,2000 wolf,giraf
   first; Garret doesn't want it to make the Wolf pointless, so judge it in play. Q7 Panda pays
   Gold once per full turn. Q8 Panda heals only on its own kills. Q10 Panda unlock = 3 different
   mount types at Tier 2. Q21 Trunk Toss (knockback) waits for Phase 4.
+- **After memos P and Q (Garret, 2026-09-25):** tier colors **Grey → Green → Yellow → Orange →
+  Red → Charcoal** (light outline), GDD v1.13; built. Boss summon/split colors (Gilded Gale's
+  "Gold Leaves", Obsidian's "Purple Rocks") still to re-pair. **Boss UI = option A**, a slim strip
+  above the carousel (boss, kills, Challenge, six numbered tier pips; during a fight: timer, boss
+  health, Give up); mockups in `mockups/`. **Gate more behind Leaf Storm:** the Giraffe and Sloth
+  both wait for the first boss (pre-boss mounts: Horse and Wolf), plus Speed/Boost capped at level
+  3 and extra booths waiting (memo Q's list). Built in Step 6; until then they're buyable.
+  Sloth reach raised to 200 px.
 
 ## Decided 2026-09-24 (Garret)
 - **Boss access:** a minimal per-tier kill gate plus a manual "Challenge boss" button, built
@@ -132,6 +140,8 @@ plugged-in laptop: `-- 0,300,1000,2000 wolf` then `-- 0,300,1000,2000 wolf,giraf
 | `codex_memo_n_boss_timers.md` | Codex: how Clicker Heroes, Tap Titans 2, Idle Slayer, and Melvor handle boss failure; player reactions; timed-boss proposal |
 | `step1_plan.md` | Step 1: decisions, contracts, and scene trees for Steps 2–3 |
 | `step4_plan.md` | Step 4: Giraffe and Sloth (approved 2026-09-25, built) |
+| `step5_plan.md` | Step 5: Elephant, mount tiers, Panda (DRAFT, awaiting approval) |
+| `mockups/` | Boss/tier UI options A–C rendered over the real game (A chosen) |
 | `codex_memo_p_tier_colors.md` | Codex + Claude: which color orders read as "stronger" (research), colorblind check; render in `tier_color_candidates.png` |
 | `codex_memo_q_boss_tier_ui.md` | Codex + Claude: how to show the boss challenge and tier picker, and how to "force" the first boss (layout options) |
 | `codex_memo_o_step1_review.md` | Codex: review of the Step 1 plan (spawn queue vs Send limit, removal order, line-tip formula, wave validation, tests) |
