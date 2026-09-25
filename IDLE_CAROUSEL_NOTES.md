@@ -24,6 +24,9 @@ _Update at the end of every session._
 
 ## 🚧 To-Do / Things To Add
 
+### Themes, someday (Garret, 2026-09-25)
+- [ ] Idea: selectable themes with the same enemy workings but new names and art (an original theme-park lineup, Halloween pumpkins, Christmas snowballs). Not now. Codex memo U (`planning/phase3/codex_memo_u_theming.md`): feasible, about M for one reskinned enemy lineup and L for a full theme. Keep these habits meanwhile: no gameplay checks on display names, stable ids, looks in exports/resources, visual size separate from hitboxes.
+
 ### Auto-clickers (Garret, 2026-09-25, after Step 8)
 - [ ] Clicking speed swings run length a lot in the sims (1 click/s ≈ 2:36, 2 clicks/s ≈ 1:16). Playtest first and keep it in mind.
 - [ ] Plan an **auto-clicker for enemies** and one **for Boost**. They could come after a prestige, as a very expensive shop item, or as a relic or random event. Design this with the prestige tree (GDD v1.10 already lists automation there).
