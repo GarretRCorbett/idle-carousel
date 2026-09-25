@@ -5,8 +5,8 @@ playtest with a fast carousel and lots of Leaves felt close to that. No performa
 existed yet. This memo measures today's build and lists what Phase 3 should do about it.
 
 ## How it was measured
-A temporary stress scene (kept as `stress_test_prototype.gd.txt` next to this memo; not
-in the game) loads the real `Game.tscn` with max Carousel Speed, the Wolf, and a second
+A temporary stress scene (since replaced by the permanent `tools/stress_test.tscn`,
+which fixes the sampling issues Codex found) loads the real `Game.tscn` with max Carousel Speed, the Wolf, and a second
 Horse, then holds N Leaves on screen at random distances. The Leaves can't die (huge health,
 no damage, no drag) so N stays fixed, but the Wolf keeps hitting them, so hit flashes and
 health bars are included. Vsync off; 1 s warm-up, then 3 s of samples per stage.
