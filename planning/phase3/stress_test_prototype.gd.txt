@@ -1,0 +1,93 @@
+extends Node
+# TEMPORARY stress test (not committed): N unkillable Leaves, fast carousel, Wolf.
+var STAGES: Array[int] = [1000, 2000]
+var _mode := "base"
+const WARMUP_S := 1.0
+const SAMPLE_S := 3.0
+var _game: Game
+var _layer: Node2D
+var _stage := -1
+var _stage_start := 0
+var _samples: Array[float] = []
+var _phys: Array[float] = []
+var _proc: Array[float] = []
+var _last := 0
+var _data: EnemyData
+
+func _ready() -> void:
+	var args := OS.get_cmdline_user_args()
+	if args.size() > 0: _mode = args[0]
+	if _mode == "nointerp": get_tree().physics_interpolation = false
+	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+	Engine.max_fps = 0
+	_game = (load("res://scenes/Game.tscn") as PackedScene).instantiate()
+	add_child(_game)
+	_layer = _game.get_node("World/EnemyLayer")
+	_data = (load("res://resources/enemies/leaf.tres") as EnemyData).duplicate()
+	_data.base_health = 1.0e9
+	_data.damage_per_second = 0.0
+	_data.latch_drag = 0.0
+	print(_mode + " stage,enemies,fps_avg,frame_ms_avg,frame_ms_p99,physics_ms_avg,process_ms_avg,draw_calls,objects")
+
+func _process(_delta: float) -> void:
+	var now := Time.get_ticks_usec()
+	if _stage == -1:
+		(_game.get_node("WaveManager") as WaveManager).set_auto(false)
+		GameState.add_gold(1.0e9)
+		for i in 10: UpgradeManager.purchase(&"carousel_speed")
+		UpgradeManager.purchase(&"mount_slot")
+		if _mode != "nowolf": UpgradeManager.purchase(&"wolf")
+		UpgradeManager.purchase(&"mount_slot")
+		UpgradeManager.purchase(&"horse")
+		_next_stage(now)
+		return
+	var elapsed := (now - _stage_start) / 1.0e6
+	if elapsed > WARMUP_S:
+		_samples.append((now - _last) / 1000.0)
+		_phys.append(Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0)
+		_proc.append(Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0)
+	_last = now
+	if elapsed > WARMUP_S + SAMPLE_S:
+		_report()
+		if _stage + 1 >= STAGES.size():
+			get_tree().quit()
+			return
+		_next_stage(now)
+
+func _next_stage(now: int) -> void:
+	_stage += 1
+	var want := STAGES[_stage]
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 1
+	var carousel := _game.get_node("World/Carousel") as Carousel
+	while _layer.get_child_count() < want:
+		var e := (load("res://scenes/enemies/Leaf.tscn") as PackedScene).instantiate() as EnemyBase
+		e.data = _data
+		var r := rng.randf_range(carousel.radius + 20.0, 380.0)
+		e.position = carousel.position + Vector2.from_angle(rng.randf() * TAU) * r
+		_game._on_enemy_spawned(e)
+		if _mode == "nophysics":
+			e.get_node("CollisionShape2D").disabled = true
+			e.monitorable = false
+		if _mode == "novisual":
+			e.get_node("Visual").visible = false
+			e.get_node("HealthBar").queue_free()
+			e.set("_health_bar", ProgressBar.new())
+	_samples.clear(); _phys.clear(); _proc.clear()
+	_stage_start = now
+	_last = now
+
+func _report() -> void:
+	var s := _samples.duplicate(); s.sort()
+	var avg := 0.0
+	for v in s: avg += v
+	avg /= maxf(1.0, s.size())
+	var p99: float = s[int(s.size() * 0.99)] if s.size() > 0 else 0.0
+	var pa := 0.0
+	for v in _phys: pa += v
+	var pr := 0.0
+	for v in _proc: pr += v
+	print("%d,%d,%.0f,%.2f,%.2f,%.2f,%.2f,%d,%d" % [_stage, _layer.get_child_count(), 1000.0 / avg, avg, p99,
+		pa / maxf(1.0, _phys.size()), pr / maxf(1.0, _proc.size()),
+		Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
+		Performance.get_monitor(Performance.OBJECT_COUNT)])

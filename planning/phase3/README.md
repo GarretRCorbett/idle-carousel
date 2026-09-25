@@ -40,6 +40,8 @@ the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
 |---|---|
 | `claude_audit.md` | What Phase 2 code already supports, what's hard-wired to Horse/Wolf/Leaf, stale data, art inventory |
 | `codex_memo_l_mounts_enemies_bosses.md` | Codex: architecture for new mounts, statuses, tiers, bosses, multi-latch, removal safety, tests, 11-step plan, 18 questions |
+| `claude_memo_performance.md` | Claude: stress test of today's build (FPS at 0–4,000 Leaves), where the time goes, Phase 3 recommendations and guardrails |
+| `stress_test_prototype.gd.txt` | The temporary stress scene script used for that memo (reference for the real tool) |
 | `claude_memo_prestige.md` | Claude: prestige research (first-prestige timing, rewards players like, Slay the Spire / Wildfrost challenges), a possible shape, questions for before Phase 5 |
 | `codex_memo_n_boss_timers.md` | Codex: how Clicker Heroes, Tap Titans 2, Idle Slayer, and Melvor handle boss failure; player reactions; timed-boss proposal |
 | `codex_memo_m_tiers_pacing.md` | Codex: tier loop, kill gate, wave recipes, stat scaling, 3-hour economy model, prices, simulator, boss tuning, 12 questions |
@@ -118,7 +120,7 @@ Ordered so the risky, shared pieces come first. Rough sizes: S ≈ under 1 h, M 
 | Step | Work | Size |
 |---|---|---|
 | 1 | Garret's decisions; resource contracts (`TierData`, `WaveProfile`, mount/enemy fields); scene trees for the new enemies and mounts | S (plan) |
-| 2 | **Foundations:** generic mount signals, `MountSweep` extracted from the Wolf (all Wolf tests still pass), per-mount damage, kill attribution, enemy removal state, queued spawns, unwrapped bearings | L |
+| 2 | **Foundations:** generic mount signals, `MountSweep` extracted from the Wolf (all Wolf tests still pass), per-mount damage, kill attribution, enemy removal state, queued spawns, unwrapped bearings. **Performance** (memo): one shared enemy snapshot per tick, health bar drawn in the enemy, drop the unused `Area2D`, `tools/stress_test.tscn` | L |
 | 3 | **Tiers and enemies:** `TierData` × 6, effective stats, Stick/Rock retune and scenes, mixed waves, `Sprite2D` + tint separate from hit flash | M–L |
 | 4 | **Eagle and Turtle:** long-range sweep on approaching enemies; `EnemyStatusEffects` (slow, freeze-ready) | M |
 | 5 | **Lion and mount tiers:** arc sweep; type-wide mount tiers with a few real Tier 2 purchases; **Unicorn** (Gold per turn, damage, heal on its own kills) | M–L |
@@ -167,6 +169,10 @@ Grouped by when they're needed. Recommendations marked ★. Full reasoning is in
 22. Idle speed: ★ test 60°/s base (from 45) / keep 45 and cheapen early upgrades / wait for hold-to-boost. (M6)
 23. Booth prices: ★ milestones ≈500 / 2,500 / 8,000 / keep ×1.5 / lock booths to tiers. This changes the GDD's booth rule. (M7)
 24. Manual wave stacking: ★ leave it unlimited, restrict it if a playtest shows abuse / one unresolved manual wave at a time now. (M8)
+
+**Performance (before Step 2; see `claude_memo_performance.md`)**
+25. Target: ★ 60 fps on a Steam Deck–class machine with 300 live enemies and all 6 mounts / higher / decide after Phase 3 content.
+26. Live-enemy cap: ★ block Send wave above a live-enemy limit and cap summoner adds / no cap, just optimize / decide after measuring.
 
 **Later (GDD clean-up before the full upgrade tree, Phase 4)**
 - Several GDD upgrades describe the same effect twice (Eagle Tier 3 vs Dive Bomb, Lion Tier 3 vs King's Wrath, Turtle Tier 3 vs Permafrost), and Prismatic Horn is both +50% and ×2. ★ same unlock, doesn't stack. (L16)
