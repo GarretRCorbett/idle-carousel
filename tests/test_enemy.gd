@@ -58,11 +58,30 @@ func test_survivable_hit_does_not_kill() -> void:
 
 func test_health_bar_hidden_until_first_hit() -> void:
 	var enemy := _enemy()
-	var bar := enemy.get_node("HealthBar") as ProgressBar
+	var bar := enemy.get_node("HealthBar") as EnemyHealthBar
 	assert_bool(bar.visible).is_false()
 	enemy.take_damage(0.5)
 	assert_bool(bar.visible).is_true()
-	assert_float(bar.value).is_equal(1.5)
+	assert_float(bar.get_fraction()).is_equal_approx(0.75, 0.0001)
+
+
+func test_hit_flash_fades_back_and_stops_processing() -> void:
+	var enemy := _enemy()
+	var visual := enemy.get_node("Visual") as Node2D
+	assert_bool(enemy.is_processing()).is_false()
+	enemy.take_damage(0.5)
+	assert_bool(enemy.is_processing()).is_true()
+	assert_object(visual.modulate).is_equal(enemy.hit_flash_modulate)
+	enemy._process(enemy.hit_flash_seconds)
+	assert_object(visual.modulate).is_equal(Color.WHITE)
+	assert_bool(enemy.is_processing()).is_false()
+
+
+func test_lethal_hit_skips_bar_and_flash() -> void:
+	var enemy := _enemy()
+	enemy.take_damage(100.0)
+	assert_bool((enemy.get_node("HealthBar") as Node2D).visible).is_false()
+	assert_bool(enemy.is_processing()).is_false()
 
 
 func test_zero_or_bad_damage_is_ignored() -> void:
