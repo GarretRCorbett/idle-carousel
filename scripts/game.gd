@@ -277,7 +277,7 @@ func _spawn_pop(global_point: Vector2, kill: bool) -> void:
 func _on_enemy_swept(mount: MountBase, enemy: EnemyBase) -> void:
 	var damage := GameState.get_mount_damage(mount.data)
 	if damage > 0.0:
-		AudioManager.play_sfx(&"wolf_hit")
+		AudioManager.play_sfx(mount.data.hit_sfx)
 		enemy.take_damage(damage, mount)
 	if enemy.is_active():
 		mount.apply_sweep(enemy)

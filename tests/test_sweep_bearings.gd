@@ -7,7 +7,7 @@ const LEAF_SCENE: PackedScene = preload("res://scenes/enemies/Leaf.tscn")
 
 var _carousel: Carousel
 var _layer: Node2D
-var _wolf: MountWolf
+var _wolf: MountSweeper
 var _snapshot: EnemySnapshot
 var _hits: Array[EnemyBase] = []
 
@@ -18,7 +18,7 @@ func _setup_wolf() -> void:
 	add_child(_carousel)
 	_layer = auto_free(Node2D.new())
 	add_child(_layer)
-	_wolf = MountWolf.new()
+	_wolf = MountSweeper.new()
 	_wolf.data = MountData.new()
 	_wolf.data.sweep_range = 65.0
 	_carousel.add_child(_wolf)

@@ -18,6 +18,8 @@ extends Resource
 @export_range(0.0, 360.0, 1.0, "suffix:°") var sweep_arc: float = 0.0
 ## Damage per hit. Fixed per hit: faster spin means more hits per minute (GDD v1.4).
 @export_range(0.0, 100.0, 0.05, "or_greater") var base_damage: float = 0.0
+## Sound Game plays when this mount's hit deals damage (an id in the sound bank).
+@export var hit_sfx: StringName = &"wolf_hit"
 
 @export_group("Economy")
 ## Gold per trigger (booth pass or sweep). Fixed per trigger: faster spin means

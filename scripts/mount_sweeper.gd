@@ -1,13 +1,15 @@
-class_name MountWolf
+class_name MountSweeper
 extends MountBase
-## The cleaner. Its line reaches outward from its slot by data.sweep_range and
-## sweeps round as the carousel turns. Every enemy the line crosses is hit,
-## each once per pass (it pierces). Hits come from angle math (MountSweep),
-## like booth passes, so nothing is missed at any spin speed. A stopped
-## carousel sends no rotation, so a stopped Wolf deals no damage.
+## Any mount whose line (or wedge) sweeps round with the carousel: the Wolf,
+## the Giraffe (a much longer line), and the base for the Sloth, Elephant and
+## Panda. The line reaches outward from its slot by data.sweep_range, widened
+## to a wedge by data.sweep_arc. Every enemy it crosses is reported once per
+## pass (it pierces); Game applies the damage and calls apply_sweep(). Hits
+## come from angle math (MountSweep), like booth passes, so nothing is missed
+## at any spin speed. A stopped carousel sends no rotation, so it does nothing.
 
 @export_group("Reach Line")
-## Faint line showing how far the Wolf reaches, so reach is easy to tune.
+## Faint line showing how far the mount reaches, so reach is easy to tune.
 @export var reach_line_color: Color = Color(1.0, 1.0, 1.0, 0.2)
 @export_range(0.5, 10.0, 0.5, "suffix:px") var reach_line_width: float = 2.0
 
@@ -21,7 +23,7 @@ func set_enemy_snapshot(snapshot: EnemySnapshot) -> void:
 
 
 ## Anything already under the line counts as hit on this pass, so placing or
-## moving a Wolf gives no free hit.
+## moving a mount gives no free hit.
 func rebase() -> void:
 	if _snapshot == null:
 		return
@@ -47,6 +49,7 @@ func _on_rotation_advanced(previous_angle: float, delta_angle: float) -> void:
 func _update_sweep_shape() -> void:
 	_sweep.inner_radius = get_slot_radius()
 	_sweep.reach = data.sweep_range
+	_sweep.half_arc = deg_to_rad(data.sweep_arc) / 2.0
 
 
 func _draw() -> void:

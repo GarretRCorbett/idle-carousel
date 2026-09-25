@@ -711,9 +711,9 @@ res://scripts/
 ├── carousel.gd
 ├── mount_base.gd          — base class all mounts extend
 ├── mount_horse.gd
-├── mount_wolf.gd
+├── mount_sweeper.gd       — line/wedge sweep: Wolf and Giraffe (data only); base for Sloth, Elephant, Panda
+├── mount_sweep.gd         — the sweep hit math each sweeping mount owns
 ├── mount_sloth.gd
-├── mount_giraffe.gd
 ├── mount_elephant.gd
 ├── mount_panda.gd
 ├── enemy_base.gd          — base class all enemies extend

@@ -177,7 +177,7 @@ func test_buying_mounts_adds_nodes_spaced_evenly() -> void:
 	UpgradeManager.purchase(&"horse")
 	var mounts := _mounts(game)
 	assert_int(mounts.size()).is_equal(3)
-	assert_bool(mounts[1] is MountWolf).is_true()
+	assert_bool(mounts[1] is MountSweeper).is_true()
 	for i in 3:
 		var expected := -PI / 2.0 + TAU * i / 3.0
 		assert_float(absf(angle_difference(mounts[i].get_slot_angle(), expected))).is_less(0.02)
@@ -238,7 +238,7 @@ func test_game_applies_mount_damage_from_game_state() -> void:
 ## Game talks to mounts only through MountBase: no per-type branches.
 func test_game_has_no_mount_type_branches() -> void:
 	var source := FileAccess.get_file_as_string("res://scripts/game.gd")
-	for type_name in ["MountWolf", "MountHorse"]:
+	for type_name in ["MountSweeper", "MountHorse", "MountSloth", "MountWolf"]:
 		assert_bool(source.contains(type_name)).override_failure_message(
 				"game.gd mentions %s" % type_name).is_false()
 
@@ -332,12 +332,12 @@ func test_two_wolves_can_be_bought_and_one_sold() -> void:
 	UpgradeManager.purchase(&"mount_slot")
 	assert_bool(UpgradeManager.purchase(&"wolf")).is_true()
 	assert_bool(UpgradeManager.purchase(&"wolf")).is_true()
-	var wolves := _mounts(game).filter(func(m: MountBase) -> bool: return m is MountWolf)
+	var wolves := _mounts(game).filter(func(m: MountBase) -> bool: return m is MountSweeper)
 	assert_int(wolves.size()).is_equal(2)
 	var wolf := UpgradeManager.get_definition(&"wolf")
 	var expected_refund := roundf(wolf.get_cost_for_level(1) * wolf.sell_refund_fraction)
 	var gold_before := GameState.get_gold()
 	assert_bool(UpgradeManager.sell(&"wolf")).is_true()
 	assert_float(GameState.get_gold() - gold_before).is_equal(expected_refund)
-	wolves = _mounts(game).filter(func(m: MountBase) -> bool: return m is MountWolf)
+	wolves = _mounts(game).filter(func(m: MountBase) -> bool: return m is MountSweeper)
 	assert_int(wolves.size()).is_equal(1)
