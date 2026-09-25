@@ -77,6 +77,8 @@ func _ready() -> void:
 	UpgradeManager.upgrade_purchased.connect(func(_id: StringName) -> void: _refresh())
 	UpgradeManager.upgrade_sold.connect(func(_id: StringName) -> void: _refresh())
 	GameState.boss_beaten.connect(func(_rank: int, _first: bool) -> void: _refresh())
+	GameState.debug_unlocks_changed.connect(_refresh)
+	ThemeManager.theme_changed.connect(_on_theme_changed)
 	_refresh()
 
 
@@ -110,7 +112,7 @@ func _boss_name_for(upgrade: UpgradeData) -> String:
 	var needed := upgrade.get_bosses_needed(GameState.get_upgrade_level(upgrade.id))
 	var tier := tier_catalog.get_tier(needed - 1)
 	if tier != null and tier.boss != null:
-		return tr(tier.boss.name_key)
+		return tr(ThemeManager.boss_name_key(tier.boss))
 	return tr(tier.name_key) if tier != null else "?"
 
 
@@ -187,6 +189,11 @@ func _label(text: String, wraps: bool, translates: bool = false) -> Label:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready() and not _rows_by_id.is_empty():
 		_refresh()
+
+
+## A theme may rename the bosses that locked rows name.
+func _on_theme_changed(_theme: ParkTheme) -> void:
+	_queue_refresh()
 
 
 func _queue_refresh() -> void:

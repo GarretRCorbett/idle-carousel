@@ -44,6 +44,8 @@ signal boss_active_changed(active: bool)
 ## A tier's boss was beaten. first_clear: the first win this run (it unlocked
 ## the next tier); false for a repeat.
 signal boss_beaten(rank: int, first_clear: bool)
+## Debug builds only: tiers were unlocked without a boss fight (dev keys, Debug tab).
+signal debug_unlocks_changed
 
 ## One latched enemy's share of drag and damage, and how long it has held on
 ## (damage starts after the grace period).
@@ -712,9 +714,10 @@ func set_boss_active(active: bool) -> void:
 
 ## Debug builds only (F3 dev key): unlocks tiers as if their bosses were beaten.
 func debug_set_bosses_beaten(count: int) -> void:
-	if not OS.is_debug_build():
+	if not OS.is_debug_build() or count <= _bosses_beaten:
 		return
-	_bosses_beaten = maxi(_bosses_beaten, count)
+	_bosses_beaten = count
+	debug_unlocks_changed.emit()
 
 
 ## Debug builds only (Debug tab): counts this tier's kill gate as met.

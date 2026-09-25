@@ -53,7 +53,7 @@ UPG_CAROUSEL_SPEED_DESC,+20% base speed,+20% de velocidad base,+20 % de vitesse 
 UPG_BOOST_POWER_NAME,Boost Power,Potencia de impulso,Puissance du boost,Boost-Stärke,Força do impulso,Сила ускорения,加速强度,ブースト強化,부스트 강화
 UPG_BOOST_POWER_DESC,+10% max boost,+10% de impulso máximo,+10 % de boost max,+10 % max. Boost,+10% de impulso máximo,+10% к макс. ускорению,最大加速 +10%,最大ブースト +10%,최대 부스트 +10%
 UPG_CLICK_DAMAGE_NAME,Click Damage,Daño por clic,Dégâts par clic,Klickschaden,Dano por clique,Урон от клика,点击伤害,クリックダメージ,클릭 피해
-UPG_CLICK_DAMAGE_DESC,+0.5 damage per click,"+0,5 de daño por clic","+0,5 dégât par clic","+0,5 Schaden pro Klick","+0,5 de dano por clique","+0,5 урона за клик",每次点击伤害 +0.5,クリックごとのダメージ +0.5,클릭당 피해 +0.5
+UPG_CLICK_DAMAGE_DESC,+0.25 damage per click,"+0,25 de daño por clic","+0,25 dégât par clic","+0,25 Schaden pro Klick","+0,25 de dano por clique","+0,25 урона за клик",每次点击伤害 +0.25,クリックごとのダメージ +0.25,클릭당 피해 +0.25
 UPG_WOLF_FANG_NAME,Wolf Fang,Colmillo de lobo,Croc du loup,Wolfszahn,Presa do lobo,Волчий клык,狼牙,オオカミの牙,늑대 송곳니
 UPG_WOLF_FANG_DESC,+0.5 Wolf damage per hit,"+0,5 de daño del lobo por golpe","+0,5 dégât du loup par coup","+0,5 Wolfschaden pro Treffer","+0,5 de dano do lobo por golpe","+0,5 урона волка за удар",狼每次攻击伤害 +0.5,オオカミの一撃ダメージ +0.5,늑대 타격당 피해 +0.5
 UPG_TICKET_BOOTH_NAME,Ticket Booth,Taquilla,Guichet,Ticketschalter,Bilheteria,Билетная касса,售票亭,チケット売り場,매표소

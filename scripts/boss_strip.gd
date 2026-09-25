@@ -56,6 +56,7 @@ func _ready() -> void:
 	GameState.boss_beaten.connect(func(_rank: int, _first: bool) -> void: refresh())
 	GameState.boss_active_changed.connect(_on_boss_active_changed)
 	GameState.run_reset.connect(refresh)
+	GameState.debug_unlocks_changed.connect(refresh)
 	ThemeManager.theme_changed.connect(_on_theme_changed)
 	refresh()
 

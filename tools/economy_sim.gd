@@ -69,6 +69,9 @@ func _ready() -> void:
 	_fight_cps = float(args[3]) if args.size() > 3 else _cps
 	_game = (load("res://scenes/Game.tscn") as PackedScene).instantiate() as Game
 	add_child(_game)
+	# The sim calls Game._physics_process itself; Godot's own ticks would add
+	# uncounted game time between batches (Codex review).
+	_game.set_physics_process(false)
 	_waves = _game.get_node("WaveManager") as WaveManager
 	_waves.set_auto(false)  # the sim sends timed waves itself (Timer nodes run on real time)
 	_router = _game.get_node("World/ClickRouter") as ClickRouter

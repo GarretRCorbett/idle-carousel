@@ -49,3 +49,26 @@ func test_game_speed_resets_when_the_game_closes() -> void:
 	Engine.time_scale = 4.0
 	game.free()
 	assert_float(Engine.time_scale).is_equal(1.0)
+
+
+## "Unlock every tier" enables the tier pips right away (Codex review).
+func test_unlocking_every_tier_updates_the_pips() -> void:
+	var game := _game()
+	var strip := game.find_child("BossStrip", true, false) as BossStrip
+	assert_bool(strip._pips[3].disabled).is_true()
+	game.debug_unlock_all_tiers()
+	for pip in strip._pips:
+		assert_bool(pip.disabled).is_false()
+
+
+## Locked shop rows name the boss as the current theme does (Codex review).
+func test_shop_uses_themed_boss_names() -> void:
+	var game := _game()
+	var shop := game.find_child("ShopPanel", true, false) as UpgradeShop
+	var gated := UpgradeManager.get_definition(&"ticket_booth")
+	var boss := game.tier_catalog.get_tier(0).boss
+	var renamed := ParkTheme.new()
+	renamed.id = &"rename_test"
+	renamed.boss_name_keys = {boss.boss_id: "BOSS_STICK_GIANT"}
+	ThemeManager.use_theme(renamed)
+	assert_str(shop._boss_name_for(gated)).is_equal(tr("BOSS_STICK_GIANT"))
