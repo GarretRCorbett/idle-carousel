@@ -9,6 +9,8 @@ const BANK: SoundBank = preload("res://resources/audio/sound_bank.tres")
 
 var _players: Dictionary[StringName, AudioStreamPlayer] = {}
 var _was_stalled: bool = false
+var _min_interval_msec: Dictionary[StringName, int] = {}
+var _last_played_msec: Dictionary[StringName, int] = {}
 
 
 func _ready() -> void:
@@ -26,6 +28,7 @@ func _ready() -> void:
 		player.stream = randomizer
 		player.volume_db = effect.volume_db
 		player.max_polyphony = effect.max_polyphony
+		_min_interval_msec[effect.id] = roundi(effect.min_interval_seconds * 1000.0)
 		player.bus = &"SFX"
 		add_child(player)
 		_players[effect.id] = player
@@ -38,7 +41,16 @@ func play_sfx(id: StringName) -> void:
 	if player == null:
 		push_warning("No sound effect named %s" % id)
 		return
+	var now := Time.get_ticks_msec()
+	if not should_play(_last_played_msec.get(id, -1000000), now, _min_interval_msec.get(id, 0)):
+		return
+	_last_played_msec[id] = now
 	player.play()
+
+
+## True unless the last play was less than min_interval_msec ago.
+static func should_play(last_msec: int, now_msec: int, min_interval_msec: int) -> bool:
+	return min_interval_msec <= 0 or now_msec - last_msec >= min_interval_msec
 
 
 func has_sfx(id: StringName) -> bool:

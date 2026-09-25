@@ -37,6 +37,7 @@ streams = Array[AudioStream]([ExtResource("6_hit_1"), ExtResource("7_hit_2"), Ex
 volume_db = -6.0
 random_pitch = 1.1
 max_polyphony = 6
+min_interval_seconds = 0.03
 
 [sub_resource type="Resource" id="fx_wolf_hit"]
 script = ExtResource("2_effect")
@@ -45,6 +46,7 @@ streams = Array[AudioStream]([ExtResource("9_wolf_hit_1"), ExtResource("10_wolf_
 volume_db = -8.0
 random_pitch = 1.1
 max_polyphony = 6
+min_interval_seconds = 0.03
 
 [sub_resource type="Resource" id="fx_pop"]
 script = ExtResource("2_effect")
@@ -53,6 +55,7 @@ streams = Array[AudioStream]([ExtResource("11_pop_1"), ExtResource("12_pop_2")])
 volume_db = -4.0
 random_pitch = 1.12
 max_polyphony = 6
+min_interval_seconds = 0.03
 
 [sub_resource type="Resource" id="fx_latch"]
 script = ExtResource("2_effect")
@@ -61,6 +64,7 @@ streams = Array[AudioStream]([ExtResource("13_latch_1"), ExtResource("14_latch_2
 volume_db = -10.0
 random_pitch = 1.06
 max_polyphony = 4
+min_interval_seconds = 0.03
 
 [sub_resource type="Resource" id="fx_purchase"]
 script = ExtResource("2_effect")

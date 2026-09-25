@@ -11,3 +11,6 @@ extends Resource
 @export_range(1.0, 2.0, 0.01) var random_pitch: float = 1.06
 ## How many copies can overlap (rapid coins, hits).
 @export_range(1, 16, 1) var max_polyphony: int = 4
+## Plays closer together than this are skipped (hundreds of hits a second
+## would otherwise all call play()). 0 = never skip.
+@export_range(0.0, 1.0, 0.005, "suffix:s") var min_interval_seconds: float = 0.0

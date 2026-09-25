@@ -48,6 +48,25 @@ physics ticks per frame to catch up, which makes the frame even slower. That spi
   the mount cost is ~5× today's.
 - Phase 6 "juice" (particles, coin pops, tweens) adds per-hit cost on top.
 
+## Update (same day): Codex review and the first fixes
+Codex reviewed this memo (it agreed with most of it; see the list in the commit history).
+Corrections: the per-Wolf "~6 ms" and "physics per tick" numbers above weren't isolated,
+so treat them as rough. Applied now, each its own commit, measured with the permanent
+`tools/stress_test.tscn` (fresh enemies per stage, per-tick timing):
+enemies as `Node2D` (no `Area2D`), a drawn health bar, a countdown hit flash, lethal
+hits skip cosmetics, shop refresh once per frame, Clear button text cached, running
+latch totals, and a per-sound minimum interval (0.03 s for rapid hits).
+
+| Leaves | FPS before → after | Worst 1% frame | Physics per tick, max |
+|---|---|---|---|
+| 300 | 958 → 1,185 | 3.6 → 2.2 ms | 4.6 → 1.9 ms |
+| 500 | 570 → 777 | 5.8 → 3.5 ms | 5.8 → 3.0 ms |
+| 1,000 | 127 → 291 | 18 → 9.8 ms | 11 → 6.3 ms |
+| 2,000 | 33 → 90 | 51 → 22 ms | 31 → 12 ms (no catch-up ticks) |
+
+Still to do in Phase 3 Step 2: the shared per-tick enemy snapshot for mounts. Deferred
+until measured: spawn staggering, pooling, MultiMesh. The live-enemy cap is Garret's call.
+
 ## Recommendations
 **Set a budget (Garret's call):** e.g. *60 fps on a Steam Deck–class machine with 300 live
 enemies and all 6 mounts*, tested at 2× that. Add a guardrail so play can't exceed it
