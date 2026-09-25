@@ -258,13 +258,13 @@ func _on_enemy_swept(mount: MountBase, enemy: EnemyBase) -> void:
 ## underneath it) and GameState adds its drag and damage.
 func _on_enemy_reached_rim(enemy: EnemyBase) -> void:
 	AudioManager.play_sfx(&"latch")
-	GameState.register_latch(enemy.get_instance_id(), enemy.data.latch_drag, enemy.data.damage_per_second)
+	GameState.register_latch(enemy.get_instance_id(), enemy.get_latch_drag(), enemy.get_latch_dps())
 
 
 ## Runs once per enemy (EnemyBase guarantees it), so the kill pays once.
 ## killer (the mount, or null for a click) isn't used yet; the Panda will be.
 func _on_enemy_died(enemy: EnemyBase, _killer: Node) -> void:
-	GameState.add_gold(enemy.data.gold_drop * enemy.gold_multiplier)
+	GameState.add_gold(enemy.get_kill_gold())
 	AudioManager.play_sfx(&"pop")
 	_spawn_pop(enemy.global_position, true)
 	_remove_enemy(enemy)

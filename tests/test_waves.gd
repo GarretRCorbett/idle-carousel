@@ -107,7 +107,7 @@ func test_restart_countdown_sends_no_wave() -> void:
 func test_sending_early_restarts_the_countdown_and_marks_bonus_gold() -> void:
 	var waves := _running_waves()
 	var multipliers: Array[float] = []
-	waves.enemy_spawned.connect(func(e: EnemyBase) -> void: multipliers.append(e.gold_multiplier))
+	waves.enemy_spawned.connect(func(e: EnemyBase) -> void: multipliers.append(e.get_kill_gold() / e.data.gold_drop))
 	waves.start()
 	_sent = 0
 	var count := waves.send_wave_now()
@@ -121,7 +121,7 @@ func test_sending_early_restarts_the_countdown_and_marks_bonus_gold() -> void:
 func test_timed_waves_have_no_bonus() -> void:
 	var waves := _running_waves()
 	var multipliers: Array[float] = []
-	waves.enemy_spawned.connect(func(e: EnemyBase) -> void: multipliers.append(e.gold_multiplier))
+	waves.enemy_spawned.connect(func(e: EnemyBase) -> void: multipliers.append(e.get_kill_gold() / e.data.gold_drop))
 	waves.start()
 	_sent = 0
 	waves._on_wave_timer_timeout()

@@ -141,7 +141,7 @@ func spawn_wave(gold_multiplier: float = 1.0) -> int:
 	for spawn_position in positions:
 		var enemy := enemy_scene.instantiate() as EnemyBase
 		enemy.position = spawn_position
-		enemy.gold_multiplier = gold_multiplier
+		enemy.configure(null, gold_multiplier)
 		enemy_spawned.emit(enemy)
 	return positions.size()
 

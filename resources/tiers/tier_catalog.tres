@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TierCatalog" format=3]
+
+[ext_resource type="Script" path="res://scripts/tier_catalog.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/tier_data.gd" id="2_data"]
+[ext_resource type="Resource" path="res://resources/tiers/grey.tres" id="3_grey"]
+[ext_resource type="Resource" path="res://resources/tiers/green.tres" id="4_green"]
+[ext_resource type="Resource" path="res://resources/tiers/blue.tres" id="5_blue"]
+[ext_resource type="Resource" path="res://resources/tiers/purple.tres" id="6_purple"]
+[ext_resource type="Resource" path="res://resources/tiers/gold.tres" id="7_gold"]
+[ext_resource type="Resource" path="res://resources/tiers/red.tres" id="8_red"]
+
+[resource]
+script = ExtResource("1_script")
+tiers = Array[ExtResource("2_data")]([ExtResource("3_grey"), ExtResource("4_green"), ExtResource("5_blue"), ExtResource("6_purple"), ExtResource("7_gold"), ExtResource("8_red")])

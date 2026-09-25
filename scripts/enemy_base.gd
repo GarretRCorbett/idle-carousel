@@ -4,6 +4,9 @@ extends Node2D
 ## carousel). Flies straight at the carousel, stops at the rim, and dies once.
 ## Game moves it each tick with advance() and decides what its signals mean.
 ## Health is a runtime copy: the shared EnemyData .tres is never changed.
+## Stats are fixed at spawn by configure() (base × tier multiplier); nothing
+## reads tier-scaled numbers from `data` after that, so switching tier only
+## changes enemies spawned afterwards.
 
 ## Reached the rim this tick. Emitted once.
 signal reached_rim(enemy: EnemyBase)
@@ -28,9 +31,6 @@ enum State { APPROACHING, AT_RIM, DEAD, REMOVED }
 ## Gap between the top of the enemy and its health bar.
 @export_range(0.0, 32.0, 1.0, "suffix:px") var health_bar_gap: float = 4.0
 
-## Kill Gold is data.gold_drop times this (1.5 for early-sent waves).
-var gold_multiplier: float = 1.0
-
 var _state: State = State.APPROACHING
 var _health: float = 0.0
 var _center: Vector2 = Vector2.ZERO
@@ -44,24 +44,86 @@ var _flash_left: float = 0.0
 var _unwrapped_bearing: float = 0.0
 var _has_bearing: bool = false
 
+# Effective stats, set once by configure().
+var _configured: bool = false
+var _tier_rank: int = 0
+var _max_health: float = 0.0
+var _move_speed: float = 0.0
+var _latch_drag: float = 0.0
+var _latch_dps: float = 0.0
+var _kill_gold: float = 0.0
+var _tint: Color = Color.WHITE
+
 @onready var _visual: Node2D = $Visual
 @onready var _health_bar: EnemyHealthBar = $HealthBar
 
 
 func _ready() -> void:
-	_health = data.base_health
+	if not _configured:
+		configure(null, 1.0)  # Grey stats
+	_health = _max_health
 	_health_bar.visible = false
-	_health_bar.position = Vector2(0.0, -data.hitbox_radius - health_bar_gap)
+	_health_bar.position = Vector2(0.0, -get_hitbox_radius() - health_bar_gap)
 	set_process(false)
+	_apply_tint()
 	_visual.draw.connect(_draw_placeholder)
 	_visual.queue_redraw()
+
+
+## Fixes this enemy's stats for `tier` (null = Grey, all ×1). Kill Gold also
+## gets reward_multiplier (the early-send bonus). Called once, before it's
+## added to the world; WaveManager does it when it creates the enemy.
+func configure(tier: TierData, reward_multiplier: float) -> void:
+	_configured = true
+	_tier_rank = tier.rank if tier != null else 0
+	_max_health = data.base_health * (tier.health_multiplier if tier != null else 1.0)
+	_move_speed = data.move_speed * (tier.speed_multiplier if tier != null else 1.0)
+	_latch_drag = data.latch_drag * (tier.drag_multiplier if tier != null else 1.0)
+	_latch_dps = data.damage_per_second * (tier.latch_dps_multiplier if tier != null else 1.0)
+	_kill_gold = data.gold_drop * (tier.gold_multiplier if tier != null else 1.0) * reward_multiplier
+	_tint = tier.tint if tier != null else Color.WHITE
+	if is_node_ready():
+		_apply_tint()
+
+
+func get_tier_rank() -> int:
+	return _tier_rank
+
+
+func get_max_health() -> float:
+	return _max_health
+
+
+func get_move_speed() -> float:
+	return _move_speed
+
+
+func get_latch_drag() -> float:
+	return _latch_drag
+
+
+func get_latch_dps() -> float:
+	return _latch_dps
+
+
+func get_kill_gold() -> float:
+	return _kill_gold
+
+
+## Hitbox and click radius aren't scaled by tier; they read the data directly.
+func get_hitbox_radius() -> float:
+	return data.hitbox_radius
+
+
+func get_click_radius() -> float:
+	return data.click_radius
 
 
 ## Called by Game after adding the enemy. `center` is the carousel center and
 ## `rim_radius` its edge, both in World space.
 func setup(center: Vector2, rim_radius: float) -> void:
 	_center = center
-	_stop_distance = rim_radius + data.hitbox_radius
+	_stop_distance = rim_radius + get_hitbox_radius()
 	_unwrapped_bearing = (position - center).angle()
 	_has_bearing = true
 
@@ -88,7 +150,7 @@ func advance(delta: float) -> void:
 		return
 	var offset := position - _center
 	var distance := offset.length()
-	var travel := data.move_speed * delta
+	var travel := _move_speed * delta
 	if distance - travel > _stop_distance:
 		position -= offset / distance * travel
 		return
@@ -108,7 +170,7 @@ func take_damage(amount: float, source: Node = null) -> bool:
 		_state = State.DEAD
 		died.emit(self, source)
 		return true
-	_health_bar.set_fraction(_health / data.base_health)
+	_health_bar.set_fraction(_health / _max_health)
 	_health_bar.visible = true
 	_flash()
 	return false
@@ -163,6 +225,12 @@ func _process(delta: float) -> void:
 
 
 ## Drawn on Visual, so the shape turns with it while the health bar stays upright.
+## The tier color, as self_modulate: it tints only Visual's own drawing and
+## never fights the hit flash, which uses modulate.
+func _apply_tint() -> void:
+	_visual.self_modulate = _tint
+
+
 func _draw_placeholder() -> void:
 	if data.texture != null:
 		return

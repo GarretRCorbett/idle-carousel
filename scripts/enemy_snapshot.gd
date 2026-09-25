@@ -35,7 +35,7 @@ func rebuild(layer: Node, from_center: Vector2) -> void:
 		enemies.append(enemy)
 		bearings.append(enemy.update_bearing(offset.angle()))
 		distances.append(offset.length())
-		radii.append(enemy.data.hitbox_radius)
+		radii.append(enemy.get_hitbox_radius())
 
 
 func size() -> int:

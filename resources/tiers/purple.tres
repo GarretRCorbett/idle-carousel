@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="TierData" format=3]
+
+[ext_resource type="Script" path="res://scripts/tier_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+tier_id = &"purple"
+rank = 3
+name_key = "TIER_PURPLE"
+tint = Color(0.72, 0.42, 0.95, 1)
+health_multiplier = 2.74
+speed_multiplier = 1.09
+drag_multiplier = 1.0
+latch_dps_multiplier = 1.33
+gold_multiplier = 3.05
