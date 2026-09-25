@@ -135,7 +135,7 @@ func test_boulder_killed_before_the_rim_wins_outright() -> void:
 
 # --- Gilded Gale (Orange) ------------------------------------------------------------------
 
-func test_gilded_gale_trickles_two_leaves_every_few_seconds() -> void:
+func test_gilded_gale_trickles_leaves_every_few_seconds() -> void:
 	var game := _game()
 	var gale := _fight(game, 3) as EnemyLeafStorm
 	var cycle := gale.gust_seconds + gale.drift_seconds + gale.rest_seconds
@@ -145,7 +145,8 @@ func test_gilded_gale_trickles_two_leaves_every_few_seconds() -> void:
 	assert_int(gale.get_packs_sent()).is_equal(4)
 	game._admit_pending_spawns()
 	var summons := _role(game, EnemyBase.EncounterRole.SUMMON)
-	assert_int(summons.size()).is_equal(8)
+	assert_int(summons.size()).is_equal(gale.first_pack_size + 3 * gale.pack_size)
+	assert_int(gale.pack_size).is_equal(3)  # Garret: 3 every 3 s
 	for leaf in summons:
 		assert_int(leaf.get_tier_rank()).is_equal(3)  # Orange Leaves
 	gale.take_damage(1000000.0)  # no split: killing it wins

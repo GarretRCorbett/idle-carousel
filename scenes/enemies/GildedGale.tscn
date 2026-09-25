@@ -10,12 +10,12 @@
 script = ExtResource("1_script")
 data = ExtResource("2_data")
 quiet_seconds = 2.0
-gust_seconds = 0.6
-drift_seconds = 2.4
-rest_seconds = 1.0
+gust_seconds = 0.5
+drift_seconds = 1.8
+rest_seconds = 0.7
 drift_step_deg = 20.0
-first_pack_size = 2
-pack_size = 2
+first_pack_size = 3
+pack_size = 3
 summon_data = ExtResource("5_leaf")
 fan_offset_deg = 20.0
 split_count = 0

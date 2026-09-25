@@ -97,6 +97,9 @@ Game's loop drops a duplicate check.
   body splits into 2 Rocks of the tier below (Red, replacing the old "Purple Rocks"), and **every
   piece must die** for the win, the same rule as Leaf Storm's 4 Leaves (Q16, Q20).
 - The strip no longer shifts when switching tiers (fixed from the playtest).
+- **Palette: A "Gilded Garden"** (memo T): violet-and-ivory canopy, walnut deck, gold trim and
+  poles, warm bulbs, a lighter green park, ink-blue panels with gold borders and ivory text.
+- **Gilded Gale:** 3 Leaves every 3 s (from 2 every 4 s).
 
 ## Decided 2026-09-25 (Garret, after seeing Step 3)
 - **More Sticks and Rocks early:** Grey waves 80 / 20 / 5 (Leaf / Stick / Rock), Sticks after 20

@@ -66,5 +66,6 @@ Obsidian 0.8). With the guessed builds in the tool, at 1.5 clicks/s:
 | Ancient Log (Panda build) | 87 s of 150 (58%) | 7 | 0 s |
 | Obsidian Boulder (late build) | 96 s of 180 (53%) | 0 | 2 s (the Red Rocks finale) |
 
-Open: the Gilded Gale's trickle (2 Leaves every 4 s, Garret's pick) never threatens a mid-game
-build; it's a pure damage race. Options for Garret: more per trickle, or faster.
+Gilded Gale: Garret raised the trickle to **3 Leaves every 3 s**. The sim build (two Wolves and a
+Tier 2 Giraffe reaching 375 px) still clears them before they land (lowest health 97), so it stays
+a damage race for a strong build; tougher Leaves are the next lever if the playtest agrees.
