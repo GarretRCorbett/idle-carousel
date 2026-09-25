@@ -57,7 +57,7 @@ Every price, health value and growth rate is a draft. The ticket booth price (1,
 
 ## Sensitivity (the part worth a look)
 - **2 clicks/s:** the whole run takes 1:16, about half as long. Leaf Storm falls at 0:02:47 because it's click-only by design (memo S), so a fast clicker can beat it before owning anything.
-- **Idle farming (0.2 clicks/s), 1.5 clicks/s in fights:** see the note at the end. Very idle players stall at Leaf Storm, because it needs clicks and their Gold comes in slowly.
+- **Idle farming (0.2 clicks/s), 1.5 clicks/s in fights (seed 1):** stuck on Leaf Storm until 1:02, losing 12 times (it's click-only and early Gold comes slowly). Then the mounts carry: bosses 2–6 fall at 1:05, 1:17, 1:52, 2:06 and 2:39. The finish matches the 1 click/s player; only the first boss is a wall.
 - **After all upgrades are bought (around 2:30)**, Gold has nothing left to buy. That's fine for Phase 3; Phase 4's full upgrade tree fills it.
 
 ## Open for Garret
