@@ -65,6 +65,8 @@ _Update at the end of every session._
 - [ ] Speed up button (2× game speed toggle) — careful: it conflicts with speedrun timing and the balance model
 - [ ] Statistics screen (total gold, enemies killed, time played) — roadmap Phase 6
 - [ ] Save/load buttons in Settings (volume sliders and language are done)
+- [ ] **Display options (Phase 6):** Fullscreen is exclusive now; also offer Borderless, and maybe a VSync/frame-limit option. Laptop + external monitor players can get jitter when the monitor hangs off the other GPU (Garret's MSI did; see `planning/phase2/README.md`), so consider a short tip.
+- [ ] **Sound taste + music (Garret, 2026-09-24):** current SFX feel off (not a bug); simple carousel-style background music may fix a lot. Phase 6.
 - [ ] "Welcome back" notification showing offline Gold earned — part of Phase 4 offline progress
 
 ### Post v1.0 Only (don't touch until shipped)

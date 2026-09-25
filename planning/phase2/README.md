@@ -14,11 +14,26 @@ Art: Kenney packs are downloaded in `../kenney_assets/` (memo I); only used file
 
 **Fail rule (TEMPORARY):** the health stall only (OVERLOAD_CLEAR was removed in Step 9). Direction: **idle first, pressure when pushing** / Package A. The real fail state is still DECISION PENDING in the GDD.
 
+## Step 11 wrap-up playtest (2026-09-24)
+- Functionally everything works. Liked: crank, latching, Auto waves.
+- Fixed the same day: Leaf clicks lacked feedback (now a crisper sound, click ring, squash);
+  waves every 10 s (was 20); idle too slow vs clicking (base 60°/s, boost cap +40%);
+  unlimited Send wave (now blocked above 30 live enemies); wanted two Wolves and to sell
+  combat mounts (done for Wolves, GDD v1.11).
+- Later: sound taste and background carousel music (Phase 6); Click Damage and Wolf tuning
+  once Sticks and Rocks exist.
+- **Jitter: solved.** Cause was Garret's setup: the MSI monitor is wired to the Radeon 780M
+  while Godot rendered on the RTX 4070 (every frame copied between GPUs), and the monitor
+  ran at 60 Hz. Fix: MSI at 100 Hz, and Windows Graphics → Godot → Power saving (780M).
+  The laptop screen was fine all along. Code-side improvements kept: mount mipmaps, 2D MSAA
+  4x + anti-aliased circles, exclusive fullscreen. Phase 6: offer Borderless as well, and a
+  tip for laptop + external monitor players.
+
 ## Garret's playtest after the pacing pass (historical; pacing reassessed in Step 11)
 - Fun; he bought all 4 booths. Still "a tad slow", but hold off retuning until enemies exist.
 - Base speed feels too slow when idling. Fine for now (it encourages clicking); revisit after Leaves.
 - Idea: an auto-clicker style option to hold boost while fighting (see NOTES).
-- Residual jitter is minor and best on the laptop's 120 Hz screen. Parked; see `codex_memo_f_jitter.md` if it comes back.
+- Residual jitter is minor and best on the laptop's 120 Hz screen. (Solved in Step 11: see above.)
 
 ## How to work with Garret (what's worked)
 - He likes decisions asked one at a time as multiple-choice questions (AskUserQuestion), with a recommended option.
