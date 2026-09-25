@@ -25,7 +25,7 @@ extends Node2D
 ## Curbed lawns (rects from the carousel center), the only grass. Keep them
 ## clear of the walkways and near the screen edges.
 @export var planters: Array[Rect2] = [
-	Rect2(-560.0, 185.0, 190.0, 140.0), Rect2(-340.0, -300.0, 140.0, 76.0),
+	Rect2(-560.0, 220.0, 190.0, 130.0), Rect2(-340.0, -300.0, 140.0, 76.0),
 	Rect2(110.0, 240.0, 225.0, 120.0),
 ]
 @export var lawn_color: Color = Color("86b98c")
@@ -42,22 +42,25 @@ extends Node2D
 @export_group("Paths")
 ## The paved ring around the plaza, and its edging.
 @export_range(0.0, 200.0, 1.0, "suffix:px") var ring_width: float = 34.0
-## Light beige for the ring and walkways (lighter than the pavement, like
-## the walkways on a theme-park map), bordered in warm brick.
-@export var paving_color: Color = Color("f2e9d8")
-@export var edging_color: Color = Color("c68b73")
-@export_range(0.0, 20.0, 1.0, "suffix:px") var edging_width: float = 8.0
-@export var joint_color: Color = Color(0.45, 0.36, 0.25, 0.12)
+## Warm brick for the ring and walkways, like a theme park's main street,
+## with an ivory border (Garret tried beige and preferred brick).
+@export var paving_color: Color = Color("d49c83")
+@export var edging_color: Color = Color("fff4dc")
+@export_range(0.0, 20.0, 1.0, "suffix:px") var edging_width: float = 3.0
+@export var joint_color: Color = Color(0.45, 0.2, 0.15, 0.18)
 ## Walkways leading off the ring, each a curve through 4 points (a cubic
 ## Bezier from the carousel center outward; the ring hides the start). Keep
 ## them clear of the planters.
 @export var walkways: Array[PackedVector2Array] = [
-	PackedVector2Array([Vector2(0.0, 150.0), Vector2(10.0, 260.0), Vector2(-60.0, 300.0), Vector2(-40.0, 420.0)]),
-	PackedVector2Array([Vector2(-150.0, 0.0), Vector2(-300.0, 10.0), Vector2(-380.0, 80.0), Vector2(-720.0, 60.0)]),
+	PackedVector2Array([Vector2(0.0, 100.0), Vector2(0.0, 250.0), Vector2(0.0, 330.0), Vector2(0.0, 420.0)]),
+	PackedVector2Array([Vector2(-110.0, -35.0), Vector2(-400.0, -55.0), Vector2(-470.0, 40.0), Vector2(-700.0, 190.0)]),
 	PackedVector2Array([Vector2(150.0, 0.0), Vector2(300.0, -20.0), Vector2(360.0, 60.0), Vector2(720.0, 40.0)]),
 	PackedVector2Array([Vector2(90.0, -120.0), Vector2(170.0, -230.0), Vector2(160.0, -300.0), Vector2(300.0, -440.0)]),
 ]
 @export_range(4.0, 160.0, 1.0, "suffix:px") var path_width: float = 62.0
+## Per-walkway widths, in walkway order (missing = path_width). The walkway
+## down toward the Boost button is the wide main one.
+@export var walkway_widths: PackedFloat32Array = PackedFloat32Array([110.0])
 ## Each walkway flares out where it meets the ring, like a plaza opening up.
 @export_range(4.0, 400.0, 1.0, "suffix:px") var flare_width: float = 170.0
 ## How far along the walkway the flare narrows to path_width (0 = no flare).
@@ -87,7 +90,7 @@ extends Node2D
 @export_group("Lamps")
 ## Lamp posts just outside the ring (degrees round the plaza).
 ## Placed to flank the walkways.
-@export var lamp_angles_deg: PackedFloat32Array = PackedFloat32Array([20.0, 70.0, 110.0, 160.0, 200.0, 340.0])
+@export var lamp_angles_deg: PackedFloat32Array = PackedFloat32Array([20.0, 50.0, 130.0, 160.0, 235.0, 340.0])
 ## Kept quiet (navy, small globes, a faint glow) so lamps never read as
 ## yellow enemies or pickups (Codex look review).
 @export var lamp_color: Color = Color("fff4dc")
@@ -99,7 +102,7 @@ extends Node2D
 ## Where trees stand (from the center) and how big; x, y, scale. Keep them out
 ## near the edges, away from where Leaves fly in and latch.
 @export var trees: PackedVector3Array = PackedVector3Array([
-	Vector3(-465.0, 255.0, 1.5), Vector3(160.0, 300.0, 1.5),
+	Vector3(-465.0, 285.0, 1.5), Vector3(160.0, 300.0, 1.5),
 ])
 @export var tree_tint: Color = Color(0.85, 0.95, 0.88)
 
@@ -168,23 +171,26 @@ func _draw_planter(rect: Rect2) -> void:
 
 
 func _draw_paths() -> void:
-	for walkway in walkways:
-		if walkway.size() != 4:
-			continue
-		draw_colored_polygon(_walkway_outline(walkway, edging_width * 2.0), edging_color)
+	for i in walkways.size():
+		if walkways[i].size() == 4:
+			draw_colored_polygon(_walkway_outline(walkways[i], edging_width * 2.0, _walkway_width(i)), edging_color)
 
 
 ## The walkway fills, drawn over the ring's border so each walkway opens
 ## into the ring instead of stopping at it.
 func _draw_path_fills() -> void:
-	for walkway in walkways:
-		if walkway.size() == 4:
-			draw_colored_polygon(_walkway_outline(walkway, 0.0), paving_color)
+	for i in walkways.size():
+		if walkways[i].size() == 4:
+			draw_colored_polygon(_walkway_outline(walkways[i], 0.0, _walkway_width(i)), paving_color)
+
+
+func _walkway_width(index: int) -> float:
+	return walkway_widths[index] if index < walkway_widths.size() else path_width
 
 
 ## The walkway's outline: both edges of the curve at its width there (wide at
 ## the ring, narrowing to path_width), plus extra for the edging.
-func _walkway_outline(walkway: PackedVector2Array, extra: float) -> PackedVector2Array:
+func _walkway_outline(walkway: PackedVector2Array, extra: float, width: float) -> PackedVector2Array:
 	var steps := 48
 	var left := PackedVector2Array()
 	var right := PackedVector2Array()
@@ -193,7 +199,7 @@ func _walkway_outline(walkway: PackedVector2Array, extra: float) -> PackedVector
 		var tangent := (_bezier(walkway, minf(t + 0.01, 1.0)) - _bezier(walkway, maxf(t - 0.01, 0.0))).normalized()
 		var normal := Vector2(-tangent.y, tangent.x)
 		var flare := smoothstep(0.0, flare_length, t) if flare_length > 0.0 else 1.0
-		var half := (lerpf(flare_width, path_width, flare) + extra) / 2.0
+		var half := (lerpf(flare_width + width - path_width, width, flare) + extra) / 2.0
 		var point := _bezier(walkway, t)
 		left.append(point + normal * half)
 		right.append(point - normal * half)
