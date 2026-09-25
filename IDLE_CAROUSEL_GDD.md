@@ -1,5 +1,5 @@
 # 🎠 Idle Carousel — Game Design Document
-### Version 1.12 | Working Title: Idle Carousel
+### Version 1.13 | Working Title: Idle Carousel
 > Solo dev project. Built in Godot 4.7 stable. Target: Steam release, anonymous, $4.99 (sale target ~$3.49–$3.75), with a free demo.
 > Personal motivation: daughters love carousels.
 > Influences: Cookie Clicker, Clicker Heroes, A Game About Feeding a Black Hole, Rusty's Retirement.
@@ -7,6 +7,7 @@
 ---
 
 ## Changelog
+- **v1.13** — Tier colors reordered (Garret): Grey → Green → Yellow → Orange → Red → Charcoal (light outline), a danger ramp. Boss summon/split colors to re-pair.
 - **v1.12** — Mounts repicked to match the Kenney Animal Pack art (Garret, Phase 3 start): **Turtle → Sloth**, **Eagle → Giraffe**, **Lion → Elephant**, **Unicorn → Panda**. Abilities are unchanged; animal-specific upgrade names drafted by Claude, approved by Garret (Drowsy, Deep Sleep, Long Neck, Double Take, Trumpet, Trunk Toss, Bamboo Feast, Lucky Bamboo). The slow icon becomes a sleepy "Zzz".
 - **v1.11** — After the Phase 2 wrap-up playtest (Garret): **mounts can be doubled and sold** (not just Horses), so players can swap builds, e.g. an extra Horse for income, then sell it for a second Wolf before a boss. Wolves now (up to the slot count, 50% refund); the Phase 3 mounts follow the same rule. Tuning: base speed 70°/s (was 45), max boost +40% (was +50%), waves every 10 s (was 20). Send wave is blocked while more than 30 enemies are alive (revisit with Sticks and Rocks). Enemy clicks get a sound and a small pop.
 - **v1.10** — Prestige is **in v1.0** (Garret): after beating the Rusted King you can prestige, start a fresh run, and keep permanent boosts. Direction: a small permanent upgrade tree (starting kits, automation, multipliers, a couple of new things) and optional challenge modifiers after the first win (Wildfrost Storm Bells / Slay the Spire Ascension style) that raise prestige rewards. Details are designed before Phase 5. Resolves the prestige-scope DECISION PENDING. Also: bosses are timed challenges reached through a per-tier kill gate (TEMPORARY rule for Phase 3 playtests; see `planning/phase3/README.md`).
@@ -190,7 +191,7 @@ Six total mounts. Unlocked progressively. Each occupies one carousel slot. Each 
 - **Starting mount** — player begins with one Horse
 - **Extra Horses (v1.5):** more Horses can be bought into empty mount slots, each costing more than the last. A Horse can be sold back for a partial refund to free its slot. Every slot is a choice: another Horse for income, or a combat mount for defense. (v1.11: every mount type works this way, see Mount Slot Progression.)
 - **Art:** Classic carousel horse. Brown/chestnut. Simple side silhouette from top-down. Coin icon appears on booth pass.
-- **Color tier:** Saddle color changes per tier (grey → green → blue → purple → gold → red)
+- **Color tier:** Saddle color changes per tier (grey → green → yellow → orange → red → charcoal)
 - **Upgrades:** Tier 2 doubles Gold per pass. Tier 3 generates Gold on every sweep not just booth passes. Lucky Horseshoe adds a small triple-Gold chance.
 
 ---
@@ -268,12 +269,18 @@ Same color language applies to both enemies and mount upgrades so players learn 
 |---|---|---|
 | 1 | Grey | Starter |
 | 2 | Green | Moderate |
-| 3 | Blue | Challenging |
-| 4 | Purple | Hard |
-| 5 | Gold | Very Hard |
-| 6 | Red | Pre-boss / Elite |
+| 3 | Yellow | Challenging |
+| 4 | Orange | Hard |
+| 5 | Red | Very Hard |
+| 6 | Charcoal (light outline) | Pre-boss / Elite |
 
-Implementation: Use Godot Modulate property on Sprite2D to tint the base sprite. Same sprite, different modulate color = different tier. One sprite per enemy type supports all tiers.
+v1.13 (Garret, 2026-09-25): a danger ramp like WoW's enemy-difficulty colors (grey, green, yellow,
+orange, red), darker as tiers rise, ending in charcoal with a light outline so it stays visible.
+Research and a colorblind check: `planning/phase3/codex_memo_p_tier_colors.md`. Colorblind players
+tell Green through Red apart mostly by brightness, so tier UI also shows the tier number.
+
+Implementation: enemy art is light grey; the tier color multiplies it (Sprite2D self_modulate).
+Same sprite, different tint = different tier. One sprite per enemy type supports all tiers.
 
 ---
 
@@ -317,9 +324,9 @@ Implementation: Use Godot Modulate property on Sprite2D to tint the base sprite.
 | Leaf Storm | Leaf | On death splits into 4 Grey Leaves |
 | Stick Giant | Stick | Moves in zigzag — harder to intercept with the Giraffe |
 | Boulder | Rock | Has 3 separate latch points, rolls faster near carousel |
-| Gilded Gale | Leaf | Spawns 2 Gold Leaves per second while alive |
+| Gilded Gale | Leaf | Spawns 2 Gold Leaves per second while alive (tier colors changed in v1.13: re-pair the summon color, Garret) |
 | Ancient Log | Stick | Immune to Sloth slow, resists first 3 hits |
-| Obsidian Boulder | Rock | Splits into 2 Purple Rocks on first kill — must kill twice |
+| Obsidian Boulder | Rock | Splits into 2 Purple Rocks on first kill — must kill twice (v1.13: re-pair the split color, Garret) |
 | The Rusted King | Final Boss | See Final Boss section |
 
 Killing a boss awards a large Gold bonus, unlocks the next color tier, makes the next mount slot available to buy (first three bosses), and may unlock a new upgrade node.
@@ -436,10 +443,10 @@ Short, surprising bonuses that break up the idle rhythm, in the spirit of Cookie
 - Both ticket booths active
 - Upgrade trees largely maxed
 - Enemy combinations intense — Rocks plus Leaf swarms simultaneously
-- Red tier enemies are pre-boss difficulty
+- Charcoal tier enemies are pre-boss difficulty
 
 ### Endgame
-After defeating the Red tier boss, the Rusted King appears.
+After defeating the Charcoal tier boss, the Rusted King appears.
 
 ---
 

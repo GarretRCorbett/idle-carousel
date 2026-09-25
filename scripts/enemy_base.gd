@@ -53,6 +53,7 @@ var _latch_drag: float = 0.0
 var _latch_dps: float = 0.0
 var _kill_gold: float = 0.0
 var _tint: Color = Color.WHITE
+var _outline_color: Color = Color(1.0, 1.0, 1.0, 0.0)
 ## The Sprite's scale with no squash (fits the texture to data.placeholder_size).
 var _sprite_scale: Vector2 = Vector2.ONE
 ## Slow (and later freeze): timed effects that change how it moves.
@@ -61,6 +62,7 @@ var _status := EnemyStatus.new()
 ## Hit flash (modulate) and tumble (rotation). Tier tint and squash are on Sprite.
 @onready var _visual: Node2D = $Visual
 @onready var _sprite: Sprite2D = $Visual/Sprite
+@onready var _outline: Sprite2D = $Visual/Outline
 @onready var _health_bar: EnemyHealthBar = $HealthBar
 @onready var _slow_icon: EnemySlowIcon = $SlowIcon
 
@@ -92,6 +94,7 @@ func configure(tier: TierData, reward_multiplier: float) -> void:
 	_latch_dps = data.damage_per_second * (tier.latch_dps_multiplier if tier != null else 1.0)
 	_kill_gold = data.gold_drop * (tier.gold_multiplier if tier != null else 1.0) * reward_multiplier
 	_tint = tier.tint if tier != null else Color.WHITE
+	_outline_color = tier.outline_color if tier != null else Color(1.0, 1.0, 1.0, 0.0)
 	if is_node_ready():
 		_apply_tint()
 
@@ -264,6 +267,7 @@ func _process(delta: float) -> void:
 ## placeholder's diameter. No texture: the Sprite hides and Visual draws the
 ## placeholder polygon instead.
 func _setup_sprite() -> void:
+	_outline.visible = false
 	if data.texture == null:
 		_sprite.visible = false
 		return
@@ -277,12 +281,20 @@ func _setup_sprite() -> void:
 	# The squash changes scale every frame; smoothing would fight it. Its
 	# parents still move smoothly.
 	_sprite.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+	# Same pixel scale as the sprite, so the bigger outline sits evenly round it.
+	if data.outline_texture != null and _outline_color.a > 0.0:
+		_outline.texture = data.outline_texture
+		_outline.scale = _sprite_scale
+		_outline.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		_outline.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+		_outline.visible = true
 
 
 ## The tier color, as self_modulate: it tints only that node's own drawing and
 ## never fights the hit flash, which uses Visual's modulate.
 func _apply_tint() -> void:
 	_sprite.self_modulate = _tint
+	_outline.self_modulate = _outline_color
 	_visual.self_modulate = _tint  # the placeholder polygon, when there's no texture
 
 
@@ -290,6 +302,7 @@ func _apply_tint() -> void:
 func _update_squash() -> void:
 	if _sprite.visible:
 		_sprite.scale = _sprite_scale * get_squash()
+		_outline.scale = _sprite.scale
 	else:
 		_visual.queue_redraw()
 

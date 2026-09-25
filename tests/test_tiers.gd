@@ -59,7 +59,7 @@ func test_catalog_has_six_tiers_in_rank_order() -> void:
 	var ids: Array[StringName] = []
 	for tier in CATALOG.tiers:
 		ids.append(tier.tier_id)
-	assert_array(ids).is_equal([&"grey", &"green", &"blue", &"purple", &"gold", &"red"])
+	assert_array(ids).is_equal([&"grey", &"green", &"yellow", &"orange", &"red", &"charcoal"])
 	assert_object(CATALOG.get_tier(6)).is_null()
 	assert_object(CATALOG.get_tier(-1)).is_null()
 

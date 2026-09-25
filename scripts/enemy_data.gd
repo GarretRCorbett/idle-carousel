@@ -35,3 +35,6 @@ extends Resource
 ## Real sprite, light grey so the tier tint reads (tools/make_tier_sprites.gd).
 ## Leave empty to draw the placeholder polygon instead.
 @export var texture: Texture2D = null
+## White silhouette a little bigger than `texture`, drawn behind it in tiers
+## with an outline (TierData.outline_color). Built by make_tier_sprites.gd.
+@export var outline_texture: Texture2D = null

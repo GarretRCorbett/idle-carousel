@@ -12,6 +12,9 @@ extends Resource
 @export var name_key: String = ""
 ## Enemy color in this tier. Multiplies the (light grey) enemy art.
 @export var tint: Color = Color.WHITE
+## Light edge around enemies in this tier, for dark tints that would vanish on
+## the grass (Charcoal). Alpha 0 = no outline.
+@export var outline_color: Color = Color(1.0, 1.0, 1.0, 0.0)
 
 @export_group("Enemy multipliers")
 @export_range(0.01, 100.0, 0.01, "or_greater") var health_multiplier: float = 1.0

@@ -10,41 +10,42 @@
 [sub_resource type="Resource" id="leaf_entry"]
 script = ExtResource("entry_script")
 enemy_scene = ExtResource("leaf_scene")
-weight = 62.0
+weight = 60.0
 max_per_wave = 0
 unlock_after_kills = 0
 
 [sub_resource type="Resource" id="stick_entry"]
 script = ExtResource("entry_script")
 enemy_scene = ExtResource("stick_scene")
-weight = 25.0
-max_per_wave = 2
+weight = 30.0
+max_per_wave = 3
 unlock_after_kills = 0
 
 [sub_resource type="Resource" id="rock_entry"]
 script = ExtResource("entry_script")
 enemy_scene = ExtResource("rock_scene")
-weight = 13.0
-max_per_wave = 1
+weight = 10.0
+max_per_wave = 2
 unlock_after_kills = 0
 
 [sub_resource type="Resource" id="waves"]
 script = ExtResource("profile_script")
-interval_seconds = 12.0
-min_enemies = 5
-max_enemies = 8
-directions = 2
+interval_seconds = 14.0
+min_enemies = 6
+max_enemies = 10
+directions = 3
 entries = Array[ExtResource("entry_script")]([SubResource("leaf_entry"), SubResource("stick_entry"), SubResource("rock_entry")])
 
 [resource]
 script = ExtResource("1_script")
-tier_id = &"purple"
-rank = 3
-name_key = "TIER_PURPLE"
-tint = Color(0.72, 0.42, 0.95, 1)
-health_multiplier = 2.74
-speed_multiplier = 1.09
+tier_id = &"charcoal"
+rank = 5
+name_key = "TIER_CHARCOAL"
+tint = Color(0.2, 0.2, 0.23, 1)
+outline_color = Color(0.85, 0.85, 0.8, 0.9)
+health_multiplier = 5.38
+speed_multiplier = 1.16
 drag_multiplier = 1.0
-latch_dps_multiplier = 1.33
-gold_multiplier = 3.05
+latch_dps_multiplier = 1.61
+gold_multiplier = 6.41
 waves = SubResource("waves")

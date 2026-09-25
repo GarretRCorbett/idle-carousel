@@ -80,3 +80,25 @@ func test_stick_sways_while_approaching_and_stops_at_the_rim() -> void:
 	var held := visual.rotation
 	stick.advance(0.5)
 	assert_float(visual.rotation).is_equal(held)
+
+
+## Tiers with an outline color (Charcoal) show a light edge behind the sprite,
+## same scale and squash; tiers without one don't.
+func test_outline_shows_only_in_tiers_that_have_one() -> void:
+	var plain := _spawn(SCENES[2])
+	assert_bool((plain.get_node("Visual/Outline") as Sprite2D).visible).is_false()
+	var charcoal := load("res://resources/tiers/tier_catalog.tres").get_tier(5) as TierData
+	assert_float(charcoal.outline_color.a).is_greater(0.0)
+	var enemy := (load(SCENES[2]) as PackedScene).instantiate() as EnemyBase
+	enemy.configure(charcoal, 1.0)
+	add_child(enemy)
+	auto_free(enemy)
+	var outline := enemy.get_node("Visual/Outline") as Sprite2D
+	var sprite := enemy.get_node("Visual/Sprite") as Sprite2D
+	assert_bool(outline.visible).is_true()
+	assert_object(outline.self_modulate).is_equal(charcoal.outline_color)
+	assert_vector(outline.scale).is_equal(sprite.scale)
+	# The outline is bigger than the sprite on every side.
+	assert_bool(outline.texture.get_width() > sprite.texture.get_width()).is_true()
+	enemy.take_damage(0.5)
+	assert_vector(outline.scale).is_equal(sprite.scale)

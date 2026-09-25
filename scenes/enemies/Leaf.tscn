@@ -11,6 +11,9 @@ data = ExtResource("2_data")
 
 [node name="Visual" type="Node2D" parent="."]
 
+[node name="Outline" type="Sprite2D" parent="Visual"]
+visible = false
+
 [node name="Sprite" type="Sprite2D" parent="Visual"]
 
 [node name="HealthBar" type="Node2D" parent="."]

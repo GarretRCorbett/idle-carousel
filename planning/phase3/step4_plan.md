@@ -100,5 +100,5 @@ Then re-run `python tools/subset_fonts.py` for the CJK glyphs.
 - **Giraffe damage 0.75** (GDD data): a Grey Leaf (2 health) needs three Giraffe passes, and at
   70°/s it may get only one pass before the Leaf latches. It softens enemies for the Wolf rather
   than killing them. Try it; raise to 1.0 if it feels useless.
-- **Sloth reach 120 px** past its slot (to 195 px from the center): it slows enemies in their
+- **Sloth reach 120 px** (raised to **200 px** by Garret after the Step 4 build) past its slot: it slows enemies in their
   last ~2 seconds. Longer reach = slowed earlier.
