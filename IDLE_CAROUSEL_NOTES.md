@@ -24,6 +24,10 @@ _Update at the end of every session._
 
 ## 🚧 To-Do / Things To Add
 
+### Auto-clickers (Garret, 2026-09-25, after Step 8)
+- [ ] Clicking speed swings run length a lot in the sims (1 click/s ≈ 2:36, 2 clicks/s ≈ 1:16). Playtest first and keep it in mind.
+- [ ] Plan an **auto-clicker for enemies** and one **for Boost**. They could come after a prestige, as a very expensive shop item, or as a relic or random event. Design this with the prestige tree (GDD v1.10 already lists automation there).
+
 ### Tier colors and progression feel (Garret, 2026-09-25)
 - [ ] **Tier color order feels off.** Grey is a good start, but maybe grey → green → yellow → orange → red → black reads better as "getting stronger". Claude + Codex researching color order and what players expect (studies, game conventions, Steam/Reddit); memo in `planning/phase3/`. Tier colors are also in the GDD, so a change is a GDD update.
 - [ ] **Force the first boss early**, before too many more upgrades, tier colors, or tier switching. Open: how the boss challenge and tier selection look (another shop tab? buttons under the shop? a new panel on the right?). Claude + Codex drafting options (Phase 3 Step 6 builds it).

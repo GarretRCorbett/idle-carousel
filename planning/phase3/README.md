@@ -332,7 +332,7 @@ Grouped by when they're needed. Recommendations marked ★. Full reasoning is in
 
 **Before Step 8 (pricing)**
 22. Idle speed: ★ test 60°/s base (from 45) / keep 45 and cheapen early upgrades / wait for hold-to-boost. (M6)
-23. Booth prices: ★ milestones ≈500 / 2,500 / 8,000 / keep ×1.5 / lock booths to tiers. This changes the GDD's booth rule. (M7)
+~~23. Booth prices~~ **Answered 2026-09-25 (Garret: "go with what made the most sense from the sims"): 1,500 Gold, each next booth ×1.8 (1,500 / 2,700 / 4,860), from the Step 8 sims. GDD v1.16.** Was: ★ milestones ≈500 / 2,500 / 8,000 / keep ×1.5 / lock booths to tiers. This changes the GDD's booth rule. (M7)
 24. Manual wave stacking: ★ leave it unlimited, restrict it if a playtest shows abuse / one unresolved manual wave at a time now. (M8)
 
 **Performance (before Step 2; see `claude_memo_performance.md`)**

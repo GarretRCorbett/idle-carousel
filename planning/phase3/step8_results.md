@@ -60,10 +60,7 @@ Every price, health value and growth rate is a draft. The ticket booth price (1,
 - **Idle farming (0.2 clicks/s), 1.5 clicks/s in fights (seed 1):** stuck on Leaf Storm until 1:02, losing 13 times (it's click-only and early Gold comes slowly). Then the mounts carry: bosses 2–6 fall at 1:05, 1:17, 1:52, 2:06 and 2:39. The finish matches the 1 click/s player; only the first boss is a wall.
 - **After all upgrades are bought (around 2:30)**, Gold has nothing left to buy. That's fine for Phase 3; Phase 4's full upgrade tree fills it.
 
-## Open for Garret
-1. Is it OK that clicking speed changes the run length this much (1 click/s = 2:36, 2 clicks/s = 1:16)? Options:
-   - ★ Keep it; the playtest will tell.
-   - Cap click damage per second.
-   - Give Leaf Storm a mount-damageable part.
-2. Booth prices (question 23): keep the draft 1,500 ×1.8, or the ★ milestones 500 / 2,500 / 8,000?
-3. Questions 22 (idle speed) and 24 (manual wave stacking) are still open; Step 8 didn't need them.
+## Garret's answers (2026-09-25)
+1. Click speed changing the run length: **playtest first and keep it in mind.** Auto-clickers (one for enemies, one for Boost) are noted for later as prestige unlocks, expensive shop items, relics or random events (`IDLE_CAROUSEL_NOTES.md`).
+2. Booth prices: **go with the sims**, so 1,500 Gold, each next booth ×1.8 (question 23 answered, GDD v1.16).
+3. Questions 22 (idle speed) and 24 (manual wave stacking) stay open; the playtest will show whether they matter.

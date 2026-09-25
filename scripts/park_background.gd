@@ -1,20 +1,32 @@
 class_name ParkBackground
 extends Node2D
-## The play-field backdrop, a small formal park (Garret: "a park, not a
-## forest"; memo T/Codex): grass, a stone plaza under the carousel with a paved
-## ring path and two short paths leading off, two flower beds with benches,
-## a few lamps, and just two trees. Everything but the grass and trees is
-## drawn in code; nothing moves or looks like an enemy, and the middle stays
-## quiet so Leaves and mounts are easy to see. Lives first under World,
-## centered on the carousel.
+## The play-field backdrop, a theme-park plaza (Garret: "more concrete like
+## a theme park, less grass"): warm pavement in big slabs, a stone plaza under
+## the carousel with a brick ring and two brick walkways, grass only in curbed
+## planters, flower beds with benches, a few lamps, a cart and two trees.
+## Everything but the trees is drawn in code; nothing moves or looks like an
+## enemy, and the middle stays quiet so Leaves and mounts are easy to see.
+## Lives first under World, centered on the carousel.
 
-@export var grass_texture: Texture2D
-## Darkens and warms the grass (1 = original colors).
-@export var grass_tint: Color = Color(0.72, 0.86, 0.74)
-## How far the grass extends from the center; big enough to cover the screen.
-@export var grass_half_size: Vector2 = Vector2(1100.0, 700.0)
-## Scale of each grass tile.
-@export_range(0.25, 8.0, 0.25) var grass_tile_scale: float = 1.5
+@export_group("Pavement")
+## Warm concrete, like a theme park's walkways; big enough to cover the screen.
+@export var pavement_color: Color = Color("e2d6bf")
+@export var pavement_half_size: Vector2 = Vector2(1100.0, 700.0)
+## Square slabs with faint joints.
+@export_range(16.0, 256.0, 1.0, "suffix:px") var slab_size: float = 80.0
+@export var slab_joint_color: Color = Color(0.45, 0.36, 0.25, 0.14)
+
+@export_group("Planters")
+## Curbed lawns (rects from the carousel center), the only grass. Keep them
+## clear of the walkways and near the screen edges.
+@export var planters: Array[Rect2] = [
+	Rect2(-620.0, 140.0, 260.0, 210.0), Rect2(-340.0, -300.0, 140.0, 76.0),
+	Rect2(110.0, 240.0, 225.0, 120.0),
+]
+@export var lawn_color: Color = Color("86b98c")
+@export var curb_color: Color = Color("fff4dc")
+@export_range(0.0, 20.0, 1.0, "suffix:px") var curb_width: float = 5.0
+@export_range(0.0, 80.0, 1.0, "suffix:px") var planter_corner_radius: float = 24.0
 
 @export_group("Clearing")
 @export var clearing_color: Color = Color("ccc4b5")
@@ -37,7 +49,7 @@ extends Node2D
 @export_group("Flower beds and benches")
 ## Bed centers (from the carousel center); each gets a bench beside it.
 ## Benches are blue and level, so they never look like a Stick flying in.
-@export var flower_beds: PackedVector2Array = PackedVector2Array([Vector2(-270.0, -250.0), Vector2(262.0, 250.0)])
+@export var flower_beds: PackedVector2Array = PackedVector2Array([Vector2(-270.0, -262.0), Vector2(262.0, 262.0)])
 @export var bed_size: Vector2 = Vector2(96.0, 46.0)
 @export var bed_edge_color: Color = Color("765642")
 @export var bed_soil_color: Color = Color("6f9a79")
@@ -65,7 +77,7 @@ extends Node2D
 ## Where trees stand (from the center) and how big; x, y, scale. Keep them out
 ## near the edges, away from where Leaves fly in and latch.
 @export var trees: PackedVector3Array = PackedVector3Array([
-	Vector3(-320.0, 250.0, 2.1), Vector3(315.0, -280.0, 2.1),
+	Vector3(-490.0, 245.0, 2.1), Vector3(160.0, 300.0, 1.6),
 ])
 @export var tree_tint: Color = Color(0.85, 0.95, 0.88)
 
@@ -76,13 +88,11 @@ func _ready() -> void:
 
 
 func _draw() -> void:
-	if grass_texture != null:
-		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE * grass_tile_scale)
-		var half := grass_half_size / grass_tile_scale
-		draw_texture_rect(grass_texture, Rect2(-half, half * 2.0), true, grass_tint)
-		draw_set_transform(Vector2.ZERO)
+	_draw_pavement()
 	var ring_outer := clearing_radius + ring_width
 	_draw_paths(ring_outer)
+	for planter in planters:
+		_draw_planter(planter)
 	# The ring path, then the plaza on top of its inner half.
 	draw_circle(Vector2.ZERO, ring_outer + 3.0, edging_color, true, -1.0, true)
 	draw_circle(Vector2.ZERO, ring_outer, paving_color, true, -1.0, true)
@@ -105,6 +115,30 @@ func _draw() -> void:
 		var spot := trees[i]
 		var size := texture.get_size() * spot.z
 		draw_texture_rect(texture, Rect2(Vector2(spot.x, spot.y) - size / 2.0, size), false, tree_tint)
+
+
+func _draw_pavement() -> void:
+	var half := pavement_half_size
+	draw_rect(Rect2(-half, half * 2.0), pavement_color)
+	var x := -floorf(half.x / slab_size) * slab_size
+	while x <= half.x:
+		draw_line(Vector2(x, -half.y), Vector2(x, half.y), slab_joint_color, 1.0)
+		x += slab_size
+	var y := -floorf(half.y / slab_size) * slab_size
+	while y <= half.y:
+		draw_line(Vector2(-half.x, y), Vector2(half.x, y), slab_joint_color, 1.0)
+		y += slab_size
+
+
+## A lawn with an ivory curb and rounded corners.
+func _draw_planter(rect: Rect2) -> void:
+	var box := StyleBoxFlat.new()
+	box.bg_color = lawn_color
+	box.border_color = curb_color
+	box.set_border_width_all(int(curb_width))
+	box.set_corner_radius_all(int(planter_corner_radius))
+	box.anti_aliasing = true
+	draw_style_box(box, rect)
 
 
 func _draw_paths(ring_outer: float) -> void:

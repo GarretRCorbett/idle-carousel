@@ -1,5 +1,5 @@
 # 🎠 Idle Carousel — Game Design Document
-### Version 1.15 | Working Title: Idle Carousel
+### Version 1.16 | Working Title: Idle Carousel
 > Solo dev project. Built in Godot 4.7 stable. Target: Steam release, anonymous, $4.99 (sale target ~$3.49–$3.75), with a free demo.
 > Personal motivation: daughters love carousels.
 > Influences: Cookie Clicker, Clicker Heroes, A Game About Feeding a Black Hole, Rusty's Retirement.
@@ -7,6 +7,7 @@
 ---
 
 ## Changelog
+- **v1.16** — Pricing pass (Phase 3 Step 8, Garret): the **Ticket Booth** now starts at 1,500 Gold and each next booth costs ×1.8 (was 500, ×1.5), picked from economy-sim runs. All prices, growth rates and boss health are tuned in the data files to a 15 / 20 / 25 / 30 / 35 / 35 min boss pace; results in `planning/phase3/step8_results.md`.
 - **v1.15** — Boss details for Phase 3 Step 7 (Garret): Gilded Gale trickles summons, Ancient Log blunts its first 3 hits, Boulder's latch points have their own health, Obsidian Boulder is two stages; every split piece must die for a win.
 - **v1.14** — First boss and gating (Garret, Phase 3 Step 6): Leaf Storm drifts, warns, and throws packs of ~20 storm leaves (then splits into 4); boss strip above the carousel with numbered tier pips; beaten bosses can be re-fought for a smaller reward; Horse and Wolf are the only mounts before it; waves are about twice as big. Details: `planning/phase3/step6_plan.md`.
 - **v1.13** — Tier colors reordered (Garret): Grey → Green → Yellow → Orange → Red → Charcoal (light outline), a danger ramp. Boss summon/split colors to re-pair.

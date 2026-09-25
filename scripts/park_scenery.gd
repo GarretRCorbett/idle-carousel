@@ -1,7 +1,7 @@
 class_name ParkScenery
 extends Control
-## The title screen's park, drawn over the sky backdrop: a lawn and a paved
-## promenade, a row of storybook shop-houses on each side (the middle stays
+## The title screen's park, drawn over the sky backdrop: a concrete plaza
+## with a thin planter strip and a red-brick promenade, a row of storybook shop-houses on each side (the middle stays
 ## clear for the title and carousel), an iron fence, a few bushes, and lamp
 ## posts with bunting strung between them. Kenney Background Elements sprites
 ## plus code-drawn lamps, bunting, shop awnings, balloons and a red-brick
@@ -9,10 +9,15 @@ extends Control
 ## are fractions of the screen, so it fits any window size. Kept sparse on purpose.
 
 @export_group("Ground")
-## Where the lawn starts (fraction of the height from the top).
+## Where the ground starts (fraction of the height from the top).
 @export_range(0.3, 1.0, 0.01) var horizon: float = 0.7
-@export var lawn_color: Color = Color("8fbf96")
-@export var lawn_far_color: Color = Color("a9cfae")
+## Warm concrete, like a theme park's walkways (Garret: "more concrete").
+@export var pavement_color: Color = Color("e2d6bf")
+@export var slab_joint_color: Color = Color(0.45, 0.36, 0.25, 0.16)
+## The only grass: a planter strip along the fence, with an ivory curb.
+@export var lawn_color: Color = Color("86b98c")
+@export var curb_color: Color = Color("fff4dc")
+@export_range(0.0, 0.2, 0.005) var planter_height: float = 0.035
 ## Warm brick, like a theme park's main street.
 @export var promenade_color: Color = Color("c9826a")
 @export var brick_line_color: Color = Color(0.45, 0.2, 0.15, 0.22)
@@ -71,9 +76,8 @@ func _draw() -> void:
 	var h := size.y
 	var ground_y := h * horizon
 	_draw_houses(w, h, ground_y)
-	# Lawn (a lighter strip far away), then the promenade.
-	draw_rect(Rect2(0.0, ground_y, w, h - ground_y), lawn_color)
-	draw_rect(Rect2(0.0, ground_y, w, h * 0.025), lawn_far_color)
+	# Pavement, the planter strip along the fence, then the promenade.
+	_draw_pavement(w, h, ground_y)
 	_draw_promenade(w, h)
 	_draw_fence(w, h, ground_y)
 	_draw_bushes(w, h, ground_y)
@@ -166,6 +170,27 @@ func _draw_awning(house: Rect2) -> void:
 		var color: Color = awning_colors[i % awning_colors.size()]
 		draw_rect(Rect2(top + Vector2(stripe * i, 0.0), Vector2(stripe, height)), color)
 		draw_circle(top + Vector2(stripe * (i + 0.5), height), stripe / 2.0, color, true, -1.0, true)
+
+
+## Concrete slabs seen at a low angle: rows get taller toward the viewer,
+## joints run to a vanishing point above the middle. The planter strip sits
+## on top, right under the fence.
+func _draw_pavement(w: float, h: float, ground_y: float) -> void:
+	draw_rect(Rect2(0.0, ground_y, w, h - ground_y), pavement_color)
+	var strip_bottom := ground_y + h * planter_height
+	var y := strip_bottom
+	var row := h * 0.03
+	while y < h:
+		draw_line(Vector2(0.0, y), Vector2(w, y), slab_joint_color, 1.0)
+		y += row
+		row *= 1.35
+	var vanish := Vector2(w / 2.0, ground_y - h * 0.5)
+	for i in range(-12, 13):
+		var foot := Vector2(w / 2.0 + i * w * 0.09, h)
+		var t := (strip_bottom - vanish.y) / (foot.y - vanish.y)
+		draw_line(vanish.lerp(foot, t), foot, slab_joint_color, 1.0, true)
+	draw_rect(Rect2(0.0, ground_y, w, h * planter_height), lawn_color)
+	draw_line(Vector2(0.0, strip_bottom), Vector2(w, strip_bottom), curb_color, 3.0)
 
 
 ## Warm brick: the band plus faint mortar lines, staggered row to row.
