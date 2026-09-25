@@ -17,19 +17,21 @@ extends Node2D
 ## Slabs with faint joints; each row is offset by half a slab, like real
 ## pavement.
 @export var slab_size: Vector2 = Vector2(96.0, 64.0)
-@export var slab_joint_color: Color = Color(0.45, 0.36, 0.25, 0.14)
+@export var slab_joint_color: Color = Color(0.45, 0.36, 0.25, 0.09)
+## No slab joints this close to the carousel, so the busy middle stays quiet.
+@export_range(0.0, 600.0, 1.0, "suffix:px") var quiet_radius: float = 230.0
 
 @export_group("Planters")
 ## Curbed lawns (rects from the carousel center), the only grass. Keep them
 ## clear of the walkways and near the screen edges.
 @export var planters: Array[Rect2] = [
-	Rect2(-620.0, 140.0, 260.0, 210.0), Rect2(-340.0, -300.0, 140.0, 76.0),
+	Rect2(-560.0, 185.0, 190.0, 140.0), Rect2(-340.0, -300.0, 140.0, 76.0),
 	Rect2(110.0, 240.0, 225.0, 120.0),
 ]
 @export var lawn_color: Color = Color("86b98c")
 @export var curb_color: Color = Color("fff4dc")
 @export_range(0.0, 20.0, 1.0, "suffix:px") var curb_width: float = 5.0
-@export_range(0.0, 80.0, 1.0, "suffix:px") var planter_corner_radius: float = 24.0
+@export_range(0.0, 80.0, 1.0, "suffix:px") var planter_corner_radius: float = 38.0
 
 @export_group("Clearing")
 @export var clearing_color: Color = Color("ccc4b5")
@@ -40,10 +42,12 @@ extends Node2D
 @export_group("Paths")
 ## The paved ring around the plaza, and its edging.
 @export_range(0.0, 200.0, 1.0, "suffix:px") var ring_width: float = 34.0
-## Warm brick for the ring and paths, like a theme park's main street.
-@export var paving_color: Color = Color("d49c83")
-@export var edging_color: Color = Color("fff4dc")
-@export var joint_color: Color = Color(0.45, 0.2, 0.15, 0.18)
+## Light beige for the ring and walkways (lighter than the pavement, like
+## the walkways on a theme-park map), bordered in warm brick.
+@export var paving_color: Color = Color("f2e9d8")
+@export var edging_color: Color = Color("c68b73")
+@export_range(0.0, 20.0, 1.0, "suffix:px") var edging_width: float = 8.0
+@export var joint_color: Color = Color(0.45, 0.36, 0.25, 0.12)
 ## Walkways leading off the ring, each a curve through 4 points (a cubic
 ## Bezier from the carousel center outward; the ring hides the start). Keep
 ## them clear of the planters.
@@ -73,25 +77,29 @@ extends Node2D
 @export_group("Umbrella cart")
 ## A concession cart under a striped umbrella (a little carousel echo).
 ## Empty = none.
-@export var carts: PackedVector2Array = PackedVector2Array([Vector2(-70.0, -245.0)])
+## Beside a bench, away from the carousel; soft stripes so it never reads
+## as a second little carousel.
+@export var carts: PackedVector2Array = PackedVector2Array([Vector2(175.0, 205.0)])
 @export var cart_color: Color = Color("405d83")
-@export var umbrella_colors: Array[Color] = [Color("fff4dc"), Color("70568b")]
+@export var umbrella_colors: Array[Color] = [Color("fff4dc"), Color("a9bcd6")]
 @export_range(8.0, 60.0, 1.0, "suffix:px") var umbrella_radius: float = 22.0
 
 @export_group("Lamps")
 ## Lamp posts just outside the ring (degrees round the plaza).
 ## Placed to flank the walkways.
 @export var lamp_angles_deg: PackedFloat32Array = PackedFloat32Array([20.0, 70.0, 110.0, 160.0, 200.0, 340.0])
+## Kept quiet (navy, small globes, a faint glow) so lamps never read as
+## yellow enemies or pickups (Codex look review).
 @export var lamp_color: Color = Color("fff4dc")
-@export var lamp_rim_color: Color = Color("ddb96a")
-@export var lamp_glow_color: Color = Color(1.0, 0.85, 0.55, 0.25)
+@export var lamp_rim_color: Color = Color("243955")
+@export var lamp_glow_color: Color = Color(1.0, 0.85, 0.55, 0.1)
 
 @export_group("Trees")
 @export var tree_textures: Array[Texture2D] = []
 ## Where trees stand (from the center) and how big; x, y, scale. Keep them out
 ## near the edges, away from where Leaves fly in and latch.
 @export var trees: PackedVector3Array = PackedVector3Array([
-	Vector3(-490.0, 245.0, 2.1), Vector3(160.0, 300.0, 1.6),
+	Vector3(-465.0, 255.0, 1.5), Vector3(160.0, 300.0, 1.5),
 ])
 @export var tree_tint: Color = Color(0.85, 0.95, 0.88)
 
@@ -104,22 +112,23 @@ func _ready() -> void:
 func _draw() -> void:
 	_draw_pavement()
 	var ring_outer := clearing_radius + ring_width
-	_draw_paths()
 	for planter in planters:
 		_draw_planter(planter)
-	# The ring path, then the plaza on top of its inner half.
-	draw_circle(Vector2.ZERO, ring_outer + 3.0, edging_color, true, -1.0, true)
+	# Walkway borders, the ring with its border, then the walkway fills on top
+	# (so the border opens where each walkway joins), then the stone plaza.
+	_draw_paths()
+	draw_circle(Vector2.ZERO, ring_outer + edging_width, edging_color, true, -1.0, true)
 	draw_circle(Vector2.ZERO, ring_outer, paving_color, true, -1.0, true)
+	_draw_path_fills()
 	for i in 36:
 		var direction := Vector2.from_angle(TAU * i / 36.0)
 		draw_line(direction * clearing_radius, direction * ring_outer, joint_color, 1.0, true)
-	draw_circle(Vector2.ZERO, clearing_radius + 2.0, edging_color, true, -1.0, true)
+	draw_circle(Vector2.ZERO, clearing_radius + 3.0, curb_color, true, -1.0, true)
 	draw_circle(Vector2.ZERO, clearing_radius, clearing_color, true, -1.0, true)
 	for i in flower_beds.size():
 		_draw_bed(flower_beds[i], i)
 	for angle in lamp_angles_deg:
-		var direction := Vector2.from_angle(deg_to_rad(angle))
-		_draw_lamp(direction * (ring_outer + 16.0), direction)
+		_draw_lamp(Vector2.from_angle(deg_to_rad(angle)) * (ring_outer + 16.0))
 	for cart in carts:
 		_draw_cart(cart)
 	for i in trees.size():
@@ -144,6 +153,7 @@ func _draw_pavement() -> void:
 			x += slab_size.x
 		y += slab_size.y
 		row += 1
+	draw_circle(Vector2.ZERO, quiet_radius, pavement_color, true, -1.0, true)
 
 
 ## A lawn with an ivory curb and rounded corners.
@@ -161,8 +171,15 @@ func _draw_paths() -> void:
 	for walkway in walkways:
 		if walkway.size() != 4:
 			continue
-		draw_colored_polygon(_walkway_outline(walkway, 6.0), edging_color)
-		draw_colored_polygon(_walkway_outline(walkway, 0.0), paving_color)
+		draw_colored_polygon(_walkway_outline(walkway, edging_width * 2.0), edging_color)
+
+
+## The walkway fills, drawn over the ring's border so each walkway opens
+## into the ring instead of stopping at it.
+func _draw_path_fills() -> void:
+	for walkway in walkways:
+		if walkway.size() == 4:
+			draw_colored_polygon(_walkway_outline(walkway, 0.0), paving_color)
 
 
 ## The walkway's outline: both edges of the curve at its width there (wide at
@@ -210,15 +227,11 @@ func _draw_bed(center: Vector2, index: int) -> void:
 	draw_rect(Rect2(bench.position + Vector2(0.0, 5.0), Vector2(bench.size.x, 3.0)), bench_leg_color)
 
 
-## An old-fashioned double lamp seen from above: a soft glow, a gold bar,
-## and two ivory globes with gold rims, side by side along the ring.
-func _draw_lamp(spot: Vector2, outward: Vector2) -> void:
-	var along := Vector2(-outward.y, outward.x) * 8.0
-	draw_circle(spot, 22.0, lamp_glow_color, true, -1.0, true)
-	draw_line(spot - along, spot + along, lamp_rim_color, 3.0, true)
-	for globe in [spot - along, spot + along]:
-		draw_circle(globe, 6.0, lamp_rim_color, true, -1.0, true)
-		draw_circle(globe, 4.2, lamp_color, true, -1.0, true)
+## A lamp seen from above: a faint glow and one ivory globe in a navy rim.
+func _draw_lamp(spot: Vector2) -> void:
+	draw_circle(spot, 13.0, lamp_glow_color, true, -1.0, true)
+	draw_circle(spot, 6.0, lamp_rim_color, true, -1.0, true)
+	draw_circle(spot, 4.0, lamp_color, true, -1.0, true)
 
 
 ## A cart peeking out under a striped umbrella, seen from above.
