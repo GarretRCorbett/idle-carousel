@@ -35,6 +35,8 @@ signal stall_timed_out
 signal emergency_cleared
 ## Emitted after every value has been reset, before the fresh values are re-announced.
 signal run_reset
+## The tier new waves come from changed (0 = Grey). Enemies already alive keep theirs.
+signal selected_tier_changed(rank: int)
 
 ## One latched enemy's share of drag and damage, and how long it has held on
 ## (damage starts after the grace period).
@@ -86,6 +88,10 @@ var _elapsed: float = 0.0
 ## Picked fresh each run; seeds wave randomness so a run can be replayed
 ## (speedrun-friendly, Garret 2026-09-24).
 var _run_seed: int = 0
+## Tier new waves come from, and kills per tier this run (by tier rank).
+## Plain values so Step 6 can save them.
+var _selected_tier: int = 0
+var _tier_kills: Dictionary[int, int] = {}
 # Latched enemies by instance ID. Totals are recomputed from this, so removing
 # one enemy removes exactly its share.
 var _latches: Dictionary[int, Latch] = {}
@@ -149,6 +155,8 @@ func reset_run(config_override: RunConfig = null) -> void:
 	_recent_income = 0.0
 	_elapsed = 0.0
 	_run_seed = randi()
+	_selected_tier = 0
+	_tier_kills.clear()
 	# Set everything first so listeners never see a half-reset run.
 	run_reset.emit()
 	gold_changed.emit(_gold, 0.0)
@@ -163,6 +171,7 @@ func reset_run(config_override: RunConfig = null) -> void:
 	latch_count_changed.emit(0)
 	stall_changed.emit(false)
 	crank_changed.emit(0.0)
+	selected_tier_changed.emit(0)
 
 
 # --- Gold -------------------------------------------------------------------
@@ -599,6 +608,30 @@ func _emit_speed_if_changed(previous_speed: float) -> void:
 
 func get_run_seed() -> int:
 	return _run_seed
+
+
+# --- Tiers ----------------------------------------------------------------------
+
+func get_selected_tier() -> int:
+	return _selected_tier
+
+
+## Waves from now on come from this tier. Game checks the rank is a real tier.
+func set_selected_tier(rank: int) -> void:
+	if rank < 0 or rank == _selected_tier:
+		return
+	_selected_tier = rank
+	selected_tier_changed.emit(rank)
+
+
+## A kill counts for the enemy's own tier, not the one selected when it died.
+## Only kills count; Emergency Clear and the stall safety net don't call this.
+func record_kill(tier_rank: int) -> void:
+	_tier_kills[tier_rank] = get_tier_kills(tier_rank) + 1
+
+
+func get_tier_kills(tier_rank: int) -> int:
+	return _tier_kills.get(tier_rank, 0)
 
 
 # --- Clicking ---------------------------------------------------------------------

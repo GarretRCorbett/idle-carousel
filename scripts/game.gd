@@ -12,6 +12,11 @@ extends Node2D
 ## Every color tier. Waves come from the selected one (Grey until Step 6's picker).
 @export var tier_catalog: TierCatalog = preload("res://resources/tiers/tier_catalog.tres")
 
+@export_group("Dev keys")
+## Debug builds only, until Step 6 adds the tier picker: previous / next tier.
+@export var previous_tier_key: Key = KEY_F2
+@export var next_tier_key: Key = KEY_F3
+
 @export_group("Pops")
 ## Ring on a click that doesn't kill, and on enemies removed without Gold
 ## (Emergency Clear, the stall safety net).
@@ -60,6 +65,8 @@ func _ready() -> void:
 	_click_router.enemy_clicked.connect(_on_enemy_clicked)
 	_wave_manager.center = _carousel.position
 	_wave_manager.tier = tier_catalog.get_tier(0)
+	_wave_manager.tier_kills = func() -> int: return GameState.get_tier_kills(GameState.get_selected_tier())
+	GameState.selected_tier_changed.connect(_on_selected_tier_changed)
 	_wave_manager.live_enemy_count = get_live_enemy_count
 	_wave_manager.enemy_spawned.connect(_on_enemy_spawned)
 	_wave_manager.countdown_changed.connect(_hud.set_wave_countdown)
@@ -91,6 +98,25 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"ui_cancel") and not _options.visible:
 		_options.open()
 		get_viewport().set_input_as_handled()
+		return
+	var key := event as InputEventKey
+	if key != null and key.pressed and not key.echo and OS.is_debug_build():
+		var step := 0
+		if key.keycode == previous_tier_key:
+			step = -1
+		elif key.keycode == next_tier_key:
+			step = 1
+		if step != 0:
+			var rank := clampi(GameState.get_selected_tier() + step, 0, tier_catalog.tiers.size() - 1)
+			GameState.set_selected_tier(rank)
+			get_viewport().set_input_as_handled()
+
+
+## New waves come from the selected tier; enemies already alive keep their stats.
+func _on_selected_tier_changed(rank: int) -> void:
+	var tier := tier_catalog.get_tier(rank)
+	if tier != null:
+		_wave_manager.tier = tier
 
 
 func _exit_tree() -> void:
@@ -268,6 +294,7 @@ func _on_enemy_reached_rim(enemy: EnemyBase) -> void:
 ## killer (the mount, or null for a click) isn't used yet; the Panda will be.
 func _on_enemy_died(enemy: EnemyBase, _killer: Node) -> void:
 	GameState.add_gold(enemy.get_kill_gold())
+	GameState.record_kill(enemy.get_tier_rank())
 	AudioManager.play_sfx(&"pop")
 	_spawn_pop(enemy.global_position, true)
 	_remove_enemy(enemy)
