@@ -8,8 +8,8 @@
 script = ExtResource("1_script")
 enemy_name = "Stick Giant"
 move_speed = 30.0
-base_health = 55.0
-damage_per_second = 2.0
+base_health = 200.0
+damage_per_second = 1.0
 latch_drag = 0.3
 hitbox_radius = 30.0
 click_radius = 44.0

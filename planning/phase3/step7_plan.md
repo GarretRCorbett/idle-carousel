@@ -49,3 +49,22 @@ a win in roughly 60–80% of the timer with some pressure; no clicking and a thi
 Each boss: its behavior (zigzag bearing swing, faster roll near the rim, trickle timing, the 25%
 armor for 3 hits and slow immunity, the split into 2 Red Rocks), its win rule (all REQUIRED pieces
 dead), protected latches, and a data test that every tier has a valid boss.
+
+## Balance run (tools/boss_sim.tscn, 2026-09-25)
+The first health values were far too low (every boss after Leaf Storm died in 13-21% of its
+timer). Raised base health (Stick Giant 200, Boulder 300, Gilded Gale 230, Ancient Log 220,
+Obsidian Boulder 200; tier multipliers on top). The latching bosses then stalled the carousel for
+8-32 s, so their latch damage came down (Stick Giant 1.0, each Boulder grip 0.4, Ancient Log 0.9,
+Obsidian 0.8). With the guessed builds in the tool, at 1.5 clicks/s:
+
+| Boss | Result | Lowest health | Stalled |
+|---|---|---|---|
+| Leaf Storm (Horse + Wolf) | win at 66 s of 90 (73%) | 29 | 0 s |
+| Stick Giant (2 Wolves, Giraffe) | 75 s of 120 (62%) | 30 | 0 s |
+| Boulder (+ Elephant, Wolf Tier 2) | 67 s of 120 (56%) | 39 | 0 s |
+| Gilded Gale (+ Sloth, Giraffe Tier 2) | 104 s of 150 (70%) | **100** | 0 s |
+| Ancient Log (Panda build) | 87 s of 150 (58%) | 7 | 0 s |
+| Obsidian Boulder (late build) | 96 s of 180 (53%) | 0 | 2 s (the Red Rocks finale) |
+
+Open: the Gilded Gale's trickle (2 Leaves every 4 s, Garret's pick) never threatens a mid-game
+build; it's a pure damage race. Options for Garret: more per trickle, or faster.

@@ -28,8 +28,11 @@
   state (6.3), gating behind bosses (6.4), BossEncounter + Leaf Storm (6.5), boss strip (6.6),
   tuning from `tools/boss_sim.tscn`. GDD v1.14.
 - Garret playtested Step 6 twice (very positive); strip shifting fixed. Step 7 questions answered.
-- **Next:** Step 7 plan (the other five bosses), then Step 8 (economy simulator + pricing), Step 9
-  (full playtest, Codex review, sign-off).
+- **Step 7 built** (`step7_plan.md`): all five bosses, tuned with `tools/boss_sim.tscn` (now every
+  tier). Found and fixed while rendering palettes: the boss strip had made the HUD wider than the
+  screen. Palette research in memo T (renders in `palette/`), waiting on Garret's pick.
+- **Next:** Garret picks a palette (memo T) and playtests the new bosses; Step 8 (economy
+  simulator + pricing), Step 9 (full playtest, Codex review, sign-off).
 
 Phase 3 roadmap scope: Sloth, Giraffe, Elephant, Panda; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)

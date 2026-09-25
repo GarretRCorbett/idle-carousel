@@ -18,7 +18,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> **Phase 3 (2026-09-25):** Steps 2–6 done: every Phase 3 mount, tier colors, bigger waves, the first boss (Leaf Storm) with the boss strip, tier pips and gating. Garret's two playtests went well (strip shifting fixed). Step 7 boss questions answered (GDD v1.15). Next: the Step 7 plan (the other five bosses). Status: `planning/phase3/README.md`.
+> **Phase 3 (2026-09-25):** Steps 2–6 done: every Phase 3 mount, tier colors, bigger waves, the first boss (Leaf Storm) with the boss strip, tier pips and gating. Garret's two playtests went well (strip shifting fixed). Step 7 boss questions answered (GDD v1.15). Step 7 is built: all six tier bosses, tuned headless. Palette research ready (memo T, renders in `planning/phase3/palette/`). Next: Garret picks a palette and playtests the bosses; then Step 8 (economy simulator + pricing). Status: `planning/phase3/README.md`.
 
 ---
 

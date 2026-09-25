@@ -157,4 +157,4 @@ A game gets only one Next Fest, so this is the one.
 ## Next Concrete Step
 _Update this line at the end of every session._
 
-> Phase 3 Step 7 plan: the other five bosses (their design questions are answered, GDD v1.15). Where Phase 3 stands: `planning/phase3/README.md`.
+> Garret: pick a palette (memo T) and playtest the six bosses; then Phase 3 Step 8 (economy simulator + pricing). Where Phase 3 stands: `planning/phase3/README.md`.
