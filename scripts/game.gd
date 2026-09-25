@@ -9,6 +9,17 @@ extends Node2D
 ## around this circle, the first one at the top (where the first booth is).
 @export_range(10.0, 400.0, 1.0, "suffix:px") var mount_radius: float = 75.0
 
+@export_group("Pops")
+## Ring on a click that doesn't kill, and on enemies removed without Gold
+## (Emergency Clear, the stall safety net).
+@export var hit_pop_color: Color = Color(1.0, 0.97, 0.85, 0.9)
+## Ring on every kill (click or mount), so kills read differently from hits.
+@export var kill_pop_color: Color = Color(0.95, 0.22, 0.18, 0.95)
+## Kill rings grow this much bigger than hit rings.
+@export_range(0.5, 3.0, 0.05) var kill_pop_scale: float = 1.3
+## At most this many rings at once (a mass clear can't flood the screen).
+@export_range(1, 500, 1) var max_live_pops: int = 40
+
 @onready var _world: Node2D = $World
 @onready var _carousel: Carousel = $World/Carousel
 @onready var _hud: Hud = $HUD
@@ -29,6 +40,7 @@ var _horses: Array[MountHorse] = []
 var _wolves: Array[MountWolf] = []
 ## Booth distance from the carousel center, taken from the scene's booth.
 var _booth_radius: float = 0.0
+var _live_pops: int = 0
 
 
 func _ready() -> void:
@@ -179,11 +191,25 @@ func _on_enemy_spawned(enemy: EnemyBase) -> void:
 
 func _on_enemy_clicked(enemy: EnemyBase) -> void:
 	AudioManager.play_sfx(&"hit")
+	# A killing click gets the kill pop from _on_enemy_died instead.
+	if not enemy.take_damage(GameState.get_click_damage()):
+		_spawn_pop(enemy.global_position, false)
+
+
+## A ring where something happened: kill (red, bigger) or hit/clear (cream).
+func _spawn_pop(global_point: Vector2, kill: bool) -> void:
+	if _live_pops >= max_live_pops:
+		return
 	var pop := ClickPop.new()
-	pop.position = _world.to_local(enemy.global_position)
+	pop.color = kill_pop_color if kill else hit_pop_color
+	if kill:
+		pop.start_radius *= kill_pop_scale
+		pop.end_radius *= kill_pop_scale
+	pop.position = _world.to_local(global_point)
+	_live_pops += 1
+	pop.tree_exiting.connect(func() -> void: _live_pops -= 1)
 	_world.add_child(pop)
 	pop.reset_physics_interpolation()
-	enemy.take_damage(GameState.get_click_damage())
 
 
 func _on_enemy_swept(wolf: MountWolf, enemy: EnemyBase) -> void:
@@ -202,6 +228,7 @@ func _on_enemy_reached_rim(enemy: EnemyBase) -> void:
 func _on_enemy_died(enemy: EnemyBase) -> void:
 	GameState.add_gold(enemy.data.gold_drop * enemy.gold_multiplier)
 	AudioManager.play_sfx(&"pop")
+	_spawn_pop(enemy.global_position, true)
 	_remove_enemy(enemy)
 
 
@@ -209,6 +236,7 @@ func _on_enemy_died(enemy: EnemyBase) -> void:
 ## Waves keep coming.
 func _on_stall_timed_out() -> void:
 	for enemy: EnemyBase in _enemy_layer.get_children():
+		_spawn_pop(enemy.global_position, false)
 		_remove_enemy(enemy)
 
 
@@ -218,6 +246,7 @@ func _on_emergency_cleared() -> void:
 	AudioManager.play_sfx(&"restart")
 	for enemy: EnemyBase in _enemy_layer.get_children():
 		if enemy.is_at_rim():
+			_spawn_pop(enemy.global_position, false)
 			_remove_enemy(enemy)
 
 

@@ -251,18 +251,49 @@ func test_emergency_clear_removes_only_latched_enemies() -> void:
 	assert_float(GameState.get_gold()).is_equal(gold - GameState.get_emergency_clear_cost())
 
 
-## Every enemy click shows a pop, even the one that kills.
-func test_click_shows_a_pop_even_when_it_kills() -> void:
+func _pops(game: Game) -> Array[ClickPop]:
+	var pops: Array[ClickPop] = []
+	for child in game.get_node("World").get_children():
+		if child is ClickPop:
+			pops.append(child)
+	return pops
+
+
+## A click that doesn't kill shows a hit pop; the killing click shows one kill pop.
+func test_clicks_show_hit_pops_and_kills_show_kill_pops() -> void:
 	var game := _game()
 	var enemy := _first_enemy(game)
 	var router := game.get_node("World/ClickRouter") as ClickRouter
-	enemy.take_damage(enemy.data.base_health - 0.01)
+	enemy.take_damage(enemy.data.base_health - 0.01 - GameState.get_click_damage())
 	assert_bool(router.route_click(enemy.global_position)).is_true()
-	var pops := 0
-	for child in game.get_node("World").get_children():
-		if child is ClickPop:
-			pops += 1
-	assert_int(pops).is_equal(1)
+	assert_int(_pops(game).size()).is_equal(1)
+	assert_object(_pops(game)[0].color).is_equal(game.hit_pop_color)
+	assert_bool(router.route_click(enemy.global_position)).is_true()
+	assert_int(_pops(game).size()).is_equal(2)
+	assert_object(_pops(game)[1].color).is_equal(game.kill_pop_color)
+
+
+## Mount kills pop too (every kill goes through the same death path).
+func test_wolf_style_kill_shows_a_kill_pop() -> void:
+	var game := _game()
+	var enemy := _first_enemy(game)
+	enemy.take_damage(100.0)
+	assert_int(_pops(game).size()).is_equal(1)
+	assert_object(_pops(game)[0].color).is_equal(game.kill_pop_color)
+
+
+## Emergency Clear pops each removed enemy, and pops are capped.
+func test_clear_pops_each_enemy_up_to_the_cap() -> void:
+	var game := _game()
+	game.max_live_pops = 2
+	var layer := game.get_node("World/EnemyLayer")
+	(game.get_node("WaveManager") as WaveManager).spawn_wave()
+	for enemy: EnemyBase in layer.get_children():
+		enemy.advance(100.0)
+	assert_int(layer.get_child_count()).is_greater(2)
+	game._on_emergency_cleared()
+	assert_int(_pops(game).size()).is_equal(2)
+	assert_object(_pops(game)[0].color).is_equal(game.hit_pop_color)
 
 
 ## Garret (2026-09-24): more than one Wolf, and Wolves can be sold to swap builds.
