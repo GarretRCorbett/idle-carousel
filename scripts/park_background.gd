@@ -4,10 +4,11 @@ extends Node2D
 ## a theme park, less grass"): warm pavement in big slabs, a stone plaza under
 ## the carousel with a brick ring and four curving brick walkways (laid out
 ## like a theme-park carousel's: one down toward the Boost button, one to
-## each side, one to the top right), grass only in curbed
-## planters, flower beds with benches, a few lamps, a cart and two trees.
-## Everything but the trees is drawn in code; nothing moves or looks like an
-## enemy, and the middle stays quiet so Leaves and mounts are easy to see.
+## each side, one to the top right), shop rooftops framing the corners,
+## grass only in curbed planters, flower beds with benches, a few lamps, a
+## cart in a bench nook and two trees. Everything but the trees is drawn in
+## code; nothing moves or looks like an enemy, and the middle stays quiet so
+## Leaves and mounts are easy to see.
 ## Lives first under World, centered on the carousel.
 
 @export_group("Pavement")
@@ -16,8 +17,8 @@ extends Node2D
 @export var pavement_half_size: Vector2 = Vector2(1100.0, 700.0)
 ## Slabs with faint joints; each row is offset by half a slab, like real
 ## pavement.
-@export var slab_size: Vector2 = Vector2(96.0, 64.0)
-@export var slab_joint_color: Color = Color(0.45, 0.36, 0.25, 0.09)
+@export var slab_size: Vector2 = Vector2(128.0, 80.0)
+@export var slab_joint_color: Color = Color(0.45, 0.36, 0.25, 0.07)
 ## No slab joints this close to the carousel, so the busy middle stays quiet.
 @export_range(0.0, 600.0, 1.0, "suffix:px") var quiet_radius: float = 230.0
 
@@ -25,13 +26,33 @@ extends Node2D
 ## Curbed lawns (rects from the carousel center), the only grass. Keep them
 ## clear of the walkways and near the screen edges.
 @export var planters: Array[Rect2] = [
-	Rect2(-560.0, 220.0, 190.0, 130.0), Rect2(-340.0, -300.0, 140.0, 76.0),
-	Rect2(110.0, 240.0, 225.0, 120.0),
+	Rect2(-460.0, 205.0, 200.0, 175.0), Rect2(-340.0, -300.0, 140.0, 76.0),
 ]
+## Per-planter corner radii (top left, top right, bottom right, bottom left),
+## in planter order; missing = planter_corner_radius. A big radius on the
+## corner facing a walkway makes the lawn curve along it.
+@export var planter_corners: Array[Vector4] = [Vector4(80.0, 40.0, 0.0, 0.0)]
 @export var lawn_color: Color = Color("86b98c")
 @export var curb_color: Color = Color("fff4dc")
-@export_range(0.0, 20.0, 1.0, "suffix:px") var curb_width: float = 5.0
+## Same width as the walkway edging, so every curb looks the same scale.
+@export_range(0.0, 20.0, 1.0, "suffix:px") var curb_width: float = 3.0
 @export_range(0.0, 80.0, 1.0, "suffix:px") var planter_corner_radius: float = 38.0
+
+@export_group("Rooftops")
+## Shop roofs seen from above, framing the plaza from the corners like the
+## buildings around a theme-park carousel (no castles or real places). Rects
+## from the carousel center; each roof's ridge runs left to right and its
+## scalloped trim faces the plaza (up). Keep them at the screen edges.
+@export var roofs: Array[Rect2] = [Rect2(125.0, 270.0, 280.0, 120.0), Rect2(-680.0, 250.0, 210.0, 140.0)]
+@export var roof_colors: Array[Color] = [Color("5f82b0"), Color("c98ea6")]
+@export var roof_trim_color: Color = Color("fff4dc")
+@export var roof_ridge_color: Color = Color("ddb96a")
+@export var roof_shadow_color: Color = Color(0.0, 0.0, 0.0, 0.12)
+
+@export_group("Nooks")
+## Small paved recesses (slightly darker slabs) that group a bench and a cart.
+@export var nooks: Array[Rect2] = [Rect2(125.0, 176.0, 180.0, 86.0)]
+@export var nook_color: Color = Color("d6c8ad")
 
 @export_group("Clearing")
 @export var clearing_color: Color = Color("ccc4b5")
@@ -62,18 +83,20 @@ extends Node2D
 ## down toward the Boost button is the wide main one.
 @export var walkway_widths: PackedFloat32Array = PackedFloat32Array([110.0, 85.0])
 ## Each walkway flares out where it meets the ring, like a plaza opening up.
-@export_range(4.0, 400.0, 1.0, "suffix:px") var flare_width: float = 170.0
+@export_range(4.0, 400.0, 1.0, "suffix:px") var flare_width: float = 140.0
 ## How far along the walkway the flare narrows to path_width (0 = no flare).
 @export_range(0.0, 1.0, 0.01) var flare_length: float = 0.45
 
 @export_group("Flower beds and benches")
 ## Bed centers (from the carousel center); each gets a bench beside it.
 ## Benches are blue and level, so they never look like a Stick flying in.
-@export var flower_beds: PackedVector2Array = PackedVector2Array([Vector2(-270.0, -262.0), Vector2(262.0, 262.0)])
+@export var flower_beds: PackedVector2Array = PackedVector2Array([Vector2(-270.0, -262.0), Vector2(245.0, 232.0)])
 @export var bed_size: Vector2 = Vector2(96.0, 46.0)
 @export var bed_edge_color: Color = Color("765642")
 @export var bed_soil_color: Color = Color("6f9a79")
-@export var bloom_colors: Array[Color] = [Color("fff4dc"), Color("b6a3cd"), Color("dca9bb"), Color("ddb96a")]
+## Soft pinks, lavender and ivory only: no yellow or green dots that could
+## pass for small enemies (Codex look review).
+@export var bloom_colors: Array[Color] = [Color("fff4dc"), Color("b6a3cd"), Color("dca9bb")]
 @export var bench_color: Color = Color("405d83")
 @export var bench_leg_color: Color = Color("243955")
 
@@ -82,7 +105,7 @@ extends Node2D
 ## Empty = none.
 ## Beside a bench, away from the carousel; soft stripes so it never reads
 ## as a second little carousel.
-@export var carts: PackedVector2Array = PackedVector2Array([Vector2(175.0, 205.0)])
+@export var carts: PackedVector2Array = PackedVector2Array([Vector2(158.0, 205.0)])
 @export var cart_color: Color = Color("405d83")
 @export var umbrella_colors: Array[Color] = [Color("fff4dc"), Color("a9bcd6")]
 @export_range(8.0, 60.0, 1.0, "suffix:px") var umbrella_radius: float = 22.0
@@ -96,13 +119,15 @@ extends Node2D
 @export var lamp_color: Color = Color("fff4dc")
 @export var lamp_rim_color: Color = Color("243955")
 @export var lamp_glow_color: Color = Color(1.0, 0.85, 0.55, 0.1)
+## A very faint shadow that grounds each lamp.
+@export var lamp_shadow_color: Color = Color(0.0, 0.0, 0.0, 0.1)
 
 @export_group("Trees")
 @export var tree_textures: Array[Texture2D] = []
 ## Where trees stand (from the center) and how big; x, y, scale. Keep them out
 ## near the edges, away from where Leaves fly in and latch.
 @export var trees: PackedVector3Array = PackedVector3Array([
-	Vector3(-465.0, 285.0, 1.5), Vector3(160.0, 300.0, 1.5),
+	Vector3(-375.0, 290.0, 1.5), Vector3(-318.0, 262.0, 1.1),
 ])
 @export var tree_tint: Color = Color(0.85, 0.95, 0.88)
 
@@ -115,8 +140,10 @@ func _ready() -> void:
 func _draw() -> void:
 	_draw_pavement()
 	var ring_outer := clearing_radius + ring_width
-	for planter in planters:
-		_draw_planter(planter)
+	for nook in nooks:
+		_draw_nook(nook)
+	for i in planters.size():
+		_draw_planter(planters[i], planter_corners[i] if i < planter_corners.size() else Vector4.ONE * planter_corner_radius)
 	# Walkway borders, the ring with its border, then the walkway fills on top
 	# (so the border opens where each walkway joins), then the stone plaza.
 	_draw_paths()
@@ -134,6 +161,8 @@ func _draw() -> void:
 		_draw_lamp(Vector2.from_angle(deg_to_rad(angle)) * (ring_outer + 16.0))
 	for cart in carts:
 		_draw_cart(cart)
+	for i in roofs.size():
+		_draw_roof(roofs[i], roof_colors[i % roof_colors.size()])
 	for i in trees.size():
 		if tree_textures.is_empty():
 			break
@@ -159,15 +188,52 @@ func _draw_pavement() -> void:
 	draw_circle(Vector2.ZERO, quiet_radius, pavement_color, true, -1.0, true)
 
 
-## A lawn with an ivory curb and rounded corners.
-func _draw_planter(rect: Rect2) -> void:
+## A lawn with an ivory curb and rounded corners (tl, tr, br, bl).
+func _draw_planter(rect: Rect2, corners: Vector4) -> void:
 	var box := StyleBoxFlat.new()
 	box.bg_color = lawn_color
 	box.border_color = curb_color
 	box.set_border_width_all(int(curb_width))
-	box.set_corner_radius_all(int(planter_corner_radius))
+	box.corner_radius_top_left = int(corners.x)
+	box.corner_radius_top_right = int(corners.y)
+	box.corner_radius_bottom_right = int(corners.z)
+	box.corner_radius_bottom_left = int(corners.w)
+	box.corner_detail = 16
 	box.anti_aliasing = true
 	draw_style_box(box, rect)
+
+
+func _draw_nook(rect: Rect2) -> void:
+	var box := StyleBoxFlat.new()
+	box.bg_color = nook_color
+	box.set_corner_radius_all(16)
+	box.anti_aliasing = true
+	draw_style_box(box, rect)
+
+
+## A shop roof from above: a soft shadow, a lighter front slope and a darker
+## back slope with faint shingle rows, a gold ridge, and a scalloped ivory
+## trim along the front (plaza) edge.
+func _draw_roof(rect: Rect2, color: Color) -> void:
+	draw_rect(Rect2(rect.position + Vector2(5.0, 6.0), rect.size), roof_shadow_color)
+	var ridge_y := rect.position.y + rect.size.y * 0.45
+	var front := Rect2(rect.position, Vector2(rect.size.x, ridge_y - rect.position.y))
+	var back := Rect2(Vector2(rect.position.x, ridge_y), Vector2(rect.size.x, rect.end.y - ridge_y))
+	draw_rect(front, color.lightened(0.12))
+	draw_rect(back, color.darkened(0.08))
+	var shingle := Color(color.darkened(0.35), 0.35)
+	var y := rect.position.y + 12.0
+	while y < rect.end.y:
+		if absf(y - ridge_y) > 4.0:
+			draw_line(Vector2(rect.position.x, y), Vector2(rect.end.x, y), shingle, 1.0)
+		y += 12.0
+	draw_line(Vector2(rect.position.x, ridge_y), Vector2(rect.end.x, ridge_y), roof_ridge_color, 3.0)
+	var scallop := 8.0
+	var x := rect.position.x + scallop
+	while x < rect.end.x:
+		draw_circle(Vector2(x, rect.position.y), scallop, roof_trim_color, true, -1.0, true)
+		x += scallop * 2.0
+	draw_rect(Rect2(rect.position, Vector2(rect.size.x, 4.0)), roof_trim_color)
 
 
 func _draw_paths() -> void:
@@ -235,6 +301,7 @@ func _draw_bed(center: Vector2, index: int) -> void:
 
 ## A lamp seen from above: a faint glow and one ivory globe in a navy rim.
 func _draw_lamp(spot: Vector2) -> void:
+	draw_circle(spot + Vector2(2.0, 3.0), 6.0, lamp_shadow_color, true, -1.0, true)
 	draw_circle(spot, 13.0, lamp_glow_color, true, -1.0, true)
 	draw_circle(spot, 6.0, lamp_rim_color, true, -1.0, true)
 	draw_circle(spot, 4.0, lamp_color, true, -1.0, true)
