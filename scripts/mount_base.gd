@@ -13,6 +13,12 @@ extends Node2D
 var _carousel: Carousel
 
 
+func _ready() -> void:
+	# Sprites are drawn ~4× smaller than their files. Mipmaps (enabled in the
+	# .png import) stop them shimmering as they turn, most visible at low speed.
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+
+
 ## Called by Game once the mount is under MountSlots.
 func setup(carousel: Carousel) -> void:
 	_carousel = carousel
