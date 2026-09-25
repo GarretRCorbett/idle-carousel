@@ -5,6 +5,8 @@ extends Node
 ## machine runs flat out: run it once, not back to back):
 ##   "$GODOT" --audio-driver Dummy --path . res://tools/stress_test.tscn
 ##   "$GODOT" --audio-driver Dummy --path . res://tools/stress_test.tscn -- 100,500,1000
+##   "$GODOT" --audio-driver Dummy --path . res://tools/stress_test.tscn -- 0,1000,2000 wolf,giraffe
+## The second argument lists the mounts beside the Horse (default: wolf).
 ## Always silent: sound costs frame time, so FPS only compares between runs
 ## that both used --audio-driver Dummy. Physics tick times compare either way.
 ## Leaves here can't die and deal no damage or drag, so the count stays
@@ -14,6 +16,7 @@ extends Node
 ## Garret picks one.
 
 const DEFAULT_STAGES: Array[int] = [0, 100, 300, 500, 1000, 2000]
+const DEFAULT_MOUNTS: Array[StringName] = [&"wolf"]
 const WARMUP_SECONDS := 3.0
 const SAMPLE_SECONDS := 4.0
 ## Leaves start this far outside the rim, so they latch (and get hit) quickly.
@@ -81,10 +84,14 @@ func _setup_run() -> void:
 	GameState.add_gold(1.0e9)
 	for i in 10:
 		UpgradeManager.purchase(&"carousel_speed")
-	UpgradeManager.purchase(&"mount_slot")
-	UpgradeManager.purchase(&"wolf")
-	UpgradeManager.purchase(&"mount_slot")
-	UpgradeManager.purchase(&"horse")
+	var mounts := _parse_mounts()
+	for id in mounts:
+		UpgradeManager.purchase(&"mount_slot")
+		UpgradeManager.purchase(id)
+	if mounts.size() < 2:
+		UpgradeManager.purchase(&"mount_slot")
+		UpgradeManager.purchase(&"horse")
+	print("mounts: %s" % ", ".join(GameState.get_mount_roster()))
 
 
 ## Fresh Leaves every stage, spread around the rim.
@@ -135,6 +142,16 @@ func _parse_stages() -> Array[int]:
 	for part in args[0].split(","):
 		stages.append(int(part))
 	return stages
+
+
+func _parse_mounts() -> Array[StringName]:
+	var args := OS.get_cmdline_user_args()
+	if args.size() < 2:
+		return DEFAULT_MOUNTS.duplicate()
+	var mounts: Array[StringName] = []
+	for part in args[1].split(","):
+		mounts.append(StringName(part))
+	return mounts
 
 
 func _add_tick_marker(priority: int, callback: Callable) -> void:

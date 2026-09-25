@@ -43,6 +43,20 @@ Before = commit cdbead7 (with sound). After = end of Step 2 (silent, `--audio-dr
 - Open, minor: the tool sometimes prints "4 resources still in use at exit" since Step 2 (not
   sound-related; the game itself doesn't show it). Look at it with `--verbose` when convenient.
 
+### Step 4 run (Horse + Wolf + Giraffe, silent, 2026-09-25): not comparable
+| Leaves | FPS | Tick avg | Tick max |
+|---|---|---|---|
+| 0 | 227 | 0.25 ms | 1.31 |
+| 300 | 190 | 4.40 ms | 6.03 |
+| 1,000 | 93 | 9.94 ms | 13.47 |
+| 2,000 | 15 | 15.04 ms | 20.93 |
+
+The machine was slower during this run: with **0** enemies a frame took 4.4 ms (0.9 ms in the
+Step 2 run), so it was likely on battery or throttled. Also, the Giraffe's 325 px line covers the
+tool's whole enemy band, so every enemy takes an extra hit (flash, health bar, sound) each pass;
+the higher tick time is mostly hit handling, not sweep math. **To do:** a paired run on a cool,
+plugged-in laptop: `-- 0,300,1000,2000 wolf` then `-- 0,300,1000,2000 wolf,giraffe`, back to back.
+
 ## Decided 2026-09-25 (Garret, after seeing Step 3)
 - **More Sticks and Rocks early:** Grey waves 80 / 20 / 5 (Leaf / Stick / Rock), Sticks after 20
   Grey kills (cap 2), Rocks after 60 (cap 1). Green 65 / 25 / 10, Stick cap 3, Rocks after 20
