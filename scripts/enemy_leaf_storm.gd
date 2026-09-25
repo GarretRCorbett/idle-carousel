@@ -71,6 +71,8 @@ var _phase_time: float = 0.0
 var _angle: float = 0.0
 var _drift_from: float = 0.0
 var _drift_to: float = 0.0
+## Seconds of drift movement done so far (runs slower while slowed).
+var _drift_progress: float = 0.0
 var _direction: float = 1.0
 var _packs_sent: int = 0
 var _wind_angle: float = 0.0
@@ -95,8 +97,9 @@ func advance(delta: float) -> void:
 		return
 	# A slow (the Sloth, on a rematch) slows its drift and spin, not its packs
 	# (Garret, after Codex's review: the Sloth helps without trivializing it).
+	# The rhythm runs on real time; a slowed drift just covers less ground.
 	var speed_factor := _advance_status(delta)
-	_phase_time += delta * speed_factor if _phase == Phase.DRIFT else delta
+	_phase_time += delta
 	var spin := deg_to_rad(spin_deg_s) * delta * speed_factor
 	if _phase == Phase.GUST:
 		spin *= gust_spin_multiplier
@@ -111,10 +114,11 @@ func advance(delta: float) -> void:
 				_throw_pack()
 				_begin_drift()
 		Phase.DRIFT:
-			var t := clampf(_phase_time / drift_seconds, 0.0, 1.0)
+			_drift_progress += delta * speed_factor
+			var t := clampf(_drift_progress / drift_seconds, 0.0, 1.0)
 			_angle = lerpf(_drift_from, _drift_to, smoothstep(0.0, 1.0, t))
 			position = _path_point(_angle)
-			if t >= 1.0:
+			if _phase_time >= drift_seconds:
 				_begin(Phase.REST)
 		Phase.REST:
 			if _phase_time >= rest_seconds:
@@ -163,6 +167,7 @@ func _begin_drift() -> void:
 		step = -step
 	_drift_from = _angle
 	_drift_to = clampf(_angle + step, low, high)
+	_drift_progress = 0.0
 	_begin(Phase.DRIFT)
 
 

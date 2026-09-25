@@ -81,7 +81,8 @@ func _draw_houses(w: float, h: float, ground_y: float) -> void:
 			var drawn := texture.get_size() * scale
 			var left := x if side == -1 else x - drawn.x
 			draw_texture_rect(texture, Rect2(Vector2(left, ground_y - drawn.y + 2.0), drawn), false, house_tint)
-			x += drawn.x * 0.92 * side
+			# Each row fills from its screen edge toward the middle.
+			x -= drawn.x * 0.92 * side
 			i += 1
 
 

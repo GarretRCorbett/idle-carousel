@@ -243,6 +243,12 @@ func test_slow_slows_the_storms_drift_not_its_packs() -> void:
 	assert_float(slowed_moved).is_less(plain_moved * 0.8)
 	assert_bool(storm.is_slowed()).is_false()
 	assert_bool(icon.visible).is_false()
+	# And the next pack still comes on the same schedule (Codex review).
+	for i in 60 * 20:
+		storm.advance(1.0 / 60.0)
+		plain.advance(1.0 / 60.0)
+		assert_int(storm.get_packs_sent()).is_equal(plain.get_packs_sent())
+	assert_int(plain.get_packs_sent()).is_greater_equal(2)  # a pack came during the check
 	plain.free()
 
 
