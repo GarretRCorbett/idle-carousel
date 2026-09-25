@@ -91,6 +91,24 @@ func test_panels_and_boost_button_take_clicks() -> void:
 				"%s should STOP clicks" % path).is_equal(Control.MOUSE_FILTER_STOP)
 
 
+## Gold changes on every kill and booth pass; the shop rows rebuild at most
+## once a frame instead of once per change.
+func test_shop_refreshes_once_per_frame_on_gold_changes() -> void:
+	var game: Node = auto_free((load("res://scenes/Game.tscn") as PackedScene).instantiate())
+	add_child(game)
+	var shop := game.get_node("HUD/HUDRoot/ScreenMargin/Columns/ShopPanel") as UpgradeShop
+	shop._process(0.0)
+	assert_bool(shop.is_processing()).is_false()
+	GameState.add_gold(5.0)
+	GameState.add_gold(5.0)
+	assert_bool(shop._refresh_queued).is_true()
+	assert_bool(shop.is_processing()).is_true()
+	shop._process(0.0)
+	assert_bool(shop._refresh_queued).is_false()
+	assert_bool(shop.is_processing()).is_false()
+	GameState.reset_run()
+
+
 func _collect_blockers(node: Node, covered: bool, offenders: PackedStringArray) -> void:
 	var control := node as Control
 	var now_covered := covered

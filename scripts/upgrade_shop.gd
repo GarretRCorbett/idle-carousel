@@ -33,6 +33,8 @@ enum RowState { LOCKED, SAVING, AFFORDABLE, MAXED }
 
 var _rows_by_id: Dictionary[StringName, ShopRow] = {}
 var _pages: Array[VBoxContainer] = []
+## Gold changes on every kill and booth pass; the rows refresh at most once a frame.
+var _refresh_queued: bool = false
 
 
 class ShopRow:
@@ -57,7 +59,7 @@ func _ready() -> void:
 	_tabs.tab_changed.connect(func(_tab: int) -> void: AudioManager.play_sfx(&"tab"))
 	for upgrade in UpgradeManager.get_definitions():
 		_rows_by_id[upgrade.id] = _build_row(upgrade)
-	GameState.gold_changed.connect(func(_b: float, _d: float) -> void: _refresh())
+	GameState.gold_changed.connect(func(_b: float, _d: float) -> void: _queue_refresh())
 	GameState.run_reset.connect(_refresh)
 	GameState.mounts_changed.connect(func(_r: Array[StringName]) -> void: _refresh())
 	UpgradeManager.upgrade_purchased.connect(func(_id: StringName) -> void: _refresh())
@@ -160,7 +162,19 @@ func _notification(what: int) -> void:
 		_refresh()
 
 
+func _queue_refresh() -> void:
+	_refresh_queued = true
+	set_process(true)
+
+
+func _process(_delta: float) -> void:
+	if _refresh_queued:
+		_refresh()
+	set_process(false)
+
+
 func _refresh() -> void:
+	_refresh_queued = false
 	for id in _rows_by_id:
 		var row := _rows_by_id[id]
 		var upgrade := UpgradeManager.get_definition(id)

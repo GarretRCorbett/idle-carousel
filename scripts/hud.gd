@@ -43,6 +43,11 @@ var _boost_button_text: String = ""
 var _mouse_holding_boost: bool = false
 var _boost_held: bool = false
 var _wave_seconds: int = 0
+## What the Clear button shows now, so it's only rebuilt when something changes
+## (it's checked every frame). Seconds -2 forces a rebuild.
+var _clear_seconds_shown: int = -2
+var _clear_cost_shown: float = -1.0
+var _clear_enabled_shown: bool = false
 
 
 func _ready() -> void:
@@ -88,6 +93,7 @@ func _notification(what: int) -> void:
 		_on_spin_speed_changed(GameState.get_effective_spin_speed_rad_s())
 		_on_stall_changed(GameState.is_stalled())
 		_refresh_wave_button()
+		_clear_seconds_shown = -2
 		_refresh_emergency_button()
 
 
@@ -161,12 +167,19 @@ func _refresh_wave_button() -> void:
 
 
 func _refresh_emergency_button() -> void:
-	var cooldown := GameState.get_emergency_clear_cooldown()
-	if cooldown > 0.0:
-		_emergency_button.text = tr(emergency_cooldown_key).format([ceili(cooldown)])
+	var seconds := ceili(GameState.get_emergency_clear_cooldown())
+	var cost := GameState.get_emergency_clear_cost()
+	var enabled := GameState.can_emergency_clear()
+	if seconds == _clear_seconds_shown and cost == _clear_cost_shown and enabled == _clear_enabled_shown:
+		return
+	_clear_seconds_shown = seconds
+	_clear_cost_shown = cost
+	_clear_enabled_shown = enabled
+	if seconds > 0:
+		_emergency_button.text = tr(emergency_cooldown_key).format([seconds])
 	else:
-		_emergency_button.text = tr(emergency_ready_key).format([NumberFormat.gold(GameState.get_emergency_clear_cost())])
-	_emergency_button.disabled = not GameState.can_emergency_clear()
+		_emergency_button.text = tr(emergency_ready_key).format([NumberFormat.gold(cost)])
+	_emergency_button.disabled = not enabled
 
 
 func _make_shortcut(key: Key) -> Shortcut:
