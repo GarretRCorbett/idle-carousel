@@ -184,6 +184,8 @@ Game's loop drops a duplicate check.
 | `step4_plan.md` | Step 4: Giraffe and Sloth (approved 2026-09-25, built) |
 | `step6_plan.md` | Step 6: Leaf Storm, boss framework, strip UI, gating, bigger waves (approved 2026-09-25, built; balance run inside) |
 | `step5_plan.md` | Step 5: Elephant, mount tiers, Panda (approved 2026-09-25, built) |
+| `step7_plan.md` | Step 7: the other five bosses (Garret: "go ahead"; built) |
+| `codex_memo_t_palette.md` | Codex + Claude: a Disney-park carousel palette (research, three options, trademark cautions); renders in `palette/` |
 | `codex_memo_s_leaf_storm.md` | Codex + Claude: how the first boss should work (Garret's summon-and-drift idea + the GDD's 4-Leaf split as the finale), starting numbers |
 | `codex_memo_r_confirmations_boss_loop.md` | Codex + Claude: which actions get a confirmation and how, tier switching and re-challenging bosses, making Giraffe/Wolf/Elephant feel different |
 | `mockups/` | Boss/tier UI options A–C rendered over the real game (A chosen) |
