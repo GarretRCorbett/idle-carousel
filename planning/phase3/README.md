@@ -112,6 +112,7 @@ Before = commit cdbead7 (with sound). After = end of Step 2 (silent, `--audio-dr
 | `claude_memo_prestige.md` | Claude: prestige research (first-prestige timing, rewards players like, Slay the Spire / Wildfrost challenges), a possible shape, questions for before Phase 5 |
 | `codex_memo_n_boss_timers.md` | Codex: how Clicker Heroes, Tap Titans 2, Idle Slayer, and Melvor handle boss failure; player reactions; timed-boss proposal |
 | `step1_plan.md` | Step 1: decisions, contracts, and scene trees for Steps 2–3 |
+| `step4_plan.md` | Step 4: Giraffe and Sloth (DRAFT, awaiting approval) |
 | `codex_memo_o_step1_review.md` | Codex: review of the Step 1 plan (spawn queue vs Send limit, removal order, line-tip formula, wave validation, tests) |
 | `codex_memo_m_tiers_pacing.md` | Codex: tier loop, kill gate, wave recipes, stat scaling, 3-hour economy model, prices, simulator, boss tuning, 12 questions |
 
