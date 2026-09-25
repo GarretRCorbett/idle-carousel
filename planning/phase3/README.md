@@ -43,6 +43,13 @@ Before = commit cdbead7 (with sound). After = end of Step 2 (silent, `--audio-dr
 - Open, minor: the tool sometimes prints "4 resources still in use at exit" since Step 2 (not
   sound-related; the game itself doesn't show it). Look at it with `--verbose` when convenient.
 
+## Decided 2026-09-25 (Garret, after seeing Step 3)
+- **More Sticks and Rocks early:** Grey waves 80 / 20 / 5 (Leaf / Stick / Rock), Sticks after 20
+  Grey kills (cap 2), Rocks after 60 (cap 1). Green 65 / 25 / 10, Stick cap 3, Rocks after 20
+  Green kills. (Replaces the Step 1 table's Grey and Green rows; Blue+ unchanged.)
+- **Stick health is right**, Leaf too. **Grey tint** darker (0.60), less silver.
+- **Sticks sway** side to side as they fly in (`EnemyStick`, `sway_degrees` / `sway_hz` exports).
+
 ## Decided 2026-09-24 (Garret)
 - **Boss access:** a minimal per-tier kill gate plus a manual "Challenge boss" button, built
   in Phase 3. HUD polish and the full shop visibility system stay in Phase 4. (Q1)

@@ -61,3 +61,22 @@ func test_no_texture_falls_back_to_the_placeholder() -> void:
 	var enemy := _spawn(SCENES[0], data)
 	assert_bool((enemy.get_node("Visual/Sprite") as Sprite2D).visible).is_false()
 	assert_object((enemy.get_node("Visual") as Node2D).self_modulate).is_equal(Color(0.3, 0.5, 1.0))
+
+
+## Sticks rock side to side while flying in (within sway_degrees) and hold
+## still once latched.
+func test_stick_sways_while_approaching_and_stops_at_the_rim() -> void:
+	var stick := _spawn(SCENES[1]) as EnemyStick
+	stick.position = Vector2(300.0, 0.0)
+	stick.setup(Vector2.ZERO, 100.0)
+	var visual := stick.get_node("Visual") as Node2D
+	var angles: Array[float] = []
+	for i in 60:
+		stick.advance(1.0 / 60.0)
+		angles.append(visual.rotation)
+		assert_float(absf(visual.rotation)).is_less_equal(deg_to_rad(stick.sway_degrees) + 0.0001)
+	assert_float(angles.max() - angles.min()).is_greater(0.1)  # it actually moved
+	stick.advance(100.0)  # reaches the rim
+	var held := visual.rotation
+	stick.advance(0.5)
+	assert_float(visual.rotation).is_equal(held)

@@ -10,23 +10,23 @@
 [sub_resource type="Resource" id="leaf_entry"]
 script = ExtResource("entry_script")
 enemy_scene = ExtResource("leaf_scene")
-weight = 76.0
+weight = 65.0
 max_per_wave = 0
 unlock_after_kills = 0
 
 [sub_resource type="Resource" id="stick_entry"]
 script = ExtResource("entry_script")
 enemy_scene = ExtResource("stick_scene")
-weight = 19.0
-max_per_wave = 2
+weight = 25.0
+max_per_wave = 3
 unlock_after_kills = 0
 
 [sub_resource type="Resource" id="rock_entry"]
 script = ExtResource("entry_script")
 enemy_scene = ExtResource("rock_scene")
-weight = 5.0
+weight = 10.0
 max_per_wave = 1
-unlock_after_kills = 40
+unlock_after_kills = 20
 
 [sub_resource type="Resource" id="waves"]
 script = ExtResource("profile_script")

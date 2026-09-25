@@ -109,7 +109,7 @@ func test_switching_tier_leaves_live_enemies_alone() -> void:
 		assert_int(enemy.get_tier_rank()).is_equal(2)
 
 
-## Unlocks read kills in the selected tier: 40 Grey kills let Sticks in.
+## Unlocks read kills in the selected tier (Grey kills let Sticks into Grey waves).
 func test_grey_kills_unlock_sticks_in_grey_waves() -> void:
 	var game := _game()
 	var waves := game.get_node("WaveManager") as WaveManager
