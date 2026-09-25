@@ -197,15 +197,7 @@ func get_unwrapped_bearing() -> float:
 func advance(delta: float) -> void:
 	if not is_active() or delta <= 0.0:
 		return
-	# This tick moves at the speed it started with, then effects count down,
-	# so a 3 s slow covers exactly 3 s of movement.
-	var speed_factor := 1.0
-	if _status_running:
-		speed_factor = _status.get_speed_factor()
-		_status.advance(delta)
-		if not _status.is_slowed():
-			_status_running = false
-			_slow_icon.visible = false
+	var speed_factor := _advance_status(delta)
 	if _state != State.APPROACHING:
 		return
 	var offset := position - _center
@@ -217,6 +209,20 @@ func advance(delta: float) -> void:
 	position = _center + offset.normalized() * _stop_distance
 	_state = State.AT_RIM
 	reached_rim.emit(self)
+
+
+## Counts timed effects (slow) down by one tick and returns the speed factor
+## for this tick: the one it started with, so a 3 s slow covers exactly 3 s of
+## movement. Subclasses with their own movement (bosses) call this too.
+func _advance_status(delta: float) -> float:
+	if not _status_running:
+		return 1.0
+	var speed_factor := _status.get_speed_factor()
+	_status.advance(delta)
+	if not _status.is_slowed():
+		_status_running = false
+		_slow_icon.visible = false
+	return speed_factor
 
 
 ## Applies damage from `source` (a mount, or null for a click). Returns true

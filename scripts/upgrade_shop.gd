@@ -52,11 +52,19 @@ class ShopRow:
 
 func _ready() -> void:
 	for i in UpgradeData.Tab.size():
+		# Each tab scrolls, so a long list (the Mounts tab has 13 rows) never
+		# makes the shop taller than the screen, which would push the whole
+		# HUD off it (Codex review, Step 6).
+		var scroll := ScrollContainer.new()
+		scroll.name = "Tab%d" % i
+		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 		var page := VBoxContainer.new()
-		page.name = "Tab%d" % i
 		page.add_theme_constant_override("separation", row_list_separation)
 		page.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_tabs.add_child(page)
+		page.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		scroll.add_child(page)
+		_tabs.add_child(scroll)
 		# A key: the tab bar translates titles itself.
 		_tabs.set_tab_title(i, tab_title_keys[i] if i < tab_title_keys.size() else str(i))
 		_pages.append(page)

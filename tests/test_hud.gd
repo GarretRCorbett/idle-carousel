@@ -121,3 +121,18 @@ func _collect_blockers(node: Node, covered: bool, offenders: PackedStringArray) 
 			offenders.append(String(control.name))
 	for child in node.get_children():
 		_collect_blockers(child, now_covered, offenders)
+
+
+## Every shop tab scrolls, so even the 13-row Mounts tab never makes the HUD
+## taller than the 1280x720 screen (Codex review, Step 6).
+func test_shop_never_outgrows_the_screen() -> void:
+	var game := (load("res://scenes/Game.tscn") as PackedScene).instantiate() as Game
+	add_child(game)
+	auto_free(game)
+	var tabs := game.find_child("ShopTabs", true, false) as TabContainer
+	var shop := game.find_child("ShopPanel", true, false) as Control
+	var screen_height := float(ProjectSettings.get_setting("display/window/size/viewport_height"))
+	for i in tabs.get_tab_count():
+		tabs.current_tab = i
+		assert_bool(tabs.get_tab_control(i) is ScrollContainer).is_true()
+		assert_float(shop.get_combined_minimum_size().y).is_less(screen_height - 32.0)

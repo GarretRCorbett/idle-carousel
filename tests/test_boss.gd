@@ -218,3 +218,40 @@ func test_click_in_the_storm_hits_the_storm() -> void:
 	assert_bool(router.route_click(storm.global_position + Vector2(4.0, 0.0))).is_true()
 	assert_float(storm.get_health()).is_less(health)
 	assert_float(leaf.get_health()).is_equal(leaf.get_max_health())
+
+
+## A slow (Sloth, on a rematch) slows the Storm's drift but not its packs, and
+## wears off (the "Zzz" goes away) like on any enemy (Codex review, Step 6).
+func test_slow_slows_the_storms_drift_not_its_packs() -> void:
+	var game := _game()
+	var storm := _fight(game)
+	var plain := _fight_copy_for_timing(storm)
+	for i in 600:
+		storm.advance(1.0 / 60.0)
+		plain.advance(1.0 / 60.0)
+		if plain.get_packs_sent() == 1:
+			break
+	assert_int(storm.get_packs_sent()).is_equal(1)  # packs on the same schedule
+	storm.apply_slow(0.5, 2.0)
+	var icon := storm.get_node("SlowIcon") as Node2D
+	assert_bool(icon.visible).is_true()
+	for i in 125:  # a little over 2 s of drift
+		storm.advance(1.0 / 60.0)
+		plain.advance(1.0 / 60.0)
+	var slowed_moved := absf(angle_difference(deg_to_rad(storm.start_deg), (storm.position - storm._center).angle()))
+	var plain_moved := absf(angle_difference(deg_to_rad(plain.start_deg), (plain.position - plain._center).angle()))
+	assert_float(slowed_moved).is_less(plain_moved * 0.8)
+	assert_bool(storm.is_slowed()).is_false()
+	assert_bool(icon.visible).is_false()
+	plain.free()
+
+
+## An unslowed Storm with the same seed, outside the game, to compare against.
+func _fight_copy_for_timing(storm: EnemyLeafStorm) -> EnemyLeafStorm:
+	var copy := (load("res://scenes/enemies/LeafStorm.tscn") as PackedScene).instantiate() as EnemyLeafStorm
+	add_child(copy)
+	copy.summon_requested.connect(func(pack: Array[EnemyBase]) -> void:
+		for leaf in pack:
+			leaf.free())
+	copy.setup(storm._center, 100.0)
+	return copy

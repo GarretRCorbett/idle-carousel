@@ -93,8 +93,11 @@ func setup(center: Vector2, rim_radius: float) -> void:
 func advance(delta: float) -> void:
 	if not is_active() or delta <= 0.0:
 		return
-	_phase_time += delta
-	var spin := deg_to_rad(spin_deg_s) * delta
+	# A slow (the Sloth, on a rematch) slows its drift and spin, not its packs
+	# (Garret, after Codex's review: the Sloth helps without trivializing it).
+	var speed_factor := _advance_status(delta)
+	_phase_time += delta * speed_factor if _phase == Phase.DRIFT else delta
+	var spin := deg_to_rad(spin_deg_s) * delta * speed_factor
 	if _phase == Phase.GUST:
 		spin *= gust_spin_multiplier
 	_wind_angle += spin
