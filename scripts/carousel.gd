@@ -67,10 +67,10 @@ func _process(delta: float) -> void:
 
 
 func _draw() -> void:
-	draw_circle(Vector2.ZERO, radius, base_color)
+	draw_circle(Vector2.ZERO, radius, base_color, true, -1.0, true)
 	for i in spoke_count:
 		var direction := Vector2.from_angle(TAU * i / spoke_count)
 		# Antialiased so thin spokes glide instead of snapping pixel to pixel.
 		draw_line(direction * hub_radius, direction * (radius - rim_width), rim_color, spoke_width, true)
 	draw_arc(Vector2.ZERO, radius - rim_width / 2.0, 0.0, TAU, 64, rim_color, rim_width, true)
-	draw_circle(Vector2.ZERO, hub_radius, hub_color)
+	draw_circle(Vector2.ZERO, hub_radius, hub_color, true, -1.0, true)

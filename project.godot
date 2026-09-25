@@ -52,4 +52,5 @@ common/physics_interpolation=true
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+anti_aliasing/quality/msaa_2d=2
 environment/defaults/default_clear_color=Color(0.239, 0.208, 0.188, 1)
