@@ -11,8 +11,7 @@ code stopped being his, so explain as you go.
 - IDLE_CAROUSEL_NOTES.md — "Next Concrete Step", open questions, ideas (read when relevant)
 - `planning/phaseN/README.md` — **where the current phase stands**: decisions, step plans,
   open questions, and which memos matter. Start a session here.
-- PHASE_2_GOALS.md — Phase 2 checklist (moves to completed_phases/ at sign-off)
-- completed_phases/ — finished phase docs (history; read only when asked)
+- completed_phases/ — finished phase checklists (Phase 1, Phase 2; history, read only when asked)
 - README.md — map of every doc and what it's for
 
 ## Engine

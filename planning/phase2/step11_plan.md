@@ -1,5 +1,5 @@
 # Phase 2 · Step 11 Plan: wrap-up and sign-off
-**Status:** Planned 2026-09-24 (Claude + Codex). Start in a fresh session.
+**Status:** Done 2026-09-24; Phase 2 signed off. (Test count ended at 199, not 187.)
 
 Phase 2 needs sign-off, not another feature pass. Codex's plan, which Claude agrees with:
 
@@ -7,11 +7,11 @@ Phase 2 needs sign-off, not another feature pass. Codex's plan, which Claude agr
 
 Remaining checklist:
 
-- [ ] Complete Step 11: **5 minutes actively playing and 5 minutes hands-off**. Record when the loop became satisfying, when clicking felt required, and what you wanted to buy next. Confirm the “want to keep going” criterion.
-- [ ] During that run, confirm the completed core loop: boost, booth income and Gold/sec, waves, latch/drag/damage, temporary stall and recovery, click/Wolf kills with one payout, and purchases.
-- [ ] Fix any acceptance-blocking bugs; expose any remaining hard-coded values identified as needing tuning. Then obtain a passing full check, including the **187 tests**.
-- [ ] Complete the **full Phase 2 diff review** and walkthrough.
-- [ ] Garret answers the understanding check: why enemies live outside Carousel, how Wolf sweep hits are detected, and how booth passes avoid duplicate payouts.
+- [x] Complete Step 11: **5 minutes actively playing and 5 minutes hands-off**. Record when the loop became satisfying, when clicking felt required, and what you wanted to buy next. Confirm the “want to keep going” criterion.
+- [x] During that run, confirm the completed core loop: boost, booth income and Gold/sec, waves, latch/drag/damage, temporary stall and recovery, click/Wolf kills with one payout, and purchases.
+- [x] Fix any acceptance-blocking bugs; expose any remaining hard-coded values identified as needing tuning. Then obtain a passing full check, including the **187 tests**.
+- [x] Complete the **full Phase 2 diff review** and walkthrough.
+- [x] Garret answers the understanding check: why enemies live outside Carousel, how Wolf sweep hits are detected, and how booth passes avoid duplicate payouts.
 
 **Tidy before sign-off:**
 

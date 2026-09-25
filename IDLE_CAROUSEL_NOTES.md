@@ -18,7 +18,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> Finish Phase 2 Step 11 (Garret's playtest notes, walkthrough, understanding check, sign-off). Then Phase 3: research is done in `planning/phase3/` (README: decisions so far, Claude's take on three Codex memos, a draft step list, open questions by step). Next session: answer the Step 3 questions, then Claude writes `step1_plan.md`.
+> **Phase 2 is signed off (2026-09-24).** Start Phase 3 in a fresh session: read `planning/phase3/README.md` (decisions, draft steps, open questions by step). Answer the Step 1 and Step 3 questions (tier colors on art, Stick/Rock retune, wave recipes, performance target), then Claude writes `planning/phase3/step1_plan.md`.
 
 ---
 

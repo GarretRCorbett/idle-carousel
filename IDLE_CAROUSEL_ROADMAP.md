@@ -33,8 +33,8 @@
 
 ---
 
-## Phase 2 — Core Loop
-**Details:** `PHASE_2_GOALS.md`
+## Phase 2 — Core Loop ✅
+**Details:** `completed_phases/PHASE_2_GOALS.md` (signed off 2026-09-24)
 **Goal:** The smallest version that's actually a game: carousel spins, Horse earns Gold at the booth, Leaves latch and slow it down, Wolf clears them.
 
 - [x] GdUnit4 test harness + headless test command in `tools/check.sh` (moved from Phase 1)
@@ -50,7 +50,7 @@
 
 **Claude Code:** scripts for carousel, booth, mount base, Horse, Wolf, enemy base, Leaf, wave timer, HUD, plus first-draft scenes (Game, Carousel, Mount, Enemy, HUD) with proper containers and anchors.
 **Garret:** reviews and approves each scene in the editor, tweaks layout and look, tunes feel in the Inspector.
-**Understanding check:** Why do enemies live outside the Carousel node? How does the Wolf know it hit something?
+**Understanding check:** Why do enemies live outside the Carousel node? How does the Wolf know it hit something? Why can't a booth pass be counted twice? *(Passed 2026-09-24.)*
 **Done when:** You can play for 5 minutes and want to keep going.
 
 ---

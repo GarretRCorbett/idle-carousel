@@ -173,24 +173,26 @@ From Garret's first playtest (see `planning/phase2/codex_memo_e_playtest_feedbac
 
 ---
 
-## Step 11 — Five-minute playtest + walkthrough (90–120 min)
+## ✅ Step 11 — Five-minute playtest + walkthrough (90–120 min)
 
-- [ ] Play 5 minutes actively and 5 minutes hands-off.
-- [ ] Note three things: when the loop first felt satisfying, when clicking felt required, and what you wanted to buy next.
-- [ ] Claude Code fixes bugs you find and turns any hard-coded numbers you'd want to tune into settings.
-- [ ] Codex review of the full Phase 2 diff.
-- [ ] Understanding check (below).
+- [x] Play 5 minutes actively and 5 minutes hands-off.
+- [x] Note three things: when the loop first felt satisfying, when clicking felt required, and what you wanted to buy next.
+- [x] Claude Code fixes bugs you find and turns any hard-coded numbers you'd want to tune into settings.
+- [x] Codex review of the full Phase 2 diff.
+- [x] Understanding check (below).
 
 ---
 
 ## ✅ Phase 2 Complete When:
 
-- [ ] Check script passes, including tests
-- [ ] The carousel spins; clicks boost; the Horse earns at the booth; Gold/sec is shown
-- [ ] Leaves arrive on a countdown, latch, drag, and deal damage; the TEMPORARY stall works
-- [ ] Clicking and the Wolf both kill Leaves, and each kill pays once
-- [ ] The leveled shop works (Carousel, Combat, and Mounts tabs; replaces the original "five purchases")
-- [ ] **Understanding check:** Why do enemies live outside the Carousel node? How does the Wolf know it hit something? Why can't a booth pass be counted twice?
-- [ ] You play for 5 minutes and want to keep going
+- [x] Check script passes, including tests
+- [x] The carousel spins; clicks boost; the Horse earns at the booth; Gold/sec is shown
+- [x] Leaves arrive on a countdown, latch, drag, and deal damage; the TEMPORARY stall works
+- [x] Clicking and the Wolf both kill Leaves, and each kill pays once
+- [x] The leveled shop works (Carousel, Combat, and Mounts tabs; replaces the original "five purchases")
+- [x] **Understanding check:** Why do enemies live outside the Carousel node? How does the Wolf know it hit something? Why can't a booth pass be counted twice?
+- [x] You play for 5 minutes and want to keep going
+
+**Signed off 2026-09-24 (Garret).** 199 tests pass. Playtest notes, fixes, jitter cause, and the understanding check are in `planning/phase2/README.md`.
 
 **Then move to Phase 3: Content.**

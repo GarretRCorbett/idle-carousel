@@ -1,6 +1,9 @@
 # Phase 2 Planning: Start Here
 
-## Status (2026-09-24, Step 11 wrap-up)
+## Status: ✅ Phase 2 signed off (2026-09-24)
+All steps done, understanding check passed, 199 tests. Next: Phase 3 (`planning/phase3/README.md`).
+
+## Status at the Step 11 wrap-up
 **Built:** Steps 1–10, 5b, 10b, and the pacing pass (GDD v1.6–1.8). Core loop: GameState, spin, Boost button with Overdrive, Horse and booth payouts, Gold/sec, leveled shop in three tabs (Carousel / Combat / Mounts), Leaves in timed waves, click damage, latch drag, the Wolf, Wolf Fang, mount slots 2–3, extra Horses (sell for 50%), Ticket Booths 2–4, even spacing, and the TEMPORARY health stall with crank and safety net.
 **Extras built early:** Kenney sprites (Horse, Wolf), UI theme (Kenney UI Pack + Future font via `tools/build_ui_theme.gd`), sound effects (`AudioManager`), main menu, backgrounds, Settings + Controls (Esc in game), wave controls (Send wave / N with +50% kill Gold, Auto waves, Emergency Clear), localization (string keys, number formatter, 9 languages with per-language fonts).
 **Check:** passes, **186 tests**. The Step 1 deliberate-failure check was shown on 2026-09-24 (FAIL, exit 1). The gdUnit4 editor plugin is enabled.
