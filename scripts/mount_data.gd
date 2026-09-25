@@ -21,6 +21,12 @@ extends Resource
 ## Sound Game plays when this mount's hit deals damage (an id in the sound bank).
 @export var hit_sfx: StringName = &"wolf_hit"
 
+@export_group("Status")
+## Slowing mounts (Sloth): speed multiplier on enemies it passes (0.5 = half speed).
+@export_range(0.0, 1.0, 0.05) var slow_multiplier: float = 1.0
+## How long the slow lasts, in seconds. 0 = no slow.
+@export_range(0.0, 30.0, 0.1, "suffix:s") var slow_seconds: float = 0.0
+
 @export_group("Economy")
 ## Gold per trigger (booth pass or sweep). Fixed per trigger: faster spin means
 ## more triggers per minute, not more Gold per trigger (GDD v1.4).

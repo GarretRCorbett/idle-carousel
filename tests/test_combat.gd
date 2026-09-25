@@ -367,3 +367,41 @@ func test_giraffe_hits_an_approaching_enemy_far_out() -> void:
 			break
 	assert_float(100.0 - enemy.get_health()).is_equal_approx(GameState.get_mount_damage(giraffe.data), 0.0001)
 	assert_bool(enemy.is_at_rim()).is_false()
+
+
+func _slow_leaf(game: Game, bearing: float, distance: float, speed: float) -> EnemyBase:
+	var carousel := game.get_node("World/Carousel") as Carousel
+	var data := (load("res://resources/enemies/leaf.tres") as EnemyData).duplicate() as EnemyData
+	data.move_speed = speed
+	var enemy := (load("res://scenes/enemies/Leaf.tscn") as PackedScene).instantiate() as EnemyBase
+	enemy.data = data
+	enemy.position = carousel.position + Vector2.from_angle(bearing) * distance
+	game._on_enemy_spawned(enemy)
+	return enemy
+
+
+## The Sloth slows an approaching enemy it passes to half speed, deals no
+## damage, and leaves latched enemies alone.
+func test_sloth_slows_approaching_enemies_without_damage() -> void:
+	var game := _game()
+	(game.get_node("WaveManager") as WaveManager).set_auto(false)
+	GameState.add_gold(10000.0)
+	UpgradeManager.purchase(&"mount_slot")
+	assert_bool(UpgradeManager.purchase(&"sloth")).is_true()
+	var sloth := _mounts(game)[1]
+	assert_bool(sloth is MountSloth).is_true()
+	var flying := _slow_leaf(game, 2.0, 170.0, 1.0)  # inside the Sloth's reach, barely moving
+	var latched := _slow_leaf(game, 3.0, 150.0, 0.0)
+	game._admit_pending_spawns()
+	latched.advance(100.0)
+	for i in 600:
+		game._physics_process(1.0 / 60.0)
+		if flying.is_slowed():
+			break
+	assert_bool(flying.is_slowed()).is_true()
+	assert_float(flying.get_current_speed()).is_equal_approx(flying.get_move_speed() * sloth.data.slow_multiplier, 0.0001)
+	assert_float(flying.get_health()).is_equal(flying.get_max_health())
+	for i in 400:  # well over a full turn: it passes the latched one too
+		game._physics_process(1.0 / 60.0)
+	assert_bool(latched.is_slowed()).is_false()
+	assert_float(latched.get_health()).is_equal(latched.get_max_health())

@@ -8,6 +8,7 @@ Downloaded packs are kept unmodified in `../kenney_assets/` (outside the repo, z
 | `sprites/mounts/horse.png` | [Kenney: Animal Pack Remastered](https://kenney.nl/assets/animal-pack-remastered) | `PNG/Round (outline)/horse.png` | CC0 1.0 | None | 2026-09-24 |
 | `sprites/mounts/wolf.png` | [Kenney: Animal Pack Remastered](https://kenney.nl/assets/animal-pack-remastered) | `PNG/Round (outline)/dog.png` (stand-in for the Wolf) | CC0 1.0 | Renamed | 2026-09-24 |
 | `sprites/mounts/giraffe.png` | [Kenney: Animal Pack Remastered](https://kenney.nl/assets/animal-pack-remastered) | `PNG/Round (outline)/giraffe.png` | CC0 1.0 | None | 2026-09-25 |
+| `sprites/mounts/sloth.png` | Kenney: Animal Pack Remastered | `PNG/Round (outline)/sloth.png` | CC0 1.0 | None | 2026-09-25 |
 | `sprites/enemies/leaf.png` | [Kenney: Foliage Sprites](https://kenney.nl/assets/foliage-sprites) | `PNG/Shaded/sprite_0082.png` | CC0 1.0 | Trimmed, scaled to 96 px, mapped to light grey for tier tinting (`tools/make_tier_sprites.gd`) | 2026-09-25 |
 | `sprites/enemies/stick.png` | [Kenney: Foliage Pack](https://kenney.nl/assets/foliage-pack) | `PNG/Default size/foliagePack_022.png` | CC0 1.0 | Same | 2026-09-25 |
 | `sprites/enemies/rock.png` | Kenney: Foliage Pack | `PNG/Default size/foliagePack_055.png` | CC0 1.0 | Same | 2026-09-25 |
