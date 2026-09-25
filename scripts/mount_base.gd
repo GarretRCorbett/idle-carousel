@@ -12,6 +12,8 @@ signal booth_passed(mount: MountBase, booth_index: int, pass_count: int)
 ## Swept a live enemy on a new pass (Wolf). Game applies this mount's damage,
 ## then calls apply_sweep() for anything else the contact does.
 signal enemy_swept(mount: MountBase, enemy: EnemyBase)
+## Earned Gold on its own (the Panda, once per full turn). Game adds it.
+signal gold_earned(mount: MountBase, amount: float)
 
 @export var data: MountData
 

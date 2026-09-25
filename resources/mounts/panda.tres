@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="MountData" format=3]
 
 [ext_resource type="Script" path="res://scripts/mount_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/mounts/panda.png" id="2_tex"]
 
 [resource]
 script = ExtResource("1_script")
@@ -10,7 +11,13 @@ is_stationary = false
 sweep_range = 60.0
 sweep_arc = 0.0
 base_damage = 0.5
-base_gold_bonus = 1.5
+base_gold_bonus = 0.0
+gold_per_turn = 3.0
+heal_per_kill = 2.0
+tier2_gold_multiplier = 1.5
+tier2_heal_multiplier = 1.5
+tier2_damage_multiplier = 1.5
 placeholder_color = Color(0.902, 0.9098, 0.9373, 1)
 placeholder_points = 8
 placeholder_size = 18.0
+texture = ExtResource("2_tex")

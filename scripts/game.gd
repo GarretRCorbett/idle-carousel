@@ -182,6 +182,7 @@ func _create_mount(id: StringName) -> MountBase:
 	# Every mount is wired the same way; a mount that never emits costs nothing.
 	mount.booth_passed.connect(_on_booth_passed)
 	mount.enemy_swept.connect(_on_enemy_swept)
+	mount.gold_earned.connect(_on_mount_gold_earned)
 	mount.set_enemy_snapshot(_snapshot)
 	return mount
 
@@ -218,6 +219,11 @@ func _layout_booths(count: int) -> void:
 		_booth_bearings.append((_booths[i].position - _carousel.position).angle())
 	for mount in _mounts:
 		mount.set_booth_bearings(_booth_bearings)
+
+
+func _on_mount_gold_earned(_mount: MountBase, amount: float) -> void:
+	GameState.add_gold(amount)
+	AudioManager.play_sfx(&"coin")
 
 
 func _on_booth_passed(mount: MountBase, booth_index: int, pass_count: int) -> void:
@@ -300,10 +306,14 @@ func _on_enemy_reached_rim(enemy: EnemyBase) -> void:
 
 
 ## Runs once per enemy (EnemyBase guarantees it), so the kill pays once.
-## killer (the mount, or null for a click) isn't used yet; the Panda will be.
-func _on_enemy_died(enemy: EnemyBase, _killer: Node) -> void:
+## killer is the mount that landed the lethal hit (null for a click): a
+## healing mount (the Panda) heals only on its own kills.
+func _on_enemy_died(enemy: EnemyBase, killer: Node) -> void:
 	GameState.add_gold(enemy.get_kill_gold())
 	GameState.record_kill(enemy.get_tier_rank())
+	var mount := killer as MountBase
+	if mount != null and mount.data != null:
+		GameState.heal_carousel(GameState.get_mount_heal(mount.data))
 	AudioManager.play_sfx(&"pop")
 	_spawn_pop(enemy.global_position, true)
 	_remove_enemy(enemy)

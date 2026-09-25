@@ -47,6 +47,9 @@ enum Tab { CAROUSEL, COMBAT, MOUNTS }
 @export_range(1, 100, 1) var max_level: int = 1
 ## Must have at least one level of this first. Empty = no prerequisite.
 @export var prerequisite_id: StringName = &""
+## Needs this many *different* mount types at Tier 2 or higher (not counting
+## this row's own mount). The Panda needs 3. 0 = no requirement.
+@export_range(0, 6, 1) var required_tier2_types: int = 0
 
 
 ## Price of the next level when `owned_levels` are already bought.

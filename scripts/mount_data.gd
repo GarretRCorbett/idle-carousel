@@ -21,6 +21,12 @@ extends Resource
 ## Sound Game plays when this mount's hit deals damage (an id in the sound bank).
 @export var hit_sfx: StringName = &"wolf_hit"
 
+@export_group("All-rounder")
+## Gold paid once per full turn of the carousel (Panda). 0 = none.
+@export_range(0.0, 1000.0, 0.1, "or_greater") var gold_per_turn: float = 0.0
+## Carousel health restored when this mount lands a killing hit (Panda). 0 = none.
+@export_range(0.0, 100.0, 0.1, "or_greater") var heal_per_kill: float = 0.0
+
 @export_group("Status")
 ## Slowing mounts (Sloth): speed multiplier on enemies it passes (0.5 = half speed).
 @export_range(0.0, 1.0, 0.05) var slow_multiplier: float = 1.0
@@ -40,6 +46,7 @@ extends Resource
 @export_range(0.1, 10.0, 0.05) var tier2_arc_multiplier: float = 1.0
 @export_range(0.1, 10.0, 0.05) var tier2_gold_multiplier: float = 1.0
 @export_range(0.1, 10.0, 0.05) var tier2_slow_seconds_multiplier: float = 1.0
+@export_range(0.1, 10.0, 0.05) var tier2_heal_multiplier: float = 1.0
 
 @export_group("Placeholder Visuals")
 ## Fill color of the code-drawn placeholder polygon.

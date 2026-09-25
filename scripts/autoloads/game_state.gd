@@ -637,6 +637,14 @@ func get_tier_kills(tier_rank: int) -> int:
 	return _tier_kills.get(tier_rank, 0)
 
 
+## Restores carousel health (the Panda's kills), up to max. Does nothing while
+## stalled: getting going again is the crank's job.
+func heal_carousel(amount: float) -> void:
+	if _stalled or not is_finite(amount) or amount <= 0.0 or _health >= get_max_health():
+		return
+	_set_health(minf(get_max_health(), _health + amount))
+
+
 # --- Clicking ---------------------------------------------------------------------
 
 ## Damage one enemy click deals: base plus every Click Damage level.
@@ -666,6 +674,24 @@ func get_mount_arc(data: MountData) -> float:
 ## Gold per trigger (booth pass for the Horse).
 func get_mount_gold(data: MountData) -> float:
 	return data.base_gold_bonus * _tier2(data, data.tier2_gold_multiplier)
+
+
+func get_mount_gold_per_turn(data: MountData) -> float:
+	return data.gold_per_turn * _tier2(data, data.tier2_gold_multiplier)
+
+
+func get_mount_heal(data: MountData) -> float:
+	return data.heal_per_kill * _tier2(data, data.tier2_heal_multiplier)
+
+
+## Mount types at Tier 2 or higher, not counting `except_id` (so the Panda
+## can't count itself). Duplicates don't count: tiers are per type.
+func get_tier2_type_count(except_id: StringName = &"") -> int:
+	var count := 0
+	for id in _mount_tiers:
+		if id != except_id and _mount_tiers[id] >= 2:
+			count += 1
+	return count
 
 
 func get_mount_slow_seconds(data: MountData) -> float:
@@ -770,6 +796,8 @@ func can_purchase_upgrade(upgrade: UpgradeData) -> bool:
 	if is_upgrade_maxed(upgrade):
 		return false
 	if upgrade.prerequisite_id != &"" and not is_upgrade_purchased(upgrade.prerequisite_id):
+		return false
+	if get_tier2_type_count(upgrade.id) < upgrade.required_tier2_types:
 		return false
 	if not _is_effect_supported(upgrade):
 		return false

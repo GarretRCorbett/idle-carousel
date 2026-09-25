@@ -17,6 +17,7 @@ enum RowState { LOCKED, SAVING, AFFORDABLE, MAXED }
 @export var requires_key: String = "SHOP_REQUIRES"
 @export var maxed_key: String = "SHOP_MAXED"
 @export var needs_slot_key: String = "SHOP_NEEDS_SLOT"
+@export var needs_tier2_key: String = "SHOP_NEEDS_TIER2_TYPES"
 @export var sell_key: String = "SHOP_SELL"
 ## Tab titles, in UpgradeData.Tab order.
 @export var tab_title_keys: PackedStringArray = ["SHOP_TAB_CAROUSEL", "SHOP_TAB_COMBAT", "SHOP_TAB_MOUNTS"]
@@ -76,13 +77,15 @@ static func get_row_state(id: StringName) -> RowState:
 	return RowState.AFFORDABLE if UpgradeManager.can_purchase(id) else RowState.SAVING
 
 
-enum LockReason { NONE, PREREQUISITE, NO_SLOT }
+enum LockReason { NONE, PREREQUISITE, NO_SLOT, TIER2_TYPES }
 
 
 static func _locked_reason(id: StringName) -> LockReason:
 	var upgrade := UpgradeManager.get_definition(id)
 	if upgrade.prerequisite_id != &"" and not UpgradeManager.is_purchased(upgrade.prerequisite_id):
 		return LockReason.PREREQUISITE
+	if GameState.get_tier2_type_count(upgrade.id) < upgrade.required_tier2_types:
+		return LockReason.TIER2_TYPES
 	if upgrade.effect_type == UpgradeData.EffectType.BUY_MOUNT and not GameState.has_free_mount_slot():
 		return LockReason.NO_SLOT
 	return LockReason.NONE
@@ -187,8 +190,11 @@ func _refresh() -> void:
 		row.progress.value = clampf(GameState.get_gold() / cost, 0.0, 1.0) if cost > 0.0 else 1.0
 		row.status.visible = state == RowState.LOCKED
 		if state == RowState.LOCKED:
-			if _locked_reason(id) == LockReason.NO_SLOT:
+			var reason := _locked_reason(id)
+			if reason == LockReason.NO_SLOT:
 				row.status.text = tr(needs_slot_key)
+			elif reason == LockReason.TIER2_TYPES:
+				row.status.text = tr(needs_tier2_key).format([GameState.get_tier2_type_count(id), upgrade.required_tier2_types])
 			else:
 				var prerequisite := UpgradeManager.get_definition(upgrade.prerequisite_id)
 				row.status.text = tr(requires_key).format([tr(prerequisite.display_name)])
