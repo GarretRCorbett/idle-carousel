@@ -29,6 +29,14 @@ enum Phase { IDLE, FIGHTING, CLEANUP }
 ## At most this many summons alive or waiting to join; extra ones are dropped
 ## (never saved up for later).
 @export_range(0, 500, 1) var max_summons: int = 45
+## Bosses that fly in start this far from the center, from a random side
+## (bosses with their own path, like Leaf Storm, place themselves).
+@export_range(100.0, 1000.0, 1.0, "suffix:px") var spawn_radius: float = 420.0
+
+## The carousel center, in the enemy layer's space. Set by Game.
+var spawn_center: Vector2 = Vector2.ZERO
+## Picks where bosses come from; seeded per run (GameState's run seed).
+var rng := RandomNumberGenerator.new()
 
 var _phase: Phase = Phase.IDLE
 var _tier: TierData
@@ -83,6 +91,7 @@ func start(tier: TierData) -> bool:
 		return false
 	_tier = tier
 	_boss = boss
+	_boss.position = spawn_center + Vector2.from_angle(rng.randf_range(-PI, PI)) * spawn_radius
 	_boss.encounter_role = EnemyBase.EncounterRole.BOSS
 	_boss.configure(tier, 1.0)
 	_boss.summon_requested.connect(_on_summon_requested)
@@ -122,6 +131,7 @@ func give_up() -> void:
 ## A new run: forget the fight without paying anything. Game already drops
 ## queued enemies on a new run.
 func reset() -> void:
+	rng.seed = GameState.get_run_seed() + 104729
 	_phase = Phase.IDLE
 	_members.clear()
 	_required.clear()
@@ -161,9 +171,10 @@ func _on_boss_died(_enemy: EnemyBase, _killer: Node) -> void:
 		return
 	_phase = Phase.CLEANUP
 	boss_health_changed.emit(0.0)
+	var child_tier := _boss.split_tier if _boss.split_tier != null else _tier
 	for child in _boss.make_death_split():
 		child.encounter_role = EnemyBase.EncounterRole.REQUIRED
-		child.configure(_tier, 1.0)
+		child.configure(child_tier, 1.0)
 		child.died.connect(_on_required_died)
 		_required[child.get_instance_id()] = child
 		_members.append(child)

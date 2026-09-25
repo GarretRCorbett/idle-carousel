@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="TierData" format=3]
 
 [ext_resource type="Script" path="res://scripts/tier_data.gd" id="1_script"]
+[ext_resource type="Resource" path="res://resources/bosses/stick_giant.tres" id="boss_data"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/Leaf.tscn" id="leaf_scene"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/Stick.tscn" id="stick_scene"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/Rock.tscn" id="rock_scene"]
@@ -48,3 +49,4 @@ drag_multiplier = 1.0
 latch_dps_multiplier = 1.1
 gold_multiplier = 1.45
 waves = SubResource("waves")
+boss = ExtResource("boss_data")

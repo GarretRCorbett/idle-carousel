@@ -21,6 +21,9 @@ extends Resource
 @export_range(1.0, 256.0, 1.0, "or_greater", "suffix:px") var click_radius: float = 20.0
 
 @export_group("Economy")
+## Ignores slows (the Ancient Log; freeze will read it too).
+@export var immune_to_slow: bool = false
+
 ## Gold awarded on kill.
 @export_range(0.0, 10000.0, 0.1, "or_greater") var gold_drop: float = 1.0
 

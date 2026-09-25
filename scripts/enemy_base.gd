@@ -27,6 +27,9 @@ enum EncounterRole { NONE, BOSS, SUMMON, REQUIRED }
 
 ## Set by BossEncounter before the enemy joins; normal enemies stay NONE.
 var encounter_role: EncounterRole = EncounterRole.NONE
+## If 0 or more, configure() uses this as the max health instead of data x
+## tier (the Boulder's grips share the health it had left).
+var max_health_override: float = -1.0
 
 @export_group("Hit Flash")
 ## Visual tint right after a hit, fading back to normal.
@@ -100,6 +103,8 @@ func configure(tier: TierData, reward_multiplier: float) -> void:
 	_configured = true
 	_tier_rank = tier.rank if tier != null else 0
 	_max_health = data.base_health * (tier.health_multiplier if tier != null else 1.0)
+	if max_health_override >= 0.0:
+		_max_health = max_health_override
 	_move_speed = data.move_speed * (tier.speed_multiplier if tier != null else 1.0)
 	_latch_drag = data.latch_drag * (tier.drag_multiplier if tier != null else 1.0)
 	_latch_dps = data.damage_per_second * (tier.latch_dps_multiplier if tier != null else 1.0)
@@ -113,7 +118,7 @@ func configure(tier: TierData, reward_multiplier: float) -> void:
 ## Slows it to `multiplier` of its speed for `seconds` (the Sloth). Only
 ## affects an active enemy; refreshes rather than stacks.
 func apply_slow(multiplier: float, seconds: float) -> void:
-	if not is_active():
+	if not is_active() or data.immune_to_slow:
 		return
 	_status.apply_slow(multiplier, seconds)
 	_status_running = _status.is_slowed()
@@ -202,13 +207,19 @@ func advance(delta: float) -> void:
 		return
 	var offset := position - _center
 	var distance := offset.length()
-	var travel := _move_speed * speed_factor * delta
+	var travel := _move_speed * speed_factor * _speed_multiplier() * delta
 	if distance - travel > _stop_distance:
 		position -= offset / distance * travel
 		return
 	position = _center + offset.normalized() * _stop_distance
 	_state = State.AT_RIM
 	reached_rim.emit(self)
+
+
+## Extra speed factor a subclass can vary (the Boulder rolls faster as it
+## nears the rim). 1 = the tier speed.
+func _speed_multiplier() -> float:
+	return 1.0
 
 
 ## Counts timed effects (slow) down by one tick and returns the speed factor

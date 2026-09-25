@@ -82,7 +82,7 @@ func test_pips_follow_unlocks_and_switch_tiers() -> void:
 	assert_bool((pips[1] as Button).disabled).is_false()
 	(pips[1] as Button).pressed.emit()
 	assert_int(GameState.get_selected_tier()).is_equal(1)
-	# Green has no boss yet (Step 7): the strip says so and Challenge is off.
+	# Green's boss needs its own kill gate first, so Challenge is off.
 	assert_bool(_action(_strip(game)).disabled).is_true()
 
 
@@ -96,8 +96,8 @@ func test_pips_lock_during_a_fight() -> void:
 		assert_bool((pip as Button).disabled).is_true()
 
 
-## Nothing in the strip changes size between farming Grey, farming a tier with
-## no boss yet, and fighting (Garret: the bar shifted when switching tiers).
+## Nothing in the strip changes size between farming Grey, farming another
+## tier, and fighting (Garret: the bar shifted when switching tiers).
 func test_strip_layout_never_shifts() -> void:
 	var game := _game()
 	var strip := _strip(game)
@@ -110,7 +110,7 @@ func test_strip_layout_never_shifts() -> void:
 		return list
 	var farming: Array[float] = widths.call()
 	GameState.record_boss_victory(0)
-	(_pips(strip)[1] as Button).pressed.emit()  # Green: no boss yet
+	(_pips(strip)[1] as Button).pressed.emit()  # Green: a different boss, gate not met
 	assert_array(widths.call()).is_equal(farming)
 	(_pips(strip)[0] as Button).pressed.emit()
 	for i in 60:

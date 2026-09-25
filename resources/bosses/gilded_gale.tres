@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BossData" format=3]
+
+[ext_resource type="Script" path="res://scripts/boss_data.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/GildedGale.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_script")
+boss_id = &"gilded_gale"
+name_key = "BOSS_GILDED_GALE"
+scene = ExtResource("2_scene")
+kills_required = 120
+time_limit_seconds = 150.0
+first_clear_gold = 650.0
+repeat_clear_gold = 160.0

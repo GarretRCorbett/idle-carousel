@@ -71,6 +71,7 @@ func _ready() -> void:
 	_encounter = BossEncounter.new()
 	_encounter.name = "BossEncounter"
 	add_child(_encounter)
+	_encounter.spawn_center = _carousel.position
 	_encounter.enemy_spawn_requested.connect(_on_enemy_spawned)
 	_encounter.enemy_removal_requested.connect(_remove_encounter_enemy)
 	_encounter.started.connect(func(_rank: int) -> void: _wave_manager.set_suspended(true))
@@ -337,8 +338,8 @@ func _on_enemy_swept(mount: MountBase, enemy: EnemyBase) -> void:
 ## underneath it) and GameState adds its drag and damage.
 func _on_enemy_reached_rim(enemy: EnemyBase) -> void:
 	AudioManager.play_sfx(&"latch")
-	# A boss fight's required enemies can't be removed by Emergency Clear.
-	var protected := enemy.encounter_role == EnemyBase.EncounterRole.REQUIRED
+	# A latched boss and a fight's required pieces can't be removed by Emergency Clear.
+	var protected := enemy.encounter_role in [EnemyBase.EncounterRole.REQUIRED, EnemyBase.EncounterRole.BOSS]
 	GameState.register_latch(enemy.get_instance_id(), enemy.get_latch_drag(), enemy.get_latch_dps(), protected)
 
 

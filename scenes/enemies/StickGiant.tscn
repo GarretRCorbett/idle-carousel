@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy_stick_giant.gd" id="1_script"]
+[ext_resource type="Resource" path="res://resources/enemies/stick_giant.tres" id="2_data"]
+[ext_resource type="Script" path="res://scripts/enemy_health_bar.gd" id="3_bar"]
+[ext_resource type="Script" path="res://scripts/enemy_slow_icon.gd" id="4_slow"]
+
+[node name="StickGiant" type="Node2D"]
+script = ExtResource("1_script")
+data = ExtResource("2_data")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Outline" type="Sprite2D" parent="Visual"]
+visible = false
+
+[node name="Sprite" type="Sprite2D" parent="Visual"]
+
+[node name="HealthBar" type="Node2D" parent="."]
+visible = false
+script = ExtResource("3_bar")
+bar_size = Vector2(72, 6)
+
+[node name="SlowIcon" type="Node2D" parent="."]
+visible = false
+script = ExtResource("4_slow")

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BossData" format=3]
+
+[ext_resource type="Script" path="res://scripts/boss_data.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/StickGiant.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_script")
+boss_id = &"stick_giant"
+name_key = "BOSS_STICK_GIANT"
+scene = ExtResource("2_scene")
+kills_required = 80
+time_limit_seconds = 120.0
+first_clear_gold = 300.0
+repeat_clear_gold = 75.0

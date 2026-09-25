@@ -10,6 +10,10 @@ extends EnemyBase
 ## as summons (no Gold, no kill credit).
 signal summon_requested(enemies: Array[EnemyBase])
 
+## The tier its split children are (Obsidian Boulder: Red Rocks). Empty = the
+## fight's own tier.
+@export var split_tier: TierData
+
 
 ## Enemies that appear when the boss dies and must die too before the fight is
 ## won (Leaf Storm: 4 Grey Leaves). Positioned, not configured. Default: none.

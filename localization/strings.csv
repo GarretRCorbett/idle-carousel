@@ -100,3 +100,8 @@ BOSS_BEATEN,Beaten,Vencido,Vaincu,Besiegt,Derrotado,Побеждён,已击败,�
 BOSS_KILLS,{0}/{1},{0}/{1},{0}/{1},{0}/{1},{0}/{1},{0}/{1},{0}/{1},{0}/{1},{0}/{1}
 BOSS_REMAINING,Remaining: {0},Quedan: {0},Restants : {0},Übrig: {0},Restam: {0},Осталось: {0},剩余：{0},残り：{0},남음: {0}
 BOSS_NONE,No boss yet,Aún sin jefe,Pas encore de boss,Noch kein Boss,Ainda sem chefe,Босса пока нет,暂无首领,ボスはまだいない,아직 보스 없음
+BOSS_STICK_GIANT,Stick Giant,Palo gigante,Bâton géant,Stockriese,Graveto gigante,Палка-великан,巨木棍,ジャイアントスティック,거대 막대기
+BOSS_BOULDER,Boulder,Peñasco,Rocher,Felsbrocken,Pedregulho,Валун,巨石,ボルダー,바위
+BOSS_GILDED_GALE,Gilded Gale,Vendaval dorado,Bourrasque dorée,Goldener Sturm,Vendaval dourado,Золотой шквал,镀金狂风,ギルデッドゲイル,황금 돌풍
+BOSS_ANCIENT_LOG,Ancient Log,Tronco ancestral,Bûche ancestrale,Uralter Stamm,Tronco ancestral,Древнее бревно,远古原木,エンシェントログ,고대 통나무
+BOSS_OBSIDIAN_BOULDER,Obsidian Boulder,Peñasco de obsidiana,Rocher d'obsidienne,Obsidianbrocken,Pedregulho de obsidiana,Обсидиановый валун,黑曜巨石,オブシディアンボルダー,흑요석 바위
