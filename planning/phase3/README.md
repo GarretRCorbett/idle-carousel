@@ -33,6 +33,16 @@ the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
 - **Prestige ships in v1.0** (GDD v1.10), built in Phase 5. For Phase 3 that means: keep run
   state separate from anything permanent, keep numbers in data with multipliers (future
   challenge modifiers), and track run times.
+- **Mounts can be doubled and sold** (GDD v1.11, after the wrap-up playtest): any type can be
+  bought more than once and sold for 50%, to swap builds (e.g. sell a Horse for a second
+  Wolf before a boss). Built for Horse and Wolf in Phase 2; new mounts follow the rule.
+  Affects question 9 (per-type tiers fit this well) and question 10 (count *types*, so
+  duplicates can't unlock the Unicorn).
+- **Send wave limit:** blocked while more than 30 enemies are alive (Phase 2 wrap-up).
+  Revisit once Sticks and Rocks exist; Garret might prefer one early wave at a time then.
+  This answers question 24 for now and part of question 26.
+- **Tuning from the wrap-up playtest:** base 60°/s, max boost +40%, waves every 10 s. So
+  question 22 is answered (60°/s).
 - **Speedrun-friendly** (Garret, see NOTES): track active run time and each boss's first-clear time in GameState; seed wave randomness per run.
 
 ## What's in this folder

@@ -1,5 +1,5 @@
 # 🎠 Idle Carousel — Game Design Document
-### Version 1.10 | Working Title: Idle Carousel
+### Version 1.11 | Working Title: Idle Carousel
 > Solo dev project. Built in Godot 4.7 stable. Target: Steam release, anonymous, $4.99 (sale target ~$3.49–$3.75), with a free demo.
 > Personal motivation: daughters love carousels.
 > Influences: Cookie Clicker, Clicker Heroes, A Game About Feeding a Black Hole, Rusty's Retirement.
@@ -7,6 +7,7 @@
 ---
 
 ## Changelog
+- **v1.11** — After the Phase 2 wrap-up playtest (Garret): **mounts can be doubled and sold** (not just Horses), so players can swap builds, e.g. an extra Horse for income, then sell it for a second Wolf before a boss. Wolves now (up to the slot count, 50% refund); the Phase 3 mounts follow the same rule. Tuning: base speed 60°/s (was 45), max boost +40% (was +50%), waves every 10 s (was 20). Send wave is blocked while more than 30 enemies are alive (revisit with Sticks and Rocks). Enemy clicks get a sound and a small pop.
 - **v1.10** — Prestige is **in v1.0** (Garret): after beating the Rusted King you can prestige, start a fresh run, and keep permanent boosts. Direction: a small permanent upgrade tree (starting kits, automation, multipliers, a couple of new things) and optional challenge modifiers after the first win (Wildfrost Storm Bells / Slay the Spire Ascension style) that raise prestige rewards. Details are designed before Phase 5. Resolves the prestige-scope DECISION PENDING. Also: bosses are timed challenges reached through a per-tier kill gate (TEMPORARY rule for Phase 3 playtests; see `planning/phase3/README.md`).
 - **v1.9** — Wave controls pulled into Phase 2 (Garret): Next Wave button + N key with a +50% kill-Gold early-send bonus and a full countdown restart; Auto Wave toggle; Emergency Clear priced from normal booth income (20 s, min 25, 60 s cooldown). Settings and Controls screen; backgrounds (top-down park for play, fall landscape for the menu).
 - **v1.8** — After the first Leaf playtest (Garret): drag softens as it stacks (speed ÷ (1 + total drag)), so Boost always helps and only the stall stops the carousel. Latched enemies deal no damage for their first 2 s. Health regenerates slowly while nothing is latched. TEMPORARY stall additions: Boost cranks a stalled carousel back (restart at 15% health, enemies stay), and a 60 s safety net clears enemies. Fail-state direction: "safe farm, risky push" (a stall costs the attempt and time, never Gold or unlocks); still DECISION PENDING until confirmed in play.
@@ -186,7 +187,7 @@ Six total mounts. Unlocked progressively. Each occupies one carousel slot. Each 
 - **Behavior:** Positioned near the ticket booth pass point. Generates a fixed amount of Gold each time it passes the booth. Faster spin means more passes per minute; upgrades raise the amount per pass.
 - **Does NOT attack enemies**
 - **Starting mount** — player begins with one Horse
-- **Extra Horses (v1.5):** more Horses can be bought into empty mount slots, each costing more than the last. A Horse can be sold back for a partial refund to free its slot. Every slot is a choice: another Horse for income, or a combat mount for defense.
+- **Extra Horses (v1.5):** more Horses can be bought into empty mount slots, each costing more than the last. A Horse can be sold back for a partial refund to free its slot. Every slot is a choice: another Horse for income, or a combat mount for defense. (v1.11: every mount type works this way, see Mount Slot Progression.)
 - **Art:** Classic carousel horse. Brown/chestnut. Simple side silhouette from top-down. Coin icon appears on booth pass.
 - **Color tier:** Saddle color changes per tier (grey → green → blue → purple → gold → red)
 - **Upgrades:** Tier 2 doubles Gold per pass. Tier 3 generates Gold on every sweep not just booth passes. Lucky Horseshoe adds a small triple-Gold chance.
@@ -248,6 +249,8 @@ Start with 1 slot (Horse only). Slots are always bought with Gold in the Upgrade
 - **Slots 4, 5, and 6:** appear in the shop after beating the first, second, and third tier bosses.
 
 A slot and its mount are separate purchases (e.g., buy Mount Slot 2, then buy Wolf to fill it).
+
+**Doubling and selling (v1.11):** any mount type can be bought more than once (each costs more than the last) and sold back for a partial refund (50%) to free its slot, so players can reshape the carousel: Horses for income while farming, extra Wolves for a boss push. The starting Horse can't be sold. Built for the Horse and Wolf in Phase 2; the Phase 3 mounts follow the same rule. Whether mount-tier upgrades apply per type or per mount is decided in Phase 3.
 
 Mount placement is automatic — they distribute equidistantly as added. No manual placement in v1.0.
 
@@ -494,7 +497,7 @@ After the victory screen the player can **prestige** (see Prestige) and start a 
 ### Wave Controls
 Built in Phase 2 (v1.9), in the stats panel:
 - Auto Wave toggle button — when ON, the wave countdown always runs and sends the next wave when it hits zero, whether or not the last wave is cleared. When OFF, the countdown pauses. Remembered between sessions (default ON).
-- Next Wave manual button (also the N key) — shows the countdown and sends the next wave immediately. **Early-send bonus (v1.9):** that wave's enemies drop +50% Gold, paid only on kills, so sending waves can't be farmed. The countdown then restarts at a full interval, so waves never pile up by accident.
+- Next Wave manual button (also the N key) — shows the countdown and sends the next wave immediately. **Early-send bonus (v1.9):** that wave's enemies drop +50% Gold, paid only on kills, so sending waves can't be farmed. The countdown then restarts at a full interval, so waves never pile up by accident. **Send limit (v1.11):** Send wave is blocked while more than 30 enemies are alive (tunable); Auto waves still arrive on their timer. Revisit once Sticks and Rocks exist (one early wave at a time is the alternative).
 - Emergency Clear button — removes all latched enemies (no kill Gold) and ends a stall. **Price (v1.9):** 20 seconds of normal booth income (unboosted, no drag, so latches can't discount it), minimum 25 Gold; 60 second cooldown; usable only while something is latched.
 
 ### Mount Info
@@ -768,7 +771,6 @@ Target playtime for a complete first run: 2.5 to 3.5 hours.
 ### Explicitly NOT in v1.0
 - Multiple carousel types or skins
 - Free mount placement
-- Mount doubling or stacking (exception, v1.5: extra Horses)
 - Mobile support
 - Multiplayer
 - More than 6 enemy tiers
@@ -786,7 +788,6 @@ Save these for after v1.0 ships. Do not build during v1.0 development.
 
 - Carousel skins as prestige rewards (prestige itself is in v1.0)
 - Free mount placement mode unlocked after first clear
-- Mount doubling mode — stack same type for specialized builds
 - Mana/spell mount with AoE burst damage and long cooldown
 - Second carousel — harder parallel run with different enemies
 - Seasonal event skins (Halloween, winter)
@@ -796,6 +797,6 @@ Save these for after v1.0 ships. Do not build during v1.0 development.
 
 ---
 
-*GDD Version 1.10*
+*GDD Version 1.11*
 *Created: June 2026*
 *Status: Design complete, ready for development*

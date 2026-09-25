@@ -263,3 +263,22 @@ func test_click_shows_a_pop_even_when_it_kills() -> void:
 		if child is ClickPop:
 			pops += 1
 	assert_int(pops).is_equal(1)
+
+
+## Garret (2026-09-24): more than one Wolf, and Wolves can be sold to swap builds.
+func test_two_wolves_can_be_bought_and_one_sold() -> void:
+	var game := _game()
+	GameState.add_gold(10000.0)
+	UpgradeManager.purchase(&"mount_slot")
+	UpgradeManager.purchase(&"mount_slot")
+	assert_bool(UpgradeManager.purchase(&"wolf")).is_true()
+	assert_bool(UpgradeManager.purchase(&"wolf")).is_true()
+	var wolves := _mounts(game).filter(func(m: MountBase) -> bool: return m is MountWolf)
+	assert_int(wolves.size()).is_equal(2)
+	var wolf := UpgradeManager.get_definition(&"wolf")
+	var expected_refund := roundf(wolf.get_cost_for_level(1) * wolf.sell_refund_fraction)
+	var gold_before := GameState.get_gold()
+	assert_bool(UpgradeManager.sell(&"wolf")).is_true()
+	assert_float(GameState.get_gold() - gold_before).is_equal(expected_refund)
+	wolves = _mounts(game).filter(func(m: MountBase) -> bool: return m is MountWolf)
+	assert_int(wolves.size()).is_equal(1)
