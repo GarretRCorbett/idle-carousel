@@ -18,6 +18,9 @@ Downloaded packs are kept unmodified in `../kenney_assets/` (outside the repo, z
 | `ui/button_yellow.png` | [Kenney: UI Pack](https://kenney.nl/assets/ui-pack) | `PNG/Yellow/Default/button_rectangle_depth_flat.png` | CC0 1.0 | Renamed | 2026-09-24 |
 | `ui/button_yellow_hover.png` | Kenney: UI Pack | `PNG/Yellow/Default/button_rectangle_depth_gradient.png` | CC0 1.0 | Renamed | 2026-09-24 |
 | `ui/button_yellow_pressed.png` | Kenney: UI Pack | `PNG/Yellow/Default/button_rectangle_flat.png` | CC0 1.0 | Renamed | 2026-09-24 |
+| `ui/button_blue.png` | Kenney: UI Pack | `PNG/Blue/Default/button_rectangle_depth_flat.png` | CC0 1.0 | Renamed; tinted royal blue by the theme | 2026-09-25 |
+| `ui/button_blue_hover.png` | Kenney: UI Pack | `PNG/Blue/Default/button_rectangle_depth_gradient.png` | CC0 1.0 | Same | 2026-09-25 |
+| `ui/button_blue_pressed.png` | Kenney: UI Pack | `PNG/Blue/Default/button_rectangle_flat.png` | CC0 1.0 | Same | 2026-09-25 |
 | `ui/button_grey.png` | Kenney: UI Pack | `PNG/Grey/Default/button_rectangle_depth_flat.png` | CC0 1.0 | Renamed | 2026-09-24 |
 | `ui/button_red.png` | Kenney: UI Pack | `PNG/Red/Default/button_rectangle_depth_flat.png` | CC0 1.0 | Renamed | 2026-09-24 |
 | `fonts/kenney_future_narrow.ttf` | [Kenney: Kenney Fonts](https://kenney.nl/assets/kenney-fonts) | `Fonts/Kenney Future Narrow.ttf` | CC0 1.0 | Renamed | 2026-09-24 |

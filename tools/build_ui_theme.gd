@@ -27,6 +27,8 @@ const TAB_IDLE := Color("405d83")
 const TAB_HOVER := Color("52709a")
 ## Price text on a disabled (grey) button: dark enough to read on light grey.
 const DISABLED_TEXT := Color("4a5a70")
+## Kenney's blue buttons are sky-cyan; this tint makes them royal blue.
+const ROYAL_TINT := Color(0.55, 0.52, 1.0)
 
 
 func _initialize() -> void:
@@ -75,6 +77,14 @@ func _initialize() -> void:
 	theme.set_color("font_pressed_color", "CrankButton", CREAM)
 	theme.set_color("font_focus_color", "CrankButton", CREAM)
 	theme.set_color("font_hover_pressed_color", "CrankButton", CREAM)
+	# Secondary actions (Settings, Quit, Back, Send wave, Sell): royal blue
+	# with ivory text. Main actions (Play, Boost, Challenge, buying) stay gold.
+	theme.set_type_variation("BlueButton", "Button")
+	_button(theme, "BlueButton", "button_blue", "button_blue_hover", "button_blue_pressed")
+	for state in ["normal", "hover", "pressed"]:
+		(theme.get_stylebox(state, "BlueButton") as StyleBoxTexture).modulate_color = ROYAL_TINT
+	for color in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
+		theme.set_color(color, "BlueButton", CREAM)
 
 	# Toggles (Auto waves, Fullscreen): plain text plus the switch, not a button.
 	for state in ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]:

@@ -149,6 +149,7 @@ func _build_row(upgrade: UpgradeData) -> ShopRow:
 	if upgrade.sell_refund_fraction > 0.0:
 		# Selling loses half the price, so it asks once (Garret, memo R).
 		row.sell_button = TwoStepButton.new()
+		row.sell_button.theme_type_variation = &"BlueButton"
 		row.sell_button.focus_mode = Control.FOCUS_NONE
 		row.sell_button.confirmed.connect(UpgradeManager.sell.bind(upgrade.id))
 		buttons.add_child(row.sell_button)

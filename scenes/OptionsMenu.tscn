@@ -182,12 +182,14 @@ alignment = 1
 theme_override_constants/separation = 12
 
 [node name="BackButton" type="Button" parent="Center/Panel/Margin/Column/ButtonRow"]
+theme_type_variation = &"BlueButton"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 44)
 layout_mode = 2
 text = "OPT_BACK"
 
 [node name="MainMenuButton" type="Button" parent="Center/Panel/Margin/Column/ButtonRow"]
+theme_type_variation = &"BlueButton"
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(180, 44)
@@ -195,6 +197,7 @@ layout_mode = 2
 text = "OPT_MAIN_MENU"
 
 [node name="QuitButton" type="Button" parent="Center/Panel/Margin/Column/ButtonRow"]
+theme_type_variation = &"BlueButton"
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(180, 44)
