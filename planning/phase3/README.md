@@ -27,7 +27,9 @@
   pack, bigger waves): waves about twice as big (6.1), two-step confirm + Sell (6.2), boss progress
   state (6.3), gating behind bosses (6.4), BossEncounter + Leaf Storm (6.5), boss strip (6.6),
   tuning from `tools/boss_sim.tscn`. GDD v1.14.
-- **Next:** Garret playtests Grey → Leaf Storm → Green. Then Step 7 (the other five bosses).
+- Garret playtested Step 6 twice (very positive); strip shifting fixed. Step 7 questions answered.
+- **Next:** Step 7 plan (the other five bosses), then Step 8 (economy simulator + pricing), Step 9
+  (full playtest, Codex review, sign-off).
 
 Phase 3 roadmap scope: Sloth, Giraffe, Elephant, Panda; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
@@ -83,6 +85,15 @@ bound that is always at least the real window (a randomized test checks it again
 math, and fails if the bound is weakened); the ring check happens before any function call;
 latched, unslowed enemies skip the slow bookkeeping; the snapshot sizes its arrays once per tick;
 Game's loop drops a duplicate check.
+
+## Decided 2026-09-25 (Garret, after two playtests of Step 6: "things are looking amazing")
+- **Step 7 bosses:** Gilded Gale = a **steady trickle** of about 2 Leaves every 4 s all fight (not
+  packs), no Gold or kill credit (Q17). Ancient Log's first **3 hits do reduced damage** (e.g. 25%),
+  and it's immune to slow (and later freeze) (Q18). Boulder's **3 latch points each have their
+  own health**, its drag dropping as each breaks (Q19). Obsidian Boulder is **two stages**: the
+  body splits into 2 Rocks of the tier below (Red, replacing the old "Purple Rocks"), and **every
+  piece must die** for the win, the same rule as Leaf Storm's 4 Leaves (Q16, Q20).
+- The strip no longer shifts when switching tiers (fixed from the playtest).
 
 ## Decided 2026-09-25 (Garret, after seeing Step 3)
 - **More Sticks and Rocks early:** Grey waves 80 / 20 / 5 (Leaf / Stick / Rock), Sticks after 20
@@ -293,11 +304,11 @@ Grouped by when they're needed. Recommendations marked ★. Full reasoning is in
 15. Waves per tier: ★ memo M's recipe table (Sticks from ~40 Grey kills, Rocks from ~40 Green kills) / random mix.
 
 **Before Steps 6–7 (bosses)**
-16. Split bosses win when: ★ every split child is dead too / the parent dies. (L12)
-17. Gilded Gale: ★ 2 Leaves every 4 s, no Gold or kill credit / 2 every second as written. (M9, L13)
-18. Ancient Log "resists the first 3 hits": ★ reduced damage on those hits / fully blocked. And immune to freeze as well as slow? ★ yes. (L10, L11)
-19. Boulder's 3 latch points: ★ each has its own health; drag drops as each is cleared / full drag until all are cleared / shared health. (L9)
-20. Obsidian Boulder "must kill twice": ★ body dies, then 2 Purple Rocks must die (two stages) / something else.
+~~16. Split bosses win when~~ **Answered 2026-09-25 (see Decided).** 16. Split bosses win when: ★ every split child is dead too / the parent dies. (L12)
+~~17. Gilded Gale~~ **Answered 2026-09-25 (see Decided).** 17. Gilded Gale: ★ 2 Leaves every 4 s, no Gold or kill credit / 2 every second as written. (M9, L13)
+~~18. Ancient Log~~ **Answered 2026-09-25 (see Decided).** 18. Ancient Log "resists the first 3 hits": ★ reduced damage on those hits / fully blocked. And immune to freeze as well as slow? ★ yes. (L10, L11)
+~~19. Boulder~~ **Answered 2026-09-25 (see Decided).** 19. Boulder's 3 latch points: ★ each has its own health; drag drops as each is cleared / full drag until all are cleared / shared health. (L9)
+~~20. Obsidian Boulder~~ **Answered 2026-09-25 (see Decided).** 20. Obsidian Boulder "must kill twice": ★ body dies, then 2 Purple Rocks must die (two stages) / something else.
 ~~21. Trunk Toss knockback~~ **Answered 2026-09-25 (see Decided).** Trunk Toss knockback: ★ Phase 4 with the other named upgrades / build with the Elephant now. (L7, L8)
 
 **Before Step 8 (pricing)**

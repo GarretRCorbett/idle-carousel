@@ -157,4 +157,4 @@ A game gets only one Next Fest, so this is the one.
 ## Next Concrete Step
 _Update this line at the end of every session._
 
-> Garret playtests the first boss (Leaf Storm); then Phase 3 Step 7, the other five bosses. Where Phase 3 stands: `planning/phase3/README.md`.
+> Phase 3 Step 7 plan: the other five bosses (their design questions are answered, GDD v1.15). Where Phase 3 stands: `planning/phase3/README.md`.

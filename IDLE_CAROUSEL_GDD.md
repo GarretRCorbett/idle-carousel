@@ -1,5 +1,5 @@
 # 🎠 Idle Carousel — Game Design Document
-### Version 1.14 | Working Title: Idle Carousel
+### Version 1.15 | Working Title: Idle Carousel
 > Solo dev project. Built in Godot 4.7 stable. Target: Steam release, anonymous, $4.99 (sale target ~$3.49–$3.75), with a free demo.
 > Personal motivation: daughters love carousels.
 > Influences: Cookie Clicker, Clicker Heroes, A Game About Feeding a Black Hole, Rusty's Retirement.
@@ -7,6 +7,7 @@
 ---
 
 ## Changelog
+- **v1.15** — Boss details for Phase 3 Step 7 (Garret): Gilded Gale trickles summons, Ancient Log blunts its first 3 hits, Boulder's latch points have their own health, Obsidian Boulder is two stages; every split piece must die for a win.
 - **v1.14** — First boss and gating (Garret, Phase 3 Step 6): Leaf Storm drifts, warns, and throws packs of ~20 storm leaves (then splits into 4); boss strip above the carousel with numbered tier pips; beaten bosses can be re-fought for a smaller reward; Horse and Wolf are the only mounts before it; waves are about twice as big. Details: `planning/phase3/step6_plan.md`.
 - **v1.13** — Tier colors reordered (Garret): Grey → Green → Yellow → Orange → Red → Charcoal (light outline), a danger ramp. Boss summon/split colors to re-pair.
 - **v1.12** — Mounts repicked to match the Kenney Animal Pack art (Garret, Phase 3 start): **Turtle → Sloth**, **Eagle → Giraffe**, **Lion → Elephant**, **Unicorn → Panda**. Abilities are unchanged; animal-specific upgrade names drafted by Claude, approved by Garret (Drowsy, Deep Sleep, Long Neck, Double Take, Trumpet, Trunk Toss, Bamboo Feast, Lucky Bamboo). The slow icon becomes a sleepy "Zzz".
@@ -324,10 +325,10 @@ Same sprite, different tint = different tier. One sprite per enemy type supports
 |---|---|---|
 | Leaf Storm | Leaf | Drifts along an arc beyond the Wolf's reach; every ~12 s it stops, gathers wind (a warning), and throws a pack of ~20 weak storm leaves. Click it; your mounts defend. On death splits into 4 Grey Leaves that must die too (v1.14) |
 | Stick Giant | Stick | Moves in zigzag — harder to intercept with the Giraffe |
-| Boulder | Rock | Has 3 separate latch points, rolls faster near carousel |
-| Gilded Gale | Leaf | Spawns 2 Gold Leaves per second while alive (tier colors changed in v1.13: re-pair the summon color, Garret) |
-| Ancient Log | Stick | Immune to Sloth slow, resists first 3 hits |
-| Obsidian Boulder | Rock | Splits into 2 Purple Rocks on first kill — must kill twice (v1.13: re-pair the split color, Garret) |
+| Boulder | Rock | Has 3 separate latch points, each with its own health (drag drops as each breaks); rolls faster near carousel |
+| Gilded Gale | Leaf | A steady trickle of its tier's Leaves (about 2 every 4 s) while alive; summons pay nothing (v1.15) |
+| Ancient Log | Stick | Immune to Sloth slow (and freeze); its first 3 hits do reduced damage |
+| Obsidian Boulder | Rock | Two stages: on first kill splits into 2 Red Rocks; every piece must die for the win (v1.15) |
 | The Rusted King | Final Boss | See Final Boss section |
 
 Killing a boss awards a large Gold bonus, unlocks the next color tier, makes the next mount slot available to buy (first three bosses), and may unlock a new upgrade node.

@@ -18,7 +18,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> **Phase 3 (2026-09-25):** Steps 2–6 done: every Phase 3 mount, tier colors, bigger waves, the first boss (Leaf Storm) with the boss strip, tier pips and gating. Next: Garret playtests Grey → Leaf Storm → Green (the fight's numbers came from a headless run, `tools/boss_sim.tscn`, not a person). Then Step 7: the other five bosses. Status: `planning/phase3/README.md`.
+> **Phase 3 (2026-09-25):** Steps 2–6 done: every Phase 3 mount, tier colors, bigger waves, the first boss (Leaf Storm) with the boss strip, tier pips and gating. Garret's two playtests went well (strip shifting fixed). Step 7 boss questions answered (GDD v1.15). Next: the Step 7 plan (the other five bosses). Status: `planning/phase3/README.md`.
 
 ---
 
