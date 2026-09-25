@@ -13,7 +13,8 @@ extends Node2D
 @export var tier_catalog: TierCatalog = preload("res://resources/tiers/tier_catalog.tres")
 
 @export_group("Dev keys")
-## Debug builds only, until Step 6 adds the tier picker: previous / next tier.
+## Debug builds only: previous / next tier, unlocking it if needed (the boss
+## strip's tier pips are the real way to switch).
 @export var previous_tier_key: Key = KEY_F2
 @export var next_tier_key: Key = KEY_F3
 
@@ -109,6 +110,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			step = 1
 		if step != 0:
 			var rank := clampi(GameState.get_selected_tier() + step, 0, tier_catalog.tiers.size() - 1)
+			GameState.debug_set_bosses_beaten(rank)  # dev keys may skip ahead
 			GameState.set_selected_tier(rank)
 			get_viewport().set_input_as_handled()
 

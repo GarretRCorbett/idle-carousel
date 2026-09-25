@@ -37,6 +37,13 @@ signal emergency_cleared
 signal run_reset
 ## The tier new waves come from changed (0 = Grey). Enemies already alive keep theirs.
 signal selected_tier_changed(rank: int)
+## A kill was recorded for a tier (the boss strip's kill gate listens).
+signal tier_kills_changed(rank: int, kills: int)
+## A boss fight started (true) or ended (false).
+signal boss_active_changed(active: bool)
+## A tier's boss was beaten. first_clear: the first win this run (it unlocked
+## the next tier); false for a repeat.
+signal boss_beaten(rank: int, first_clear: bool)
 
 ## One latched enemy's share of drag and damage, and how long it has held on
 ## (damage starts after the grace period).
@@ -94,6 +101,12 @@ var _run_seed: int = 0
 ## Plain values so Step 6 can save them.
 var _selected_tier: int = 0
 var _tier_kills: Dictionary[int, int] = {}
+## Bosses beaten in order this run: tier `rank` is unlocked when rank <= this.
+var _bosses_beaten: int = 0
+## Run time (seconds) of each boss's first clear, by tier rank. Speedrun-friendly.
+var _boss_clear_times: Dictionary[int, float] = {}
+## True while a boss fight runs: no tier switching, no stall safety net.
+var _boss_active: bool = false
 # Latched enemies by instance ID. Totals are recomputed from this, so removing
 # one enemy removes exactly its share.
 var _latches: Dictionary[int, Latch] = {}
@@ -160,6 +173,9 @@ func reset_run(config_override: RunConfig = null) -> void:
 	_run_seed = randi()
 	_selected_tier = 0
 	_tier_kills.clear()
+	_bosses_beaten = 0
+	_boss_clear_times.clear()
+	_boss_active = false
 	# Set everything first so listeners never see a half-reset run.
 	run_reset.emit()
 	gold_changed.emit(_gold, 0.0)
@@ -175,6 +191,7 @@ func reset_run(config_override: RunConfig = null) -> void:
 	stall_changed.emit(false)
 	crank_changed.emit(0.0)
 	selected_tier_changed.emit(0)
+	boss_active_changed.emit(false)
 
 
 # --- Gold -------------------------------------------------------------------
@@ -408,7 +425,9 @@ func _advance_stall(delta: float) -> void:
 	_stall_seconds += delta
 	if _boost_held:
 		_add_crank(delta / _config.crank_hold_seconds)
-	if _stalled and _stall_seconds >= _config.stall_timeout_seconds:
+	# During a boss fight there's no safety net: cranking is the rescue, and
+	# the fight's own timer ends the attempt. It must never remove the boss.
+	if _stalled and not _boss_active and _stall_seconds >= _config.stall_timeout_seconds:
 		_latches.clear()
 		_recompute_latch_totals()
 		latch_count_changed.emit(0)
@@ -619,18 +638,72 @@ func get_selected_tier() -> int:
 	return _selected_tier
 
 
-## Waves from now on come from this tier. Game checks the rank is a real tier.
-func set_selected_tier(rank: int) -> void:
-	if rank < 0 or rank == _selected_tier:
-		return
+## Waves from now on come from this tier. Refused for a locked tier or during
+## a boss fight. Game checks the rank is a real tier.
+func set_selected_tier(rank: int) -> bool:
+	if rank < 0 or rank == _selected_tier or not is_tier_unlocked(rank) or _boss_active:
+		return false
 	_selected_tier = rank
 	selected_tier_changed.emit(rank)
+	return true
+
+
+func is_tier_unlocked(rank: int) -> bool:
+	return rank >= 0 and rank <= _bosses_beaten
+
+
+func get_bosses_beaten() -> int:
+	return _bosses_beaten
+
+
+## Records a win against tier `rank`'s boss. Returns true for the first clear
+## (it unlocks the next tier), false for a repeat.
+func record_boss_victory(rank: int) -> bool:
+	var first_clear := rank == _bosses_beaten
+	if first_clear:
+		_bosses_beaten += 1
+		_boss_clear_times[rank] = _elapsed
+	boss_beaten.emit(rank, first_clear)
+	return first_clear
+
+
+func is_boss_beaten(rank: int) -> bool:
+	return rank < _bosses_beaten
+
+
+## Run seconds at the first clear of tier `rank`'s boss, or -1 if not beaten.
+func get_boss_clear_time(rank: int) -> float:
+	return _boss_clear_times.get(rank, -1.0)
+
+
+## Seconds this run has been played (the simulation clock).
+func get_run_seconds() -> float:
+	return _elapsed
+
+
+func is_boss_active() -> bool:
+	return _boss_active
+
+
+func set_boss_active(active: bool) -> void:
+	if active == _boss_active:
+		return
+	_boss_active = active
+	boss_active_changed.emit(active)
+
+
+## Debug builds only (F3 dev key): unlocks tiers as if their bosses were beaten.
+func debug_set_bosses_beaten(count: int) -> void:
+	if not OS.is_debug_build():
+		return
+	_bosses_beaten = maxi(_bosses_beaten, count)
 
 
 ## A kill counts for the enemy's own tier, not the one selected when it died.
 ## Only kills count; Emergency Clear and the stall safety net don't call this.
 func record_kill(tier_rank: int) -> void:
 	_tier_kills[tier_rank] = get_tier_kills(tier_rank) + 1
+	tier_kills_changed.emit(tier_rank, _tier_kills[tier_rank])
 
 
 func get_tier_kills(tier_rank: int) -> int:

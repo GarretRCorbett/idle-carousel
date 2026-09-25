@@ -25,6 +25,8 @@ extends Resource
 
 ## How this tier's waves are made (interval, size, directions, enemy mix).
 @export var waves: WaveProfile
+## This tier's boss; beating it unlocks the next tier. Empty = none yet.
+@export var boss: BossData
 
 
 func get_problems() -> PackedStringArray:
@@ -42,4 +44,7 @@ func get_problems() -> PackedStringArray:
 	else:
 		for problem in waves.get_problems():
 			problems.append("%s waves: %s" % [tier_id, problem])
+	if boss != null:
+		for problem in boss.get_problems():
+			problems.append("%s boss: %s" % [tier_id, problem])
 	return problems

@@ -47,8 +47,11 @@ func _key(keycode: Key) -> InputEventKey:
 
 func test_run_starts_on_grey_with_no_kills() -> void:
 	GameState.record_kill(0)
+	GameState.debug_set_bosses_beaten(2)
 	GameState.set_selected_tier(2)
+	GameState.record_boss_victory(2)
 	GameState.reset_run(_config)
+	assert_int(GameState.get_bosses_beaten()).is_equal(0)
 	assert_int(GameState.get_selected_tier()).is_equal(0)
 	assert_int(GameState.get_tier_kills(0)).is_equal(0)
 
@@ -56,6 +59,7 @@ func test_run_starts_on_grey_with_no_kills() -> void:
 func test_selecting_a_tier_signals_once() -> void:
 	var seen: Array[int] = []
 	GameState.selected_tier_changed.connect(func(rank: int) -> void: seen.append(rank))
+	GameState.debug_set_bosses_beaten(1)
 	GameState.set_selected_tier(1)
 	GameState.set_selected_tier(1)
 	GameState.set_selected_tier(-1)
@@ -98,6 +102,7 @@ func test_switching_tier_leaves_live_enemies_alone() -> void:
 	var waves := game.get_node("WaveManager") as WaveManager
 	var grey_enemy := _admitted_leaf(game, CATALOG.get_tier(0))
 	var health := grey_enemy.get_max_health()
+	GameState.debug_set_bosses_beaten(2)
 	GameState.set_selected_tier(2)
 	assert_float(grey_enemy.get_max_health()).is_equal(health)
 	assert_int(grey_enemy.get_tier_rank()).is_equal(0)
@@ -117,8 +122,56 @@ func test_grey_kills_unlock_sticks_in_grey_waves() -> void:
 	for i in 40:
 		GameState.record_kill(0)
 	assert_int(waves.tier_kills.call()).is_equal(40)
+	GameState.debug_set_bosses_beaten(1)
 	GameState.set_selected_tier(1)
 	assert_int(waves.tier_kills.call()).is_equal(0)
+
+
+# --- Unlocks and boss progress ----------------------------------------------------------
+
+func test_locked_tiers_and_fights_refuse_switching() -> void:
+	assert_bool(GameState.is_tier_unlocked(0)).is_true()
+	assert_bool(GameState.is_tier_unlocked(1)).is_false()
+	assert_bool(GameState.set_selected_tier(1)).is_false()
+	assert_bool(GameState.record_boss_victory(0)).is_true()  # first clear unlocks Green
+	assert_bool(GameState.set_selected_tier(1)).is_true()
+	GameState.set_boss_active(true)
+	assert_bool(GameState.set_selected_tier(0)).is_false()
+	GameState.set_boss_active(false)
+	assert_bool(GameState.set_selected_tier(0)).is_true()
+
+
+func test_first_clear_unlocks_once_and_records_the_time() -> void:
+	GameState.advance_simulation(12.5)
+	var seen: Array = []
+	GameState.boss_beaten.connect(func(rank: int, first: bool) -> void: seen.append([rank, first]))
+	assert_bool(GameState.record_boss_victory(0)).is_true()
+	assert_bool(GameState.record_boss_victory(0)).is_false()  # a repeat
+	assert_int(GameState.get_bosses_beaten()).is_equal(1)
+	assert_bool(GameState.is_boss_beaten(0)).is_true()
+	assert_float(GameState.get_boss_clear_time(0)).is_equal_approx(12.5, 0.001)
+	assert_float(GameState.get_boss_clear_time(1)).is_equal(-1.0)
+	assert_array(seen).is_equal([[0, true], [0, false]])
+
+
+func test_kills_signal_for_the_strip() -> void:
+	var seen: Array = []
+	GameState.tier_kills_changed.connect(func(rank: int, kills: int) -> void: seen.append([rank, kills]))
+	GameState.record_kill(0)
+	GameState.record_kill(0)
+	assert_array(seen).is_equal([[0, 1], [0, 2]])
+
+
+## During a fight a stall never times out (the safety net would remove the boss).
+func test_no_safety_net_during_a_boss_fight() -> void:
+	var timed_out: Array[bool] = [false]
+	GameState.stall_timed_out.connect(func() -> void: timed_out[0] = true)
+	GameState.set_boss_active(true)
+	GameState.register_latch(1, 0.0, 1000.0)
+	for i in 200:
+		GameState.advance_simulation(1.0)
+	assert_bool(GameState.is_stalled()).is_true()
+	assert_bool(timed_out[0]).is_false()
 
 
 # --- Dev keys -------------------------------------------------------------------------
