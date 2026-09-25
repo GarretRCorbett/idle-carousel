@@ -29,7 +29,9 @@ extends Resource
 @export var placeholder_color: Color = Color.WHITE
 ## Vertex count of the placeholder polygon.
 @export_range(3, 32, 1) var placeholder_points: int = 6
-## Radius of the placeholder polygon, in pixels.
+## How big the enemy looks: the placeholder polygon's radius, or half the
+## sprite's longest side. Only looks: hitbox and click radius are separate.
 @export_range(1.0, 128.0, 1.0, "suffix:px") var placeholder_size: float = 12.0
-## Real sprite. Leave empty to draw the placeholder polygon instead.
+## Real sprite, light grey so the tier tint reads (tools/make_tier_sprites.gd).
+## Leave empty to draw the placeholder polygon instead.
 @export var texture: Texture2D = null

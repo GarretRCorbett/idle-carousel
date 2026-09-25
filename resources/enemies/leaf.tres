@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://d1ikk47qr7jkf"]
 
 [ext_resource type="Script" uid="uid://bq2cyr33rl7hr" path="res://scripts/enemy_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/leaf.png" id="2_tex"]
 
 [resource]
 script = ExtResource("1_script")
@@ -14,4 +15,5 @@ click_radius = 20.0
 gold_drop = 2.0
 placeholder_color = Color(0.8784, 0.4824, 0.2235, 1)
 placeholder_points = 5
-placeholder_size = 10.0
+placeholder_size = 14.0
+texture = ExtResource("2_tex")

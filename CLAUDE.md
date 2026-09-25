@@ -35,6 +35,8 @@ tests/                  GdUnit4 test suites (test_*.gd, extend GdUnitTestSuite)
 addons/gdUnit4/         GdUnit4 6.2.1 test framework (third-party; don't edit)
 tools/                  check.sh / check.bat (+ check_scripts.gd they run);
                         build_ui_theme.gd (rebuilds the UI theme and fonts);
+                        make_tier_sprites.gd (rebuilds the light-grey enemy sprites
+                        from ../kenney_assets for tier tinting);
                         subset_fonts.py (rebuilds the CJK font subsets);
                         stress_test.tscn (performance: N Leaves, prints FPS and
                         tick times; run before/after perf changes, same GPU only;

@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3]
 
 [ext_resource type="Script" path="res://scripts/enemy_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/stick.png" id="2_tex"]
 
 [resource]
 script = ExtResource("1_script")
@@ -14,4 +15,5 @@ click_radius = 22.0
 gold_drop = 3.0
 placeholder_color = Color(0.5451, 0.3686, 0.2353, 1)
 placeholder_points = 4
-placeholder_size = 14.0
+placeholder_size = 18.0
+texture = ExtResource("2_tex")

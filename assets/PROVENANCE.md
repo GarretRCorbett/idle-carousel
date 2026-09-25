@@ -7,6 +7,9 @@ Downloaded packs are kept unmodified in `../kenney_assets/` (outside the repo, z
 |---|---|---|---|---|---|
 | `sprites/mounts/horse.png` | [Kenney: Animal Pack Remastered](https://kenney.nl/assets/animal-pack-remastered) | `PNG/Round (outline)/horse.png` | CC0 1.0 | None | 2026-09-24 |
 | `sprites/mounts/wolf.png` | [Kenney: Animal Pack Remastered](https://kenney.nl/assets/animal-pack-remastered) | `PNG/Round (outline)/dog.png` (stand-in for the Wolf) | CC0 1.0 | Renamed | 2026-09-24 |
+| `sprites/enemies/leaf.png` | [Kenney: Foliage Sprites](https://kenney.nl/assets/foliage-sprites) | `PNG/Shaded/sprite_0082.png` | CC0 1.0 | Trimmed, scaled to 96 px, mapped to light grey for tier tinting (`tools/make_tier_sprites.gd`) | 2026-09-25 |
+| `sprites/enemies/stick.png` | [Kenney: Foliage Pack](https://kenney.nl/assets/foliage-pack) | `PNG/Default size/foliagePack_022.png` | CC0 1.0 | Same | 2026-09-25 |
+| `sprites/enemies/rock.png` | Kenney: Foliage Pack | `PNG/Default size/foliagePack_055.png` | CC0 1.0 | Same | 2026-09-25 |
 | `ui/button_yellow.png` | [Kenney: UI Pack](https://kenney.nl/assets/ui-pack) | `PNG/Yellow/Default/button_rectangle_depth_flat.png` | CC0 1.0 | Renamed | 2026-09-24 |
 | `ui/button_yellow_hover.png` | Kenney: UI Pack | `PNG/Yellow/Default/button_rectangle_depth_gradient.png` | CC0 1.0 | Renamed | 2026-09-24 |
 | `ui/button_yellow_pressed.png` | Kenney: UI Pack | `PNG/Yellow/Default/button_rectangle_flat.png` | CC0 1.0 | Renamed | 2026-09-24 |

@@ -53,8 +53,12 @@ var _latch_drag: float = 0.0
 var _latch_dps: float = 0.0
 var _kill_gold: float = 0.0
 var _tint: Color = Color.WHITE
+## The Sprite's scale with no squash (fits the texture to data.placeholder_size).
+var _sprite_scale: Vector2 = Vector2.ONE
 
+## Hit flash (modulate) and tumble (rotation). Tier tint and squash are on Sprite.
 @onready var _visual: Node2D = $Visual
+@onready var _sprite: Sprite2D = $Visual/Sprite
 @onready var _health_bar: EnemyHealthBar = $HealthBar
 
 
@@ -65,6 +69,7 @@ func _ready() -> void:
 	_health_bar.visible = false
 	_health_bar.position = Vector2(0.0, -get_hitbox_radius() - health_bar_gap)
 	set_process(false)
+	_setup_sprite()
 	_apply_tint()
 	_visual.draw.connect(_draw_placeholder)
 	_visual.queue_redraw()
@@ -209,14 +214,14 @@ func get_health() -> float:
 func _flash() -> void:
 	_flash_left = hit_flash_seconds
 	_visual.modulate = hit_flash_modulate
-	_visual.queue_redraw()
+	_update_squash()
 	set_process(true)
 
 
 ## Runs only while flashing. Subclasses that need _process must call super.
 func _process(delta: float) -> void:
 	_flash_left = maxf(0.0, _flash_left - delta)
-	_visual.queue_redraw()  # the squash is drawn, so it doesn't fight transform smoothing
+	_update_squash()
 	if _flash_left <= 0.0:
 		_visual.modulate = Color.WHITE
 		set_process(false)
@@ -224,13 +229,41 @@ func _process(delta: float) -> void:
 	_visual.modulate = Color.WHITE.lerp(hit_flash_modulate, _flash_left / hit_flash_seconds)
 
 
-## Drawn on Visual, so the shape turns with it while the health bar stays upright.
-## The tier color, as self_modulate: it tints only Visual's own drawing and
-## never fights the hit flash, which uses modulate.
+## Shows data.texture on the Sprite, scaled so its longest side is the
+## placeholder's diameter. No texture: the Sprite hides and Visual draws the
+## placeholder polygon instead.
+func _setup_sprite() -> void:
+	if data.texture == null:
+		_sprite.visible = false
+		return
+	var longest := maxf(data.texture.get_width(), data.texture.get_height())
+	_sprite_scale = Vector2.ONE * (2.0 * data.placeholder_size / longest)
+	_sprite.texture = data.texture
+	_sprite.scale = _sprite_scale
+	_sprite.visible = true
+	# Drawn much smaller than the file: mipmaps stop it shimmering as it turns.
+	_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	# The squash changes scale every frame; smoothing would fight it. Its
+	# parents still move smoothly.
+	_sprite.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
+
+
+## The tier color, as self_modulate: it tints only that node's own drawing and
+## never fights the hit flash, which uses Visual's modulate.
 func _apply_tint() -> void:
-	_visual.self_modulate = _tint
+	_sprite.self_modulate = _tint
+	_visual.self_modulate = _tint  # the placeholder polygon, when there's no texture
 
 
+## The squash: the Sprite's scale, or the placeholder's drawn size.
+func _update_squash() -> void:
+	if _sprite.visible:
+		_sprite.scale = _sprite_scale * get_squash()
+	else:
+		_visual.queue_redraw()
+
+
+## Drawn on Visual, so the shape turns with it while the health bar stays upright.
 func _draw_placeholder() -> void:
 	if data.texture != null:
 		return
