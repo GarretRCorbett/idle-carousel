@@ -35,7 +35,10 @@ tests/                  GdUnit4 test suites (test_*.gd, extend GdUnitTestSuite)
 addons/gdUnit4/         GdUnit4 6.2.1 test framework (third-party; don't edit)
 tools/                  check.sh / check.bat (+ check_scripts.gd they run);
                         build_ui_theme.gd (rebuilds the UI theme and fonts);
-                        subset_fonts.py (rebuilds the CJK font subsets)
+                        subset_fonts.py (rebuilds the CJK font subsets);
+                        stress_test.tscn (performance: N Leaves, prints FPS and
+                        tick times; run before/after perf changes, same GPU only;
+                        Garret's Godot renders on the Radeon 780M since 2026-09-24)
 ```
 
 ## Assets (Kenney, CC0)
@@ -159,3 +162,7 @@ When the docs are pasted in and no repo access is needed, `-s read-only` in plac
 the `-c sandbox_mode` flag also works, and you can skip the snapshot.
 Save useful answers as memos in `planning/phaseN/codex_memo_<letter>_<topic>.md`.
 Memos are input, not decisions.
+
+Tips: a run takes ~5–15 min; two can run in parallel (one snapshot covers both); Codex
+can search the web when the prompt allows it; it shares Garret's usage limits, so say
+when a big run is starting. Wait for its completion notice instead of polling.
