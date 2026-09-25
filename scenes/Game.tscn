@@ -44,6 +44,7 @@ script = ExtResource("8_router")
 [node name="WaveManager" type="Node" parent="." unique_id=1331348848]
 script = ExtResource("9_waves")
 enemy_scene = ExtResource("10_leaf")
+wave_interval = 10.0
 
 [node name="WaveTimer" type="Timer" parent="WaveManager" unique_id=1939518674]
 process_callback = 0
