@@ -107,15 +107,18 @@ func test_catalog_is_valid() -> void:
 
 
 func test_levels_cost_more_each_time() -> void:
+	# Real prices live in the data; the test checks the rule, not the numbers.
 	var speed := UpgradeManager.get_definition(&"carousel_speed")
-	assert_float(UpgradeManager.get_cost(&"carousel_speed")).is_equal(30.0)
-	GameState.add_gold(1000.0)
+	var base := speed.cost_gold
+	var growth := speed.cost_growth
+	assert_float(UpgradeManager.get_cost(&"carousel_speed")).is_equal(base)
+	GameState.add_gold(100000.0)
 	UpgradeManager.purchase(&"carousel_speed")
 	assert_int(UpgradeManager.get_level(&"carousel_speed")).is_equal(1)
-	assert_float(UpgradeManager.get_cost(&"carousel_speed")).is_equal(45.0)
+	assert_float(UpgradeManager.get_cost(&"carousel_speed")).is_equal(roundf(base * growth))
 	UpgradeManager.purchase(&"carousel_speed")
-	assert_float(UpgradeManager.get_cost(&"carousel_speed")).is_equal(roundf(30.0 * 1.5 * 1.5))
-	assert_float(GameState.get_spin_upgrade_multiplier()).is_equal_approx(1.4, 0.00001)
+	assert_float(UpgradeManager.get_cost(&"carousel_speed")).is_equal(roundf(base * growth * growth))
+	assert_float(GameState.get_spin_upgrade_multiplier()).is_equal_approx(1.0 + 2.0 * speed.effect_value, 0.00001)
 	assert_int(speed.max_level).is_equal(10)
 
 
@@ -134,8 +137,8 @@ func test_ticket_booth_adds_a_booth_up_to_four() -> void:
 	var counts: Array = []
 	GameState.booth_count_changed.connect(func(c: int) -> void: counts.append(c))
 	assert_int(GameState.get_booth_count()).is_equal(1)
-	assert_float(UpgradeManager.get_cost(&"ticket_booth")).is_equal(500.0)
-	GameState.add_gold(100000.0)
+	assert_float(UpgradeManager.get_cost(&"ticket_booth")).is_equal(UpgradeManager.get_definition(&"ticket_booth").cost_gold)
+	GameState.add_gold(1000000.0)
 	GameState.debug_set_bosses_beaten(6)  # these tests buy boss-gated rows
 	for i in 3:
 		assert_bool(UpgradeManager.purchase(&"ticket_booth")).is_true()

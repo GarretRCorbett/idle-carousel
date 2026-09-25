@@ -8,7 +8,7 @@
 script = ExtResource("1_script")
 enemy_name = "Gilded Gale"
 move_speed = 0.0
-base_health = 230.0
+base_health = 550.0
 damage_per_second = 0.0
 latch_drag = 0.0
 hitbox_radius = 36.0

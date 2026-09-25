@@ -8,7 +8,7 @@
 script = ExtResource("1_script")
 enemy_name = "Boulder"
 move_speed = 22.0
-base_health = 300.0
+base_health = 480.0
 damage_per_second = 3.0
 latch_drag = 0.36
 hitbox_radius = 34.0

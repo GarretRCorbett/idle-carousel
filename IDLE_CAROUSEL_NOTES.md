@@ -18,7 +18,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> **Phase 3 (2026-09-25):** Steps 2–6 done: every Phase 3 mount, tier colors, bigger waves, the first boss (Leaf Storm) with the boss strip, tier pips and gating. Garret's two playtests went well (strip shifting fixed). Step 7 boss questions answered (GDD v1.15). Step 7 is built: all six tier bosses, tuned headless. Palette research ready (memo T, renders in `planning/phase3/palette/`). Garret picked palette A (Gilded Garden) and it's applied. Next: Garret playtests the bosses and the new look; then Step 8 (economy simulator + pricing). Status: `planning/phase3/README.md`.
+> **Phase 3 (2026-09-25):** Steps 2–6 done: every Phase 3 mount, tier colors, bigger waves, the first boss (Leaf Storm) with the boss strip, tier pips and gating. Garret's two playtests went well (strip shifting fixed). Step 7 boss questions answered (GDD v1.15). Step 7 is built: all six tier bosses, tuned headless. Palette research ready (memo T, renders in `planning/phase3/palette/`). Garret picked palette A (Gilded Garden) and it's applied, with a theme-park look. Step 8 is built: `tools/economy_sim.tscn` plus a pricing pass that hits Garret's pace at 1 click/s (results and three open questions in `planning/phase3/step8_results.md`). Next: Garret playtests bosses, look and prices; then Step 9 (full playtest, Codex review, sign-off). Status: `planning/phase3/README.md`.
 
 ---
 

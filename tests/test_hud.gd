@@ -24,9 +24,10 @@ func test_speed_multiplier_is_relative_to_base() -> void:
 
 
 func test_speed_multiplier_includes_upgrades() -> void:
-	GameState.add_gold(30.0)
+	GameState.add_gold(UpgradeManager.get_cost(&"carousel_speed"))
 	UpgradeManager.purchase(&"carousel_speed")
-	assert_float(GameState.get_speed_multiplier()).is_equal_approx(1.2, 0.00001)
+	var bonus := UpgradeManager.get_definition(&"carousel_speed").effect_value
+	assert_float(GameState.get_speed_multiplier()).is_equal_approx(1.0 + bonus, 0.00001)
 
 
 func test_boost_fraction_fills_toward_cap() -> void:
@@ -42,7 +43,7 @@ func test_boost_fraction_fills_toward_cap() -> void:
 
 func test_row_states_follow_gold_and_levels() -> void:
 	assert_int(UpgradeShop.get_row_state(&"carousel_speed")).is_equal(UpgradeShop.RowState.SAVING)
-	GameState.add_gold(30.0)
+	GameState.add_gold(UpgradeManager.get_cost(&"carousel_speed"))
 	assert_int(UpgradeShop.get_row_state(&"carousel_speed")).is_equal(UpgradeShop.RowState.AFFORDABLE)
 	UpgradeManager.purchase(&"carousel_speed")
 	# Level 1 of 10 bought: still buyable, now saving toward level 2.

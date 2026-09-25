@@ -8,7 +8,7 @@
 script = ExtResource("1_script")
 enemy_name = "Obsidian Boulder"
 move_speed = 20.0
-base_health = 200.0
+base_health = 380.0
 damage_per_second = 0.8
 latch_drag = 0.45
 hitbox_radius = 36.0

@@ -8,7 +8,7 @@
 script = ExtResource("1_script")
 enemy_name = "Ancient Log"
 move_speed = 18.0
-base_health = 220.0
+base_health = 400.0
 damage_per_second = 0.9
 latch_drag = 0.4
 hitbox_radius = 34.0

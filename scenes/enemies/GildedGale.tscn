@@ -9,6 +9,7 @@
 [node name="GildedGale" type="Node2D"]
 script = ExtResource("1_script")
 data = ExtResource("2_data")
+path_radius = 190.0
 quiet_seconds = 2.0
 gust_seconds = 0.5
 drift_seconds = 1.8

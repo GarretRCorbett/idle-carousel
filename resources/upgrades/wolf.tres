@@ -13,6 +13,6 @@ effect_value = 1.0
 tab = 2
 mount_scene = ExtResource("2_scene")
 sell_refund_fraction = 0.5
-cost_gold = 80.0
+cost_gold = 150.0
 cost_growth = 1.5
 max_level = 5

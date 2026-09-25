@@ -31,8 +31,11 @@
 - **Step 7 built** (`step7_plan.md`): all five bosses, tuned with `tools/boss_sim.tscn` (now every
   tier). Found and fixed while rendering palettes: the boss strip had made the HUD wider than the
   screen. Palette research in memo T; Garret picked A and it's applied.
-- **Next:** Garret playtests the new bosses and palette A; Step 8 (economy simulator + pricing),
-  Step 9 (full playtest, Codex review, sign-off).
+- **Step 8 built** (`step8_results.md`): `tools/economy_sim.tscn` plays whole runs headless; prices
+  and boss health retuned to Garret's 15/20/25/30/35/35 min pace (sim at 1 click/s: bosses at
+  0:18, 0:31, 1:06, 1:30, 2:05, 2:36). All numbers are drafts; three open questions in the file.
+- **Next:** Garret playtests bosses, palette A, the park look and the new prices; Step 9 (full
+  playtest, Codex review, sign-off).
 
 Phase 3 roadmap scope: Sloth, Giraffe, Elephant, Panda; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
