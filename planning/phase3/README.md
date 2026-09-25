@@ -10,11 +10,14 @@
   random-with-caps waves per tier, seeded per run (3.2); selected tier + kills per tier + F2/F3
   dev keys (3.3). Stick.tscn / Rock.tscn exist as placeholder scenes, and the Stick/Rock retune
   (0.9 / 1.5) is in, both moved up from commit 4 because the tier files need the scenes.
-- **Next: Step 3 commit 4 (enemy art).** Waiting on Garret's pick from
-  `step3_enemy_art_candidates.png` (one leaf, one stick, one rock). Then: Sprite layer, the
-  light-grey conversion tool, provenance, and the tier-colors frame for tuning the six tints.
-- Tier tints are Claude's drafts (grey, lime green, blue, purple, gold, red) in `resources/tiers/`.
-  On today's orange placeholder shapes they look muddy; judge them on the real light-grey art.
+- **Step 3 commit 4 done (enemy art).** Garret asked Claude and Codex to pick: Leaf = Foliage
+  Sprites FS 82, Stick = Foliage Pack FP 22, Rock = FP 55 (sheet: `step3_enemy_art_candidates.png`).
+  `tools/make_tier_sprites.gd` makes the light-grey copies. Leaf/Stick visual size raised
+  (14 / 18 px radius; hitboxes unchanged). Frames: `step3_tier_colors.png` (all six tints,
+  real size and 3x), `step3_gameplay_frame.png`.
+- **Step 3 is done** apart from Garret's review: tier tints (drafts in `resources/tiers/`) and
+  enemy sizes are his to tweak in the Inspector. Next: Step 4 (Giraffe and Sloth), which needs
+  README questions 6 (Sloth trigger) answered first.
 
 Phase 3 roadmap scope: Sloth, Giraffe, Elephant, Panda; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)

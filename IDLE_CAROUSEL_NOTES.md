@@ -18,7 +18,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> **Phase 3 (2026-09-25):** Step 2 (foundations) is done and Codex-reviewed; Step 3 commits 1–3 (tiers, waves, tier/kill state + F2/F3) are done. Next: Garret picks one leaf, stick and rock from `planning/phase3/step3_enemy_art_candidates.png`, then Step 3 commit 4 (Sprite layer, light-grey conversion, provenance, tier-colors frame to tune the tints). Status: `planning/phase3/README.md`.
+> **Phase 3 (2026-09-25):** Step 2 (foundations) is done and Codex-reviewed; Step 3 commits 1–3 (tiers, waves, tier/kill state + F2/F3) are done. Step 3 commit 4 (enemy art, picked by Claude + Codex) is done too. Next: Garret reviews the tier tints and enemy sizes (`planning/phase3/step3_tier_colors.png`, tweak in the Inspector), answers README question 6 (Sloth trigger), then Step 4 (Giraffe and Sloth). Status: `planning/phase3/README.md`.
 
 ---
 
