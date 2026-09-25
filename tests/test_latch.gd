@@ -240,3 +240,23 @@ func test_long_stall_times_out_clears_latches_and_restarts() -> void:
 	assert_bool(GameState.is_stalled()).is_false()
 	assert_int(GameState.get_latched_count()).is_equal(0)
 	assert_float(GameState.get_health()).is_equal_approx(25.0, 0.00001)
+
+
+## Totals are kept as a running sum (hundreds of Leaves can latch at once);
+## they must match a fresh sum and end at exactly zero.
+func test_running_latch_totals_match_and_end_at_zero() -> void:
+	for i in 200:
+		GameState.register_latch(i, 0.01 * (i % 7 + 1), 0.1 * (i % 3 + 1))
+	for i in range(0, 200, 2):
+		GameState.unregister_latch(i)
+	var drag := 0.0
+	var dps := 0.0
+	for i in range(1, 200, 2):
+		drag += 0.01 * (i % 7 + 1)
+		dps += 0.1 * (i % 3 + 1)
+	assert_float(GameState.get_total_drag()).is_equal_approx(drag, 0.000001)
+	assert_float(GameState.get_total_latch_dps()).is_equal_approx(dps, 0.000001)
+	for i in range(1, 200, 2):
+		GameState.unregister_latch(i)
+	assert_float(GameState.get_total_drag()).is_equal(0.0)
+	assert_float(GameState.get_total_latch_dps()).is_equal(0.0)

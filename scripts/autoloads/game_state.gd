@@ -232,7 +232,8 @@ func _set_health(value: float) -> void:
 ## the stall's crank and timeout. Called once per tick from advance_simulation().
 func _advance_health(delta: float) -> void:
 	var damage := 0.0
-	for latch: Latch in _latches.values():
+	for id: int in _latches:  # keys, so no array is built every tick
+		var latch: Latch = _latches[id]
 		var before := latch.age
 		latch.age += delta
 		var grace := _config.latch_grace_seconds
@@ -273,9 +274,12 @@ func register_latch(enemy_id: int, drag: float, damage_per_second: float) -> boo
 	if _latches.has(enemy_id) or not is_finite(drag) or not is_finite(damage_per_second):
 		return false
 	var previous_speed := get_effective_spin_speed_rad_s()
-	_latches[enemy_id] = Latch.new(maxf(0.0, drag), maxf(0.0, damage_per_second))
+	var latch := Latch.new(maxf(0.0, drag), maxf(0.0, damage_per_second))
+	_latches[enemy_id] = latch
 	_clear_seconds = 0.0
-	_recompute_latch_totals()
+	# Add this latch's share instead of re-summing every latch (hundreds can land at once).
+	_total_drag += latch.drag
+	_total_latch_dps += latch.damage_per_second
 	latch_count_changed.emit(_latches.size())
 	_emit_speed_if_changed(previous_speed)
 	return true
@@ -286,8 +290,14 @@ func unregister_latch(enemy_id: int) -> bool:
 	if not _latches.has(enemy_id):
 		return false
 	var previous_speed := get_effective_spin_speed_rad_s()
+	var latch: Latch = _latches[enemy_id]
 	_latches.erase(enemy_id)
-	_recompute_latch_totals()
+	if _latches.is_empty():
+		_total_drag = 0.0  # exactly zero, no rounding left over
+		_total_latch_dps = 0.0
+	else:
+		_total_drag = maxf(0.0, _total_drag - latch.drag)
+		_total_latch_dps = maxf(0.0, _total_latch_dps - latch.damage_per_second)
 	var stall_flipped := _evaluate_temporary_stall()
 	latch_count_changed.emit(_latches.size())
 	if stall_flipped:
