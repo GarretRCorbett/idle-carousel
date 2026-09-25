@@ -59,13 +59,10 @@ func _game() -> Game:
 func _first_enemy(game: Game) -> EnemyBase:
 	var waves := game.get_node("WaveManager") as WaveManager
 	waves.spawn_wave()
+	game._admit_pending_spawns()  # spawns join at the start of the next tick
 	var layer := game.get_node("World/EnemyLayer")
-	var router := game.get_node("World/ClickRouter") as ClickRouter
 	for i in range(layer.get_child_count() - 1, 0, -1):
-		var extra := layer.get_child(i) as EnemyBase
-		router.unregister_enemy(extra)
-		layer.remove_child(extra)
-		extra.free()
+		game._remove_enemy(layer.get_child(i) as EnemyBase)
 	return layer.get_child(0) as EnemyBase
 
 
@@ -86,7 +83,7 @@ func test_clicks_kill_a_leaf_for_its_gold() -> void:
 	var spot := enemy.global_position
 	for i in needed:
 		assert_bool(router.route_click(spot)).is_true()
-	assert_bool(enemy.can_receive_click()).is_false()
+	assert_bool(enemy.is_active()).is_false()
 	assert_float(GameState.get_gold()).is_equal(gold_drop)
 	# Once dead it takes no more clicks, so it can't pay twice.
 	assert_bool(router.route_click(spot)).is_false()
@@ -108,6 +105,7 @@ func test_stall_timeout_removes_every_enemy_without_gold() -> void:
 	var game := _game()
 	var layer := game.get_node("World/EnemyLayer")
 	(game.get_node("WaveManager") as WaveManager).spawn_wave()
+	game._admit_pending_spawns()
 	for enemy: EnemyBase in layer.get_children():
 		enemy.advance(100.0)
 	GameState.stall_timed_out.emit()
@@ -144,9 +142,9 @@ func test_bought_wolf_kills_a_latched_leaf() -> void:
 	# Real ticks (snapshot, then the carousel turns), a minute at most.
 	for i in 3600:
 		game._physics_process(1.0 / 60.0)
-		if not enemy.can_receive_click():
+		if not enemy.is_active():
 			break
-	assert_bool(enemy.can_receive_click()).is_false()
+	assert_bool(enemy.is_active()).is_false()
 	# The Horse also passes the booth during the turns, so Gold rises by at least the drop.
 	assert_float(GameState.get_gold() - gold_before).is_greater_equal(gold_drop)
 	assert_int(GameState.get_latched_count()).is_equal(0)
@@ -257,6 +255,7 @@ func test_early_sent_leaf_pays_bonus_gold() -> void:
 	var game := _game()
 	var waves := game.get_node("WaveManager") as WaveManager
 	waves.send_wave_now()
+	game._admit_pending_spawns()
 	var enemy := game.get_node("World/EnemyLayer").get_child(0) as EnemyBase
 	enemy.take_damage(100.0)
 	assert_float(GameState.get_gold()).is_equal_approx(enemy.data.gold_drop * waves.early_send_gold_multiplier, 0.0001)
@@ -266,6 +265,7 @@ func test_emergency_clear_removes_only_latched_enemies() -> void:
 	var game := _game()
 	var layer := game.get_node("World/EnemyLayer")
 	(game.get_node("WaveManager") as WaveManager).spawn_wave()
+	game._admit_pending_spawns()
 	var enemies: Array[EnemyBase] = []
 	for child: EnemyBase in layer.get_children():
 		enemies.append(child)
@@ -315,6 +315,7 @@ func test_clear_pops_each_enemy_up_to_the_cap() -> void:
 	game.max_live_pops = 2
 	var layer := game.get_node("World/EnemyLayer")
 	(game.get_node("WaveManager") as WaveManager).spawn_wave()
+	game._admit_pending_spawns()
 	for enemy: EnemyBase in layer.get_children():
 		enemy.advance(100.0)
 	assert_int(layer.get_child_count()).is_greater(2)

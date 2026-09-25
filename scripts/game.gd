@@ -2,8 +2,8 @@ class_name Game
 extends Node2D
 ## Root of the play scene. Starts a fresh run and keeps the world centered.
 ## This is the single place that drives the simulation each tick, so the order
-## is explicit: GameState first (boost decay, income window, latch damage),
-## then enemies move, then one snapshot of where they are, then the carousel
+## is explicit: spawns from last tick join first, then GameState (boost decay,
+## income window, latch damage), then enemies move, then one snapshot of where they are, then the carousel
 ## turns at the resulting speed and mounts sweep against that snapshot.
 
 ## Distance of mounts from the carousel center. Mounts space themselves evenly
@@ -42,6 +42,13 @@ var _booth_radius: float = 0.0
 var _live_pops: int = 0
 ## Every live enemy's bearing and distance, measured once per tick for all mounts.
 var _snapshot := EnemySnapshot.new()
+## Enemies spawned since the last tick. They join at the start of the next one,
+## so an enemy spawned mid-tick (later: splits, summons) never moves, latches,
+## or gets hit in the tick it appeared.
+var _pending_spawns: Array[EnemyBase] = []
+## Enemies in play (admitted and not removed). The Send limit counts these
+## plus the queue.
+var _live_enemy_count: int = 0
 
 
 func _ready() -> void:
@@ -50,7 +57,7 @@ func _ready() -> void:
 	_hud.boost_requested.connect(GameState.add_click_boost)
 	_click_router.enemy_clicked.connect(_on_enemy_clicked)
 	_wave_manager.center = _carousel.position
-	_wave_manager.enemy_layer = _enemy_layer
+	_wave_manager.live_enemy_count = get_live_enemy_count
 	_wave_manager.enemy_spawned.connect(_on_enemy_spawned)
 	_wave_manager.countdown_changed.connect(_hud.set_wave_countdown)
 	_wave_manager.auto_changed.connect(_hud.set_auto_wave)
@@ -67,6 +74,7 @@ func _ready() -> void:
 	_hud.boost_held_changed.connect(GameState.set_boost_held)
 	GameState.booth_count_changed.connect(_layout_booths)
 	GameState.mounts_changed.connect(_sync_mounts)
+	GameState.run_reset.connect(_discard_pending_spawns)
 	GameState.reset_run()
 	_layout_booths(GameState.get_booth_count())
 	_sync_mounts(GameState.get_mount_roster())
@@ -82,12 +90,17 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
+func _exit_tree() -> void:
+	_discard_pending_spawns()
+
+
 func _physics_process(delta: float) -> void:
+	_admit_pending_spawns()
 	GameState.advance_simulation(delta)
 	for enemy: EnemyBase in _enemy_layer.get_children():
 		# The stall safety net may have just removed it; a removed enemy must
 		# not reach the rim and latch (nothing would be left to kill).
-		if not enemy.is_queued_for_deletion():
+		if enemy.is_active():
 			enemy.advance(delta)
 	_snapshot.rebuild(_enemy_layer, _carousel.global_position)
 	_carousel.advance_rotation(delta, GameState.get_effective_spin_speed_rad_s())
@@ -175,7 +188,28 @@ func _on_booth_passed(mount: MountBase, booth_index: int, pass_count: int) -> vo
 	AudioManager.play_sfx(&"coin")
 
 
+## Enemies in play plus those waiting to join. Given to WaveManager for the
+## Send limit, so several presses within one tick can't get past it.
+func get_live_enemy_count() -> int:
+	return _live_enemy_count + _pending_spawns.size()
+
+
 func _on_enemy_spawned(enemy: EnemyBase) -> void:
+	_pending_spawns.append(enemy)
+
+
+## Admits this tick's batch. Anything spawned while admitting waits for the next.
+func _admit_pending_spawns() -> void:
+	if _pending_spawns.is_empty():
+		return
+	var batch := _pending_spawns
+	_pending_spawns = []
+	for enemy in batch:
+		_admit_enemy(enemy)
+
+
+func _admit_enemy(enemy: EnemyBase) -> void:
+	_live_enemy_count += 1
 	_enemy_layer.add_child(enemy)
 	enemy.setup(_carousel.position, _carousel.radius)
 	# Appearing is a jump, not travel: don't interpolate in from the origin.
@@ -215,8 +249,8 @@ func _on_enemy_swept(mount: MountBase, enemy: EnemyBase) -> void:
 	var damage := GameState.get_mount_damage(mount.data)
 	if damage > 0.0:
 		AudioManager.play_sfx(&"wolf_hit")
-		enemy.take_damage(damage)
-	if enemy.can_receive_click():
+		enemy.take_damage(damage, mount)
+	if enemy.is_active():
 		mount.apply_sweep(enemy)
 
 
@@ -228,7 +262,8 @@ func _on_enemy_reached_rim(enemy: EnemyBase) -> void:
 
 
 ## Runs once per enemy (EnemyBase guarantees it), so the kill pays once.
-func _on_enemy_died(enemy: EnemyBase) -> void:
+## killer (the mount, or null for a click) isn't used yet; the Panda will be.
+func _on_enemy_died(enemy: EnemyBase, _killer: Node) -> void:
 	GameState.add_gold(enemy.data.gold_drop * enemy.gold_multiplier)
 	AudioManager.play_sfx(&"pop")
 	_spawn_pop(enemy.global_position, true)
@@ -239,6 +274,8 @@ func _on_enemy_died(enemy: EnemyBase) -> void:
 ## Waves keep coming.
 func _on_stall_timed_out() -> void:
 	for enemy: EnemyBase in _enemy_layer.get_children():
+		if not enemy.is_active():
+			continue
 		_spawn_pop(enemy.global_position, false)
 		_remove_enemy(enemy)
 
@@ -248,17 +285,31 @@ func _on_stall_timed_out() -> void:
 func _on_emergency_cleared() -> void:
 	AudioManager.play_sfx(&"restart")
 	for enemy: EnemyBase in _enemy_layer.get_children():
-		if enemy.is_at_rim():
+		if enemy.is_active() and enemy.is_at_rim():
 			_spawn_pop(enemy.global_position, false)
 			_remove_enemy(enemy)
 
 
+## Takes an enemy out of the world. Marking it removed comes first, before the
+## latch signals below can reach a listener that might touch it. A second call
+## does nothing.
 func _remove_enemy(enemy: EnemyBase) -> void:
+	if not enemy.mark_removed():
+		return
+	_live_enemy_count -= 1
 	GameState.unregister_latch(enemy.get_instance_id())
 	_click_router.unregister_enemy(enemy)
 	for mount in _mounts:
 		mount.forget_enemy(enemy.get_instance_id())
 	enemy.queue_free()
+
+
+## Frees enemies that were waiting to join (a new run, or leaving the scene).
+func _discard_pending_spawns() -> void:
+	for enemy in _pending_spawns:
+		if is_instance_valid(enemy):
+			enemy.free()
+	_pending_spawns.clear()
 
 
 func _center_world() -> void:

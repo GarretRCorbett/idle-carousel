@@ -46,8 +46,9 @@ var center: Vector2 = Vector2.ZERO
 var rng := RandomNumberGenerator.new()
 var _shown_seconds: int = -1
 var _auto: bool = true
-## Where live enemies are, to count them for the Send limit. Set by Game.
-var enemy_layer: Node
+## Returns how many enemies are alive or waiting to join, for the Send limit.
+## Set by Game. Unset = no limit.
+var live_enemy_count: Callable
 var _send_available: bool = true
 
 @onready var _timer: Timer = $WaveTimer
@@ -85,9 +86,9 @@ func send_wave_now() -> int:
 ## Off: the countdown pauses and waves only come when sent.
 ## False while more than max_live_enemies_to_send enemies are alive.
 func can_send_wave() -> bool:
-	if max_live_enemies_to_send <= 0 or enemy_layer == null:
+	if max_live_enemies_to_send <= 0 or not live_enemy_count.is_valid():
 		return true
-	return enemy_layer.get_child_count() <= max_live_enemies_to_send
+	return live_enemy_count.call() <= max_live_enemies_to_send
 
 
 func set_auto(on: bool) -> void:

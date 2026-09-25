@@ -28,7 +28,7 @@ func rebuild(layer: Node, from_center: Vector2) -> void:
 	radii.clear()
 	for child in layer.get_children():
 		var enemy := child as EnemyBase
-		if enemy == null or not enemy.can_receive_click() or enemy.is_queued_for_deletion():
+		if enemy == null or not enemy.is_active():
 			continue
 		var offset := enemy.global_position - center
 		enemies.append(enemy)

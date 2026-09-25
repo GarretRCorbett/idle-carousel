@@ -40,7 +40,7 @@ func _on_rotation_advanced(previous_angle: float, delta_angle: float) -> void:
 	var hits: Array[EnemyBase] = _sweep.collect(_snapshot, previous_angle + get_slot_angle(), delta_angle)
 	for enemy in hits:
 		# A long tick can list an enemy twice; the first hit may have killed it.
-		if is_instance_valid(enemy) and enemy.can_receive_click():
+		if is_instance_valid(enemy) and enemy.is_active():
 			enemy_swept.emit(self, enemy)
 
 

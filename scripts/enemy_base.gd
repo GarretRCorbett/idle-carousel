@@ -7,10 +7,13 @@ extends Node2D
 
 ## Reached the rim this tick. Emitted once.
 signal reached_rim(enemy: EnemyBase)
-## Health hit zero. Emitted exactly once, after the enemy stops taking clicks.
-signal died(enemy: EnemyBase)
+## Health hit zero. Emitted exactly once, after the enemy stops taking hits.
+## killer is the mount that landed the lethal hit, or null (a click, or no source).
+signal died(enemy: EnemyBase, killer: Node)
 
-enum State { APPROACHING, AT_RIM, DEAD }
+## DEAD: killed, about to be removed. REMOVED: Game is taking it out of the
+## world (killed or cleared). Neither can move, latch, be hit, or die again.
+enum State { APPROACHING, AT_RIM, DEAD, REMOVED }
 
 @export var data: EnemyData
 
@@ -71,16 +74,16 @@ func advance(delta: float) -> void:
 	reached_rim.emit(self)
 
 
-## Applies damage. Returns true only for the hit that kills it; hits after
-## that (even in the same frame) do nothing.
-func take_damage(amount: float) -> bool:
-	if _state == State.DEAD or not is_finite(amount) or amount <= 0.0:
+## Applies damage from `source` (a mount, or null for a click). Returns true
+## only for the hit that kills it; hits after that (even in the same frame) do nothing.
+func take_damage(amount: float, source: Node = null) -> bool:
+	if not is_active() or not is_finite(amount) or amount <= 0.0:
 		return false
 	_health = maxf(0.0, _health - amount)
 	if _health <= 0.0:
 		# Removed this tick, so skip the bar and flash.
 		_state = State.DEAD
-		died.emit(self)
+		died.emit(self, source)
 		return true
 	_health_bar.set_fraction(_health / data.base_health)
 	_health_bar.visible = true
@@ -88,8 +91,24 @@ func take_damage(amount: float) -> bool:
 	return false
 
 
-func can_receive_click() -> bool:
-	return _state != State.DEAD
+## Still in play: approaching or latched. Everything that acts on an enemy
+## (moving, sweeps, clicks, damage) checks this first.
+func is_active() -> bool:
+	return _state == State.APPROACHING or _state == State.AT_RIM
+
+
+## Game calls this first when it takes the enemy out of the world, before
+## anything else (latch signals, freeing) can reach it. Returns false if it was
+## already removed, so a second removal does nothing.
+func mark_removed() -> bool:
+	if _state == State.REMOVED:
+		return false
+	_state = State.REMOVED
+	return true
+
+
+func is_removed() -> bool:
+	return _state == State.REMOVED
 
 
 func is_at_rim() -> bool:

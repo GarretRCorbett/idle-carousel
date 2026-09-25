@@ -44,9 +44,7 @@ static func choose_target(world_point: Vector2, enemies: Array[EnemyBase]) -> En
 	var best: EnemyBase = null
 	var best_distance_squared := INF
 	for enemy in enemies:
-		if not is_instance_valid(enemy) or enemy.is_queued_for_deletion():
-			continue
-		if not enemy.can_receive_click():
+		if not is_instance_valid(enemy) or not enemy.is_active():
 			continue
 		var distance_squared := world_point.distance_squared_to(enemy.global_position)
 		var radius := enemy.data.click_radius

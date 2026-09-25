@@ -34,7 +34,7 @@ func collect(snapshot: EnemySnapshot, start_angle: float, delta_angle: float) ->
 			continue
 		var enemy := snapshot.enemies[i]
 		# An earlier mount this tick may have killed or removed it.
-		if not is_instance_valid(enemy) or not enemy.can_receive_click():
+		if not is_instance_valid(enemy) or not enemy.is_active():
 			continue
 		var passes := RotationMath.sweep_passes(start_angle, delta_angle, snapshot.bearings[i], half)
 		var id := enemy.get_instance_id()

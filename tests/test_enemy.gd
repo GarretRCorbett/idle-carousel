@@ -26,7 +26,7 @@ func _enemy(data: EnemyData = _data) -> EnemyBase:
 	add_child(enemy)
 	auto_free(enemy)
 	enemy.setup(Vector2.ZERO, 100.0)
-	enemy.died.connect(func(_e: EnemyBase) -> void: _deaths += 1)
+	enemy.died.connect(func(_e: EnemyBase, _k: Node) -> void: _deaths += 1)
 	enemy.reached_rim.connect(func(_e: EnemyBase) -> void: _rim_arrivals += 1)
 	return enemy
 
@@ -45,7 +45,7 @@ func test_two_killing_hits_in_one_frame_die_once() -> void:
 	assert_bool(enemy.take_damage(5.0)).is_true()
 	assert_bool(enemy.take_damage(5.0)).is_false()
 	assert_int(_deaths).is_equal(1)
-	assert_bool(enemy.can_receive_click()).is_false()
+	assert_bool(enemy.is_active()).is_false()
 
 
 func test_survivable_hit_does_not_kill() -> void:
@@ -53,7 +53,7 @@ func test_survivable_hit_does_not_kill() -> void:
 	assert_bool(enemy.take_damage(1.0)).is_false()
 	assert_float(enemy.get_health()).is_equal(1.0)
 	assert_int(_deaths).is_equal(0)
-	assert_bool(enemy.can_receive_click()).is_true()
+	assert_bool(enemy.is_active()).is_true()
 
 
 func test_health_bar_hidden_until_first_hit() -> void:
