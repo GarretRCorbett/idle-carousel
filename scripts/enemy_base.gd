@@ -55,11 +55,14 @@ var _kill_gold: float = 0.0
 var _tint: Color = Color.WHITE
 ## The Sprite's scale with no squash (fits the texture to data.placeholder_size).
 var _sprite_scale: Vector2 = Vector2.ONE
+## Slow (and later freeze): timed effects that change how it moves.
+var _status := EnemyStatus.new()
 
 ## Hit flash (modulate) and tumble (rotation). Tier tint and squash are on Sprite.
 @onready var _visual: Node2D = $Visual
 @onready var _sprite: Sprite2D = $Visual/Sprite
 @onready var _health_bar: EnemyHealthBar = $HealthBar
+@onready var _slow_icon: EnemySlowIcon = $SlowIcon
 
 
 func _ready() -> void:
@@ -68,6 +71,8 @@ func _ready() -> void:
 	_health = _max_health
 	_health_bar.visible = false
 	_health_bar.position = Vector2(0.0, -get_hitbox_radius() - health_bar_gap)
+	_slow_icon.position = Vector2(get_hitbox_radius() * 0.5, -get_hitbox_radius() - health_bar_gap - 6.0)
+	_slow_icon.visible = false
 	set_process(false)
 	_setup_sprite()
 	_apply_tint()
@@ -89,6 +94,24 @@ func configure(tier: TierData, reward_multiplier: float) -> void:
 	_tint = tier.tint if tier != null else Color.WHITE
 	if is_node_ready():
 		_apply_tint()
+
+
+## Slows it to `multiplier` of its speed for `seconds` (the Sloth). Only
+## affects an active enemy; refreshes rather than stacks.
+func apply_slow(multiplier: float, seconds: float) -> void:
+	if not is_active():
+		return
+	_status.apply_slow(multiplier, seconds)
+	_slow_icon.visible = _status.is_slowed()
+
+
+func is_slowed() -> bool:
+	return _status.is_slowed()
+
+
+## Current speed in px/s, with any slow applied.
+func get_current_speed() -> float:
+	return _move_speed * _status.get_speed_factor()
 
 
 func get_tier_rank() -> int:
@@ -151,11 +174,19 @@ func get_unwrapped_bearing() -> float:
 
 ## Moves one tick toward the carousel. Stops exactly at the rim, never past it.
 func advance(delta: float) -> void:
-	if _state != State.APPROACHING or delta <= 0.0:
+	if not is_active() or delta <= 0.0:
+		return
+	# This tick moves at the speed it started with, then effects count down,
+	# so a 3 s slow covers exactly 3 s of movement.
+	var speed_factor := _status.get_speed_factor()
+	_status.advance(delta)
+	if _slow_icon.visible and not _status.is_slowed():
+		_slow_icon.visible = false
+	if _state != State.APPROACHING:
 		return
 	var offset := position - _center
 	var distance := offset.length()
-	var travel := _move_speed * delta
+	var travel := _move_speed * speed_factor * delta
 	if distance - travel > _stop_distance:
 		position -= offset / distance * travel
 		return

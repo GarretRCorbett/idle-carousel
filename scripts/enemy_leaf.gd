@@ -9,4 +9,4 @@ extends EnemyBase
 func advance(delta: float) -> void:
 	super.advance(delta)
 	if _state == State.APPROACHING:
-		_visual.rotation += deg_to_rad(tumble_speed_deg_s) * delta
+		_visual.rotation += deg_to_rad(tumble_speed_deg_s) * _status.get_speed_factor() * delta

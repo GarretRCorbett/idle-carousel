@@ -23,5 +23,5 @@ func _ready() -> void:
 func advance(delta: float) -> void:
 	super.advance(delta)
 	if _state == State.APPROACHING:
-		_sway_time += delta
+		_sway_time += delta * _status.get_speed_factor()  # slowed = sways slower too
 		_visual.rotation = deg_to_rad(sway_degrees) * sin(TAU * sway_hz * _sway_time)
