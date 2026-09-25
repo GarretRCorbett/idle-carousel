@@ -1,5 +1,5 @@
 # Phase 3 · Step 5 Plan: Elephant, mount tiers, Panda
-**Status:** DRAFT for Garret's approval (2026-09-25).
+**Status:** APPROVED 2026-09-25 (Garret: make sure Elephant, Wolf and Giraffe feel different).
 **Inputs:** GDD (Elephant, Panda, mount tier table), README decisions (Q7 Panda Gold once per full
 turn, Q8 heal only on its own kills, Q9 tiers per type, Q10 Panda needs 3 *different* types at
 Tier 2, Q11 Elephant = wedge that hits harder but mustn't make the Wolf pointless, Q21 knockback
