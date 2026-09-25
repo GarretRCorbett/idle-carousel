@@ -7,7 +7,7 @@ extends Node2D
 ## new mount type never needs its own branch in Game. Each has a do-nothing
 ## default; a mount overrides the ones it uses.
 
-## Passed a ticket booth (Horse). Game pays data.base_gold_bonus per pass.
+## Passed a ticket booth (Horse). Game pays GameState.get_mount_gold() per pass.
 signal booth_passed(mount: MountBase, booth_index: int, pass_count: int)
 ## Swept a live enemy on a new pass (Wolf). Game applies this mount's damage,
 ## then calls apply_sweep() for anything else the contact does.

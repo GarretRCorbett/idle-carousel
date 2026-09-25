@@ -12,6 +12,7 @@ sweep_range = 250.0
 sweep_arc = 0.0
 base_damage = 0.75
 base_gold_bonus = 0.0
+tier2_reach_multiplier = 1.5
 placeholder_color = Color(0.651, 0.4824, 0.3569, 1)
 placeholder_points = 6
 placeholder_size = 20.0

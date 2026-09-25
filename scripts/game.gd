@@ -85,6 +85,7 @@ func _ready() -> void:
 	GameState.booth_count_changed.connect(_layout_booths)
 	GameState.mounts_changed.connect(_sync_mounts)
 	GameState.run_reset.connect(_discard_pending_spawns)
+	GameState.upgrade_applied.connect(_on_upgrade_applied)
 	GameState.reset_run()
 	_layout_booths(GameState.get_booth_count())
 	_sync_mounts(GameState.get_mount_roster())
@@ -134,6 +135,14 @@ func _physics_process(delta: float) -> void:
 	_snapshot.rebuild(_enemy_layer, _carousel.global_position)
 	_carousel.advance_rotation(delta, GameState.get_effective_spin_speed_rad_s())
 	_carousel.set_boost_state(GameState.is_boost_maxed(), GameState.is_overdrive_active())
+
+
+## A mount tier can change reach or wedge width. Rebase every mount at once,
+## so an enemy that just came into reach isn't a free hit.
+func _on_upgrade_applied(id: StringName, _level: int) -> void:
+	var upgrade := UpgradeManager.get_definition(id)
+	if upgrade != null and upgrade.effect_type == UpgradeData.EffectType.MOUNT_TIER:
+		_layout_mounts()
 
 
 ## Makes the mounts on the carousel match GameState's roster. Existing mounts
@@ -212,7 +221,7 @@ func _layout_booths(count: int) -> void:
 
 
 func _on_booth_passed(mount: MountBase, booth_index: int, pass_count: int) -> void:
-	GameState.add_gold(mount.data.base_gold_bonus * pass_count)
+	GameState.add_gold(GameState.get_mount_gold(mount.data) * pass_count)
 	_booths[booth_index].pop()
 	AudioManager.play_sfx(&"coin")
 

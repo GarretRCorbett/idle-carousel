@@ -74,6 +74,8 @@ var _boost_cap_bonus: float = 0.0
 var _click_damage_bonus: float = 0.0
 ## Extra damage per hit bought for each mount type, by MountData.mount_id.
 var _mount_damage_bonus: Dictionary[StringName, float] = {}
+## Tier per mount type (1 if never upgraded), by MountData.mount_id.
+var _mount_tiers: Dictionary[StringName, int] = {}
 var _booth_count: int = 1
 # Mounts: ids (the BUY_MOUNT upgrade id, e.g. &"horse") in placement order.
 var _mount_roster: Array[StringName] = []
@@ -133,6 +135,7 @@ func reset_run(config_override: RunConfig = null) -> void:
 	_boost_cap_bonus = 0.0
 	_click_damage_bonus = 0.0
 	_mount_damage_bonus.clear()
+	_mount_tiers.clear()
 	_booth_count = config.starting_booths
 	_mount_slots = config.starting_mount_slots
 	_mount_roster.clear()
@@ -345,7 +348,7 @@ func _recompute_latch_totals() -> void:
 func get_normal_booth_income_per_second() -> float:
 	var horses := _mount_roster.count(STARTING_MOUNT)
 	var turns_per_second := deg_to_rad(_config.base_spin_speed_deg_s) * get_spin_upgrade_multiplier() / TAU
-	return horses * _booth_count * HORSE_DATA.base_gold_bonus * turns_per_second
+	return horses * _booth_count * get_mount_gold(HORSE_DATA) * turns_per_second
 
 
 func get_emergency_clear_cost() -> float:
@@ -646,7 +649,37 @@ func get_click_damage() -> float:
 func get_mount_damage(data: MountData) -> float:
 	if data == null:
 		return 0.0
-	return data.base_damage + get_mount_damage_bonus(data.mount_id)
+	return (data.base_damage + get_mount_damage_bonus(data.mount_id)) * _tier2(data, data.tier2_damage_multiplier)
+
+
+## Mount stats with the type's tier applied. Mounts and Game read these,
+## never the raw MountData numbers, so a tier upgrade reaches every mount.
+func get_mount_reach(data: MountData) -> float:
+	return data.sweep_range * _tier2(data, data.tier2_reach_multiplier)
+
+
+## Full wedge width in degrees (0 = a line).
+func get_mount_arc(data: MountData) -> float:
+	return data.sweep_arc * _tier2(data, data.tier2_arc_multiplier)
+
+
+## Gold per trigger (booth pass for the Horse).
+func get_mount_gold(data: MountData) -> float:
+	return data.base_gold_bonus * _tier2(data, data.tier2_gold_multiplier)
+
+
+func get_mount_slow_seconds(data: MountData) -> float:
+	return data.slow_seconds * _tier2(data, data.tier2_slow_seconds_multiplier)
+
+
+## 1 = not upgraded. Per type: every Wolf shares the Wolf's tier.
+func get_mount_tier(mount_id: StringName) -> int:
+	return _mount_tiers.get(mount_id, 1)
+
+
+## `multiplier` once the type is Tier 2 or above, else 1.
+func _tier2(data: MountData, multiplier: float) -> float:
+	return multiplier if get_mount_tier(data.mount_id) >= 2 else 1.0
 
 
 func get_mount_damage_bonus(mount_id: StringName) -> float:
@@ -773,6 +806,8 @@ func try_purchase_upgrade(upgrade: UpgradeData) -> bool:
 			_mount_roster.append(upgrade.id)
 		UpgradeData.EffectType.ADD_MOUNT_DAMAGE:
 			_mount_damage_bonus[upgrade.target_mount] = get_mount_damage_bonus(upgrade.target_mount) + upgrade.effect_value
+		UpgradeData.EffectType.MOUNT_TIER:
+			_mount_tiers[upgrade.target_mount] = get_mount_tier(upgrade.target_mount) + 1
 	# Everything is committed; now announce it.
 	gold_changed.emit(_gold, -cost)
 	_emit_speed_if_changed(previous_speed)
@@ -796,4 +831,5 @@ func _is_effect_supported(upgrade: UpgradeData) -> bool:
 		UpgradeData.EffectType.ADD_MOUNT_SLOT,
 		UpgradeData.EffectType.BUY_MOUNT,
 		UpgradeData.EffectType.ADD_MOUNT_DAMAGE,
+		UpgradeData.EffectType.MOUNT_TIER,
 	]

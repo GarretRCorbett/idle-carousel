@@ -50,11 +50,11 @@ func _on_rotation_advanced(previous_angle: float, delta_angle: float) -> void:
 
 
 ## Copies the current shape into the sweep, and redraws the reach marker if
-## it changed (placement, or later a tier upgrade).
+## it changed (placement, or a tier upgrade).
 func _update_sweep_shape() -> void:
 	var inner := get_slot_radius()
-	var reach := data.sweep_range
-	var half_arc := deg_to_rad(data.sweep_arc) / 2.0
+	var reach := GameState.get_mount_reach(data)
+	var half_arc := deg_to_rad(GameState.get_mount_arc(data)) / 2.0
 	if inner != _sweep.inner_radius or reach != _sweep.reach or half_arc != _sweep.half_arc:
 		queue_redraw()
 	_sweep.inner_radius = inner

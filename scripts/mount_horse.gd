@@ -1,7 +1,7 @@
 class_name MountHorse
 extends MountBase
 ## The generator. Each time it passes a ticket booth it reports a pass; Game
-## pays data.base_gold_bonus per pass. The payout is fixed; faster spin only
+## pays GameState.get_mount_gold(data) per pass (Tier 2 doubles it). The payout is fixed; faster spin only
 ## means more passes (GDD v1.4).
 
 ## Each booth's direction from the carousel center, in World space.
