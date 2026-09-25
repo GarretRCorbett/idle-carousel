@@ -5,12 +5,12 @@
 [resource]
 script = ExtResource("1_script")
 mount_name = "Giraffe"
+mount_id = &"giraffe"
 is_stationary = false
 sweep_range = 250.0
 sweep_arc = 0.0
 base_damage = 0.75
 base_gold_bonus = 0.0
-unlock_cost_gold = 150
 placeholder_color = Color(0.651, 0.4824, 0.3569, 1)
 placeholder_points = 6
 placeholder_size = 20.0

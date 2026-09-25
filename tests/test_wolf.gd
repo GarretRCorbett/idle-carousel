@@ -63,7 +63,7 @@ func _setup_wolf() -> void:
 	_wolf.setup(_carousel)
 	_wolf.set_enemy_layer(_layer)
 	_hits.clear()
-	_wolf.enemy_swept.connect(func(_w: MountWolf, e: EnemyBase) -> void: _hits.append(e))
+	_wolf.enemy_swept.connect(func(_m: MountBase, e: EnemyBase) -> void: _hits.append(e))
 
 
 func _enemy_at(bearing: float, distance: float, health: float = 100.0) -> EnemyBase:
@@ -135,7 +135,7 @@ func test_placing_a_wolf_on_an_enemy_gives_no_free_hit() -> void:
 	_wolf.setup(_carousel)
 	_wolf.set_enemy_layer(_layer)
 	_hits.clear()
-	_wolf.enemy_swept.connect(func(_w: MountWolf, e: EnemyBase) -> void: _hits.append(e))
+	_wolf.enemy_swept.connect(func(_m: MountBase, e: EnemyBase) -> void: _hits.append(e))
 	_turn(0.3, 3)  # moves off the enemy
 	assert_array(_hits).is_empty()
 	_turn(TAU, 60)  # comes back around

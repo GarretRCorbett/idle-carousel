@@ -5,12 +5,12 @@
 [resource]
 script = ExtResource("1_script")
 mount_name = "Panda"
+mount_id = &"panda"
 is_stationary = false
 sweep_range = 60.0
 sweep_arc = 0.0
 base_damage = 0.5
 base_gold_bonus = 1.5
-unlock_cost_gold = 2000
 placeholder_color = Color(0.902, 0.9098, 0.9373, 1)
 placeholder_points = 8
 placeholder_size = 18.0

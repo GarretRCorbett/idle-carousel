@@ -36,8 +36,6 @@ var _booth_bearings: Array[float] = []
 ## Mount nodes in roster order, and the roster ids they were built from.
 var _mounts: Array[MountBase] = []
 var _mount_ids: Array[StringName] = []
-var _horses: Array[MountHorse] = []
-var _wolves: Array[MountWolf] = []
 ## Booth distance from the carousel center, taken from the scene's booth.
 var _booth_radius: float = 0.0
 var _live_pops: int = 0
@@ -115,13 +113,6 @@ func _sync_mounts(roster: Array[StringName]) -> void:
 		mount.queue_free()
 	_mounts = mounts
 	_mount_ids = roster.duplicate()
-	_horses.clear()
-	_wolves.clear()
-	for mount in _mounts:
-		if mount is MountHorse:
-			_horses.append(mount)
-		elif mount is MountWolf:
-			_wolves.append(mount)
 	_layout_mounts()
 
 
@@ -133,22 +124,21 @@ func _create_mount(id: StringName) -> MountBase:
 	var mount := upgrade.mount_scene.instantiate() as MountBase
 	_mount_slots.add_child(mount)
 	mount.setup(_carousel)
-	if mount is MountHorse:
-		mount.booth_passed.connect(_on_booth_passed)
-	if mount is MountWolf:
-		mount.enemy_swept.connect(_on_enemy_swept)
+	# Every mount is wired the same way; a mount that never emits costs nothing.
+	mount.booth_passed.connect(_on_booth_passed)
+	mount.enemy_swept.connect(_on_enemy_swept)
+	mount.set_enemy_layer(_enemy_layer)
 	return mount
 
 
 ## Evenly spaced, first at the top. Moving is a jump, so it never pays Gold,
-## and each Wolf re-seeds so moving onto an enemy isn't a free hit.
+## and each mount rebases so moving onto an enemy isn't a free hit.
 func _layout_mounts() -> void:
 	for i in _mounts.size():
 		_mounts[i].place(-PI / 2.0 + TAU * i / _mounts.size(), mount_radius)
-	for horse in _horses:
-		horse.set_booth_bearings(_booth_bearings)
-	for wolf in _wolves:
-		wolf.set_enemy_layer(_enemy_layer)
+	for mount in _mounts:
+		mount.set_booth_bearings(_booth_bearings)
+		mount.rebase()
 
 
 ## Makes exactly `count` booths, evenly spaced starting at the top. Moving a
@@ -169,12 +159,12 @@ func _layout_booths(count: int) -> void:
 		_booths[i].reset_physics_interpolation()
 		# Read the bearing back from the position, exactly as mounts read slot angles.
 		_booth_bearings.append((_booths[i].position - _carousel.position).angle())
-	for horse in _horses:
-		horse.set_booth_bearings(_booth_bearings)
+	for mount in _mounts:
+		mount.set_booth_bearings(_booth_bearings)
 
 
-func _on_booth_passed(horse: MountHorse, booth_index: int, pass_count: int) -> void:
-	GameState.add_gold(horse.data.base_gold_bonus * pass_count)
+func _on_booth_passed(mount: MountBase, booth_index: int, pass_count: int) -> void:
+	GameState.add_gold(mount.data.base_gold_bonus * pass_count)
 	_booths[booth_index].pop()
 	AudioManager.play_sfx(&"coin")
 
@@ -212,9 +202,16 @@ func _spawn_pop(global_point: Vector2, kill: bool) -> void:
 	pop.reset_physics_interpolation()
 
 
-func _on_enemy_swept(wolf: MountWolf, enemy: EnemyBase) -> void:
-	AudioManager.play_sfx(&"wolf_hit")
-	enemy.take_damage(wolf.data.base_damage + GameState.get_wolf_damage_bonus())
+## Damage first (from GameState, so upgrades count), then whatever else this
+## mount's contact does. A mount with no damage (the Sloth, later) only gets
+## apply_sweep().
+func _on_enemy_swept(mount: MountBase, enemy: EnemyBase) -> void:
+	var damage := GameState.get_mount_damage(mount.data)
+	if damage > 0.0:
+		AudioManager.play_sfx(&"wolf_hit")
+		enemy.take_damage(damage)
+	if enemy.can_receive_click():
+		mount.apply_sweep(enemy)
 
 
 ## Latching: the enemy stays where it is in the world (the carousel turns
@@ -253,8 +250,8 @@ func _on_emergency_cleared() -> void:
 func _remove_enemy(enemy: EnemyBase) -> void:
 	GameState.unregister_latch(enemy.get_instance_id())
 	_click_router.unregister_enemy(enemy)
-	for wolf in _wolves:
-		wolf.forget_enemy(enemy)
+	for mount in _mounts:
+		mount.forget_enemy(enemy.get_instance_id())
 	enemy.queue_free()
 
 

@@ -70,7 +70,8 @@ var _speed_modifiers: Dictionary[StringName, float] = {}
 var _spin_bonus: float = 0.0
 var _boost_cap_bonus: float = 0.0
 var _click_damage_bonus: float = 0.0
-var _wolf_damage_bonus: float = 0.0
+## Extra damage per hit bought for each mount type, by MountData.mount_id.
+var _mount_damage_bonus: Dictionary[StringName, float] = {}
 var _booth_count: int = 1
 # Mounts: ids (the BUY_MOUNT upgrade id, e.g. &"horse") in placement order.
 var _mount_roster: Array[StringName] = []
@@ -122,7 +123,7 @@ func reset_run(config_override: RunConfig = null) -> void:
 	_spin_bonus = 0.0
 	_boost_cap_bonus = 0.0
 	_click_damage_bonus = 0.0
-	_wolf_damage_bonus = 0.0
+	_mount_damage_bonus.clear()
 	_booth_count = config.starting_booths
 	_mount_slots = config.starting_mount_slots
 	_mount_roster.clear()
@@ -597,9 +598,16 @@ func get_click_damage() -> float:
 	return _config.base_click_damage + _click_damage_bonus
 
 
-## Extra damage per Wolf hit from Wolf Fang levels (added to MountData.base_damage).
-func get_wolf_damage_bonus() -> float:
-	return _wolf_damage_bonus
+## Damage per hit for one mount type: its base_damage plus every damage
+## upgrade bought for it (Wolf Fang for the Wolf).
+func get_mount_damage(data: MountData) -> float:
+	if data == null:
+		return 0.0
+	return data.base_damage + get_mount_damage_bonus(data.mount_id)
+
+
+func get_mount_damage_bonus(mount_id: StringName) -> float:
+	return _mount_damage_bonus.get(mount_id, 0.0)
 
 
 # --- Ticket booths ------------------------------------------------------------------
@@ -720,8 +728,8 @@ func try_purchase_upgrade(upgrade: UpgradeData) -> bool:
 			_mount_slots += 1
 		UpgradeData.EffectType.BUY_MOUNT:
 			_mount_roster.append(upgrade.id)
-		UpgradeData.EffectType.ADD_WOLF_DAMAGE:
-			_wolf_damage_bonus += upgrade.effect_value
+		UpgradeData.EffectType.ADD_MOUNT_DAMAGE:
+			_mount_damage_bonus[upgrade.target_mount] = get_mount_damage_bonus(upgrade.target_mount) + upgrade.effect_value
 	# Everything is committed; now announce it.
 	gold_changed.emit(_gold, -cost)
 	_emit_speed_if_changed(previous_speed)
@@ -744,5 +752,5 @@ func _is_effect_supported(upgrade: UpgradeData) -> bool:
 		UpgradeData.EffectType.ADD_CLICK_DAMAGE,
 		UpgradeData.EffectType.ADD_MOUNT_SLOT,
 		UpgradeData.EffectType.BUY_MOUNT,
-		UpgradeData.EffectType.ADD_WOLF_DAMAGE,
+		UpgradeData.EffectType.ADD_MOUNT_DAMAGE,
 	]

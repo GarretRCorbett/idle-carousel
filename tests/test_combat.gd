@@ -215,7 +215,33 @@ func test_wolf_fang_needs_the_wolf_and_adds_damage() -> void:
 	assert_bool(UpgradeManager.purchase(&"wolf_fang")).is_true()
 	var fang := UpgradeManager.get_definition(&"wolf_fang")
 	assert_int(fang.tab).is_equal(UpgradeData.Tab.COMBAT)
-	assert_float(GameState.get_wolf_damage_bonus()).is_equal_approx(fang.effect_value, 0.00001)
+	assert_float(GameState.get_mount_damage_bonus(&"wolf")).is_equal_approx(fang.effect_value, 0.00001)
+	var wolf := load("res://resources/mounts/wolf.tres") as MountData
+	assert_float(GameState.get_mount_damage(wolf)).is_equal_approx(wolf.base_damage + fang.effect_value, 0.00001)
+	# Other mount types don't get the Wolf's bonus.
+	assert_float(GameState.get_mount_damage_bonus(&"horse")).is_equal(0.0)
+
+
+## The damage Game applies on a sweep comes from GameState, so upgrades count.
+func test_game_applies_mount_damage_from_game_state() -> void:
+	var game := _game()
+	GameState.add_gold(10000.0)
+	UpgradeManager.purchase(&"mount_slot")
+	UpgradeManager.purchase(&"wolf")
+	UpgradeManager.purchase(&"wolf_fang")
+	var wolf := _mounts(game)[1]
+	var enemy := _first_enemy(game)
+	var health := enemy.get_health()
+	game._on_enemy_swept(wolf, enemy)
+	assert_float(health - enemy.get_health()).is_equal_approx(minf(health, GameState.get_mount_damage(wolf.data)), 0.00001)
+
+
+## Game talks to mounts only through MountBase: no per-type branches.
+func test_game_has_no_mount_type_branches() -> void:
+	var source := FileAccess.get_file_as_string("res://scripts/game.gd")
+	for type_name in ["MountWolf", "MountHorse"]:
+		assert_bool(source.contains(type_name)).override_failure_message(
+				"game.gd mentions %s" % type_name).is_false()
 
 
 func test_wolf_fang_level_1_kills_a_grey_leaf_in_one_pass() -> void:

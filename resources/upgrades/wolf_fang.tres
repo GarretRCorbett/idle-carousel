@@ -14,3 +14,4 @@ cost_gold = 100.0
 cost_growth = 1.6
 max_level = 10
 prerequisite_id = &"wolf"
+target_mount = &"wolf"

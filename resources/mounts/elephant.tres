@@ -5,12 +5,12 @@
 [resource]
 script = ExtResource("1_script")
 mount_name = "Elephant"
+mount_id = &"elephant"
 is_stationary = false
 sweep_range = 70.0
 sweep_arc = 45.0
 base_damage = 0.75
 base_gold_bonus = 0.0
-unlock_cost_gold = 600
 placeholder_color = Color(0.8471, 0.7059, 0.3529, 1)
 placeholder_points = 8
 placeholder_size = 20.0

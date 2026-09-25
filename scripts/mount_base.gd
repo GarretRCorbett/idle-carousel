@@ -3,6 +3,15 @@ extends Node2D
 ## Base for every mount. Lives under Carousel/MountSlots, so it rotates with the
 ## carousel. Game places it with place(); its +X axis points outward. Draws its
 ## MountData texture, or a code placeholder when there's none.
+## Game talks to every mount only through the functions and signals below, so a
+## new mount type never needs its own branch in Game. Each has a do-nothing
+## default; a mount overrides the ones it uses.
+
+## Passed a ticket booth (Horse). Game pays data.base_gold_bonus per pass.
+signal booth_passed(mount: MountBase, booth_index: int, pass_count: int)
+## Swept a live enemy on a new pass (Wolf). Game applies this mount's damage,
+## then calls apply_sweep() for anything else the contact does.
+signal enemy_swept(mount: MountBase, enemy: EnemyBase)
 
 @export var data: MountData
 
@@ -38,6 +47,34 @@ func place(angle: float, radius: float) -> void:
 func teardown() -> void:
 	if _carousel != null and _carousel.rotation_advanced.is_connected(_on_rotation_advanced):
 		_carousel.rotation_advanced.disconnect(_on_rotation_advanced)
+
+
+## Each booth's direction from the carousel center, in World space. Game calls
+## this whenever the booths or mounts move.
+func set_booth_bearings(_bearings: Array[float]) -> void:
+	pass
+
+
+## The layer enemies live in. Game calls this once, after setup().
+func set_enemy_layer(_layer: Node) -> void:
+	pass
+
+
+## Called after the mount is placed or moved: whatever is under it now counts
+## as already hit, so moving never gives a free hit.
+func rebase() -> void:
+	pass
+
+
+## An enemy is gone; drop anything remembered about it (by instance ID).
+func forget_enemy(_id: int) -> void:
+	pass
+
+
+## What one sweep contact does besides damage (Game applies the damage first).
+## The Sloth's slow will override this.
+func apply_sweep(_enemy: EnemyBase) -> void:
+	pass
 
 
 ## This mount's angle on the carousel, in carousel space. Taken from its

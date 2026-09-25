@@ -4,8 +4,6 @@ extends MountBase
 ## pays data.base_gold_bonus per pass. The payout is fixed; faster spin only
 ## means more passes (GDD v1.4).
 
-signal booth_passed(horse: MountHorse, booth_index: int, pass_count: int)
-
 ## Each booth's direction from the carousel center, in World space.
 var _booth_bearings: Array[float] = []
 

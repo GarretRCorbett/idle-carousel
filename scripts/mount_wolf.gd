@@ -6,9 +6,6 @@ extends MountBase
 ## passes, so nothing is missed at any spin speed. A stopped carousel sends no
 ## rotation, so a stopped Wolf deals no damage.
 
-## The line crossed a live enemy on a new pass. Game applies the damage.
-signal enemy_swept(wolf: MountWolf, enemy: EnemyBase)
-
 @export_group("Reach Line")
 ## Faint line showing how far the Wolf reaches, so reach is easy to tune.
 @export var reach_line_color: Color = Color(1.0, 1.0, 1.0, 0.2)
@@ -20,11 +17,16 @@ var _enemy_layer: Node
 var _last_hit_pass: Dictionary[int, int] = {}
 
 
-## Called by Game with the layer enemies live in, and again after the Wolf is
-## moved. Anything already under the line counts as hit on this pass, so
-## placing or moving a Wolf gives no free hit.
 func set_enemy_layer(layer: Node) -> void:
 	_enemy_layer = layer
+	rebase()
+
+
+## Anything already under the line counts as hit on this pass, so placing or
+## moving a Wolf gives no free hit.
+func rebase() -> void:
+	if _enemy_layer == null:
+		return
 	var angle := _carousel.get_unwrapped_angle() + get_slot_angle()
 	for enemy in _live_enemies():
 		var window := _window_of(enemy)
@@ -36,8 +38,8 @@ func set_enemy_layer(layer: Node) -> void:
 
 
 ## Game calls this when an enemy is removed, so the list doesn't grow forever.
-func forget_enemy(enemy: EnemyBase) -> void:
-	_last_hit_pass.erase(enemy.get_instance_id())
+func forget_enemy(id: int) -> void:
+	_last_hit_pass.erase(id)
 
 
 func _on_rotation_advanced(previous_angle: float, delta_angle: float) -> void:

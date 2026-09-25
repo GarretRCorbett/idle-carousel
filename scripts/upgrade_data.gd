@@ -12,7 +12,7 @@ enum EffectType {
 	ADD_CLICK_DAMAGE,  ## effect_value added to click damage per level
 	ADD_MOUNT_SLOT,    ## one more mount slot per level
 	BUY_MOUNT,         ## one mount_scene per level, placed in the next free slot
-	ADD_WOLF_DAMAGE,   ## effect_value added to Wolf damage per hit, per level
+	ADD_MOUNT_DAMAGE,  ## effect_value added to target_mount's damage per hit, per level
 }
 
 ## Which shop tab the row appears on.
@@ -34,6 +34,8 @@ enum Tab { CAROUSEL, COMBAT, MOUNTS }
 ## BUY_MOUNT: selling one back refunds this fraction of the last level's price.
 ## 0 = can't be sold.
 @export_range(0.0, 1.0, 0.05) var sell_refund_fraction: float = 0.0
+## ADD_MOUNT_DAMAGE: which mount type it boosts (MountData.mount_id, e.g. &"wolf").
+@export var target_mount: StringName = &""
 
 @export_group("Price and Levels")
 ## Price of the first level.
@@ -67,4 +69,6 @@ func get_problems() -> PackedStringArray:
 		problems.append("%s: can't be its own prerequisite" % id)
 	if effect_type == EffectType.BUY_MOUNT and mount_scene == null:
 		problems.append("%s: BUY_MOUNT needs a mount_scene" % id)
+	if effect_type == EffectType.ADD_MOUNT_DAMAGE and target_mount == &"":
+		problems.append("%s: ADD_MOUNT_DAMAGE needs a target_mount" % id)
 	return problems

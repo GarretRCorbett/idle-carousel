@@ -4,6 +4,9 @@ extends Resource
 ## Balance changes happen here in the Inspector, not in mount scripts.
 
 @export var mount_name: String = ""
+## Matches the shop's upgrade id for this mount (&"wolf", &"horse", ...), so
+## upgrades that target a mount type (Wolf Fang) find it. Don't rename after release.
+@export var mount_id: StringName = &""
 ## Stationary mounts trigger once per rotation at a target point (Horse, Sloth).
 ## Sweeping mounts fire outward continuously as the carousel turns.
 @export var is_stationary: bool = false
@@ -20,8 +23,6 @@ extends Resource
 ## Gold per trigger (booth pass or sweep). Fixed per trigger: faster spin means
 ## more triggers per minute, not more Gold per trigger (GDD v1.4).
 @export_range(0.0, 1000.0, 0.1, "or_greater") var base_gold_bonus: float = 0.0
-## Gold cost to unlock this mount. 0 = available from the start.
-@export_range(0, 1000000, 1, "or_greater") var unlock_cost_gold: int = 0
 
 @export_group("Placeholder Visuals")
 ## Fill color of the code-drawn placeholder polygon.

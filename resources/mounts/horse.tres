@@ -6,12 +6,12 @@
 [resource]
 script = ExtResource("1_script")
 mount_name = "Horse"
+mount_id = &"horse"
 is_stationary = true
 sweep_range = 0.0
 sweep_arc = 0.0
 base_damage = 0.0
 base_gold_bonus = 5.0
-unlock_cost_gold = 0
 placeholder_color = Color(0.5843, 0.2706, 0.2078, 1)
 placeholder_points = 8
 placeholder_size = 18.0
