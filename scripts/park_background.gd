@@ -53,7 +53,11 @@ extends Node2D
 	PackedVector2Array([Vector2(150.0, 0.0), Vector2(300.0, -20.0), Vector2(360.0, 60.0), Vector2(720.0, 40.0)]),
 	PackedVector2Array([Vector2(90.0, -120.0), Vector2(170.0, -230.0), Vector2(160.0, -300.0), Vector2(300.0, -440.0)]),
 ]
-@export_range(4.0, 120.0, 1.0, "suffix:px") var path_width: float = 44.0
+@export_range(4.0, 160.0, 1.0, "suffix:px") var path_width: float = 62.0
+## Each walkway flares out where it meets the ring, like a plaza opening up.
+@export_range(4.0, 400.0, 1.0, "suffix:px") var flare_width: float = 170.0
+## How far along the walkway the flare narrows to path_width (0 = no flare).
+@export_range(0.0, 1.0, 0.01) var flare_length: float = 0.45
 
 @export_group("Flower beds and benches")
 ## Bed centers (from the carousel center); each gets a bench beside it.
@@ -157,14 +161,27 @@ func _draw_paths() -> void:
 	for walkway in walkways:
 		if walkway.size() != 4:
 			continue
-		var points := PackedVector2Array()
-		for i in 33:
-			points.append(_bezier(walkway, i / 32.0))
-		draw_polyline(points, edging_color, path_width + 6.0, true)
-		draw_polyline(points, paving_color, path_width, true)
-		# Round the joints so the curve never shows notches.
-		for point in points:
-			draw_circle(point, path_width / 2.0, paving_color, true, -1.0, true)
+		draw_colored_polygon(_walkway_outline(walkway, 6.0), edging_color)
+		draw_colored_polygon(_walkway_outline(walkway, 0.0), paving_color)
+
+
+## The walkway's outline: both edges of the curve at its width there (wide at
+## the ring, narrowing to path_width), plus extra for the edging.
+func _walkway_outline(walkway: PackedVector2Array, extra: float) -> PackedVector2Array:
+	var steps := 48
+	var left := PackedVector2Array()
+	var right := PackedVector2Array()
+	for i in steps + 1:
+		var t := float(i) / steps
+		var tangent := (_bezier(walkway, minf(t + 0.01, 1.0)) - _bezier(walkway, maxf(t - 0.01, 0.0))).normalized()
+		var normal := Vector2(-tangent.y, tangent.x)
+		var flare := smoothstep(0.0, flare_length, t) if flare_length > 0.0 else 1.0
+		var half := (lerpf(flare_width, path_width, flare) + extra) / 2.0
+		var point := _bezier(walkway, t)
+		left.append(point + normal * half)
+		right.append(point - normal * half)
+	right.reverse()
+	return left + right
 
 
 static func _bezier(p: PackedVector2Array, t: float) -> Vector2:
