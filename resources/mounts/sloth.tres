@@ -4,13 +4,13 @@
 
 [resource]
 script = ExtResource("1_script")
-mount_name = "Unicorn"
-is_stationary = false
-sweep_range = 60.0
+mount_name = "Sloth"
+is_stationary = true
+sweep_range = 120.0
 sweep_arc = 0.0
-base_damage = 0.5
-base_gold_bonus = 1.5
-unlock_cost_gold = 2000
-placeholder_color = Color(0.902, 0.9098, 0.9373, 1)
+base_damage = 0.0
+base_gold_bonus = 0.0
+unlock_cost_gold = 150
+placeholder_color = Color(0.4392, 0.5098, 0.2196, 1)
 placeholder_points = 8
-placeholder_size = 18.0
+placeholder_size = 12.0

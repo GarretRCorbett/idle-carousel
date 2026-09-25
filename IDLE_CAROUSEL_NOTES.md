@@ -18,7 +18,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> **Phase 2 is signed off (2026-09-24).** Start Phase 3 in a fresh session: read `planning/phase3/README.md` (decisions, draft steps, open questions by step). Answer the Step 1 and Step 3 questions (tier colors on art, Stick/Rock retune, wave recipes, performance target), then Claude writes `planning/phase3/step1_plan.md`.
+> **Phase 3 Step 1 (2026-09-24):** `planning/phase3/step1_plan.md` (contracts for Steps 2–3) is approved and done (incl. Codex memo O). Next: Step 2, foundations (fresh session recommended; it's the biggest step).
 
 ---
 
@@ -88,14 +88,14 @@ Make the kill counter VISIBLE in the HUD so players always know where they stand
 Clicker Heroes is good at this — always tells you exactly what's needed.
 
 ### On difficulty curve
-The gap between Turtle (3rd mount) and Eagle (4th mount) is probably the hardest
+The gap between the Sloth (3rd mount) and Giraffe (4th mount) is probably the hardest
 stretch of early game. Watch this in playtesting. If it feels punishing, either
-tune Eagle unlock cost down or make Spin Speed upgrades available at lower Gold cost.
+tune the Giraffe's unlock cost down or make Spin Speed upgrades available at lower Gold cost.
 
-### On Unicorn unlock requirement
+### On Panda unlock requirement
 "Requires 3 other mounts at Tier 2+" may be too gating if Gold is tight.
 Fallback: change to "3 other mounts unlocked" (not Tier 2) if playtesting
-shows Unicorn arrives too late. Tune cost before changing requirement.
+shows the Panda arrives too late. Tune cost before changing requirement.
 
 ### On single-currency balance
 With Gold doing everything, the main balance risk is one tree getting maxed while the other feels neglected. Watch for:

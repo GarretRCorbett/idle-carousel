@@ -1,5 +1,5 @@
 # 🎠 Idle Carousel — Game Design Document
-### Version 1.11 | Working Title: Idle Carousel
+### Version 1.12 | Working Title: Idle Carousel
 > Solo dev project. Built in Godot 4.7 stable. Target: Steam release, anonymous, $4.99 (sale target ~$3.49–$3.75), with a free demo.
 > Personal motivation: daughters love carousels.
 > Influences: Cookie Clicker, Clicker Heroes, A Game About Feeding a Black Hole, Rusty's Retirement.
@@ -7,6 +7,7 @@
 ---
 
 ## Changelog
+- **v1.12** — Mounts repicked to match the Kenney Animal Pack art (Garret, Phase 3 start): **Turtle → Sloth**, **Eagle → Giraffe**, **Lion → Elephant**, **Unicorn → Panda**. Abilities are unchanged; animal-specific upgrade names drafted by Claude, approved by Garret (Drowsy, Deep Sleep, Long Neck, Double Take, Trumpet, Trunk Toss, Bamboo Feast, Lucky Bamboo). The slow icon becomes a sleepy "Zzz".
 - **v1.11** — After the Phase 2 wrap-up playtest (Garret): **mounts can be doubled and sold** (not just Horses), so players can swap builds, e.g. an extra Horse for income, then sell it for a second Wolf before a boss. Wolves now (up to the slot count, 50% refund); the Phase 3 mounts follow the same rule. Tuning: base speed 70°/s (was 45), max boost +40% (was +50%), waves every 10 s (was 20). Send wave is blocked while more than 30 enemies are alive (revisit with Sticks and Rocks). Enemy clicks get a sound and a small pop.
 - **v1.10** — Prestige is **in v1.0** (Garret): after beating the Rusted King you can prestige, start a fresh run, and keep permanent boosts. Direction: a small permanent upgrade tree (starting kits, automation, multipliers, a couple of new things) and optional challenge modifiers after the first win (Wildfrost Storm Bells / Slay the Spire Ascension style) that raise prestige rewards. Details are designed before Phase 5. Resolves the prestige-scope DECISION PENDING. Also: bosses are timed challenges reached through a per-tier kill gate (TEMPORARY rule for Phase 3 playtests; see `planning/phase3/README.md`).
 - **v1.9** — Wave controls pulled into Phase 2 (Garret): Next Wave button + N key with a +50% kill-Gold early-send bonus and a full countdown restart; Auto Wave toggle; Emergency Clear priced from normal booth income (20 s, min 25, 60 s cooldown). Settings and Controls screen; backgrounds (top-down park for play, fall landscape for the menu).
@@ -204,44 +205,44 @@ Six total mounts. Unlocked progressively. Each occupies one carousel slot. Each 
 
 ---
 
-### Turtle — The Defender
+### Sloth — The Defender
 - **Type:** Stationary
 - **Role:** Crowd control — slows approaching enemies
-- **Behavior:** As it rotates past approaching enemies (before they latch), it applies a Slow debuff. Slowed enemies move at 50% speed and have a visible slow icon above their head (snowflake). Slow lasts 3 seconds.
-- **Art:** Turtle top-down shell view. Green with pattern. Snowflake icon appears above affected enemies.
-- **Color tier:** Shell pattern color changes per tier
-- **Upgrades:** Shell 1/2/3 increases slow duration. Permafrost converts slow to a brief freeze.
+- **Behavior:** As it rotates past approaching enemies (before they latch), it applies a Slow debuff. Slowed enemies move at 50% speed and have a visible slow icon above their head (a sleepy "Zzz"). Slow lasts 3 seconds.
+- **Art:** Kenney Animal Pack sloth. "Zzz" icon appears above affected enemies.
+- **Color tier:** An accent (saddle/collar) color changes per tier
+- **Upgrades:** Drowsy 1/2/3 increases slow duration. Deep Sleep converts slow to a brief freeze (the enemy dozes off).
 
 ---
 
-### Eagle — The Scout
+### Giraffe — The Scout
 - **Type:** Sweeping, extended range
 - **Role:** Long-range — hits enemies before they reach the carousel
-- **Behavior:** Fires outward at significantly longer range than Wolf. Can hit enemies still approaching from a distance before they latch. Counter to fast Leaf swarms — the Eagle intercepts them mid-approach.
-- **Art:** Eagle wings spread top-down. Brown with white head. Talon strike visual on distant hit.
-- **Color tier:** Wing tip color changes per tier
-- **Upgrades:** Eagle Eye 1/2/3 extends range further. Dive Bomb makes it fire twice per sweep.
+- **Behavior:** Fires outward at significantly longer range than Wolf. Can hit enemies still approaching from a distance before they latch. Counter to fast Leaf swarms — the Giraffe's long neck reaches them mid-approach.
+- **Art:** Kenney Animal Pack giraffe. Headbutt/strike visual on distant hit.
+- **Color tier:** An accent (saddle/collar) color changes per tier
+- **Upgrades:** Long Neck 1/2/3 extends range further. Double Take makes it fire twice per sweep.
 
 ---
 
-### Lion — The Heavy
+### Elephant — The Heavy
 - **Type:** Sweeping, wide arc
 - **Role:** AoE — hits multiple latched enemies simultaneously
-- **Behavior:** Instead of a single line, the Lion sweep covers a wider arc. Hits all enemies within that arc. Particularly effective when multiple enemies are latched at the same section of the rim.
-- **Art:** Lion top-down, mane visible as a ring. Gold color. Roar/shockwave arc visual on sweep.
-- **Color tier:** Mane color changes per tier
-- **Upgrades:** Lion Roar 1/2/3 increases arc width. King's Wrath adds knockback that flings latched enemies outward.
+- **Behavior:** Instead of a single line, the Elephant sweep covers a wider arc. Hits all enemies within that arc. Particularly effective when multiple enemies are latched at the same section of the rim.
+- **Art:** Kenney Animal Pack elephant. Trumpet/shockwave arc visual on sweep.
+- **Color tier:** An accent (saddle/headdress) color changes per tier
+- **Upgrades:** Trumpet 1/2/3 increases arc width. Trunk Toss adds knockback that flings latched enemies outward.
 
 ---
 
-### Unicorn — The All-Rounder
+### Panda — The All-Rounder
 - **Type:** Sweeping
 - **Role:** Hybrid — Gold generation plus combat plus heal
 - **Behavior:** Generates a small Gold amount on each sweep (less than Horse). Deals damage to enemies in sweep path (less than Wolf). On enemy kill, restores a small amount of carousel health.
 - **Unlock requirement:** Must have upgraded at least 3 other mounts to Tier 2.
-- **Art:** Unicorn top-down, horn prominent. White/iridescent. Sparkle trail follows sweep path.
-- **Color tier:** Horn and mane color shifts through tier colors
-- **Upgrades:** Prismatic Horn increases all three effects by 50%. Dream Blessing adds a chance to double Gold on sweep.
+- **Art:** Kenney Animal Pack panda. Sparkle trail follows sweep path.
+- **Color tier:** An accent (saddle/collar) color shifts through tier colors
+- **Upgrades:** Bamboo Feast increases all three effects by 50%. Lucky Bamboo adds a chance to double Gold on sweep.
 
 ### Mount Slot Progression
 Start with 1 slot (Horse only). Slots are always bought with Gold in the Upgrade Shop:
@@ -281,7 +282,7 @@ Implementation: Use Godot Modulate property on Sprite2D to tint the base sprite.
 - **Health:** Low (1-2 hits)
 - **Latch drag:** Small
 - **Behavior:** Spawns in groups of 3-5. Approaches quickly. Easy to kill individually but overwhelming in numbers if ignored.
-- **Threat type:** Quantity. Tests whether Eagle can intercept fast movers before mass-latching.
+- **Threat type:** Quantity. Tests whether the Giraffe can intercept fast movers before mass-latching.
 - **Art:** Autumn leaf shape top-down. Orange/gold. Tumbles as it moves. Small and readable.
 - **Gold on kill:** Low (but kills happen frequently)
 
@@ -314,10 +315,10 @@ Implementation: Use Godot Modulate property on Sprite2D to tint the base sprite.
 | Boss | Based On | Special Ability |
 |---|---|---|
 | Leaf Storm | Leaf | On death splits into 4 Grey Leaves |
-| Stick Giant | Stick | Moves in zigzag — harder to intercept with Eagle |
+| Stick Giant | Stick | Moves in zigzag — harder to intercept with the Giraffe |
 | Boulder | Rock | Has 3 separate latch points, rolls faster near carousel |
 | Gilded Gale | Leaf | Spawns 2 Gold Leaves per second while alive |
-| Ancient Log | Stick | Immune to Turtle slow, resists first 3 hits |
+| Ancient Log | Stick | Immune to Sloth slow, resists first 3 hits |
 | Obsidian Boulder | Rock | Splits into 2 Purple Rocks on first kill — must kill twice |
 | The Rusted King | Final Boss | See Final Boss section |
 
@@ -362,11 +363,11 @@ Two trees. Both cost Gold. Upgrades always show the next tier even if locked so 
 | Click Range | Click hitbox larger — easier to hit fast Leaves |
 | Click Combo | Rapid clicks within 1 second build a 2x damage multiplier |
 | Wolf Fang 1/2/3 | Wolf sweep damage increased |
-| Eagle Eye 1/2/3 | Eagle range extended |
-| Lion Roar 1/2/3 | Lion arc width increased |
-| Turtle Shell 1/2/3 | Slow duration extended |
-| Kings Wrath | Lion knockback added |
-| Dive Bomb | Eagle fires twice per sweep |
+| Long Neck 1/2/3 | Giraffe range extended |
+| Trumpet 1/2/3 | Elephant arc width increased |
+| Drowsy 1/2/3 | Sloth slow duration extended |
+| Trunk Toss | Elephant knockback added |
+| Double Take | Giraffe fires twice per sweep |
 | Pack Mentality | Wolf fires offset second sweep |
 
 ---
@@ -376,13 +377,13 @@ Two trees. Both cost Gold. Upgrades always show the next tier even if locked so 
 | Upgrade | Effect |
 |---|---|
 | Wolf Tier 2/3 | Speed and damage increase, then damage trail |
-| Turtle Tier 2/3 | Slow duration doubled, then freeze added |
-| Eagle Tier 2/3 | Range extended significantly, then fires twice |
-| Lion Tier 2/3 | Arc doubled, then knockback added |
+| Sloth Tier 2/3 | Slow duration doubled, then freeze added |
+| Giraffe Tier 2/3 | Range extended significantly, then fires twice |
+| Elephant Tier 2/3 | Arc doubled, then knockback added |
 | Horse Tier 2/3 | Gold per pass doubled, then Gold on every sweep |
-| Unicorn Unlock | Requires 3 other mounts at Tier 2 |
-| Unicorn Tier 2 | All Unicorn effects plus 50% |
-| Prismatic Horn | Unicorn effects doubled |
+| Panda Unlock | Requires 3 other mounts at Tier 2 |
+| Panda Tier 2 | All Panda effects plus 50% |
+| Bamboo Feast | Panda effects doubled |
 
 ---
 
@@ -419,14 +420,14 @@ Short, surprising bonuses that break up the idle rhythm, in the spirit of Cookie
 - First goal: Survive first wave by clicking
 - First purchase: Carousel Speed level 1 (immediate satisfaction)
 - Second purchase: Mount Slot 2 + Wolf (game transforms — now have auto-combat)
-- Third purchase: Slot 3, add Turtle or Eagle (first strategic choice)
+- Third purchase: Slot 3, add Sloth or Giraffe (first strategic choice)
 - Boss: Leaf Storm — splits into 4 leaves on death, tests burst enemy handling
 - Reward: Green Tier unlocked, Slot 4 available to buy, new combat upgrades available
 
 ### Mid Game (Green through Purple)
 - Enemies get tougher, spawn faster
 - Extra ticket booths come online (major Gold surge moments)
-- Eagle and Lion come online
+- Giraffe and Elephant come online
 - Click Combo upgrade changes active play feel
 - Boss types introduce new behaviors
 
@@ -505,7 +506,7 @@ Built in Phase 2 (v1.9), in the stats panel:
 - Mount tier shown as a small colored gem on the carousel slot
 
 ### Simplicity principle
-No floating damage numbers in v1.0. Enemy health shown as a simple health bar above each enemy. Slow debuff shown as snowflake icon. Latch shown as a chain visual on the carousel rim.
+No floating damage numbers in v1.0. Enemy health shown as a simple health bar above each enemy. Slow debuff shown as a sleepy "Zzz" icon. Latch shown as a chain visual on the carousel rim.
 
 ---
 
@@ -629,13 +630,13 @@ Top-down 2D. Simple readable silhouettes. Autumn park color palette. Charming no
 
 **Wolf:** Predatory silhouette top-down. Dark grey. Open jaws facing outward. Reads as dangerous.
 
-**Turtle:** Shell pattern clearly visible from top-down. Green with hexagonal segments. Round and unmistakably turtle-shaped.
+**Sloth:** Kenney Animal Pack sloth. Calm, sleepy face; reads as "slow" at a glance.
 
-**Eagle:** Wings spread wide — most distinctive silhouette from above. Brown with white head suggestion. Wings communicate large range.
+**Giraffe:** Kenney Animal Pack giraffe. Yellow with spots; the long neck communicates long range.
 
-**Lion:** Mane visible as a ring around the head from top-down. Gold/tan. Reads as powerful area effect.
+**Elephant:** Kenney Animal Pack elephant. Big ears and trunk; reads as heavy, wide area effect.
 
-**Unicorn:** White horse body with clearly visible horn. Iridescent shimmer. Most visually complex mount — visual reward for unlocking it.
+**Panda:** Kenney Animal Pack panda. Black and white, gentle; a special late unlock (sparkle effects make it feel rare).
 
 **Leaf:** Autumn leaf shape. Orange/gold. Slightly asymmetric. Tumbles as it moves.
 
@@ -711,10 +712,10 @@ res://scripts/
 ├── mount_base.gd          — base class all mounts extend
 ├── mount_horse.gd
 ├── mount_wolf.gd
-├── mount_turtle.gd
-├── mount_eagle.gd
-├── mount_lion.gd
-├── mount_unicorn.gd
+├── mount_sloth.gd
+├── mount_giraffe.gd
+├── mount_elephant.gd
+├── mount_panda.gd
 ├── enemy_base.gd          — base class all enemies extend
 ├── enemy_leaf.gd
 ├── enemy_stick.gd

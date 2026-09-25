@@ -58,13 +58,13 @@
 ## Phase 3 — Content
 **Goal:** All mounts, all enemies, all color tiers.
 
-- [ ] Turtle, Eagle, Lion, Unicorn (behavior scripts + `.tres`)
+- [ ] Sloth, Giraffe, Elephant, Panda (behavior scripts + `.tres`; were Turtle, Eagle, Lion, Unicorn before GDD v1.12)
 - [ ] Stick and Rock enemies
 - [ ] Six color tiers via Modulate, tier data in `.tres`
 - [ ] Boss base class plus the six tier bosses
 - [ ] Mount slots 4–6 (slots 2–3 and equidistant spacing were built in Phase 2)
 - [ ] Minimal tier progression (pulled from Phase 4, Garret 2026-09-24): per-tier kill gate, "Challenge boss" button, timed boss fights (TEMPORARY rule), pick any unlocked tier to farm
-- [ ] Mount Tier 2 upgrades, enough to unlock the Unicorn
+- [ ] Mount Tier 2 upgrades, enough to unlock the Panda
 - [ ] Run time and first-clear times tracked in GameState (speedrun timer and prestige later)
 - [ ] Balance simulator v1 (economy only) and a pricing pass
 

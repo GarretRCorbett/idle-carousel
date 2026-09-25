@@ -1,11 +1,11 @@
 # Phase 3 Planning: Start Here
 
 ## Status (2026-09-24)
-**Pre-planning done** in the Phase 2 wrap-up session (Claude + Codex, using spare usage).
-Nothing is built or decided yet. Next: Garret answers the questions below, then Claude
-writes `step1_plan.md`.
+**Step 1 approved and done** (`step1_plan.md`, incl. Codex memo O): contracts and scene trees for Steps 2–3.
+Next: Step 2 (foundations). Step 1 and Step 3 questions are answered (below). Mounts renamed to
+Kenney animals (GDD v1.12).
 
-Phase 3 roadmap scope: Turtle, Eagle, Lion, Unicorn; Stick and Rock; six color tiers;
+Phase 3 roadmap scope: Sloth, Giraffe, Elephant, Panda; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
 
 ## Decided 2026-09-24 (Garret)
@@ -37,12 +37,22 @@ the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
   bought more than once and sold for 50%, to swap builds (e.g. sell a Horse for a second
   Wolf before a boss). Built for Horse and Wolf in Phase 2; new mounts follow the rule.
   Question 9 answered: **per-type tiers** (Garret). Affects question 10 (count *types*, so
-  duplicates can't unlock the Unicorn).
+  duplicates can't unlock the Panda).
 - **Send wave limit:** blocked while more than 30 enemies are alive (Phase 2 wrap-up).
   Revisit once Sticks and Rocks exist; Garret might prefer one early wave at a time then.
   This answers question 24 for now and part of question 26.
 - **Tuning from the wrap-up playtest:** base 70°/s (60, then 70 after a second playtest), max boost +40%, waves every 10 s. So
   question 22 is answered (70°/s).
+- **Phase 3 start (Garret, 2026-09-24):** tier colors = light greyscale enemy sprites + tint (Q13);
+  Stick/Rock latch damage 0.9 / 1.5 (Q14); waves = **random with caps** per tier (odds per type
+  plus a max per wave), per-tier interval in data, Grey at 10 s (Q15); Claude drafts the six tier
+  shades, Garret tweaks; debug-only dev keys switch tiers until Step 6; performance target decided
+  after content (Q25), stress test still run each step; Send limit stays 30 until the first
+  Grey + Green playtest (Q26); Step 1 contracts cover Steps 2–3 only.
+- **Mounts renamed** to match Kenney's Animal Pack (Garret; GDD v1.12): **Turtle → Sloth,
+  Eagle → Giraffe, Lion → Elephant, Unicorn → Panda.** Abilities unchanged. Q12 answered.
+  Upgrade names drafted by Claude, approved by Garret. **The memos in this folder still use the
+  old names.**
 - **Speedrun-friendly** (Garret, see NOTES): track active run time and each boss's first-clear time in GameState; seed wave randomness per run.
 
 ## What's in this folder
@@ -54,6 +64,8 @@ the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
 | `tools/stress_test.tscn` | (in tools/) The stress test as a permanent dev tool; run it before/after performance changes |
 | `claude_memo_prestige.md` | Claude: prestige research (first-prestige timing, rewards players like, Slay the Spire / Wildfrost challenges), a possible shape, questions for before Phase 5 |
 | `codex_memo_n_boss_timers.md` | Codex: how Clicker Heroes, Tap Titans 2, Idle Slayer, and Melvor handle boss failure; player reactions; timed-boss proposal |
+| `step1_plan.md` | Step 1: decisions, contracts, and scene trees for Steps 2–3 |
+| `codex_memo_o_step1_review.md` | Codex: review of the Step 1 plan (spawn queue vs Send limit, removal order, line-tip formula, wave validation, tests) |
 | `codex_memo_m_tiers_pacing.md` | Codex: tier loop, kill gate, wave recipes, stat scaling, 3-hour economy model, prices, simulator, boss tuning, 12 questions |
 
 The memos are **input, not decisions.**
@@ -64,8 +76,8 @@ The memos are **input, not decisions.**
 - **Foundations before content.** The roadmap calls Phase 3 "pattern replication", but
   that's only true after a few shared pieces exist: every mount emits the same signals
   (no more `if mount is MountWolf` in `game.gd`), a shared `MountSweep` helper that
-  Wolf/Eagle/Lion/Turtle/Unicorn each own (composition, not a superclass), per-mount
-  damage lookup, and kill attribution (which mount landed the lethal hit, for Unicorn heals).
+  Wolf/Giraffe/Elephant/Sloth/Panda each own (composition, not a superclass), per-mount
+  damage lookup, and kill attribution (which mount landed the lethal hit, for Panda heals).
 - **Removal is a state, not just `queue_free()`.** An enemy being removed can't move,
   latch, be hit, spawn children, or complete a boss. Phase 2's last bug was exactly this;
   splits, spawners, and knockback add more ways to hit it. Children spawned mid-tick
@@ -113,7 +125,7 @@ The memos are **input, not decisions.**
    plays the *economy* forward (purchases, booth income, kill income from cleared waves)
    and prints time-to-each-purchase and time-to-each-tier. Combat safety stays a
    playtest question until the economy numbers look right.
-5. **Knockback (King's Wrath)** is a Lion upgrade, not the Lion. Build the Lion's arc
+5. **Knockback (Trunk Toss)** is an Elephant upgrade, not the Elephant. Build the Elephant's arc
    in Phase 3; knockback with the other named upgrades in Phase 4 unless Garret wants it early.
 
 ### Carries into Phase 3 from elsewhere
@@ -132,14 +144,14 @@ Ordered so the risky, shared pieces come first. Rough sizes: S ≈ under 1 h, M 
 | 1 | Garret's decisions; resource contracts (`TierData`, `WaveProfile`, mount/enemy fields); scene trees for the new enemies and mounts | S (plan) |
 | 2 | **Foundations:** generic mount signals, `MountSweep` extracted from the Wolf (all Wolf tests still pass), per-mount damage, kill attribution, enemy removal state, queued spawns, unwrapped bearings. **Performance** (memo): one shared enemy snapshot per tick, health bar drawn in the enemy, drop the unused `Area2D`, `tools/stress_test.tscn` | L |
 | 3 | **Tiers and enemies:** `TierData` × 6, effective stats, Stick/Rock retune and scenes, mixed waves, `Sprite2D` + tint separate from hit flash | M–L |
-| 4 | **Eagle and Turtle:** long-range sweep on approaching enemies; `EnemyStatusEffects` (slow, freeze-ready) | M |
-| 5 | **Lion and mount tiers:** arc sweep; type-wide mount tiers with a few real Tier 2 purchases; **Unicorn** (Gold per turn, damage, heal on its own kills) | M–L |
+| 4 | **Giraffe and Sloth:** long-range sweep on approaching enemies; `EnemyStatusEffects` (slow, freeze-ready) | M |
+| 5 | **Elephant and mount tiers:** arc sweep; type-wide mount tiers with a few real Tier 2 purchases; **Panda** (Gold per turn, damage, heal on its own kills) | M–L |
 | 6 | **Boss framework + first boss:** tier/kill/boss state in GameState (save-ready), minimal kill gate + Challenge button, `EnemyBoss`, `BossEncounter`, slots 4–6, **Leaf Storm** | L |
 | 7 | **Remaining five bosses:** Stick Giant (zigzag), Boulder (3 latch points), Gilded Gale (spawner), Ancient Log (immune + resist), Obsidian Boulder (split) | L (maybe 2 sessions) |
 | 8 | **Balance simulator v1 + pricing pass:** new prices, test 60°/s base speed | M |
 | 9 | Playtest across tiers, fixes, Codex review, understanding check, sign-off | M |
 
-About 8–10 sessions. Grey + Green with Stick, Rock, Turtle/Eagle, and Leaf Storm
+About 8–10 sessions. Grey + Green with Stick, Rock, Sloth/Giraffe, and Leaf Storm
 (end of Step 6) is the first slice worth a real playtest.
 
 ## Questions for Garret
@@ -154,15 +166,15 @@ Grouped by when they're needed. Recommendations marked ★. Full reasoning is in
 5. TEMPORARY boss-failure rule for playtests (the real fail state stays DECISION PENDING): ★ a stall ends the attempt after a short rescue window; Gold and unlocks kept / the attempt only ends if you leave / decide after the first boss playtest. (M4)
 
 **Before Steps 4–5 (mounts)**
-6. Turtle trigger: ★ slows each approaching enemy once as it rotates past it / one pulse at a fixed point each turn. (L1)
-7. Unicorn Gold: ★ once per full turn / per enemy hit / per turn that hits something. (L2)
-8. Unicorn heal: ★ only on its own kills / any kill while it's on the carousel. (L3)
+6. Sloth trigger: ★ slows each approaching enemy once as it rotates past it / one pulse at a fixed point each turn. (L1)
+7. Panda Gold: ★ once per full turn / per enemy hit / per turn that hits something. (L2)
+8. Panda heal: ★ only on its own kills / any kill while it's on the carousel. (L3)
 9. ~~Mount tiers~~ **Decided: per type** (all Wolves share Wolf Tier 2). (L4)
-10. Unicorn unlock: ★ 3 different mount types at Tier 2 (duplicate Horses don't count) / any 3 mounts at Tier 2. (L5)
-11. Lion shape: ★ a wedge centered on the carousel / a cone from the Lion. (L6) Also confirm the Lion's job: the Wolf already hits every enemy on its line, so a wider arc mostly hits clusters *sooner*, not more often. Is that enough, or should the Lion hit harder too?
-12. Mount art: Kenney has no turtle, eagle, lion, or unicorn. ★ placeholder shapes until the art phase / Kenney stand-ins (owl, bear, recolored horse…).
+10. Panda unlock: ★ 3 different mount types at Tier 2 (duplicate Horses don't count) / any 3 mounts at Tier 2. (L5)
+11. Elephant shape: ★ a wedge centered on the carousel / a cone from the Elephant. (L6) Also confirm the Elephant's job: the Wolf already hits every enemy on its line, so a wider arc mostly hits clusters *sooner*, not more often. Is that enough, or should the Elephant hit harder too?
+12. ~~Mount art~~ **Decided:** repicked to Kenney animals (Sloth, Giraffe, Elephant, Panda).
 
-**Before Step 3 (tiers and enemies)**
+**Before Step 3 (tiers and enemies)** — all answered (see Decided).
 13. Tier colors on colored art: ★ light/greyscale enemy sprites + tint / a color-swap shader / tint only an accent. (L15)
 14. Stick/Rock retune: ★ latch damage 0.9 and 1.5 (from 2 and 4) / keep and see.
 15. Waves per tier: ★ memo M's recipe table (Sticks from ~40 Grey kills, Rocks from ~40 Green kills) / random mix.
@@ -173,7 +185,7 @@ Grouped by when they're needed. Recommendations marked ★. Full reasoning is in
 18. Ancient Log "resists the first 3 hits": ★ reduced damage on those hits / fully blocked. And immune to freeze as well as slow? ★ yes. (L10, L11)
 19. Boulder's 3 latch points: ★ each has its own health; drag drops as each is cleared / full drag until all are cleared / shared health. (L9)
 20. Obsidian Boulder "must kill twice": ★ body dies, then 2 Purple Rocks must die (two stages) / something else.
-21. King's Wrath knockback: ★ Phase 4 with the other named upgrades / build with the Lion now. (L7, L8)
+21. Trunk Toss knockback: ★ Phase 4 with the other named upgrades / build with the Elephant now. (L7, L8)
 
 **Before Step 8 (pricing)**
 22. Idle speed: ★ test 60°/s base (from 45) / keep 45 and cheapen early upgrades / wait for hold-to-boost. (M6)
@@ -185,6 +197,6 @@ Grouped by when they're needed. Recommendations marked ★. Full reasoning is in
 26. Live-enemy cap: ★ block Send wave above a live-enemy limit and cap summoner adds / no cap, just optimize / decide after measuring.
 
 **Later (GDD clean-up before the full upgrade tree, Phase 4)**
-- Several GDD upgrades describe the same effect twice (Eagle Tier 3 vs Dive Bomb, Lion Tier 3 vs King's Wrath, Turtle Tier 3 vs Permafrost), and Prismatic Horn is both +50% and ×2. ★ same unlock, doesn't stack. (L16)
+- Several GDD upgrades describe the same effect twice (Giraffe Tier 3 vs Double Take, Elephant Tier 3 vs Trunk Toss, Sloth Tier 3 vs Deep Sleep), and Bamboo Feast is both +50% and ×2. ★ same unlock, doesn't stack. (L16)
 - Horse Tier 3 "Gold on every sweep" needs a definition. ★ booth passes plus one extra payment per turn. (M10)
 - Mount-tier colors vs the six enemy colors. ★ keep them separate. (L18)

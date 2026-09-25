@@ -4,7 +4,7 @@ extends Resource
 ## Balance changes happen here in the Inspector, not in mount scripts.
 
 @export var mount_name: String = ""
-## Stationary mounts trigger once per rotation at a target point (Horse, Turtle).
+## Stationary mounts trigger once per rotation at a target point (Horse, Sloth).
 ## Sweeping mounts fire outward continuously as the carousel turns.
 @export var is_stationary: bool = false
 

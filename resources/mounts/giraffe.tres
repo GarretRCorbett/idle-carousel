@@ -4,13 +4,13 @@
 
 [resource]
 script = ExtResource("1_script")
-mount_name = "Lion"
+mount_name = "Giraffe"
 is_stationary = false
-sweep_range = 70.0
-sweep_arc = 45.0
+sweep_range = 250.0
+sweep_arc = 0.0
 base_damage = 0.75
 base_gold_bonus = 0.0
-unlock_cost_gold = 600
-placeholder_color = Color(0.8471, 0.7059, 0.3529, 1)
-placeholder_points = 8
+unlock_cost_gold = 150
+placeholder_color = Color(0.651, 0.4824, 0.3569, 1)
+placeholder_points = 6
 placeholder_size = 20.0
