@@ -244,3 +244,18 @@ func test_distance_check_keeps_every_enemy_in_reach() -> void:
 			expected.append(enemy)
 	_turn(TAU, 360)
 	assert_array(_hits).contains_exactly_in_any_order(expected)
+
+
+## A wedge (sweep_arc) reaches enemies to the side of the line: turning the
+## line from 0 to 0.3 rad, a 90° wedge already covers an enemy at 1.0 rad.
+func test_wedge_hits_what_a_line_would_not_yet() -> void:
+	_setup_wolf()
+	var enemy := _enemy_at(1.0, 110.0)
+	_turn(0.3, 6)
+	assert_array(_hits).is_empty()  # a plain line needs to reach ~0.9 rad
+	_setup_wolf()
+	_wolf.data.sweep_arc = 90.0
+	var enemy2 := _enemy_at(1.0, 110.0)
+	_turn(0.3, 6)
+	assert_array(_hits).contains_exactly([enemy2])
+	enemy.free()

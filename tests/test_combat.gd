@@ -405,3 +405,27 @@ func test_sloth_slows_approaching_enemies_without_damage() -> void:
 		game._physics_process(1.0 / 60.0)
 	assert_bool(latched.is_slowed()).is_false()
 	assert_float(latched.get_health()).is_equal(latched.get_max_health())
+
+
+## The Elephant pounds the rim hard but can't reach past ~120 px.
+func test_elephant_hits_latched_hard_and_has_short_reach() -> void:
+	var game := _game()
+	(game.get_node("WaveManager") as WaveManager).set_auto(false)
+	GameState.add_gold(10000.0)
+	UpgradeManager.purchase(&"mount_slot")
+	assert_bool(UpgradeManager.purchase(&"elephant")).is_true()
+	var elephant := _mounts(game)[1]
+	var near := _slow_leaf(game, 1.0, 200.0, 1.0)
+	near.data.base_health = 100.0  # before it joins: stats are fixed then
+	var far := _slow_leaf(game, 2.5, 150.0, 0.0)  # edge at 140: past the Elephant's 120
+	game._admit_pending_spawns()
+	near.advance(1000.0)  # latches at the rim
+	for i in 600:
+		game._physics_process(1.0 / 60.0)
+		if near.get_health() < near.get_max_health():
+			break
+	assert_float(near.get_max_health() - near.get_health()).is_equal_approx(GameState.get_mount_damage(elephant.data), 0.0001)
+	assert_float(GameState.get_mount_damage(elephant.data)).is_greater(GameState.get_mount_damage(load("res://resources/mounts/wolf.tres")))
+	for i in 480:  # more than a full turn
+		game._physics_process(1.0 / 60.0)
+	assert_float(far.get_health()).is_equal(far.get_max_health())
