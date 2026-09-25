@@ -26,7 +26,7 @@ extends Node2D
 ## Curbed lawns (rects from the carousel center), the only grass. Keep them
 ## clear of the walkways and near the screen edges.
 @export var planters: Array[Rect2] = [
-	Rect2(-460.0, 205.0, 200.0, 175.0), Rect2(-340.0, -300.0, 140.0, 76.0),
+	Rect2(-460.0, 205.0, 200.0, 175.0),
 ]
 ## Per-planter corner radii (top left, top right, bottom right, bottom left),
 ## in planter order; missing = planter_corner_radius. A big radius on the
@@ -42,9 +42,13 @@ extends Node2D
 ## Shop roofs seen from above, framing the plaza from the corners like the
 ## buildings around a theme-park carousel (no castles or real places). Rects
 ## from the carousel center; each roof's ridge runs left to right and its
-## scalloped trim faces the plaza (up). Keep them at the screen edges.
-@export var roofs: Array[Rect2] = [Rect2(125.0, 270.0, 280.0, 120.0), Rect2(-680.0, 250.0, 210.0, 140.0)]
-@export var roof_colors: Array[Color] = [Color("5f82b0"), Color("c98ea6")]
+## scalloped trim faces the plaza (up for roofs below the carousel, down for
+## roofs above it). Keep them at the screen edges.
+@export var roofs: Array[Rect2] = [
+	Rect2(125.0, 270.0, 280.0, 120.0), Rect2(-680.0, 250.0, 210.0, 140.0),
+	Rect2(-720.0, -420.0, 490.0, 265.0), Rect2(-335.0, -200.0, 135.0, 72.0),
+]
+@export var roof_colors: Array[Color] = [Color("5f82b0"), Color("c98ea6"), Color("4f79a8"), Color("c98ea6")]
 @export var roof_trim_color: Color = Color("fff4dc")
 @export var roof_ridge_color: Color = Color("ddb96a")
 @export var roof_shadow_color: Color = Color(0.0, 0.0, 0.0, 0.12)
@@ -68,6 +72,7 @@ extends Node2D
 @export var paving_color: Color = Color("d49c83")
 @export var edging_color: Color = Color("fff4dc")
 @export_range(0.0, 20.0, 1.0, "suffix:px") var edging_width: float = 3.0
+@export_range(0.0, 20.0, 1.0, "suffix:px") var ring_edge_width: float = 3.0
 @export var joint_color: Color = Color(0.45, 0.2, 0.15, 0.18)
 ## Walkways leading off the ring, each a curve through 4 points (a cubic
 ## Bezier from the carousel center outward; the ring hides the start). Keep
@@ -90,7 +95,7 @@ extends Node2D
 @export_group("Flower beds and benches")
 ## Bed centers (from the carousel center); each gets a bench beside it.
 ## Benches are blue and level, so they never look like a Stick flying in.
-@export var flower_beds: PackedVector2Array = PackedVector2Array([Vector2(-270.0, -262.0), Vector2(245.0, 232.0)])
+@export var flower_beds: PackedVector2Array = PackedVector2Array([Vector2(245.0, 232.0)])
 @export var bed_size: Vector2 = Vector2(96.0, 46.0)
 @export var bed_edge_color: Color = Color("765642")
 @export var bed_soil_color: Color = Color("6f9a79")
@@ -114,11 +119,9 @@ extends Node2D
 ## Lamp posts just outside the ring (degrees round the plaza).
 ## Placed to flank the walkways.
 @export var lamp_angles_deg: PackedFloat32Array = PackedFloat32Array([20.0, 50.0, 130.0, 160.0, 235.0, 340.0])
-## Kept quiet (navy, small globes, a faint glow) so lamps never read as
-## yellow enemies or pickups (Codex look review).
 @export var lamp_color: Color = Color("fff4dc")
-@export var lamp_rim_color: Color = Color("243955")
-@export var lamp_glow_color: Color = Color(1.0, 0.85, 0.55, 0.1)
+@export var lamp_rim_color: Color = Color("ddb96a")
+@export var lamp_glow_color: Color = Color(1.0, 0.85, 0.55, 0.25)
 ## A very faint shadow that grounds each lamp.
 @export var lamp_shadow_color: Color = Color(0.0, 0.0, 0.0, 0.1)
 
@@ -144,12 +147,12 @@ func _draw() -> void:
 		_draw_nook(nook)
 	for i in planters.size():
 		_draw_planter(planters[i], planter_corners[i] if i < planter_corners.size() else Vector4.ONE * planter_corner_radius)
-	# Walkway borders, the ring with its border, then the walkway fills on top
-	# (so the border opens where each walkway joins), then the stone plaza.
+	# Walkways, then the ring on top with an unbroken ivory edge (Garret
+	# preferred it to walkways opening into the ring), then the stone plaza.
 	_draw_paths()
-	draw_circle(Vector2.ZERO, ring_outer + edging_width, edging_color, true, -1.0, true)
-	draw_circle(Vector2.ZERO, ring_outer, paving_color, true, -1.0, true)
 	_draw_path_fills()
+	draw_circle(Vector2.ZERO, ring_outer + ring_edge_width, edging_color, true, -1.0, true)
+	draw_circle(Vector2.ZERO, ring_outer, paving_color, true, -1.0, true)
 	for i in 36:
 		var direction := Vector2.from_angle(TAU * i / 36.0)
 		draw_line(direction * clearing_radius, direction * ring_outer, joint_color, 1.0, true)
@@ -158,7 +161,8 @@ func _draw() -> void:
 	for i in flower_beds.size():
 		_draw_bed(flower_beds[i], i)
 	for angle in lamp_angles_deg:
-		_draw_lamp(Vector2.from_angle(deg_to_rad(angle)) * (ring_outer + 16.0))
+		var direction := Vector2.from_angle(deg_to_rad(angle))
+		_draw_lamp(direction * (ring_outer + 16.0), direction)
 	for cart in carts:
 		_draw_cart(cart)
 	for i in roofs.size():
@@ -216,11 +220,12 @@ func _draw_nook(rect: Rect2) -> void:
 ## trim along the front (plaza) edge.
 func _draw_roof(rect: Rect2, color: Color) -> void:
 	draw_rect(Rect2(rect.position + Vector2(5.0, 6.0), rect.size), roof_shadow_color)
-	var ridge_y := rect.position.y + rect.size.y * 0.45
-	var front := Rect2(rect.position, Vector2(rect.size.x, ridge_y - rect.position.y))
-	var back := Rect2(Vector2(rect.position.x, ridge_y), Vector2(rect.size.x, rect.end.y - ridge_y))
-	draw_rect(front, color.lightened(0.12))
-	draw_rect(back, color.darkened(0.08))
+	var faces_up := rect.get_center().y > 0.0
+	var ridge_y := rect.position.y + rect.size.y * (0.45 if faces_up else 0.55)
+	var top := Rect2(rect.position, Vector2(rect.size.x, ridge_y - rect.position.y))
+	var bottom := Rect2(Vector2(rect.position.x, ridge_y), Vector2(rect.size.x, rect.end.y - ridge_y))
+	draw_rect(top, color.lightened(0.12) if faces_up else color.darkened(0.08))
+	draw_rect(bottom, color.darkened(0.08) if faces_up else color.lightened(0.12))
 	var shingle := Color(color.darkened(0.35), 0.35)
 	var y := rect.position.y + 12.0
 	while y < rect.end.y:
@@ -228,12 +233,13 @@ func _draw_roof(rect: Rect2, color: Color) -> void:
 			draw_line(Vector2(rect.position.x, y), Vector2(rect.end.x, y), shingle, 1.0)
 		y += 12.0
 	draw_line(Vector2(rect.position.x, ridge_y), Vector2(rect.end.x, ridge_y), roof_ridge_color, 3.0)
+	var edge_y := rect.position.y if faces_up else rect.end.y
 	var scallop := 8.0
 	var x := rect.position.x + scallop
 	while x < rect.end.x:
-		draw_circle(Vector2(x, rect.position.y), scallop, roof_trim_color, true, -1.0, true)
+		draw_circle(Vector2(x, edge_y), scallop, roof_trim_color, true, -1.0, true)
 		x += scallop * 2.0
-	draw_rect(Rect2(rect.position, Vector2(rect.size.x, 4.0)), roof_trim_color)
+	draw_rect(Rect2(Vector2(rect.position.x, edge_y - (0.0 if faces_up else 4.0)), Vector2(rect.size.x, 4.0)), roof_trim_color)
 
 
 func _draw_paths() -> void:
@@ -242,8 +248,6 @@ func _draw_paths() -> void:
 			draw_colored_polygon(_walkway_outline(walkways[i], edging_width * 2.0, _walkway_width(i)), edging_color)
 
 
-## The walkway fills, drawn over the ring's border so each walkway opens
-## into the ring instead of stopping at it.
 func _draw_path_fills() -> void:
 	for i in walkways.size():
 		if walkways[i].size() == 4:
@@ -299,12 +303,16 @@ func _draw_bed(center: Vector2, index: int) -> void:
 	draw_rect(Rect2(bench.position + Vector2(0.0, 5.0), Vector2(bench.size.x, 3.0)), bench_leg_color)
 
 
-## A lamp seen from above: a faint glow and one ivory globe in a navy rim.
-func _draw_lamp(spot: Vector2) -> void:
-	draw_circle(spot + Vector2(2.0, 3.0), 6.0, lamp_shadow_color, true, -1.0, true)
-	draw_circle(spot, 13.0, lamp_glow_color, true, -1.0, true)
-	draw_circle(spot, 6.0, lamp_rim_color, true, -1.0, true)
-	draw_circle(spot, 4.0, lamp_color, true, -1.0, true)
+## An old-fashioned double lamp seen from above: a soft glow, a gold bar,
+## and two ivory globes with gold rims, side by side along the ring.
+func _draw_lamp(spot: Vector2, outward: Vector2) -> void:
+	var along := Vector2(-outward.y, outward.x) * 8.0
+	draw_circle(spot + Vector2(2.0, 3.0), 8.0, lamp_shadow_color, true, -1.0, true)
+	draw_circle(spot, 22.0, lamp_glow_color, true, -1.0, true)
+	draw_line(spot - along, spot + along, lamp_rim_color, 3.0, true)
+	for globe in [spot - along, spot + along]:
+		draw_circle(globe, 6.0, lamp_rim_color, true, -1.0, true)
+		draw_circle(globe, 4.2, lamp_color, true, -1.0, true)
 
 
 ## A cart peeking out under a striped umbrella, seen from above.
