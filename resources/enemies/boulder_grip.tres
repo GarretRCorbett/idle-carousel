@@ -6,6 +6,7 @@
 
 [resource]
 script = ExtResource("1_script")
+id = &"boulder_grip"
 enemy_name = "Boulder Grip"
 move_speed = 25.0
 base_health = 10.0

@@ -35,8 +35,8 @@ func test_every_enemy_scene_shows_its_sprite_at_its_size() -> void:
 
 
 func test_stick_and_rock_use_their_own_data() -> void:
-	assert_str(_spawn(SCENES[1]).data.enemy_name).is_equal("Stick")
-	assert_str(_spawn(SCENES[2]).data.enemy_name).is_equal("Rock")
+	assert_str(String(_spawn(SCENES[1]).data.id)).is_equal("stick")
+	assert_str(String(_spawn(SCENES[2]).data.id)).is_equal("rock")
 
 
 func test_tint_on_the_sprite_survives_the_flash_and_squash_recovers() -> void:

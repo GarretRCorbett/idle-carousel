@@ -56,6 +56,12 @@ func _ready() -> void:
 	GameState.boss_beaten.connect(func(_rank: int, _first: bool) -> void: refresh())
 	GameState.boss_active_changed.connect(_on_boss_active_changed)
 	GameState.run_reset.connect(refresh)
+	ThemeManager.theme_changed.connect(_on_theme_changed)
+	refresh()
+
+
+## A theme may rename the boss.
+func _on_theme_changed(_theme: ParkTheme) -> void:
 	refresh()
 
 
@@ -111,7 +117,7 @@ func refresh() -> void:
 		return
 	var tier := tier_catalog.get_tier(GameState.get_selected_tier())
 	var boss := tier.boss if tier != null else null
-	_boss_name.text = tr(boss.name_key) if boss != null else tr(no_boss_key)
+	_boss_name.text = tr(ThemeManager.boss_name_key(boss)) if boss != null else tr(no_boss_key)
 	if _fighting:
 		_bar.theme_type_variation = &"HealthBar"
 		_action.requires_confirm = true

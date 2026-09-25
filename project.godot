@@ -21,6 +21,7 @@ GameState="*uid://dgcc4awfrfjp7"
 SaveManager="*uid://bwbpfmjn5u34p"
 AudioManager="*uid://dm1omox18o2xe"
 UpgradeManager="*uid://dt8lfju6ji2xf"
+ThemeManager="*res://scripts/autoloads/theme_manager.gd"
 
 [display]
 

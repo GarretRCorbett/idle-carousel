@@ -195,7 +195,7 @@ func _path_point(angle: float) -> Vector2:
 ## the pack will land. Drawn on the Storm itself (not Visual), so it doesn't
 ## flash or tint.
 func _draw() -> void:
-	var size := data.placeholder_size if data != null else 40.0
+	var size := get_visual_size() if data != null else 40.0
 	var gusting := _phase == Phase.GUST
 	var color := warning_color if gusting else wind_color
 	var growth := 1.0 + (0.25 * _phase_time / gust_seconds if gusting else 0.0)

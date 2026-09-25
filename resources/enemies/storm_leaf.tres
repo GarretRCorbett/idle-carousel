@@ -6,6 +6,7 @@
 
 [resource]
 script = ExtResource("1_script")
+id = &"storm_leaf"
 enemy_name = "Storm Leaf"
 move_speed = 80.0
 base_health = 1.0

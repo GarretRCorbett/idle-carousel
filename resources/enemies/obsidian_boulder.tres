@@ -6,6 +6,7 @@
 
 [resource]
 script = ExtResource("1_script")
+id = &"obsidian_boulder"
 enemy_name = "Obsidian Boulder"
 move_speed = 20.0
 base_health = 380.0

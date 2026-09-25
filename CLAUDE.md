@@ -40,6 +40,9 @@ tools/                  check.sh / check.bat (+ check_scripts.gd they run);
                         boss_sim.tscn (plays the Leaf Storm fight headless with a
                         pre-boss build; prints win time, lowest health, stalls);
                         subset_fonts.py (rebuilds the CJK font subsets);
+                        make_test_themes.gd (rebuilds resources/themes/*.tres:
+                        the park plus the Winter/Halloween test themes; F4 cycles
+                        themes in debug builds);
                         stress_test.tscn (performance: N Leaves, prints FPS and
                         tick times; run before/after perf changes, same GPU only;
                         Garret's Godot renders on the Radeon 780M since 2026-09-24)
@@ -60,6 +63,7 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
 2. SaveManager — file I/O, offline progress. Save file: `user://save_data.json`
 3. AudioManager — persistent music/SFX players
 4. UpgradeManager — leveled upgrades from `upgrade_catalog.tres`, can_afford/purchase/levels, emits signals
+5. ThemeManager — the current ParkTheme (`resources/themes/`): enemy skins, boss names, scenery colors
 
 ## Architecture rules (from the GDD)
 - Enemies and projectiles live in world-space layers (EnemyLayer, ProjectileLayer),
@@ -90,6 +94,18 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
   which chains all of them. Fonts are built by `tools/build_ui_theme.gd`; after CJK text
   changes, re-run `python tools/subset_fonts.py` (a test fails if a glyph is missing).
   Kenney has no ✓. Background: `planning/phase2/codex_memo_k_fonts.md`.
+- Themes (Garret plans seasonal/event themes; `planning/phase3/theming_plan.md`). Keep
+  every change theme-ready:
+  - Gameplay code never checks display names (`enemy_name`, text). Use stable ids
+    (`EnemyData.id`, `BossData.boss_id`, mount/upgrade ids) and never rename an id.
+  - Looks are data: sprites, sizes, colors and shapes live in resources or `@export`s,
+    read through `ThemeManager.skin_for()` for enemies. New scenery settings are
+    `@export`s so a theme can override them (`ParkTheme.scenery`).
+  - Visual size stays separate from hitbox and click radius.
+  - Keep effect drawing (rings, trails) apart from fight logic, with its colors and
+    sizes as `@export`s; draw from `get_visual_size()`, not `data.placeholder_size`.
+  - A new enemy gets an id and a skin in every theme in `tools/make_test_themes.gd`
+    (`tests/test_themes.gd` fails otherwise).
 - Pseudolocalization check: Project Settings → Advanced Settings on →
   Internationalization → Pseudolocalization → Use Pseudolocalization, run the game,
   look for plain English (missed) or cut-off text, then turn it off again.

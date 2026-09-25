@@ -1,0 +1,107 @@
+[gd_resource type="Resource" script_class="ParkTheme" format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy_skin.gd" id="1_yinrj"]
+[ext_resource type="Script" path="res://scripts/park_theme.gd" id="2_e4o7l"]
+
+[sub_resource type="Resource" id="Resource_y15lj"]
+script = ExtResource("1_yinrj")
+enemy_id = &"leaf"
+visual_size = 14.0
+shape = 2
+
+[sub_resource type="Resource" id="Resource_28fgr"]
+script = ExtResource("1_yinrj")
+enemy_id = &"storm_leaf"
+visual_size = 11.0
+shape = 2
+
+[sub_resource type="Resource" id="Resource_y8hw4"]
+script = ExtResource("1_yinrj")
+enemy_id = &"stick"
+visual_size = 18.0
+shape = 3
+color = Color(0.89411765, 0.9490196, 1, 1)
+points = 4
+
+[sub_resource type="Resource" id="Resource_hbdfx"]
+script = ExtResource("1_yinrj")
+enemy_id = &"rock"
+visual_size = 16.0
+shape = 1
+points = 16
+
+[sub_resource type="Resource" id="Resource_hwdfa"]
+script = ExtResource("1_yinrj")
+enemy_id = &"boulder_grip"
+visual_size = 18.0
+shape = 1
+points = 16
+
+[sub_resource type="Resource" id="Resource_42kia"]
+script = ExtResource("1_yinrj")
+enemy_id = &"leaf_storm"
+visual_size = 44.0
+shape = 2
+points = 8
+
+[sub_resource type="Resource" id="Resource_5av7l"]
+script = ExtResource("1_yinrj")
+enemy_id = &"gilded_gale"
+visual_size = 44.0
+shape = 2
+color = Color(1, 0.9647059, 0.84705883, 1)
+points = 8
+
+[sub_resource type="Resource" id="Resource_7xn3v"]
+script = ExtResource("1_yinrj")
+enemy_id = &"stick_giant"
+visual_size = 48.0
+shape = 3
+color = Color(0.89411765, 0.9490196, 1, 1)
+points = 4
+
+[sub_resource type="Resource" id="Resource_m656f"]
+script = ExtResource("1_yinrj")
+enemy_id = &"boulder"
+visual_size = 44.0
+shape = 1
+points = 16
+
+[sub_resource type="Resource" id="Resource_fvq0k"]
+script = ExtResource("1_yinrj")
+enemy_id = &"ancient_log"
+visual_size = 52.0
+shape = 3
+color = Color(0.8392157, 0.9098039, 0.96862745, 1)
+points = 4
+
+[sub_resource type="Resource" id="Resource_c2adj"]
+script = ExtResource("1_yinrj")
+enemy_id = &"obsidian_boulder"
+visual_size = 46.0
+shape = 1
+color = Color(0.827451, 0.8627451, 0.92156863, 1)
+points = 16
+
+[resource]
+script = ExtResource("2_e4o7l")
+id = &"winter_test"
+dev_name = "Winter (test)"
+enemy_skins = Array[ExtResource("1_yinrj")]([SubResource("Resource_y15lj"), SubResource("Resource_28fgr"), SubResource("Resource_y8hw4"), SubResource("Resource_hbdfx"), SubResource("Resource_hwdfa"), SubResource("Resource_42kia"), SubResource("Resource_5av7l"), SubResource("Resource_7xn3v"), SubResource("Resource_m656f"), SubResource("Resource_fvq0k"), SubResource("Resource_c2adj")])
+scenery = Dictionary[StringName, Dictionary]({
+&"park_background": {
+"bloom_colors": Array[Color]([Color(1, 1, 1, 1), Color(0.8117647, 0.8784314, 0.9607843, 1), Color(0.7137255, 0.7882353, 0.9019608, 1)]),
+"clearing_color": Color(0.84705883, 0.8745098, 0.9137255, 1),
+"curb_color": Color(1, 1, 1, 1),
+"lawn_color": Color(0.8901961, 0.92156863, 0.9607843, 1),
+"nook_color": Color(0.8666667, 0.89411765, 0.93333334, 1),
+"pavement_color": Color(0.93333334, 0.9490196, 0.96862745, 1),
+"slab_joint_color": Color(0.35, 0.45, 0.6, 0.1),
+"tree_tint": Color(0.8, 0.9, 1, 1)
+},
+&"park_scenery": {
+"bloom_colors": Array[Color]([Color(1, 1, 1, 1), Color(0.8117647, 0.8784314, 0.9607843, 1)]),
+"lawn_color": Color(0.8901961, 0.92156863, 0.9607843, 1),
+"pavement_color": Color(0.93333334, 0.9490196, 0.96862745, 1)
+}
+})

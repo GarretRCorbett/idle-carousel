@@ -6,6 +6,7 @@
 
 [resource]
 script = ExtResource("1_script")
+id = &"gilded_gale"
 enemy_name = "Gilded Gale"
 move_speed = 0.0
 base_health = 550.0

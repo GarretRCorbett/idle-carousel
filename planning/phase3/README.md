@@ -34,8 +34,12 @@
 - **Step 8 built** (`step8_results.md`): `tools/economy_sim.tscn` plays whole runs headless; prices
   and boss health retuned to Garret's 15/20/25/30/35/35 min pace (sim at 1 click/s: bosses at
   0:18, 0:31, 1:06, 1:30, 2:05, 2:36). All numbers are drafts; three open questions in the file.
-- **Next:** Garret playtests bosses, palette A, the park look and the new prices; Step 9 (full
-  playtest, Codex review, sign-off).
+- **Look pass** after Step 8: theme-park plaza (brick walkways, rooftops, planters, gold lamps),
+  a matching title screen, and royal blue buttons and title in place of yellow.
+- **Theming foundation** (`theming_plan.md`, Codex memo U): stable enemy ids, EnemySkin /
+  ParkTheme / ThemeManager, Winter and Halloween test themes (F4 in debug builds).
+- **Next:** Garret playtests bosses, the look and the new prices; Step 9 (full playtest, Codex
+  review, sign-off).
 
 Phase 3 roadmap scope: Sloth, Giraffe, Elephant, Panda; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)

@@ -82,6 +82,14 @@ extends Control
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	resized.connect(queue_redraw)
+	ThemeManager.theme_changed.connect(_on_theme_changed)
+	_on_theme_changed(ThemeManager.get_theme())
+
+
+## Themes recolor the title screen (ParkTheme.scenery, role "park_scenery").
+func _on_theme_changed(_theme: ParkTheme) -> void:
+	ThemeManager.apply_scenery(self, &"park_scenery")
+	queue_redraw()
 
 
 func _draw() -> void:

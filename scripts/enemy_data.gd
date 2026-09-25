@@ -3,6 +3,10 @@ extends Resource
 ## Base stats for one enemy type. One .tres per type in res://resources/enemies/.
 ## These are Grey-tier (tier 1) values; color tiers scale them later.
 
+## Stable id for code, themes and (later) saves. Never changes, even when a
+## theme renames or redraws the enemy. Gameplay code must never check
+## enemy_name (it's a label for people reading the data).
+@export var id: StringName = &""
 @export var enemy_name: String = ""
 
 @export_group("Combat")

@@ -25,7 +25,8 @@ _Update at the end of every session._
 ## 🚧 To-Do / Things To Add
 
 ### Themes, someday (Garret, 2026-09-25)
-- [ ] Idea: selectable themes with the same enemy workings but new names and art (an original theme-park lineup, Halloween pumpkins, Christmas snowballs). Not now. Codex memo U (`planning/phase3/codex_memo_u_theming.md`): feasible, about M for one reskinned enemy lineup and L for a full theme. Keep these habits meanwhile: no gameplay checks on display names, stable ids, looks in exports/resources, visual size separate from hitboxes.
+- [x] Foundation and test themes built (Garret chose "prep + test theme now"): stable enemy ids, EnemySkin, ParkTheme, ThemeManager, and Winter/Halloween test themes (F4 in debug builds). See `planning/phase3/theming_plan.md`; habits are in CLAUDE.md.
+- [ ] For a real theme: mount skins, carousel/UI/tier colors per theme, sounds, a saved choice with a picker, then the art. Tier tints darken theme colors (grey pumpkins look brown), so pick light art or per-theme tier colors.
 
 ### Auto-clickers (Garret, 2026-09-25, after Step 8)
 - [ ] Clicking speed swings run length a lot in the sims (1 click/s ≈ 2:36, 2 clicks/s ≈ 1:16). Playtest first and keep it in mind.

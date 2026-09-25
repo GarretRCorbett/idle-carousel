@@ -74,6 +74,8 @@ var _status := EnemyStatus.new()
 var _status_running: bool = false
 
 ## Hit flash (modulate) and tumble (rotation). Tier tint and squash are on Sprite.
+## How it looks in the current theme (ThemeManager); set in _ready.
+var _look: EnemySkin
 @onready var _visual: Node2D = $Visual
 @onready var _sprite: Sprite2D = $Visual/Sprite
 @onready var _outline: Sprite2D = $Visual/Outline
@@ -90,6 +92,7 @@ func _ready() -> void:
 	_slow_icon.position = Vector2(get_hitbox_radius() * 0.5, -get_hitbox_radius() - health_bar_gap - 6.0)
 	_slow_icon.visible = false
 	set_process(false)
+	_look = ThemeManager.skin_for(data)
 	_setup_sprite()
 	_apply_tint()
 	_visual.draw.connect(_draw_placeholder)
@@ -301,17 +304,31 @@ func _process(delta: float) -> void:
 	_visual.modulate = Color.WHITE.lerp(hit_flash_modulate, _flash_left / hit_flash_seconds)
 
 
-## Shows data.texture on the Sprite, scaled so its longest side is the
-## placeholder's diameter. No texture: the Sprite hides and Visual draws the
-## placeholder polygon instead.
+## Re-reads the theme's look (Game calls it when the theme changes).
+func refresh_look() -> void:
+	_look = ThemeManager.skin_for(data)
+	_setup_sprite()
+	_apply_tint()
+	_visual.queue_redraw()
+	queue_redraw()
+
+
+## How big it looks (the skin's size; hitbox and click radius are separate).
+func get_visual_size() -> float:
+	return _look.visual_size if _look != null else data.placeholder_size
+
+
+## Shows the skin's texture on the Sprite, scaled so its longest side is the
+## visual size's diameter. No texture: the Sprite hides and Visual draws the
+## skin's shape instead.
 func _setup_sprite() -> void:
 	_outline.visible = false
-	if data.texture == null:
+	if _look.texture == null:
 		_sprite.visible = false
 		return
-	var longest := maxf(data.texture.get_width(), data.texture.get_height())
-	_sprite_scale = Vector2.ONE * (2.0 * data.placeholder_size / longest)
-	_sprite.texture = data.texture
+	var longest := maxf(_look.texture.get_width(), _look.texture.get_height())
+	_sprite_scale = Vector2.ONE * (2.0 * _look.visual_size / longest)
+	_sprite.texture = _look.texture
 	_sprite.scale = _sprite_scale
 	_sprite.visible = true
 	# Drawn much smaller than the file: mipmaps stop it shimmering as it turns.
@@ -320,8 +337,8 @@ func _setup_sprite() -> void:
 	# parents still move smoothly.
 	_sprite.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	# Same pixel scale as the sprite, so the bigger outline sits evenly round it.
-	if data.outline_texture != null and _outline_color.a > 0.0:
-		_outline.texture = data.outline_texture
+	if _look.outline_texture != null and _outline_color.a > 0.0:
+		_outline.texture = _look.outline_texture
 		_outline.scale = _sprite_scale
 		_outline.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		_outline.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
@@ -347,13 +364,9 @@ func _update_squash() -> void:
 
 ## Drawn on Visual, so the shape turns with it while the health bar stays upright.
 func _draw_placeholder() -> void:
-	if data.texture != null:
+	if _look == null or _look.texture != null:
 		return
-	var size := data.placeholder_size * get_squash()
-	var points := PackedVector2Array()
-	for i in data.placeholder_points:
-		points.append(Vector2.from_angle(TAU * i / data.placeholder_points) * size)
-	_visual.draw_colored_polygon(points, data.placeholder_color)
+	_look.draw_shape(_visual, _look.visual_size * get_squash())
 
 
 ## 1 normally; hit_squash_scale right after a hit, easing back to 1.

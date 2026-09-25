@@ -6,6 +6,7 @@
 
 [resource]
 script = ExtResource("1_script")
+id = &"ancient_log"
 enemy_name = "Ancient Log"
 move_speed = 18.0
 base_health = 400.0

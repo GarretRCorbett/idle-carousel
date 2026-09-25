@@ -137,6 +137,13 @@ extends Node2D
 
 func _ready() -> void:
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+	ThemeManager.theme_changed.connect(_on_theme_changed)
+	_on_theme_changed(ThemeManager.get_theme())
+
+
+## Themes recolor the park (ParkTheme.scenery, role "park_background").
+func _on_theme_changed(_theme: ParkTheme) -> void:
+	ThemeManager.apply_scenery(self, &"park_background")
 	queue_redraw()
 
 

@@ -1,0 +1,117 @@
+[gd_resource type="Resource" script_class="ParkTheme" format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy_skin.gd" id="1_rk61v"]
+[ext_resource type="Script" path="res://scripts/park_theme.gd" id="2_4lwt3"]
+
+[sub_resource type="Resource" id="Resource_3ekw8"]
+script = ExtResource("1_rk61v")
+enemy_id = &"leaf"
+visual_size = 14.0
+shape = 4
+color = Color(0.9411765, 0.627451, 0.3137255, 1)
+points = 3
+
+[sub_resource type="Resource" id="Resource_s8svr"]
+script = ExtResource("1_rk61v")
+enemy_id = &"storm_leaf"
+visual_size = 11.0
+shape = 4
+color = Color(0.9411765, 0.627451, 0.3137255, 1)
+points = 3
+
+[sub_resource type="Resource" id="Resource_2w5pp"]
+script = ExtResource("1_rk61v")
+enemy_id = &"stick"
+visual_size = 18.0
+shape = 3
+color = Color(0.9490196, 0.9254902, 0.8745098, 1)
+points = 4
+
+[sub_resource type="Resource" id="Resource_skmgh"]
+script = ExtResource("1_rk61v")
+enemy_id = &"rock"
+visual_size = 16.0
+shape = 1
+color = Color(0.7882353, 0.7137255, 0.89411765, 1)
+points = 16
+
+[sub_resource type="Resource" id="Resource_im2k0"]
+script = ExtResource("1_rk61v")
+enemy_id = &"boulder_grip"
+visual_size = 18.0
+shape = 1
+color = Color(0.7882353, 0.7137255, 0.89411765, 1)
+points = 16
+
+[sub_resource type="Resource" id="Resource_jx4wn"]
+script = ExtResource("1_rk61v")
+enemy_id = &"leaf_storm"
+visual_size = 44.0
+shape = 4
+color = Color(0.9411765, 0.627451, 0.3137255, 1)
+points = 3
+
+[sub_resource type="Resource" id="Resource_iv01c"]
+script = ExtResource("1_rk61v")
+enemy_id = &"gilded_gale"
+visual_size = 44.0
+shape = 4
+color = Color(0.9607843, 0.7529412, 0.3764706, 1)
+points = 3
+
+[sub_resource type="Resource" id="Resource_vqwo7"]
+script = ExtResource("1_rk61v")
+enemy_id = &"stick_giant"
+visual_size = 48.0
+shape = 3
+color = Color(0.9490196, 0.9254902, 0.8745098, 1)
+points = 4
+
+[sub_resource type="Resource" id="Resource_luwgw"]
+script = ExtResource("1_rk61v")
+enemy_id = &"boulder"
+visual_size = 44.0
+shape = 1
+color = Color(0.7882353, 0.7137255, 0.89411765, 1)
+points = 16
+
+[sub_resource type="Resource" id="Resource_8fino"]
+script = ExtResource("1_rk61v")
+enemy_id = &"ancient_log"
+visual_size = 52.0
+shape = 3
+color = Color(0.9019608, 0.8627451, 0.78431374, 1)
+points = 4
+
+[sub_resource type="Resource" id="Resource_5nwtk"]
+script = ExtResource("1_rk61v")
+enemy_id = &"obsidian_boulder"
+visual_size = 46.0
+shape = 1
+color = Color(0.64705884, 0.56078434, 0.76862746, 1)
+points = 16
+
+[resource]
+script = ExtResource("2_4lwt3")
+id = &"halloween_test"
+dev_name = "Halloween (test)"
+enemy_skins = Array[ExtResource("1_rk61v")]([SubResource("Resource_3ekw8"), SubResource("Resource_s8svr"), SubResource("Resource_2w5pp"), SubResource("Resource_skmgh"), SubResource("Resource_im2k0"), SubResource("Resource_jx4wn"), SubResource("Resource_iv01c"), SubResource("Resource_vqwo7"), SubResource("Resource_luwgw"), SubResource("Resource_8fino"), SubResource("Resource_5nwtk")])
+scenery = Dictionary[StringName, Dictionary]({
+&"park_background": {
+"bloom_colors": Array[Color]([Color(0.9411765, 0.627451, 0.3137255, 1), Color(0.60784316, 0.49803922, 0.7490196, 1), Color(0.16862746, 0.13333334, 0.2, 1)]),
+"clearing_color": Color(0.6392157, 0.6, 0.5294118, 1),
+"lamp_glow_color": Color(1, 0.55, 0.15, 0.35),
+"lawn_color": Color(0.43529412, 0.49803922, 0.32156864, 1),
+"nook_color": Color(0.65882355, 0.6156863, 0.53333336, 1),
+"pavement_color": Color(0.7254902, 0.6784314, 0.59607846, 1),
+"roof_colors": Array[Color]([Color(0.41960785, 0.30980393, 0.5411765, 1), Color(0.8509804, 0.50980395, 0.16862746, 1), Color(0.2901961, 0.22745098, 0.3764706, 1), Color(0.8509804, 0.50980395, 0.16862746, 1)]),
+"tree_tint": Color(0.95, 0.75, 0.55, 1)
+},
+&"park_scenery": {
+"bloom_colors": Array[Color]([Color(0.9411765, 0.627451, 0.3137255, 1), Color(0.60784316, 0.49803922, 0.7490196, 1)]),
+"lamp_glow_color": Color(1, 0.55, 0.15, 0.4),
+"lawn_color": Color(0.43529412, 0.49803922, 0.32156864, 1),
+"pavement_color": Color(0.7254902, 0.6784314, 0.59607846, 1),
+"roof_colors": Array[Color]([Color(0.41960785, 0.30980393, 0.5411765, 1), Color(0.8509804, 0.50980395, 0.16862746, 1), Color(0.2901961, 0.22745098, 0.3764706, 1)])
+}
+})

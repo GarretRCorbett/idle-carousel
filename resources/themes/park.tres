@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ParkTheme" format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy_skin.gd" id="1_l64wg"]
+[ext_resource type="Script" path="res://scripts/park_theme.gd" id="2_0j47m"]
+
+[resource]
+script = ExtResource("2_0j47m")
+id = &"park"
+dev_name = "Park"

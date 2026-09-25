@@ -18,6 +18,8 @@ extends Node2D
 ## strip's tier pips are the real way to switch).
 @export var previous_tier_key: Key = KEY_F2
 @export var next_tier_key: Key = KEY_F3
+## Debug builds only: the next theme (the Winter and Halloween tests).
+@export var next_theme_key: Key = KEY_F4
 
 @export_group("Pops")
 ## Ring on a click that doesn't kill, and on enemies removed without Gold
@@ -87,6 +89,7 @@ func _ready() -> void:
 	_wave_manager.tier = tier_catalog.get_tier(0)
 	_wave_manager.tier_kills = func() -> int: return GameState.get_tier_kills(GameState.get_selected_tier())
 	GameState.selected_tier_changed.connect(_on_selected_tier_changed)
+	ThemeManager.theme_changed.connect(_on_theme_changed)
 	_wave_manager.live_enemy_count = get_live_enemy_count
 	_wave_manager.enemy_spawned.connect(_on_enemy_spawned)
 	_wave_manager.countdown_changed.connect(_hud.set_wave_countdown)
@@ -127,11 +130,23 @@ func _unhandled_input(event: InputEvent) -> void:
 			step = -1
 		elif key.keycode == next_tier_key:
 			step = 1
+		if key.keycode == next_theme_key:
+			ThemeManager.cycle(1)
+			print("Theme: %s" % ThemeManager.get_theme().dev_name)
+			get_viewport().set_input_as_handled()
+			return
 		if step != 0:
 			var rank := clampi(GameState.get_selected_tier() + step, 0, tier_catalog.tiers.size() - 1)
 			GameState.debug_set_bosses_beaten(rank)  # dev keys may skip ahead
 			GameState.set_selected_tier(rank)
 			get_viewport().set_input_as_handled()
+
+
+## Enemies already out change their look too (new ones pick it up in _ready).
+func _on_theme_changed(_theme: ParkTheme) -> void:
+	for enemy: EnemyBase in _enemy_layer.get_children():
+		if enemy.is_node_ready():
+			enemy.refresh_look()
 
 
 ## New waves come from the selected tier; enemies already alive keep their stats.

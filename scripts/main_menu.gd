@@ -30,6 +30,15 @@ func _ready() -> void:
 	_play_button.grab_focus.call_deferred()
 
 
+## Debug builds only: F4 shows the next theme (the Winter and Halloween tests).
+func _unhandled_key_input(event: InputEvent) -> void:
+	var key := event as InputEventKey
+	if key != null and key.pressed and not key.echo and key.keycode == KEY_F4 and OS.is_debug_build():
+		ThemeManager.cycle(1)
+		print("Theme: %s" % ThemeManager.get_theme().dev_name)
+		get_viewport().set_input_as_handled()
+
+
 ## Language changed: the title uses that language's title font.
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready():

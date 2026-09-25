@@ -31,6 +31,6 @@ func get_armor_left() -> int:
 
 ## One ring per blunted hit still to come.
 func _draw() -> void:
-	var size := data.placeholder_size if data != null else 40.0
+	var size := get_visual_size() if data != null else 40.0
 	for i in _armor_left:
 		draw_arc(Vector2.ZERO, size * (0.55 + 0.14 * i), 0.0, TAU, 32, bark_ring_color, 2.5, true)
