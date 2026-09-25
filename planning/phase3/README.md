@@ -101,6 +101,12 @@ Game's loop drops a duplicate check.
   poles, warm bulbs, a lighter green park, ink-blue panels with gold borders and ivory text. **Applied**
   (code-drawn canopy with scallops and bulbs, green trees, ivory booth, rebuilt UI theme, grassy menu
   backdrop): `palette/chosen_a_*.png`. Every color is an export or a theme-builder constant.
+- **Park, not forest** (Garret; Codex asset survey in the 2026-09-25 session): the game view is a
+  small formal park (plaza, paved ring path, two paths, flower beds with blue benches, lamps, two
+  trees, all code-drawn except grass and trees); the title screen is a promenade (storybook
+  shop-houses each side, iron fence, bushes, lamp posts with bunting, paved walk; Kenney Background
+  Elements + code). Renders: `palette/park_*.png`. Kenney has no matching top-down benches/lamps/
+  flower beds, hence code-drawn.
 - **Gilded Gale:** 3 Leaves every 3 s (from 2 every 4 s).
 
 ## Decided 2026-09-25 (Garret, after seeing Step 3)

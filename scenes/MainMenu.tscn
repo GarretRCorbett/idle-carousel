@@ -6,7 +6,16 @@
 [ext_resource type="FontVariation" path="res://assets/fonts/title_font.tres" id="4_title_font"]
 [ext_resource type="PackedScene" path="res://scenes/mounts/Horse.tscn" id="5_horse"]
 [ext_resource type="PackedScene" path="res://scenes/OptionsMenu.tscn" id="6_options"]
-[ext_resource type="Texture2D" path="res://assets/sprites/background/menu_park.png" id="7_bg"]
+[ext_resource type="Texture2D" path="res://assets/sprites/background/menu/sky.png" id="7_bg"]
+[ext_resource type="Script" path="res://scripts/park_scenery.gd" id="20_scenery"]
+[ext_resource type="Texture2D" path="res://assets/sprites/background/menu/house1.png" id="21_h1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/background/menu/house_alt2.png" id="22_h2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/background/menu/house2.png" id="23_h3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/background/menu/house_alt1.png" id="24_h4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/background/menu/fence_iron.png" id="25_fence"]
+[ext_resource type="Texture2D" path="res://assets/sprites/background/menu/bush1.png" id="26_b1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/background/menu/bush3.png" id="27_b2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/background/menu/bush_alt1.png" id="28_b3"]
 
 [node name="MainMenu" type="Control" unique_id=1196148949]
 layout_mode = 3
@@ -19,7 +28,6 @@ theme = ExtResource("2_theme")
 script = ExtResource("1_menu")
 
 [node name="Backdrop" type="TextureRect" parent="."]
-modulate = Color(0.78, 0.82, 0.88, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,6 +38,19 @@ mouse_filter = 2
 texture = ExtResource("7_bg")
 expand_mode = 1
 stretch_mode = 6
+
+[node name="ParkScenery" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("20_scenery")
+houses = Array[Texture2D]([ExtResource("21_h1"), ExtResource("22_h2"), ExtResource("23_h3"), ExtResource("24_h4")])
+fence = ExtResource("25_fence")
+bushes = Array[Texture2D]([ExtResource("26_b1"), ExtResource("27_b2"), ExtResource("28_b3")])
 
 [node name="Center" type="CenterContainer" parent="."]
 layout_mode = 1

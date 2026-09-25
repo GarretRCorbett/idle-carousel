@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b1pjkya6v5xc4"
-path="res://.godot/imported/menu_park.png-195d628720e183e991c1f1c99a004425.ctex"
+uid="uid://x83sovqn8kme"
+path="res://.godot/imported/house1.png-9dfdfb3e517a336c295ecdff0804d972.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/background/menu_park.png"
-dest_files=["res://.godot/imported/menu_park.png-195d628720e183e991c1f1c99a004425.ctex"]
+source_file="res://assets/sprites/background/menu/house1.png"
+dest_files=["res://.godot/imported/house1.png-9dfdfb3e517a336c295ecdff0804d972.ctex"]
 
 [params]
 
