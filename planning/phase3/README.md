@@ -126,7 +126,9 @@ plugged-in laptop: `-- 0,300,1000,2000 wolf` then `-- 0,300,1000,2000 wolf,giraf
 | `claude_memo_prestige.md` | Claude: prestige research (first-prestige timing, rewards players like, Slay the Spire / Wildfrost challenges), a possible shape, questions for before Phase 5 |
 | `codex_memo_n_boss_timers.md` | Codex: how Clicker Heroes, Tap Titans 2, Idle Slayer, and Melvor handle boss failure; player reactions; timed-boss proposal |
 | `step1_plan.md` | Step 1: decisions, contracts, and scene trees for Steps 2–3 |
-| `step4_plan.md` | Step 4: Giraffe and Sloth (DRAFT, awaiting approval) |
+| `step4_plan.md` | Step 4: Giraffe and Sloth (approved 2026-09-25, built) |
+| `codex_memo_p_tier_colors.md` | Codex + Claude: which color orders read as "stronger" (research), colorblind check; render in `tier_color_candidates.png` |
+| `codex_memo_q_boss_tier_ui.md` | Codex + Claude: how to show the boss challenge and tier picker, and how to "force" the first boss (layout options) |
 | `codex_memo_o_step1_review.md` | Codex: review of the Step 1 plan (spawn queue vs Send limit, removal order, line-tip formula, wave validation, tests) |
 | `codex_memo_m_tiers_pacing.md` | Codex: tier loop, kill gate, wave recipes, stat scaling, 3-hour economy model, prices, simulator, boss tuning, 12 questions |
 
