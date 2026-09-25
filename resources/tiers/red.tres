@@ -31,8 +31,8 @@ unlock_after_kills = 0
 [sub_resource type="Resource" id="waves"]
 script = ExtResource("profile_script")
 interval_seconds = 13.0
-min_enemies = 6
-max_enemies = 9
+min_enemies = 11
+max_enemies = 18
 directions = 2
 entries = Array[ExtResource("entry_script")]([SubResource("leaf_entry"), SubResource("stick_entry"), SubResource("rock_entry")])
 

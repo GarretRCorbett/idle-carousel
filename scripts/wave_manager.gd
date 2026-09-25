@@ -25,9 +25,9 @@ signal send_available_changed(available: bool)
 ## Distance from the carousel center where enemies appear (just off-screen).
 @export_range(100.0, 2000.0, 1.0, "suffix:px") var spawn_radius: float = 380.0
 ## Each enemy's direction is within ± this of the wave's direction.
-@export_range(0.0, 180.0, 1.0, "suffix:°") var cluster_spread_deg: float = 20.0
+@export_range(0.0, 180.0, 1.0, "suffix:°") var cluster_spread_deg: float = 30.0
 ## Each enemy starts up to this much further out, so they don't arrive stacked.
-@export_range(0.0, 500.0, 1.0, "suffix:px") var cluster_depth_px: float = 60.0
+@export_range(0.0, 500.0, 1.0, "suffix:px") var cluster_depth_px: float = 120.0
 
 @export_group("Controls")
 ## This key sends the next wave right away (Garret wants it kept as a real control).
