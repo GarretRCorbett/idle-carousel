@@ -249,3 +249,17 @@ func test_emergency_clear_removes_only_latched_enemies() -> void:
 	assert_bool(enemies[0].is_queued_for_deletion()).is_true()
 	assert_bool(enemies[1].is_queued_for_deletion()).is_false()
 	assert_float(GameState.get_gold()).is_equal(gold - GameState.get_emergency_clear_cost())
+
+
+## Every enemy click shows a pop, even the one that kills.
+func test_click_shows_a_pop_even_when_it_kills() -> void:
+	var game := _game()
+	var enemy := _first_enemy(game)
+	var router := game.get_node("World/ClickRouter") as ClickRouter
+	enemy.take_damage(enemy.data.base_health - 0.01)
+	assert_bool(router.route_click(enemy.global_position)).is_true()
+	var pops := 0
+	for child in game.get_node("World").get_children():
+		if child is ClickPop:
+			pops += 1
+	assert_int(pops).is_equal(1)

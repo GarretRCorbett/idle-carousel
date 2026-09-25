@@ -28,9 +28,9 @@ Downloaded packs are kept unmodified in `../kenney_assets/` (outside the repo, z
 | `audio/sfx/coin_1.ogg` | [Kenney: Casino Audio](https://kenney.nl/assets/casino-audio) | `Audio/chips-collide-1.ogg` | CC0 1.0 | Renamed | 2026-09-24 |
 | `audio/sfx/coin_2.ogg` | [Kenney: Casino Audio](https://kenney.nl/assets/casino-audio) | `Audio/chips-collide-2.ogg` | CC0 1.0 | Renamed | 2026-09-24 |
 | `audio/sfx/coin_3.ogg` | [Kenney: Casino Audio](https://kenney.nl/assets/casino-audio) | `Audio/chips-collide-3.ogg` | CC0 1.0 | Renamed | 2026-09-24 |
-| `audio/sfx/hit_1.ogg` | [Kenney: Impact Sounds](https://kenney.nl/assets/impact-sounds) | `Audio/impactSoft_medium_000.ogg` | CC0 1.0 | Renamed | 2026-09-24 |
-| `audio/sfx/hit_2.ogg` | [Kenney: Impact Sounds](https://kenney.nl/assets/impact-sounds) | `Audio/impactSoft_medium_001.ogg` | CC0 1.0 | Renamed | 2026-09-24 |
-| `audio/sfx/hit_3.ogg` | [Kenney: Impact Sounds](https://kenney.nl/assets/impact-sounds) | `Audio/impactSoft_medium_002.ogg` | CC0 1.0 | Renamed | 2026-09-24 |
+| `audio/sfx/hit_1.ogg` | [Kenney: Impact Sounds](https://kenney.nl/assets/impact-sounds) | `Audio/impactWood_light_000.ogg` (was impactSoft_medium; swapped for a crisper click) | CC0 1.0 | Renamed | 2026-09-24 |
+| `audio/sfx/hit_2.ogg` | [Kenney: Impact Sounds](https://kenney.nl/assets/impact-sounds) | `Audio/impactWood_light_001.ogg` (was impactSoft_medium; swapped for a crisper click) | CC0 1.0 | Renamed | 2026-09-24 |
+| `audio/sfx/hit_3.ogg` | [Kenney: Impact Sounds](https://kenney.nl/assets/impact-sounds) | `Audio/impactWood_light_002.ogg` (was impactSoft_medium; swapped for a crisper click) | CC0 1.0 | Renamed | 2026-09-24 |
 | `audio/sfx/wolf_hit_1.ogg` | [Kenney: Impact Sounds](https://kenney.nl/assets/impact-sounds) | `Audio/impactPunch_medium_000.ogg` | CC0 1.0 | Renamed | 2026-09-24 |
 | `audio/sfx/wolf_hit_2.ogg` | [Kenney: Impact Sounds](https://kenney.nl/assets/impact-sounds) | `Audio/impactPunch_medium_001.ogg` | CC0 1.0 | Renamed | 2026-09-24 |
 | `audio/sfx/pop_1.ogg` | [Kenney: Interface Sounds](https://kenney.nl/assets/interface-sounds) | `Audio/pluck_001.ogg` | CC0 1.0 | Renamed | 2026-09-24 |

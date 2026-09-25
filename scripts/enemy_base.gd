@@ -18,6 +18,8 @@ enum State { APPROACHING, AT_RIM, DEAD }
 ## Visual tint right after a hit, fading back to normal.
 @export var hit_flash_modulate: Color = Color(2.0, 2.0, 2.0)
 @export_range(0.01, 1.0, 0.01, "suffix:s") var hit_flash_seconds: float = 0.12
+## Shape size right after a hit, springing back to full over the flash.
+@export_range(0.3, 1.5, 0.01) var hit_squash_scale: float = 0.75
 
 @export_group("Health Bar")
 ## Gap between the top of the enemy and its health bar.
@@ -103,12 +105,14 @@ func get_health() -> float:
 func _flash() -> void:
 	_flash_left = hit_flash_seconds
 	_visual.modulate = hit_flash_modulate
+	_visual.queue_redraw()
 	set_process(true)
 
 
 ## Runs only while flashing. Subclasses that need _process must call super.
 func _process(delta: float) -> void:
-	_flash_left -= delta
+	_flash_left = maxf(0.0, _flash_left - delta)
+	_visual.queue_redraw()  # the squash is drawn, so it doesn't fight transform smoothing
 	if _flash_left <= 0.0:
 		_visual.modulate = Color.WHITE
 		set_process(false)
@@ -120,7 +124,15 @@ func _process(delta: float) -> void:
 func _draw_placeholder() -> void:
 	if data.texture != null:
 		return
+	var size := data.placeholder_size * get_squash()
 	var points := PackedVector2Array()
 	for i in data.placeholder_points:
-		points.append(Vector2.from_angle(TAU * i / data.placeholder_points) * data.placeholder_size)
+		points.append(Vector2.from_angle(TAU * i / data.placeholder_points) * size)
 	_visual.draw_colored_polygon(points, data.placeholder_color)
+
+
+## 1 normally; hit_squash_scale right after a hit, easing back to 1.
+func get_squash() -> float:
+	if hit_flash_seconds <= 0.0:
+		return 1.0
+	return lerpf(1.0, hit_squash_scale, _flash_left / hit_flash_seconds)

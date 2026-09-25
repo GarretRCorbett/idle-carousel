@@ -177,6 +177,10 @@ func _on_enemy_spawned(enemy: EnemyBase) -> void:
 
 func _on_enemy_clicked(enemy: EnemyBase) -> void:
 	AudioManager.play_sfx(&"hit")
+	var pop := ClickPop.new()
+	pop.position = _world.to_local(enemy.global_position)
+	_world.add_child(pop)
+	pop.reset_physics_interpolation()
 	enemy.take_damage(GameState.get_click_damage())
 
 

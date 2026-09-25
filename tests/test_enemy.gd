@@ -72,7 +72,9 @@ func test_hit_flash_fades_back_and_stops_processing() -> void:
 	enemy.take_damage(0.5)
 	assert_bool(enemy.is_processing()).is_true()
 	assert_object(visual.modulate).is_equal(enemy.hit_flash_modulate)
+	assert_float(enemy.get_squash()).is_equal_approx(enemy.hit_squash_scale, 0.0001)
 	enemy._process(enemy.hit_flash_seconds)
+	assert_float(enemy.get_squash()).is_equal(1.0)
 	assert_object(visual.modulate).is_equal(Color.WHITE)
 	assert_bool(enemy.is_processing()).is_false()
 
