@@ -64,6 +64,9 @@ func _notification(what: int) -> void:
 		refresh()
 
 
+## Every piece has a fixed width (set in BossStrip.tscn; long text is cut
+## with "..."), so switching tiers or starting a fight never shifts the strip.
+
 ## Game forwards the fight's timer (seconds left) every tick. (Setting the
 ## same text again is free: Label ignores it.)
 func set_fight_time(seconds_left: float) -> void:
@@ -128,9 +131,10 @@ func refresh() -> void:
 
 
 func _update_gate(tier: TierData, boss: BossData) -> void:
-	_bar.visible = boss != null
+	# The bar stays (empty) when there's no boss, so nothing in the strip moves.
 	if boss == null:
 		_progress.text = ""
+		_bar.value = 0.0
 		return
 	if GameState.is_boss_beaten(tier.rank):
 		_progress.text = tr(beaten_key)

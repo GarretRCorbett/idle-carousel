@@ -94,3 +94,27 @@ func test_pips_lock_during_a_fight() -> void:
 	game.challenge_boss()
 	for pip in _pips(_strip(game)):
 		assert_bool((pip as Button).disabled).is_true()
+
+
+## Nothing in the strip changes size between farming Grey, farming a tier with
+## no boss yet, and fighting (Garret: the bar shifted when switching tiers).
+func test_strip_layout_never_shifts() -> void:
+	var game := _game()
+	var strip := _strip(game)
+	var row := strip.get_node("Margin/Row") as HBoxContainer
+	var widths := func() -> Array[float]:
+		var list: Array[float] = []
+		for child: Control in row.get_children():
+			# A hidden piece takes no room in the row, so it counts as 0.
+			list.append(child.get_combined_minimum_size().x if child.visible else 0.0)
+		return list
+	var farming: Array[float] = widths.call()
+	GameState.record_boss_victory(0)
+	(_pips(strip)[1] as Button).pressed.emit()  # Green: no boss yet
+	assert_array(widths.call()).is_equal(farming)
+	(_pips(strip)[0] as Button).pressed.emit()
+	for i in 60:
+		GameState.record_kill(0)
+	game.challenge_boss()
+	game.get_encounter().advance(1.0)
+	assert_array(widths.call()).is_equal(farming)
