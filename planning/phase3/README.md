@@ -41,8 +41,8 @@ the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
 - **Send wave limit:** blocked while more than 30 enemies are alive (Phase 2 wrap-up).
   Revisit once Sticks and Rocks exist; Garret might prefer one early wave at a time then.
   This answers question 24 for now and part of question 26.
-- **Tuning from the wrap-up playtest:** base 60°/s, max boost +40%, waves every 10 s. So
-  question 22 is answered (60°/s).
+- **Tuning from the wrap-up playtest:** base 70°/s (60, then 70 after a second playtest), max boost +40%, waves every 10 s. So
+  question 22 is answered (70°/s).
 - **Speedrun-friendly** (Garret, see NOTES): track active run time and each boss's first-clear time in GameState; seed wave randomness per run.
 
 ## What's in this folder
