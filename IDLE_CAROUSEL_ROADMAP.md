@@ -157,4 +157,4 @@ A game gets only one Next Fest, so this is the one.
 ## Next Concrete Step
 _Update this line at the end of every session._
 
-> Phase 2 Step 11 wrap-up in a fresh session: follow `planning/phase2/step11_plan.md` (playtest, doc tidy, walkthrough, sign-off). Then plan Phase 3 (more mounts).
+> Phase 3, Step 3 commit 4 (enemy art) after Garret's pick. Where Phase 3 stands: `planning/phase3/README.md`.

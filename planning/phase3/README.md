@@ -1,9 +1,20 @@
 # Phase 3 Planning: Start Here
 
-## Status (2026-09-24)
-**Step 1 approved and done** (`step1_plan.md`, incl. Codex memo O): contracts and scene trees for Steps 2–3.
-Next: Step 2 (foundations). Step 1 and Step 3 questions are answered (below). Mounts renamed to
-Kenney animals (GDD v1.12).
+## Status (2026-09-25)
+- **Step 1** approved and done (`step1_plan.md`, incl. Codex memo O).
+- **Step 2 done** (commits 2.1–2.5): one mount interface + per-mount damage, `MountSweep` with the
+  line-tip fix, shared `EnemySnapshot`, removal state + kill attribution + queued spawns,
+  unwrapped bearings. Codex review of all of Step 2 (`--base cdbead7`): no findings.
+  Stress numbers below.
+- **Step 3 commits 1–3 done:** six `TierData` files + effective stats (3.1); `WaveProfile`
+  random-with-caps waves per tier, seeded per run (3.2); selected tier + kills per tier + F2/F3
+  dev keys (3.3). Stick.tscn / Rock.tscn exist as placeholder scenes, and the Stick/Rock retune
+  (0.9 / 1.5) is in, both moved up from commit 4 because the tier files need the scenes.
+- **Next: Step 3 commit 4 (enemy art).** Waiting on Garret's pick from
+  `step3_enemy_art_candidates.png` (one leaf, one stick, one rock). Then: Sprite layer, the
+  light-grey conversion tool, provenance, and the tier-colors frame for tuning the six tints.
+- Tier tints are Claude's drafts (grey, lime green, blue, purple, gold, red) in `resources/tiers/`.
+  On today's orange placeholder shapes they look muddy; judge them on the real light-grey art.
 
 Phase 3 roadmap scope: Sloth, Giraffe, Elephant, Panda; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)

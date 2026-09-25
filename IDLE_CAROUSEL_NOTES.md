@@ -18,7 +18,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> **Phase 3 Step 1 (2026-09-24):** `planning/phase3/step1_plan.md` (contracts for Steps 2–3) is approved and done (incl. Codex memo O). Next: Step 2, foundations (fresh session recommended; it's the biggest step).
+> **Phase 3 (2026-09-25):** Step 2 (foundations) is done and Codex-reviewed; Step 3 commits 1–3 (tiers, waves, tier/kill state + F2/F3) are done. Next: Garret picks one leaf, stick and rock from `planning/phase3/step3_enemy_art_candidates.png`, then Step 3 commit 4 (Sprite layer, light-grey conversion, provenance, tier-colors frame to tune the tints). Status: `planning/phase3/README.md`.
 
 ---
 
