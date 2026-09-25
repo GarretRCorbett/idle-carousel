@@ -42,12 +42,14 @@ enum Phase { QUIET, GUST, DRIFT, REST }
 ## latched at once would stall the carousel every pack.
 @export var summon_data: EnemyData = preload("res://resources/enemies/storm_leaf.tres")
 ## Packs land in two fans, this far to each side of the Storm's bearing...
-@export_range(0.0, 90.0, 1.0, "suffix:°") var fan_offset_deg: float = 35.0
+@export_range(0.0, 90.0, 1.0, "suffix:°") var fan_offset_deg: float = 28.0
 ## ...each this wide...
 @export_range(0.0, 45.0, 1.0, "suffix:°") var fan_spread_deg: float = 14.0
-## ...this far from the carousel center (about 2 s from the rim).
-@export_range(150.0, 500.0, 1.0, "suffix:px") var pack_distance_min: float = 300.0
-@export_range(150.0, 500.0, 1.0, "suffix:px") var pack_distance_max: float = 340.0
+## ...this far from the carousel center: inside the visible play area (the
+## side panels start ~330 px out, the Boost button ~280 px below), about 2 s
+## from the rim.
+@export_range(150.0, 500.0, 1.0, "suffix:px") var pack_distance_min: float = 250.0
+@export_range(150.0, 500.0, 1.0, "suffix:px") var pack_distance_max: float = 280.0
 
 @export_group("Death split")
 @export_range(0, 12, 1) var split_count: int = 4

@@ -39,6 +39,7 @@ extends Node2D
 @onready var _click_router: ClickRouter = $World/ClickRouter
 @onready var _wave_manager: WaveManager = $WaveManager
 @onready var _options: OptionsMenu = $OptionsLayer/OptionsMenu
+@onready var _boss_strip: BossStrip = %BossStrip
 
 var _booths: Array[TicketBooth] = []
 var _booth_bearings: Array[float] = []
@@ -74,6 +75,12 @@ func _ready() -> void:
 	_encounter.started.connect(func(_rank: int) -> void: _wave_manager.set_suspended(true))
 	_encounter.ended.connect(func(_victory: bool, _first: bool) -> void: _wave_manager.set_suspended(false))
 	GameState.run_reset.connect(_encounter.reset)
+	_encounter.time_changed.connect(_boss_strip.set_fight_time)
+	_encounter.boss_health_changed.connect(_boss_strip.set_boss_health)
+	_encounter.remaining_changed.connect(_boss_strip.set_remaining)
+	_boss_strip.challenge_requested.connect(challenge_boss)
+	_boss_strip.give_up_requested.connect(give_up_boss)
+	_boss_strip.tier_selected.connect(GameState.set_selected_tier)
 	_wave_manager.center = _carousel.position
 	_wave_manager.tier = tier_catalog.get_tier(0)
 	_wave_manager.tier_kills = func() -> int: return GameState.get_tier_kills(GameState.get_selected_tier())

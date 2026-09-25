@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://by8f47x4ifp4f" path="res://scripts/click_router.gd" id="8_router"]
 [ext_resource type="Script" uid="uid://blxerhlljqhwt" path="res://scripts/wave_manager.gd" id="9_waves"]
 [ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="12_theme"]
+[ext_resource type="PackedScene" path="res://scenes/ui/BossStrip.tscn" id="30_strip"]
 [ext_resource type="PackedScene" path="res://scenes/OptionsMenu.tscn" id="13_options"]
 [ext_resource type="Script" path="res://scripts/park_background.gd" id="14_bg"]
 [ext_resource type="Texture2D" path="res://assets/sprites/background/grass_tile.png" id="15_grass"]
@@ -146,6 +147,10 @@ text = "HUD_CLEAR_LATCHED"
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
+
+[node name="BossStrip" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn" instance=ExtResource("30_strip")]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="PlaySpace" type="Control" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn" unique_id=994945073]
 layout_mode = 2

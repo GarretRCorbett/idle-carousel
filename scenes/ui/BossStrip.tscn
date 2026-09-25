@@ -1,0 +1,54 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/boss_strip.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/two_step_button.gd" id="2_button"]
+
+[node name="BossStrip" type="PanelContainer"]
+script = ExtResource("1_script")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 6
+
+[node name="Row" type="HBoxContainer" parent="Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="BossName" type="Label" parent="Margin/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Progress" type="Label" parent="Margin/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+
+[node name="Bar" type="ProgressBar" parent="Margin/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 14)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+mouse_filter = 2
+max_value = 1.0
+show_percentage = false
+
+[node name="ActionButton" type="Button" parent="Margin/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 34)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 14
+script = ExtResource("2_button")
+
+[node name="Pips" type="HBoxContainer" parent="Margin/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 5

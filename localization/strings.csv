@@ -94,3 +94,9 @@ TIER_YELLOW,Yellow,Amarillo,Jaune,Gelb,Amarelo,Жёлтый,黄,イエロー,노
 TIER_ORANGE,Orange,Naranja,Orange,Orange,Laranja,Оранжевый,橙,オレンジ,주황
 TIER_RED,Red,Rojo,Rouge,Rot,Vermelho,Красный,红,レッド,빨강
 TIER_CHARCOAL,Charcoal,Carbón,Anthracite,Anthrazit,Carvão,Угольный,炭黑,チャコール,숯검정
+BOSS_CHALLENGE,Challenge,Desafiar,Défier,Herausfordern,Desafiar,Вызов,挑战,挑戦,도전
+BOSS_GIVE_UP,Give up,Rendirse,Abandonner,Aufgeben,Desistir,Сдаться,放弃,諦める,포기
+BOSS_BEATEN,Beaten,Vencido,Vaincu,Besiegt,Derrotado,Побеждён,已击败,撃破済み,격파함
+BOSS_KILLS,{0}/{1},{0}/{1},{0}/{1},{0}/{1},{0}/{1},{0}/{1},{0}/{1},{0}/{1},{0}/{1}
+BOSS_REMAINING,Remaining: {0},Quedan: {0},Restants : {0},Übrig: {0},Restam: {0},Осталось: {0},剩余：{0},残り：{0},남음: {0}
+BOSS_NONE,No boss yet,Aún sin jefe,Pas encore de boss,Noch kein Boss,Ainda sem chefe,Босса пока нет,暂无首领,ボスはまだいない,아직 보스 없음
