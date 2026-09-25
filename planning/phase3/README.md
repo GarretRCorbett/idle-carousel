@@ -20,9 +20,11 @@
   "Zzz" (4.3), Sloth (4.4). Shop prices 150 each and all new text are drafts.
   Finding: with 120 px reach the Sloth catches few Leaves (they cross its zone in ~1 s; a turn
   takes 5+ s). Reach is a Garret call.
-- **Open for Garret:** tier color order (memo P + `tier_color_candidates.png`), boss/tier UI
-  (memo Q). Next build step: Step 5 (Elephant, mount tiers, Panda); Step 6 (boss + picker) after
-  the UI choice.
+- **Step 5 done** (`step5_plan.md`): Elephant (5.1), mount tiers per type with five Tier 2 rows
+  (5.2), Panda with Gold per turn, heal on own kills, "3 types at Tier 2" unlock (5.3). Prices,
+  Tier 2 effects and strings are drafts.
+- **Open for Garret:** memo R (confirmations, tier/boss loop, sharper mount roles: Wolf reach
+  ~90, Elephant ~30). Next: Step 6 plan (boss framework, Leaf Storm, the strip UI, gating).
 
 Phase 3 roadmap scope: Sloth, Giraffe, Elephant, Panda; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
@@ -140,7 +142,8 @@ plugged-in laptop: `-- 0,300,1000,2000 wolf` then `-- 0,300,1000,2000 wolf,giraf
 | `codex_memo_n_boss_timers.md` | Codex: how Clicker Heroes, Tap Titans 2, Idle Slayer, and Melvor handle boss failure; player reactions; timed-boss proposal |
 | `step1_plan.md` | Step 1: decisions, contracts, and scene trees for Steps 2–3 |
 | `step4_plan.md` | Step 4: Giraffe and Sloth (approved 2026-09-25, built) |
-| `step5_plan.md` | Step 5: Elephant, mount tiers, Panda (DRAFT, awaiting approval) |
+| `step5_plan.md` | Step 5: Elephant, mount tiers, Panda (approved 2026-09-25, built) |
+| `codex_memo_r_confirmations_boss_loop.md` | Codex + Claude: which actions get a confirmation and how, tier switching and re-challenging bosses, making Giraffe/Wolf/Elephant feel different |
 | `mockups/` | Boss/tier UI options A–C rendered over the real game (A chosen) |
 | `codex_memo_p_tier_colors.md` | Codex + Claude: which color orders read as "stronger" (research), colorblind check; render in `tier_color_candidates.png` |
 | `codex_memo_q_boss_tier_ui.md` | Codex + Claude: how to show the boss challenge and tier picker, and how to "force" the first boss (layout options) |

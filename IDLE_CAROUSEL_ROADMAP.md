@@ -157,4 +157,4 @@ A game gets only one Next Fest, so this is the one.
 ## Next Concrete Step
 _Update this line at the end of every session._
 
-> Phase 3 Step 5 (Elephant, mount tiers, Panda); Garret's tier-color and boss-UI choices (memos P, Q) feed Step 6. Where Phase 3 stands: `planning/phase3/README.md`.
+> Phase 3 Step 6 plan (boss framework, Leaf Storm, strip UI, gating), after Garret's answers on memo R. Where Phase 3 stands: `planning/phase3/README.md`.

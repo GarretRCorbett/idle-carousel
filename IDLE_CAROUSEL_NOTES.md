@@ -18,7 +18,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> **Phase 3 (2026-09-25):** Step 2 (foundations) is done and Codex-reviewed; Step 3 commits 1–3 (tiers, waves, tier/kill state + F2/F3) are done. Steps 3 and 4 (Giraffe, Sloth) are done. Next: Garret reads memos P (tier color order) and Q (boss + tier picker UI) in `planning/phase3/`, then Step 5 (Elephant, mount tiers, Panda). Status: `planning/phase3/README.md`.
+> **Phase 3 (2026-09-25):** Step 2 (foundations) is done and Codex-reviewed; Step 3 commits 1–3 (tiers, waves, tier/kill state + F2/F3) are done. Steps 3–5 are done: every Phase 3 mount (Giraffe, Sloth, Elephant, Panda) plus Tier 2 rows. Next: Garret answers memo R's questions (confirmations, re-challenging bosses, Wolf/Elephant reach), then the Step 6 plan (boss framework + Leaf Storm + strip UI + gating). Status: `planning/phase3/README.md`.
 
 ---
 
