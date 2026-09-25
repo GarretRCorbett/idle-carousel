@@ -24,15 +24,19 @@ var _last_hit_pass: Dictionary[int, int] = {}
 ## Every new pass the sweep makes across a live enemy while turning from
 ## start_angle by delta_angle (carousel angles, unwrapped, plus the slot angle).
 ## One entry per pass, so an enemy can be listed twice in a very long tick.
-func collect(enemies: Array[EnemyBase], center: Vector2, start_angle: float, delta_angle: float) -> Array[EnemyBase]:
+func collect(snapshot: EnemySnapshot, start_angle: float, delta_angle: float) -> Array[EnemyBase]:
 	var found: Array[EnemyBase] = []
 	if delta_angle <= 0.0:
 		return found
-	for enemy in enemies:
-		var window := _window_of(enemy, center)
-		if window.y < 0.0:
+	for i in snapshot.size():
+		var half := _half_window_at(snapshot, i)
+		if half < 0.0:
 			continue
-		var passes := RotationMath.sweep_passes(start_angle, delta_angle, window.x, window.y)
+		var enemy := snapshot.enemies[i]
+		# An earlier mount this tick may have killed or removed it.
+		if not is_instance_valid(enemy) or not enemy.can_receive_click():
+			continue
+		var passes := RotationMath.sweep_passes(start_angle, delta_angle, snapshot.bearings[i], half)
 		var id := enemy.get_instance_id()
 		var first := maxi(passes.x, _last_hit_pass.get(id, passes.x - 1) + 1)
 		for pass_index in range(first, passes.y + 1):
@@ -43,14 +47,15 @@ func collect(enemies: Array[EnemyBase], center: Vector2, start_angle: float, del
 
 ## Anything under the sweep at `angle` counts as already hit on this pass, so
 ## placing or moving a mount gives no free hit. Earlier memory is kept.
-func rebase(enemies: Array[EnemyBase], center: Vector2, angle: float) -> void:
-	for enemy in enemies:
-		var window := _window_of(enemy, center)
-		if window.y < 0.0:
+func rebase(snapshot: EnemySnapshot, angle: float) -> void:
+	for i in snapshot.size():
+		var half := _half_window_at(snapshot, i)
+		if half < 0.0 or not is_instance_valid(snapshot.enemies[i]):
 			continue
-		var pass_index := roundi((angle - window.x) / TAU)
-		if absf(angle - window.x - pass_index * TAU) <= window.y:
-			_last_hit_pass[enemy.get_instance_id()] = pass_index
+		var bearing := snapshot.bearings[i]
+		var pass_index := roundi((angle - bearing) / TAU)
+		if absf(angle - bearing - pass_index * TAU) <= half:
+			_last_hit_pass[snapshot.enemies[i].get_instance_id()] = pass_index
 
 
 ## Drops what's remembered about a removed enemy, so the memory doesn't grow forever.
@@ -58,14 +63,12 @@ func forget(id: int) -> void:
 	_last_hit_pass.erase(id)
 
 
-## Vector2(bearing, half_width) of an enemy as seen from the center;
-## half_width is -1 if the sweep can't touch it.
-func _window_of(enemy: EnemyBase, center: Vector2) -> Vector2:
-	var offset := enemy.global_position - center
-	var half := line_half_window(offset.length(), enemy.data.hitbox_radius, inner_radius, inner_radius + reach)
-	if half < 0.0:
-		return Vector2(0.0, -1.0)
-	return Vector2(offset.angle(), half + half_arc)
+## Half-width (radians) of snapshot entry i's window, or -1 if the sweep can't
+## touch it. line_half_window checks distance first, which is cheap, so the
+## many enemies outside this mount's ring skip the angle math.
+func _half_window_at(snapshot: EnemySnapshot, i: int) -> float:
+	var half := line_half_window(snapshot.distances[i], snapshot.radii[i], inner_radius, inner_radius + reach)
+	return half + half_arc if half >= 0.0 else -1.0
 
 
 ## How far (radians) the line from inner to outer can turn away from an enemy's

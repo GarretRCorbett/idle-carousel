@@ -2,8 +2,9 @@ class_name Game
 extends Node2D
 ## Root of the play scene. Starts a fresh run and keeps the world centered.
 ## This is the single place that drives the simulation each tick, so the order
-## is explicit: GameState first (boost decay, income window, later latch damage),
-## then enemies move, then the carousel moves at the resulting speed.
+## is explicit: GameState first (boost decay, income window, latch damage),
+## then enemies move, then one snapshot of where they are, then the carousel
+## turns at the resulting speed and mounts sweep against that snapshot.
 
 ## Distance of mounts from the carousel center. Mounts space themselves evenly
 ## around this circle, the first one at the top (where the first booth is).
@@ -39,6 +40,8 @@ var _mount_ids: Array[StringName] = []
 ## Booth distance from the carousel center, taken from the scene's booth.
 var _booth_radius: float = 0.0
 var _live_pops: int = 0
+## Every live enemy's bearing and distance, measured once per tick for all mounts.
+var _snapshot := EnemySnapshot.new()
 
 
 func _ready() -> void:
@@ -86,6 +89,7 @@ func _physics_process(delta: float) -> void:
 		# not reach the rim and latch (nothing would be left to kill).
 		if not enemy.is_queued_for_deletion():
 			enemy.advance(delta)
+	_snapshot.rebuild(_enemy_layer, _carousel.global_position)
 	_carousel.advance_rotation(delta, GameState.get_effective_spin_speed_rad_s())
 	_carousel.set_boost_state(GameState.is_boost_maxed(), GameState.is_overdrive_active())
 
@@ -127,13 +131,15 @@ func _create_mount(id: StringName) -> MountBase:
 	# Every mount is wired the same way; a mount that never emits costs nothing.
 	mount.booth_passed.connect(_on_booth_passed)
 	mount.enemy_swept.connect(_on_enemy_swept)
-	mount.set_enemy_layer(_enemy_layer)
+	mount.set_enemy_snapshot(_snapshot)
 	return mount
 
 
 ## Evenly spaced, first at the top. Moving is a jump, so it never pays Gold,
 ## and each mount rebases so moving onto an enemy isn't a free hit.
 func _layout_mounts() -> void:
+	# Rebase against where enemies are now, not where they were last tick.
+	_snapshot.rebuild(_enemy_layer, _carousel.global_position)
 	for i in _mounts.size():
 		_mounts[i].place(-PI / 2.0 + TAU * i / _mounts.size(), mount_radius)
 	for mount in _mounts:

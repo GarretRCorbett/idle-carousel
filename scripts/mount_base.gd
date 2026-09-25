@@ -55,8 +55,9 @@ func set_booth_bearings(_bearings: Array[float]) -> void:
 	pass
 
 
-## The layer enemies live in. Game calls this once, after setup().
-func set_enemy_layer(_layer: Node) -> void:
+## The shared list of live enemies, rebuilt by Game every tick before the
+## carousel turns. Game calls this once, after setup().
+func set_enemy_snapshot(_snapshot: EnemySnapshot) -> void:
 	pass
 
 

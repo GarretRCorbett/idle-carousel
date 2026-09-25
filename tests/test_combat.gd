@@ -141,10 +141,11 @@ func test_bought_wolf_kills_a_latched_leaf() -> void:
 	var gold_drop := enemy.data.gold_drop
 	var gold_before := GameState.get_gold()
 	enemy.advance(100.0)  # latch at the rim
-	var carousel := game.get_node("World/Carousel") as Carousel
-	var passes_needed := ceili(enemy.data.base_health / (load("res://resources/mounts/wolf.tres") as MountData).base_damage)
-	for i in 120 * passes_needed:
-		carousel.advance_rotation(1.0 / 60.0, TAU / 2.0)  # one turn in 2 s
+	# Real ticks (snapshot, then the carousel turns), a minute at most.
+	for i in 3600:
+		game._physics_process(1.0 / 60.0)
+		if not enemy.can_receive_click():
+			break
 	assert_bool(enemy.can_receive_click()).is_false()
 	# The Horse also passes the booth during the turns, so Gold rises by at least the drop.
 	assert_float(GameState.get_gold() - gold_before).is_greater_equal(gold_drop)

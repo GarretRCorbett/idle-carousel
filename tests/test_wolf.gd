@@ -7,6 +7,7 @@ const LEAF_SCENE: PackedScene = preload("res://scenes/enemies/Leaf.tscn")
 var _carousel: Carousel
 var _layer: Node2D
 var _wolf: MountWolf
+var _snapshot: EnemySnapshot
 var _hits: Array[EnemyBase] = []
 
 
@@ -112,7 +113,8 @@ func _setup_wolf() -> void:
 	_carousel.add_child(_wolf)
 	_wolf.place(0.0, 75.0)
 	_wolf.setup(_carousel)
-	_wolf.set_enemy_layer(_layer)
+	_snapshot = EnemySnapshot.new()
+	_wolf.set_enemy_snapshot(_snapshot)
 	_hits.clear()
 	_wolf.enemy_swept.connect(func(_m: MountBase, e: EnemyBase) -> void: _hits.append(e))
 
@@ -128,8 +130,10 @@ func _enemy_at(bearing: float, distance: float, health: float = 100.0) -> EnemyB
 	return enemy
 
 
+## Like Game's tick: snapshot first, then the carousel turns.
 func _turn(total: float, ticks: int = 1) -> void:
 	for i in ticks:
+		_snapshot.rebuild(_layer, _carousel.global_position)
 		_carousel.advance_rotation(1.0, total / ticks)
 
 
@@ -168,7 +172,7 @@ func test_enemies_out_of_reach_are_not_hit() -> void:
 func test_stopped_wolf_deals_nothing() -> void:
 	_setup_wolf()
 	_enemy_at(0.0, 110.0)  # right under the line
-	_carousel.advance_rotation(1.0, 0.0)
+	_turn(0.0)
 	assert_array(_hits).is_empty()
 
 
@@ -184,7 +188,9 @@ func test_placing_a_wolf_on_an_enemy_gives_no_free_hit() -> void:
 	_carousel.add_child(_wolf)
 	_wolf.place(0.0, 75.0)
 	_wolf.setup(_carousel)
-	_wolf.set_enemy_layer(_layer)
+	_snapshot = EnemySnapshot.new()
+	_snapshot.rebuild(_layer, _carousel.global_position)
+	_wolf.set_enemy_snapshot(_snapshot)
 	_hits.clear()
 	_wolf.enemy_swept.connect(func(_m: MountBase, e: EnemyBase) -> void: _hits.append(e))
 	_turn(0.3, 3)  # moves off the enemy
@@ -199,3 +205,42 @@ func test_dead_enemies_are_skipped() -> void:
 	enemy.take_damage(1000.0)
 	_turn(TAU, 60)
 	assert_array(_hits).is_empty()
+
+
+## A mount killed an enemy earlier in the tick; a later mount reading the same
+## snapshot skips it.
+func test_enemy_killed_earlier_in_the_tick_is_skipped() -> void:
+	_setup_wolf()
+	var enemy := _enemy_at(1.0, 110.0)
+	_snapshot.rebuild(_layer, _carousel.global_position)
+	enemy.take_damage(1000.0)
+	_carousel.advance_rotation(1.0, TAU)
+	assert_array(_hits).is_empty()
+
+
+## The snapshot only holds live enemies, measured from the center.
+func test_snapshot_measures_live_enemies() -> void:
+	_setup_wolf()
+	var alive := _enemy_at(0.5, 110.0)
+	var dead := _enemy_at(1.0, 120.0)
+	dead.take_damage(1000.0)
+	_snapshot.rebuild(_layer, _carousel.global_position)
+	assert_int(_snapshot.size()).is_equal(1)
+	assert_object(_snapshot.enemies[0]).is_same(alive)
+	assert_float(_snapshot.bearings[0]).is_equal_approx(0.5, 0.00001)
+	assert_float(_snapshot.distances[0]).is_equal_approx(110.0, 0.0001)
+	assert_float(_snapshot.radii[0]).is_equal(10.0)
+
+
+## The distance check never drops an enemy that the full math would hit:
+## every enemy whose circle overlaps the line's ring is hit in one turn.
+func test_distance_check_keeps_every_enemy_in_reach() -> void:
+	_setup_wolf()
+	var expected: Array[EnemyBase] = []
+	for i in 40:
+		var distance := 61.25 + i * 2.5  # 61.25..158.75; the ring is 65..150 with the hitbox
+		var enemy := _enemy_at(0.1 + i * 0.15, distance)
+		if distance + 10.0 >= 75.0 and distance - 10.0 <= 140.0:
+			expected.append(enemy)
+	_turn(TAU, 360)
+	assert_array(_hits).contains_exactly_in_any_order(expected)
