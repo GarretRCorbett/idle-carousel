@@ -82,6 +82,7 @@ func _process(_delta: float) -> void:
 func _setup_run() -> void:
 	(_game.get_node("WaveManager") as WaveManager).set_auto(false)
 	GameState.add_gold(1.0e9)
+	GameState.debug_set_bosses_beaten(6)  # every mount and level available
 	for i in 10:
 		UpgradeManager.purchase(&"carousel_speed")
 	var mounts := _parse_mounts()

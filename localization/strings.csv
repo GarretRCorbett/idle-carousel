@@ -86,3 +86,11 @@ UPG_PANDA_DESC,"Gold each turn, light hits, heals on its kills","Oro en cada vue
 UPG_PANDA_TIER2_NAME,Panda Tier 2,Panda nivel 2,Panda niveau 2,Panda Stufe 2,Panda nível 2,"Панда, ур. 2",熊猫 2阶,パンダ ランク2,판다 2단계
 UPG_PANDA_TIER2_DESC,"Every Panda: +50% damage, Gold and healing","Todos los pandas: +50% de daño, oro y curación","Tous les pandas : +50 % de dégâts, d’or et de soin","Alle Pandas: +50 % Schaden, Gold und Heilung","Todos os pandas: +50% de dano, ouro e cura","Все панды: +50% урона, золота и лечения",所有熊猫：伤害、金币和治疗+50%,全てのパンダ：ダメージ・ゴールド・回復+50%,"모든 판다: 피해, 골드, 회복 +50%"
 UI_CONFIRM,Confirm?,¿Confirmar?,Confirmer ?,Bestätigen?,Confirmar?,Точно?,确认？,確認？,확인?
+SHOP_BEAT_BOSS,Beat {0},Vence a {0},Battez {0},Besiege {0},Derrote {0},Победите: {0},击败 {0},{0}を倒す,{0} 처치
+BOSS_LEAF_STORM,Leaf Storm,Tormenta de hojas,Tempête de feuilles,Blättersturm,Tempestade de folhas,Листопад,落叶风暴,リーフストーム,낙엽 폭풍
+TIER_GREY,Grey,Gris,Gris,Grau,Cinza,Серый,灰,グレー,회색
+TIER_GREEN,Green,Verde,Vert,Grün,Verde,Зелёный,绿,グリーン,초록
+TIER_YELLOW,Yellow,Amarillo,Jaune,Gelb,Amarelo,Жёлтый,黄,イエロー,노랑
+TIER_ORANGE,Orange,Naranja,Orange,Orange,Laranja,Оранжевый,橙,オレンジ,주황
+TIER_RED,Red,Rojo,Rouge,Rot,Vermelho,Красный,红,レッド,빨강
+TIER_CHARCOAL,Charcoal,Carbón,Anthracite,Anthrazit,Carvão,Угольный,炭黑,チャコール,숯검정

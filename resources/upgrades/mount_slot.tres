@@ -12,4 +12,5 @@ effect_value = 1.0
 tab = 2
 cost_gold = 60.0
 cost_growth = 2.5
-max_level = 2
+max_level = 5
+level_cap_by_bosses = PackedInt32Array(2, 3, 4, 5)

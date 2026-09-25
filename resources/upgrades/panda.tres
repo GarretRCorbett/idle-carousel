@@ -17,3 +17,4 @@ cost_gold = 1500.0
 cost_growth = 1.5
 max_level = 5
 required_tier2_types = 3
+required_bosses = 1

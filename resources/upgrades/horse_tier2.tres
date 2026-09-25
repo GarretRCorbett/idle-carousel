@@ -14,3 +14,4 @@ target_mount = &"horse"
 cost_gold = 300.0
 cost_growth = 1.0
 max_level = 1
+required_bosses = 1

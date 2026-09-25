@@ -12,3 +12,4 @@ effect_value = 0.1
 cost_gold = 40.0
 cost_growth = 1.5
 max_level = 10
+level_cap_by_bosses = PackedInt32Array(3, 10)

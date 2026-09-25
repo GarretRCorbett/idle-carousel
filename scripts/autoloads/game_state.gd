@@ -759,6 +759,12 @@ func get_mount_heal(data: MountData) -> float:
 
 ## Mount types at Tier 2 or higher, not counting `except_id` (so the Panda
 ## can't count itself). Duplicates don't count: tiers are per type.
+## True if the next level waits for more bosses (the first boss is a real
+## milestone: Garret, memo Q).
+func is_boss_gated(upgrade: UpgradeData) -> bool:
+	return get_upgrade_level(upgrade.id) >= upgrade.get_level_cap(_bosses_beaten)
+
+
 func get_tier2_type_count(except_id: StringName = &"") -> int:
 	var count := 0
 	for id in _mount_tiers:
@@ -871,6 +877,8 @@ func can_purchase_upgrade(upgrade: UpgradeData) -> bool:
 	if upgrade.prerequisite_id != &"" and not is_upgrade_purchased(upgrade.prerequisite_id):
 		return false
 	if get_tier2_type_count(upgrade.id) < upgrade.required_tier2_types:
+		return false
+	if is_boss_gated(upgrade):
 		return false
 	if not _is_effect_supported(upgrade):
 		return false

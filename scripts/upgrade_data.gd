@@ -50,6 +50,30 @@ enum Tab { CAROUSEL, COMBAT, MOUNTS }
 ## Needs this many *different* mount types at Tier 2 or higher (not counting
 ## this row's own mount). The Panda needs 3. 0 = no requirement.
 @export_range(0, 6, 1) var required_tier2_types: int = 0
+## Can't be bought at all until this many tier bosses are beaten (the
+## Giraffe waits for Leaf Storm). 0 = open from the start.
+@export_range(0, 6, 1) var required_bosses: int = 0
+## Highest level you can buy after 0, 1, 2... bosses beaten, e.g. [3, 10]:
+## levels 1-3 now, the rest after the first boss. Empty = no boss cap.
+@export var level_cap_by_bosses: PackedInt32Array = PackedInt32Array()
+
+
+## Highest level buyable with `bosses_beaten` bosses beaten.
+func get_level_cap(bosses_beaten: int) -> int:
+	if bosses_beaten < required_bosses:
+		return 0
+	if level_cap_by_bosses.is_empty():
+		return max_level
+	return mini(max_level, level_cap_by_bosses[clampi(bosses_beaten, 0, level_cap_by_bosses.size() - 1)])
+
+
+## Bosses that must be beaten before level `owned_levels + 1` can be bought,
+## or -1 if no number of bosses allows it.
+func get_bosses_needed(owned_levels: int) -> int:
+	for bosses in range(0, 7):
+		if get_level_cap(bosses) > owned_levels:
+			return bosses
+	return -1
 
 
 ## Price of the next level when `owned_levels` are already bought.

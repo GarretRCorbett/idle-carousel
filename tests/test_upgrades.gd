@@ -136,6 +136,7 @@ func test_ticket_booth_adds_a_booth_up_to_four() -> void:
 	assert_int(GameState.get_booth_count()).is_equal(1)
 	assert_float(UpgradeManager.get_cost(&"ticket_booth")).is_equal(500.0)
 	GameState.add_gold(100000.0)
+	GameState.debug_set_bosses_beaten(6)  # these tests buy boss-gated rows
 	for i in 3:
 		assert_bool(UpgradeManager.purchase(&"ticket_booth")).is_true()
 	assert_bool(UpgradeManager.purchase(&"ticket_booth")).is_false()
@@ -147,3 +148,44 @@ func test_unknown_id_is_harmless() -> void:
 	assert_bool(UpgradeManager.purchase(&"nope")).is_false()
 	assert_bool(UpgradeManager.can_purchase(&"nope")).is_false()
 	assert_object(UpgradeManager.get_definition(&"nope")).is_null()
+
+
+# --- Boss gates (Phase 3 Step 6) ----------------------------------------------------------
+
+## Before the first boss only Horse and Wolf, and Speed/Boost up to level 3.
+func test_first_boss_gates_the_next_upgrades() -> void:
+	GameState.reset_run()
+	GameState.add_gold(1000000.0)
+	for i in 3:
+		assert_bool(UpgradeManager.purchase(&"carousel_speed")).is_true()
+	assert_bool(UpgradeManager.purchase(&"carousel_speed")).is_false()
+	assert_int(UpgradeShop.get_row_state(&"carousel_speed")).is_equal(UpgradeShop.RowState.LOCKED)
+	assert_bool(UpgradeManager.purchase(&"ticket_booth")).is_false()
+	UpgradeManager.purchase(&"mount_slot")
+	UpgradeManager.purchase(&"mount_slot")
+	assert_bool(UpgradeManager.purchase(&"mount_slot")).is_false()  # slot 4 waits for the boss
+	assert_bool(UpgradeManager.purchase(&"giraffe")).is_false()
+	assert_bool(UpgradeManager.purchase(&"sloth")).is_false()
+	assert_bool(UpgradeManager.purchase(&"wolf")).is_true()
+	GameState.record_boss_victory(0)
+	assert_bool(UpgradeManager.purchase(&"carousel_speed")).is_true()
+	assert_bool(UpgradeManager.purchase(&"ticket_booth")).is_true()
+	assert_bool(UpgradeManager.purchase(&"mount_slot")).is_true()  # slot 4
+	assert_bool(UpgradeManager.purchase(&"mount_slot")).is_false()  # slot 5 waits for boss 2
+	assert_bool(UpgradeManager.purchase(&"giraffe")).is_true()
+	GameState.reset_run()
+
+
+func test_level_cap_by_bosses() -> void:
+	var upgrade := UpgradeData.new()
+	upgrade.id = &"x"
+	upgrade.max_level = 10
+	upgrade.level_cap_by_bosses = PackedInt32Array([3, 10])
+	assert_int(upgrade.get_level_cap(0)).is_equal(3)
+	assert_int(upgrade.get_level_cap(1)).is_equal(10)
+	assert_int(upgrade.get_level_cap(5)).is_equal(10)
+	assert_int(upgrade.get_bosses_needed(2)).is_equal(0)
+	assert_int(upgrade.get_bosses_needed(3)).is_equal(1)
+	upgrade.required_bosses = 1
+	assert_int(upgrade.get_level_cap(0)).is_equal(0)
+	assert_int(upgrade.get_bosses_needed(0)).is_equal(1)

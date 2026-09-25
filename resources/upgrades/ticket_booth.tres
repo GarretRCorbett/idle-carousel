@@ -12,3 +12,4 @@ effect_value = 1.0
 cost_gold = 500.0
 cost_growth = 1.5
 max_level = 3
+required_bosses = 1

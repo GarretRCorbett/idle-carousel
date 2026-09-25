@@ -51,6 +51,7 @@ func test_row_states_follow_gold_and_levels() -> void:
 
 func test_row_is_maxed_after_every_level() -> void:
 	GameState.add_gold(1000000.0)
+	GameState.debug_set_bosses_beaten(6)  # these tests buy boss-gated rows
 	for i in 10:
 		assert_bool(UpgradeManager.purchase(&"carousel_speed")).is_true()
 	assert_int(UpgradeShop.get_row_state(&"carousel_speed")).is_equal(UpgradeShop.RowState.MAXED)

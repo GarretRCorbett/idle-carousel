@@ -18,6 +18,9 @@ enum RowState { LOCKED, SAVING, AFFORDABLE, MAXED }
 @export var maxed_key: String = "SHOP_MAXED"
 @export var needs_slot_key: String = "SHOP_NEEDS_SLOT"
 @export var needs_tier2_key: String = "SHOP_NEEDS_TIER2_TYPES"
+@export var beat_boss_key: String = "SHOP_BEAT_BOSS"
+## Tier bosses, to name the boss a gated row is waiting for.
+@export var tier_catalog: TierCatalog = preload("res://resources/tiers/tier_catalog.tres")
 @export var sell_key: String = "SHOP_SELL"
 ## Tab titles, in UpgradeData.Tab order.
 @export var tab_title_keys: PackedStringArray = ["SHOP_TAB_CAROUSEL", "SHOP_TAB_COMBAT", "SHOP_TAB_MOUNTS"]
@@ -65,6 +68,7 @@ func _ready() -> void:
 	GameState.mounts_changed.connect(func(_r: Array[StringName]) -> void: _refresh())
 	UpgradeManager.upgrade_purchased.connect(func(_id: StringName) -> void: _refresh())
 	UpgradeManager.upgrade_sold.connect(func(_id: StringName) -> void: _refresh())
+	GameState.boss_beaten.connect(func(_rank: int, _first: bool) -> void: _refresh())
 	_refresh()
 
 
@@ -77,18 +81,29 @@ static func get_row_state(id: StringName) -> RowState:
 	return RowState.AFFORDABLE if UpgradeManager.can_purchase(id) else RowState.SAVING
 
 
-enum LockReason { NONE, PREREQUISITE, NO_SLOT, TIER2_TYPES }
+enum LockReason { NONE, PREREQUISITE, BOSS, NO_SLOT, TIER2_TYPES }
 
 
 static func _locked_reason(id: StringName) -> LockReason:
 	var upgrade := UpgradeManager.get_definition(id)
 	if upgrade.prerequisite_id != &"" and not UpgradeManager.is_purchased(upgrade.prerequisite_id):
 		return LockReason.PREREQUISITE
+	if GameState.is_boss_gated(upgrade):
+		return LockReason.BOSS
 	if GameState.get_tier2_type_count(upgrade.id) < upgrade.required_tier2_types:
 		return LockReason.TIER2_TYPES
 	if upgrade.effect_type == UpgradeData.EffectType.BUY_MOUNT and not GameState.has_free_mount_slot():
 		return LockReason.NO_SLOT
 	return LockReason.NONE
+
+
+## The boss a boss-gated row is waiting for: the boss of tier (bosses needed - 1).
+func _boss_name_for(upgrade: UpgradeData) -> String:
+	var needed := upgrade.get_bosses_needed(GameState.get_upgrade_level(upgrade.id))
+	var tier := tier_catalog.get_tier(needed - 1)
+	if tier != null and tier.boss != null:
+		return tr(tier.boss.name_key)
+	return tr(tier.name_key) if tier != null else "?"
 
 
 func _build_row(upgrade: UpgradeData) -> ShopRow:
@@ -193,6 +208,8 @@ func _refresh() -> void:
 			var reason := _locked_reason(id)
 			if reason == LockReason.NO_SLOT:
 				row.status.text = tr(needs_slot_key)
+			elif reason == LockReason.BOSS:
+				row.status.text = tr(beat_boss_key).format([_boss_name_for(upgrade)])
 			elif reason == LockReason.TIER2_TYPES:
 				row.status.text = tr(needs_tier2_key).format([GameState.get_tier2_type_count(id), upgrade.required_tier2_types])
 			else:

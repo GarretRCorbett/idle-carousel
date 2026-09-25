@@ -16,3 +16,4 @@ sell_refund_fraction = 0.5
 cost_gold = 400.0
 cost_growth = 1.5
 max_level = 5
+required_bosses = 1

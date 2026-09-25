@@ -10,6 +10,7 @@ func before_test() -> void:
 	_config.latch_grace_seconds = 0.0
 	_config.regen_per_second = 0.0
 	GameState.reset_run(_config)
+	GameState.debug_set_bosses_beaten(6)  # these tests buy boss-gated rows
 
 
 func after_test() -> void:
@@ -48,6 +49,7 @@ func _game() -> Game:
 	add_child(game)
 	auto_free(game)
 	GameState.reset_run(_config)
+	GameState.debug_set_bosses_beaten(6)  # these tests buy boss-gated rows
 	(game.get_node("WaveManager") as WaveManager).set_auto(false)
 	return game
 

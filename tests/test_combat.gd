@@ -51,6 +51,7 @@ func _game() -> Game:
 	add_child(game)
 	auto_free(game)
 	GameState.reset_run(_config)  # Game._ready() reset to the real config
+	GameState.debug_set_bosses_beaten(6)  # these tests buy boss-gated rows
 	return game
 
 
