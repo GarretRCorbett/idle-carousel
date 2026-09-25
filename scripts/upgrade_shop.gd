@@ -43,7 +43,7 @@ class ShopRow:
 	var status: Label
 	var pips: LevelPips
 	var button: Button
-	var sell_button: Button
+	var sell_button: TwoStepButton
 	var progress: ProgressBar
 
 
@@ -124,10 +124,10 @@ func _build_row(upgrade: UpgradeData) -> ShopRow:
 	buttons.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	buttons.add_child(row.button)
 	if upgrade.sell_refund_fraction > 0.0:
-		row.sell_button = Button.new()
-		row.sell_button.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+		# Selling loses half the price, so it asks once (Garret, memo R).
+		row.sell_button = TwoStepButton.new()
 		row.sell_button.focus_mode = Control.FOCUS_NONE
-		row.sell_button.pressed.connect(UpgradeManager.sell.bind(upgrade.id))
+		row.sell_button.confirmed.connect(UpgradeManager.sell.bind(upgrade.id))
 		buttons.add_child(row.sell_button)
 	line.add_child(text)
 	line.add_child(buttons)
@@ -200,7 +200,7 @@ func _refresh() -> void:
 				row.status.text = tr(requires_key).format([tr(prerequisite.display_name)])
 		if row.sell_button != null:
 			row.sell_button.disabled = not UpgradeManager.can_sell(id)
-			row.sell_button.text = tr(sell_key).format([NumberFormat.gold(UpgradeManager.get_sell_refund(id))])
+			row.sell_button.set_idle_text(tr(sell_key).format([NumberFormat.gold(UpgradeManager.get_sell_refund(id))]))
 		match state:
 			RowState.LOCKED:
 				row.root.modulate = locked_modulate
