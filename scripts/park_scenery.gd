@@ -4,15 +4,18 @@ extends Control
 ## promenade, a row of storybook shop-houses on each side (the middle stays
 ## clear for the title and carousel), an iron fence, a few bushes, and lamp
 ## posts with bunting strung between them. Kenney Background Elements sprites
-## plus code-drawn lamps, bunting and ground. Positions are fractions of the
-## screen, so it fits any window size. Kept sparse on purpose.
+## plus code-drawn lamps, bunting, shop awnings, balloons and a red-brick
+## promenade (the theme-park cues: Main Street shops and pavement). Positions
+## are fractions of the screen, so it fits any window size. Kept sparse on purpose.
 
 @export_group("Ground")
 ## Where the lawn starts (fraction of the height from the top).
 @export_range(0.3, 1.0, 0.01) var horizon: float = 0.7
 @export var lawn_color: Color = Color("8fbf96")
 @export var lawn_far_color: Color = Color("a9cfae")
-@export var promenade_color: Color = Color("e6ddcc")
+## Warm brick, like a theme park's main street.
+@export var promenade_color: Color = Color("c9826a")
+@export var brick_line_color: Color = Color(0.45, 0.2, 0.15, 0.22)
 @export_range(0.0, 0.3, 0.01) var promenade_top: float = 0.84
 @export_range(0.0, 0.3, 0.01) var promenade_height: float = 0.07
 
@@ -22,9 +25,12 @@ extends Control
 @export_range(0.05, 0.6, 0.01) var house_height: float = 0.16
 ## Houses fill from each edge toward the middle, up to this fraction of the
 ## width on each side.
-@export_range(0.1, 0.5, 0.01) var house_side_width: float = 0.27
+@export_range(0.1, 0.5, 0.01) var house_side_width: float = 0.21
 ## Pushes them back into the distance.
 @export var house_tint: Color = Color(0.93, 0.95, 1.0)
+## Striped shop awnings over each house's ground floor; stripes alternate.
+@export var awning_colors: Array[Color] = [Color("fff4dc"), Color("70568b")]
+@export_range(3, 16, 1) var awning_stripes: int = 7
 
 @export_group("Fence and bushes")
 @export var fence: Texture2D
@@ -48,6 +54,12 @@ extends Control
 @export_range(0.0, 0.2, 0.005) var bunting_sag: float = 0.04
 @export_range(4.0, 40.0, 1.0, "suffix:px") var flag_size: float = 12.0
 
+@export_group("Balloons")
+## Where the balloon bunch is tied (fraction of the width), on the promenade.
+@export_range(0.0, 1.0, 0.01) var balloon_spot: float = 0.95
+@export var balloon_colors: Array[Color] = [Color("d9534f"), Color("70568b"), Color("ddb96a"), Color("405d83"), Color("fff4dc")]
+@export_range(4.0, 40.0, 1.0, "suffix:px") var balloon_radius: float = 13.0
+
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -62,10 +74,11 @@ func _draw() -> void:
 	# Lawn (a lighter strip far away), then the promenade.
 	draw_rect(Rect2(0.0, ground_y, w, h - ground_y), lawn_color)
 	draw_rect(Rect2(0.0, ground_y, w, h * 0.025), lawn_far_color)
-	draw_rect(Rect2(0.0, h * promenade_top, w, h * promenade_height), promenade_color)
+	_draw_promenade(w, h)
 	_draw_fence(w, h, ground_y)
 	_draw_bushes(w, h, ground_y)
 	_draw_lamps_and_bunting(w, h)
+	_draw_balloons(w, h)
 
 
 func _draw_houses(w: float, h: float, ground_y: float) -> void:
@@ -80,7 +93,9 @@ func _draw_houses(w: float, h: float, ground_y: float) -> void:
 			var scale := h * house_height / texture.get_height()
 			var drawn := texture.get_size() * scale
 			var left := x if side == -1 else x - drawn.x
-			draw_texture_rect(texture, Rect2(Vector2(left, ground_y - drawn.y + 2.0), drawn), false, house_tint)
+			var rect := Rect2(Vector2(left, ground_y - drawn.y + 2.0), drawn)
+			draw_texture_rect(texture, rect, false, house_tint)
+			_draw_awning(rect)
 			# Each row fills from its screen edge toward the middle.
 			x -= drawn.x * 0.92 * side
 			i += 1
@@ -139,3 +154,49 @@ func _draw_bunting(from: Vector2, to: Vector2, h: float) -> void:
 		var b := points[i + 1]
 		var mid := (a + b) / 2.0 + Vector2(0.0, flag_size)
 		draw_colored_polygon(PackedVector2Array([a, b, mid]), bunting_colors[i % bunting_colors.size()])
+
+
+## A striped awning with a scalloped edge across a house's ground floor.
+func _draw_awning(house: Rect2) -> void:
+	var width := house.size.x * 0.72
+	var height := house.size.y * 0.075
+	var top := Vector2(house.position.x + (house.size.x - width) / 2.0, house.position.y + house.size.y * 0.6)
+	var stripe := width / awning_stripes
+	for i in awning_stripes:
+		var color: Color = awning_colors[i % awning_colors.size()]
+		draw_rect(Rect2(top + Vector2(stripe * i, 0.0), Vector2(stripe, height)), color)
+		draw_circle(top + Vector2(stripe * (i + 0.5), height), stripe / 2.0, color, true, -1.0, true)
+
+
+## Warm brick: the band plus faint mortar lines, staggered row to row.
+func _draw_promenade(w: float, h: float) -> void:
+	var top := h * promenade_top
+	var height := h * promenade_height
+	draw_rect(Rect2(0.0, top, w, height), promenade_color)
+	var rows := 3
+	var brick := height / rows * 2.2
+	for row in rows:
+		var y := top + height * row / rows
+		if row > 0:
+			draw_line(Vector2(0.0, y), Vector2(w, y), brick_line_color, 1.0)
+		var x := brick * 0.5 * (row % 2)
+		while x < w:
+			draw_line(Vector2(x, y), Vector2(x, y + height / rows), brick_line_color, 1.0)
+			x += brick
+
+
+## A bunch of balloons tied to one spot on the promenade.
+func _draw_balloons(w: float, h: float) -> void:
+	if balloon_colors.is_empty():
+		return
+	var knot := Vector2(w * balloon_spot, h * (promenade_top + promenade_height * 0.2))
+	var offsets := [Vector2(-18.0, -118.0), Vector2(6.0, -132.0), Vector2(26.0, -112.0), Vector2(-4.0, -100.0), Vector2(16.0, -92.0)]
+	for i in offsets.size():
+		var center: Vector2 = knot + offsets[i]
+		draw_line(knot, center + Vector2(0.0, balloon_radius * 1.15), Color(0.2, 0.2, 0.25, 0.6), 1.0, true)
+	for i in offsets.size():
+		var center: Vector2 = knot + offsets[i]
+		draw_set_transform(center, 0.0, Vector2(1.0, 1.2))
+		draw_circle(Vector2.ZERO, balloon_radius, balloon_colors[i % balloon_colors.size()], true, -1.0, true)
+		draw_circle(Vector2(-balloon_radius * 0.35, -balloon_radius * 0.35), balloon_radius * 0.25, Color(1.0, 1.0, 1.0, 0.45), true, -1.0, true)
+		draw_set_transform(Vector2.ZERO)

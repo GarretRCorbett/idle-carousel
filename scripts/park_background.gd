@@ -25,9 +25,10 @@ extends Node2D
 @export_group("Paths")
 ## The paved ring around the plaza, and its edging.
 @export_range(0.0, 200.0, 1.0, "suffix:px") var ring_width: float = 34.0
-@export var paving_color: Color = Color("e6ddcc")
+## Warm brick for the ring and paths, like a theme park's main street.
+@export var paving_color: Color = Color("d49c83")
 @export var edging_color: Color = Color("fff4dc")
-@export var joint_color: Color = Color(0.0, 0.0, 0.0, 0.06)
+@export var joint_color: Color = Color(0.45, 0.2, 0.15, 0.18)
 ## Directions of the paths leading off the ring (degrees, 0 = right, 90 = down).
 @export var path_angles_deg: PackedFloat32Array = PackedFloat32Array([130.0, -50.0])
 @export_range(4.0, 100.0, 1.0, "suffix:px") var path_width: float = 30.0
@@ -43,6 +44,14 @@ extends Node2D
 @export var bloom_colors: Array[Color] = [Color("fff4dc"), Color("b6a3cd"), Color("dca9bb"), Color("ddb96a")]
 @export var bench_color: Color = Color("405d83")
 @export var bench_leg_color: Color = Color("243955")
+
+@export_group("Umbrella cart")
+## A concession cart under a striped umbrella (a little carousel echo).
+## Empty = none.
+@export var carts: PackedVector2Array = PackedVector2Array([Vector2(215.0, -250.0)])
+@export var cart_color: Color = Color("405d83")
+@export var umbrella_colors: Array[Color] = [Color("fff4dc"), Color("70568b")]
+@export_range(8.0, 60.0, 1.0, "suffix:px") var umbrella_radius: float = 22.0
 
 @export_group("Lamps")
 ## Lamp posts just outside the ring (degrees round the plaza).
@@ -85,7 +94,10 @@ func _draw() -> void:
 	for i in flower_beds.size():
 		_draw_bed(flower_beds[i], i)
 	for angle in lamp_angles_deg:
-		_draw_lamp(Vector2.from_angle(deg_to_rad(angle)) * (ring_outer + 16.0))
+		var direction := Vector2.from_angle(deg_to_rad(angle))
+		_draw_lamp(direction * (ring_outer + 16.0), direction)
+	for cart in carts:
+		_draw_cart(cart)
 	for i in trees.size():
 		if tree_textures.is_empty():
 			break
@@ -125,8 +137,26 @@ func _draw_bed(center: Vector2, index: int) -> void:
 	draw_rect(Rect2(bench.position + Vector2(0.0, 5.0), Vector2(bench.size.x, 3.0)), bench_leg_color)
 
 
-## A lamp seen from above: a soft glow and an ivory globe with a gold rim.
-func _draw_lamp(spot: Vector2) -> void:
-	draw_circle(spot, 18.0, lamp_glow_color, true, -1.0, true)
-	draw_circle(spot, 7.0, lamp_rim_color, true, -1.0, true)
-	draw_circle(spot, 5.0, lamp_color, true, -1.0, true)
+## An old-fashioned double lamp seen from above: a soft glow, a gold bar,
+## and two ivory globes with gold rims, side by side along the ring.
+func _draw_lamp(spot: Vector2, outward: Vector2) -> void:
+	var along := Vector2(-outward.y, outward.x) * 8.0
+	draw_circle(spot, 22.0, lamp_glow_color, true, -1.0, true)
+	draw_line(spot - along, spot + along, lamp_rim_color, 3.0, true)
+	for globe in [spot - along, spot + along]:
+		draw_circle(globe, 6.0, lamp_rim_color, true, -1.0, true)
+		draw_circle(globe, 4.2, lamp_color, true, -1.0, true)
+
+
+## A cart peeking out under a striped umbrella, seen from above.
+func _draw_cart(spot: Vector2) -> void:
+	draw_rect(Rect2(spot + Vector2(-umbrella_radius * 0.9, umbrella_radius * 0.35), Vector2(umbrella_radius * 1.8, umbrella_radius * 0.8)), cart_color)
+	var wedges := 8
+	for i in wedges:
+		var from := TAU * i / wedges
+		var to := TAU * (i + 1) / wedges
+		var points := PackedVector2Array([spot])
+		for k in 5:
+			points.append(spot + Vector2.from_angle(lerpf(from, to, k / 4.0)) * umbrella_radius)
+		draw_colored_polygon(points, umbrella_colors[i % umbrella_colors.size()])
+	draw_circle(spot, 3.0, lamp_rim_color, true, -1.0, true)
