@@ -9,7 +9,8 @@ extends RefCounted
 ## readers recheck the enemy before acting on it.
 
 var enemies: Array[EnemyBase] = []
-## Direction from the center, radians.
+## Direction from the center, radians, unwrapped (see EnemyBase.update_bearing),
+## so a sweep's pass numbers stay the same when an enemy crosses ±180°.
 var bearings := PackedFloat64Array()
 ## Distance from the center, pixels.
 var distances := PackedFloat64Array()
@@ -32,7 +33,7 @@ func rebuild(layer: Node, from_center: Vector2) -> void:
 			continue
 		var offset := enemy.global_position - center
 		enemies.append(enemy)
-		bearings.append(offset.angle())
+		bearings.append(enemy.update_bearing(offset.angle()))
 		distances.append(offset.length())
 		radii.append(enemy.data.hitbox_radius)
 

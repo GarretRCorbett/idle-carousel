@@ -38,6 +38,11 @@ var _center: Vector2 = Vector2.ZERO
 var _stop_distance: float = 0.0
 ## Seconds left in the hit flash. _process runs only while this is above 0.
 var _flash_left: float = 0.0
+## Direction from the carousel center, but "unwrapped": it doesn't jump from
+## +180° to -180° on the left of the screen, so an enemy moving sideways across
+## that line (the Stick Giant's zigzag) never looks like a new sweep pass.
+var _unwrapped_bearing: float = 0.0
+var _has_bearing: bool = false
 
 @onready var _visual: Node2D = $Visual
 @onready var _health_bar: EnemyHealthBar = $HealthBar
@@ -57,6 +62,24 @@ func _ready() -> void:
 func setup(center: Vector2, rim_radius: float) -> void:
 	_center = center
 	_stop_distance = rim_radius + data.hitbox_radius
+	_unwrapped_bearing = (position - center).angle()
+	_has_bearing = true
+
+
+## Takes this tick's plain bearing (-PI..PI) and returns the unwrapped one,
+## moved by the shortest change since the last call. EnemySnapshot calls this
+## once per tick, after all movement. Calling it twice without moving changes nothing.
+func update_bearing(wrapped_bearing: float) -> float:
+	if _has_bearing:
+		_unwrapped_bearing += angle_difference(_unwrapped_bearing, wrapped_bearing)
+	else:
+		_unwrapped_bearing = wrapped_bearing
+		_has_bearing = true
+	return _unwrapped_bearing
+
+
+func get_unwrapped_bearing() -> float:
+	return _unwrapped_bearing
 
 
 ## Moves one tick toward the carousel. Stops exactly at the rim, never past it.
