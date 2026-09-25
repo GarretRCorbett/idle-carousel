@@ -1,9 +1,12 @@
 extends Node
 ## Dev tool, not part of the game: holds N Leaves on screen with a fast
 ## carousel and the Wolf, and prints frame and physics timings per stage.
-## Run from the project folder (a window opens; vsync is turned off):
-##   "$GODOT" --path . res://tools/stress_test.tscn
-##   "$GODOT" --path . res://tools/stress_test.tscn -- 100,500,1000
+## Run from the project folder (a window opens; vsync is turned off, so the
+## machine runs flat out: run it once, not back to back):
+##   "$GODOT" --audio-driver Dummy --path . res://tools/stress_test.tscn
+##   "$GODOT" --audio-driver Dummy --path . res://tools/stress_test.tscn -- 100,500,1000
+## Always silent: sound costs frame time, so FPS only compares between runs
+## that both used --audio-driver Dummy. Physics tick times compare either way.
 ## Leaves here can't die and deal no damage or drag, so the count stays
 ## fixed, but the Wolf keeps hitting them (flashes, health bars, sounds).
 ## Numbers depend on the machine; compare runs on the same one.
@@ -98,6 +101,9 @@ func _next_stage(now: int) -> void:
 		var distance := _rng.randf_range(inner, inner + SPAWN_BAND_PX)
 		enemy.position = carousel.position + Vector2.from_angle(_rng.randf() * TAU) * distance
 		_game._on_enemy_spawned(enemy)
+	# Spawns join at the next tick, so that tick admits the whole stage at
+	# once. It's setup, not play: don't sample it.
+	_sampling = false
 	_frame_ms.clear()
 	_tick_ms.clear()
 	_ticks_per_frame.clear()

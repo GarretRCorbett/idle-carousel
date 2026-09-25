@@ -8,6 +8,27 @@ Kenney animals (GDD v1.12).
 Phase 3 roadmap scope: Sloth, Giraffe, Elephant, Panda; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
 
+## Step 2 performance (stress test, Radeon 780M, 1 Wolf + 1 Horse, 2026-09-25)
+Before = commit cdbead7 (with sound). After = end of Step 2 (silent, `--audio-driver Dummy`).
+**Compare tick times**; FPS isn't comparable because the silent run skips audio work.
+
+| Leaves | Tick avg before → after | Tick max before → after | FPS before → after |
+|---|---|---|---|
+| 0 | 0.18 → 0.19 ms | 0.97 → 0.93 | 782 → 1107 |
+| 100 | 1.00 → 1.00 ms | 2.14 → 1.80 | 668 → 997 |
+| 300 | 1.76 → 1.86 ms | 2.79 → 2.75 | 474 → 712 |
+| 500 | 2.43 → 2.50 ms | 4.73 → 3.35 | 313 → 424 |
+| 1,000 | 3.98 → 4.33 ms | 5.51 → 5.07 | 133 → 156 |
+| 2,000 | 7.21 → 7.62 ms | 9.84 → 9.31 | 50 → 56 |
+
+- With **one** sweeping mount, ticks cost 5–9% more at 1,000+ enemies: the snapshot adds a
+  bearing update and array writes per enemy, and one Wolf alone doesn't share it. The saving
+  is meant to show with several sweeping mounts (Giraffe, Elephant, Panda); re-measure at Step 5.
+- Spawns now join at the next tick, so the stress tool admits a whole stage in one tick. That
+  tick is setup, and the tool no longer samples it (it showed as fake 27–64 ms spikes).
+- Open, minor: the tool sometimes prints "4 resources still in use at exit" since Step 2 (not
+  sound-related; the game itself doesn't show it). Look at it with `--verbose` when convenient.
+
 ## Decided 2026-09-24 (Garret)
 - **Boss access:** a minimal per-tier kill gate plus a manual "Challenge boss" button, built
   in Phase 3. HUD polish and the full shop visibility system stay in Phase 4. (Q1)
