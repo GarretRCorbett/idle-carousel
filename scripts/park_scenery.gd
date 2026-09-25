@@ -1,12 +1,13 @@
 class_name ParkScenery
 extends Control
-## The title screen's park, drawn over the sky backdrop: a concrete plaza
-## with a thin planter strip and a red-brick promenade, a row of storybook shop-houses on each side (the middle stays
-## clear for the title and carousel), an iron fence, a few bushes, and lamp
-## posts with bunting strung between them. Kenney Background Elements sprites
-## plus code-drawn lamps, bunting, shop awnings, balloons and a red-brick
-## promenade (the theme-park cues: Main Street shops and pavement). Positions
-## are fractions of the screen, so it fits any window size. Kept sparse on purpose.
+## The title screen's park, drawn over the sky backdrop, matching the play
+## field's look: a concrete plaza with a planter strip of blooms, a brick
+## promenade with ivory edging, a row of shopfronts on each side (cream
+## fronts, blue and pink roofs with scalloped ivory trim and a gold ridge,
+## striped awnings; the middle stays clear for the title and carousel), an
+## iron fence, bushes, gold double lamps with bunting, an umbrella cart and
+## balloons. Kenney sprites for the fence and bushes; everything else is drawn
+## in code. Positions are fractions of the screen, so it fits any window size.
 
 @export_group("Ground")
 ## Where the ground starts (fraction of the height from the top).
@@ -18,23 +19,27 @@ extends Control
 @export var lawn_color: Color = Color("86b98c")
 @export var curb_color: Color = Color("fff4dc")
 @export_range(0.0, 0.2, 0.005) var planter_height: float = 0.035
-## Warm brick, like a theme park's main street.
-@export var promenade_color: Color = Color("c9826a")
+## Warm brick with an ivory edge, like the play field's walkways.
+@export var promenade_color: Color = Color("d49c83")
+@export var promenade_edge_color: Color = Color("fff4dc")
+## Blooms along the planter strip (soft colors, like the play field's beds).
+@export var bloom_colors: Array[Color] = [Color("fff4dc"), Color("b6a3cd"), Color("dca9bb")]
 @export var brick_line_color: Color = Color(0.45, 0.2, 0.15, 0.22)
 @export_range(0.0, 0.3, 0.01) var promenade_top: float = 0.84
 @export_range(0.0, 0.3, 0.01) var promenade_height: float = 0.07
 
-@export_group("Shop-houses")
-@export var houses: Array[Texture2D] = []
-## Height of each house as a fraction of the screen height.
-@export_range(0.05, 0.6, 0.01) var house_height: float = 0.16
-## Houses fill from each edge toward the middle, up to this fraction of the
-## width on each side.
-@export_range(0.1, 0.5, 0.01) var house_side_width: float = 0.21
-## Pushes them back into the distance.
-@export var house_tint: Color = Color(0.93, 0.95, 1.0)
-## Striped shop awnings over each house's ground floor; stripes alternate.
-@export var awning_colors: Array[Color] = [Color("fff4dc"), Color("70568b")]
+@export_group("Shopfronts")
+## Shopfronts fill from each edge toward the middle, up to this fraction of
+## the width on each side. Widths and heights (fractions of the screen) cycle.
+@export_range(0.1, 0.5, 0.01) var house_side_width: float = 0.24
+@export var shop_widths: PackedFloat32Array = PackedFloat32Array([0.1, 0.085, 0.11, 0.09])
+@export var shop_heights: PackedFloat32Array = PackedFloat32Array([0.17, 0.14, 0.19, 0.15])
+@export var facade_colors: Array[Color] = [Color("fff4dc"), Color("f0e2c8"), Color("f6ead6")]
+## The same blues and pink as the play field's rooftops.
+@export var roof_colors: Array[Color] = [Color("4f79a8"), Color("c98ea6"), Color("5f82b0")]
+@export var window_color: Color = Color("405d83")
+@export var trim_color: Color = Color("fff4dc")
+@export var ridge_color: Color = Color("ddb96a")
 @export_range(3, 16, 1) var awning_stripes: int = 7
 
 @export_group("Fence and bushes")
@@ -50,14 +55,22 @@ extends Control
 @export_group("Lamps and bunting")
 ## Lamp posts along the promenade (fractions of the width).
 @export var lamp_spots: PackedFloat32Array = PackedFloat32Array([0.12, 0.34, 0.66, 0.88])
+## Navy posts with the play field's gold double lamp heads.
 @export var lamp_color: Color = Color("243955")
-@export var lamp_glow_color: Color = Color(1.0, 0.85, 0.55, 0.45)
+@export var lamp_gold_color: Color = Color("ddb96a")
+@export var lamp_glow_color: Color = Color(1.0, 0.85, 0.55, 0.4)
 @export var lamp_bulb_color: Color = Color("fff4dc")
 @export_range(0.05, 0.6, 0.01) var lamp_height: float = 0.26
 ## Bunting flags cycle through these (palette A).
 @export var bunting_colors: Array[Color] = [Color("fff4dc"), Color("70568b"), Color("ddb96a"), Color("405d83")]
 @export_range(0.0, 0.2, 0.005) var bunting_sag: float = 0.04
 @export_range(4.0, 40.0, 1.0, "suffix:px") var flag_size: float = 12.0
+
+@export_group("Umbrella cart")
+## Where the cart stands (fraction of the width), on the pavement in front.
+@export_range(0.0, 1.0, 0.01) var cart_spot: float = 0.22
+@export var cart_color: Color = Color("405d83")
+@export var umbrella_colors: Array[Color] = [Color("fff4dc"), Color("a9bcd6")]
 
 @export_group("Balloons")
 ## Where the balloon bunch is tied (fraction of the width), on the promenade.
@@ -82,27 +95,70 @@ func _draw() -> void:
 	_draw_fence(w, h, ground_y)
 	_draw_bushes(w, h, ground_y)
 	_draw_lamps_and_bunting(w, h)
+	_draw_cart(w, h)
 	_draw_balloons(w, h)
 
 
 func _draw_houses(w: float, h: float, ground_y: float) -> void:
-	if houses.is_empty():
+	if shop_widths.is_empty() or shop_heights.is_empty():
 		return
 	for side in [-1, 1]:
-		var x := 0.0 if side == -1 else w
-		var limit := w * house_side_width
+		var edge := 0.0 if side == -1 else w
+		var x := edge
 		var i := 0 if side == -1 else 1
-		while absf(x - (0.0 if side == -1 else w)) < limit:
-			var texture: Texture2D = houses[i % houses.size()]
-			var scale := h * house_height / texture.get_height()
-			var drawn := texture.get_size() * scale
-			var left := x if side == -1 else x - drawn.x
-			var rect := Rect2(Vector2(left, ground_y - drawn.y + 2.0), drawn)
-			draw_texture_rect(texture, rect, false, house_tint)
-			_draw_awning(rect)
+		while absf(x - edge) < w * house_side_width:
+			var size := Vector2(w * shop_widths[i % shop_widths.size()], h * shop_heights[i % shop_heights.size()])
+			var left := x if side == -1 else x - size.x
+			_draw_shopfront(Rect2(Vector2(left, ground_y - size.y + 2.0), size), i)
 			# Each row fills from its screen edge toward the middle.
-			x -= drawn.x * 0.92 * side
+			x -= (size.x + 2.0) * side
 			i += 1
+
+
+## A Main Street-style shopfront: cream front, a mansard roof with shingle
+## rows, a gold ridge and scalloped ivory trim, two upper windows, a striped
+## awning over a shop window and a door.
+func _draw_shopfront(body: Rect2, index: int) -> void:
+	var roof_color: Color = roof_colors[index % roof_colors.size()]
+	draw_rect(body, facade_colors[index % facade_colors.size()])
+	# Mansard roof on top, a little wider than the front.
+	var roof_h := body.size.y * 0.3
+	var eave := body.position.y
+	var roof := PackedVector2Array([
+		Vector2(body.position.x - 5.0, eave), Vector2(body.end.x + 5.0, eave),
+		Vector2(body.end.x - body.size.x * 0.12, eave - roof_h), Vector2(body.position.x + body.size.x * 0.12, eave - roof_h),
+	])
+	draw_colored_polygon(roof, roof_color)
+	var shingle := Color(roof_color.darkened(0.35), 0.35)
+	for k in range(1, 4):
+		var y := eave - roof_h * k / 4.0
+		var inset := body.size.x * 0.12 * k / 4.0
+		draw_line(Vector2(body.position.x - 5.0 + inset, y), Vector2(body.end.x + 5.0 - inset, y), shingle, 1.0)
+	draw_line(roof[3], roof[2], ridge_color, 3.0)
+	var scallop := 5.0
+	var sx := body.position.x - 5.0 + scallop
+	while sx < body.end.x + 5.0:
+		draw_circle(Vector2(sx, eave), scallop, trim_color, true, -1.0, true)
+		sx += scallop * 2.0
+	# Two upper windows with ivory frames.
+	var win := Vector2(body.size.x * 0.2, body.size.y * 0.2)
+	for fx in [0.22, 0.58]:
+		var r := Rect2(body.position + Vector2(body.size.x * fx, body.size.y * 0.14), win)
+		draw_rect(r.grow(2.0), trim_color)
+		draw_rect(r, window_color)
+	# Striped awning over the ground floor, then a shop window and a door.
+	var awning := Rect2(body.position + Vector2(body.size.x * 0.08, body.size.y * 0.48), Vector2(body.size.x * 0.84, body.size.y * 0.1))
+	var stripe := awning.size.x / awning_stripes
+	for k in awning_stripes:
+		var color := roof_color if k % 2 == 0 else trim_color
+		draw_rect(Rect2(awning.position + Vector2(stripe * k, 0.0), Vector2(stripe, awning.size.y)), color)
+		draw_circle(awning.position + Vector2(stripe * (k + 0.5), awning.size.y), stripe / 2.0, color, true, -1.0, true)
+	var shop_window := Rect2(body.position + Vector2(body.size.x * 0.14, body.size.y * 0.66), Vector2(body.size.x * 0.44, body.size.y * 0.24))
+	draw_rect(shop_window.grow(2.0), trim_color)
+	draw_rect(shop_window, window_color)
+	var door := Rect2(body.position + Vector2(body.size.x * 0.66, body.size.y * 0.64), Vector2(body.size.x * 0.18, body.size.y * 0.36))
+	draw_rect(door.grow(2.0), trim_color)
+	draw_rect(door, roof_color.darkened(0.25))
 
 
 func _draw_fence(w: float, h: float, ground_y: float) -> void:
@@ -134,9 +190,13 @@ func _draw_lamps_and_bunting(w: float, h: float) -> void:
 		var x := w * spot
 		draw_line(Vector2(x, base_y), Vector2(x, top_y), lamp_color, 4.0, true)
 		draw_rect(Rect2(x - 7.0, base_y - 4.0, 14.0, 6.0), lamp_color)
-		draw_circle(Vector2(x, top_y - 6.0), 16.0, lamp_glow_color, true, -1.0, true)
-		draw_circle(Vector2(x, top_y - 6.0), 7.0, lamp_bulb_color, true, -1.0, true)
-		draw_rect(Rect2(x - 8.0, top_y + 1.0, 16.0, 3.0), lamp_color)
+		# A gold crossbar with a globe at each end, like the play field's lamps.
+		draw_circle(Vector2(x, top_y - 6.0), 26.0, lamp_glow_color, true, -1.0, true)
+		draw_line(Vector2(x - 13.0, top_y + 2.0), Vector2(x + 13.0, top_y + 2.0), lamp_gold_color, 3.0, true)
+		for gx in [x - 13.0, x + 13.0]:
+			draw_circle(Vector2(gx, top_y - 6.0), 8.0, lamp_gold_color, true, -1.0, true)
+			draw_circle(Vector2(gx, top_y - 6.0), 6.0, lamp_bulb_color, true, -1.0, true)
+		draw_circle(Vector2(x, top_y - 2.0), 3.0, lamp_gold_color, true, -1.0, true)
 		tops.append(Vector2(x, top_y + 4.0))
 	# Bunting only between the two lamps on each side, so the middle stays clear.
 	for pair in [[0, 1], [tops.size() - 2, tops.size() - 1]]:
@@ -160,18 +220,6 @@ func _draw_bunting(from: Vector2, to: Vector2, h: float) -> void:
 		draw_colored_polygon(PackedVector2Array([a, b, mid]), bunting_colors[i % bunting_colors.size()])
 
 
-## A striped awning with a scalloped edge across a house's ground floor.
-func _draw_awning(house: Rect2) -> void:
-	var width := house.size.x * 0.72
-	var height := house.size.y * 0.075
-	var top := Vector2(house.position.x + (house.size.x - width) / 2.0, house.position.y + house.size.y * 0.6)
-	var stripe := width / awning_stripes
-	for i in awning_stripes:
-		var color: Color = awning_colors[i % awning_colors.size()]
-		draw_rect(Rect2(top + Vector2(stripe * i, 0.0), Vector2(stripe, height)), color)
-		draw_circle(top + Vector2(stripe * (i + 0.5), height), stripe / 2.0, color, true, -1.0, true)
-
-
 ## Concrete slabs seen at a low angle: rows get taller toward the viewer,
 ## joints run to a vanishing point above the middle. The planter strip sits
 ## on top, right under the fence.
@@ -190,6 +238,14 @@ func _draw_pavement(w: float, h: float, ground_y: float) -> void:
 		var t := (strip_bottom - vanish.y) / (foot.y - vanish.y)
 		draw_line(vanish.lerp(foot, t), foot, slab_joint_color, 1.0, true)
 	draw_rect(Rect2(0.0, ground_y, w, h * planter_height), lawn_color)
+	if not bloom_colors.is_empty():
+		var bx := 9.0
+		var k := 0
+		while bx < w:
+			var by := ground_y + h * planter_height * (0.55 + 0.25 * sin(k * 1.9))
+			draw_circle(Vector2(bx, by), 3.0, bloom_colors[k % bloom_colors.size()], true, -1.0, true)
+			bx += 17.0 + 6.0 * sin(k * 2.7)
+			k += 1
 	draw_line(Vector2(0.0, strip_bottom), Vector2(w, strip_bottom), curb_color, 3.0)
 
 
@@ -197,6 +253,7 @@ func _draw_pavement(w: float, h: float, ground_y: float) -> void:
 func _draw_promenade(w: float, h: float) -> void:
 	var top := h * promenade_top
 	var height := h * promenade_height
+	draw_rect(Rect2(0.0, top - 3.0, w, height + 6.0), promenade_edge_color)
 	draw_rect(Rect2(0.0, top, w, height), promenade_color)
 	var rows := 3
 	var brick := height / rows * 2.2
@@ -225,3 +282,28 @@ func _draw_balloons(w: float, h: float) -> void:
 		draw_circle(Vector2.ZERO, balloon_radius, balloon_colors[i % balloon_colors.size()], true, -1.0, true)
 		draw_circle(Vector2(-balloon_radius * 0.35, -balloon_radius * 0.35), balloon_radius * 0.25, Color(1.0, 1.0, 1.0, 0.45), true, -1.0, true)
 		draw_set_transform(Vector2.ZERO)
+
+
+## A concession cart under a striped umbrella, seen from the side.
+func _draw_cart(w: float, h: float) -> void:
+	var base := Vector2(w * cart_spot, h * (promenade_top - 0.015))
+	var body := Rect2(base + Vector2(-26.0, -26.0), Vector2(52.0, 22.0))
+	draw_rect(body, cart_color)
+	draw_rect(Rect2(body.position + Vector2(0.0, -3.0), Vector2(body.size.x, 4.0)), trim_color)
+	for wx in [-16.0, 16.0]:
+		draw_circle(base + Vector2(wx, -3.0), 5.0, lamp_color, true, -1.0, true)
+		draw_circle(base + Vector2(wx, -3.0), 2.0, lamp_gold_color, true, -1.0, true)
+	var pole_top := base + Vector2(0.0, -58.0)
+	draw_line(base + Vector2(0.0, -26.0), pole_top, lamp_color, 2.0, true)
+	# Dome umbrella: striped wedges of a half circle, scalloped rim.
+	var radius := 38.0
+	var wedges := 6
+	for i in wedges:
+		var points := PackedVector2Array([pole_top])
+		for k in 5:
+			points.append(pole_top + Vector2.from_angle(PI + PI * (i + k / 4.0) / wedges) * Vector2(radius, radius * 0.8))
+		draw_colored_polygon(points, umbrella_colors[i % umbrella_colors.size()])
+	for i in wedges:
+		var cx := pole_top.x - radius + radius * 2.0 * (i + 0.5) / wedges
+		draw_circle(Vector2(cx, pole_top.y), radius / wedges, umbrella_colors[i % umbrella_colors.size()], true, -1.0, true)
+	draw_circle(pole_top + Vector2(0.0, -radius * 0.8), 3.0, lamp_gold_color, true, -1.0, true)
