@@ -42,7 +42,7 @@ func test_mount_damage_upgrade_needs_a_target() -> void:
 
 func test_all_enemies_load_as_enemy_data() -> void:
 	var files := _tres_files(ENEMY_DIR)
-	assert_int(files.size()).is_equal(3)
+	assert_int(files.size()).is_equal(5)
 	for file in files:
 		assert_object(load(file) as EnemyData).override_failure_message(
 				"%s is not an EnemyData" % file).is_not_null()

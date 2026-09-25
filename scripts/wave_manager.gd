@@ -53,6 +53,8 @@ var _auto: bool = true
 ## Set by Game. Unset = no limit.
 var live_enemy_count: Callable
 var _send_available: bool = true
+## True during a boss fight: no timed waves, no Send (the Auto setting is kept).
+var _suspended: bool = false
 
 @onready var _timer: Timer = $WaveTimer
 
@@ -67,7 +69,7 @@ func _ready() -> void:
 func start(seed_value: int = 0) -> void:
 	rng.seed = seed_value
 	_timer.start(first_wave_delay)
-	_timer.paused = not _auto
+	_update_timer_pause()
 	_emit_countdown_if_changed()
 
 
@@ -80,7 +82,7 @@ func get_wave_interval() -> float:
 ## tier's interval applies from here.
 func restart_countdown() -> void:
 	_timer.start(get_wave_interval())
-	_timer.paused = not _auto
+	_update_timer_pause()
 	_emit_countdown_if_changed()
 
 
@@ -94,20 +96,38 @@ func send_wave_now() -> int:
 	return count
 
 
-## Off: the countdown pauses and waves only come when sent.
-## False while more than max_live_enemies_to_send enemies are alive.
+## False while more than max_live_enemies_to_send enemies are alive, or
+## during a boss fight.
 func can_send_wave() -> bool:
+	if _suspended:
+		return false
 	if max_live_enemies_to_send <= 0 or not live_enemy_count.is_valid():
 		return true
 	return live_enemy_count.call() <= max_live_enemies_to_send
 
 
+## Off: the countdown pauses and waves only come when sent.
 func set_auto(on: bool) -> void:
 	if on == _auto:
 		return
 	_auto = on
-	_timer.paused = not on
+	_update_timer_pause()
 	auto_changed.emit(on)
+
+
+## During a boss fight: the countdown holds and Send is blocked. Afterwards
+## the countdown carries on where it was; the Auto setting is untouched.
+func set_suspended(on: bool) -> void:
+	_suspended = on
+	_update_timer_pause()
+
+
+func is_suspended() -> bool:
+	return _suspended
+
+
+func _update_timer_pause() -> void:
+	_timer.paused = _suspended or not _auto
 
 
 func is_auto() -> bool:

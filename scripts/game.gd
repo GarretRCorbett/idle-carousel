@@ -57,6 +57,8 @@ var _pending_spawns: Array[EnemyBase] = []
 ## Enemies in play (admitted and not removed). The Send limit counts these
 ## plus the queue.
 var _live_enemy_count: int = 0
+## Runs boss fights (created here; ticked in _physics_process).
+var _encounter: BossEncounter
 
 
 func _ready() -> void:
@@ -64,6 +66,14 @@ func _ready() -> void:
 	_booths.append(_first_booth)
 	_hud.boost_requested.connect(GameState.add_click_boost)
 	_click_router.enemy_clicked.connect(_on_enemy_clicked)
+	_encounter = BossEncounter.new()
+	_encounter.name = "BossEncounter"
+	add_child(_encounter)
+	_encounter.enemy_spawn_requested.connect(_on_enemy_spawned)
+	_encounter.enemy_removal_requested.connect(_remove_encounter_enemy)
+	_encounter.started.connect(func(_rank: int) -> void: _wave_manager.set_suspended(true))
+	_encounter.ended.connect(func(_victory: bool, _first: bool) -> void: _wave_manager.set_suspended(false))
+	GameState.run_reset.connect(_encounter.reset)
 	_wave_manager.center = _carousel.position
 	_wave_manager.tier = tier_catalog.get_tier(0)
 	_wave_manager.tier_kills = func() -> int: return GameState.get_tier_kills(GameState.get_selected_tier())
@@ -134,6 +144,7 @@ func _physics_process(delta: float) -> void:
 		# not reach the rim and latch (nothing would be left to kill).
 		if enemy.is_active():
 			enemy.advance(delta)
+	_encounter.advance(delta)
 	_snapshot.rebuild(_enemy_layer, _carousel.global_position)
 	_carousel.advance_rotation(delta, GameState.get_effective_spin_speed_rad_s())
 	_carousel.set_boost_state(GameState.is_boost_maxed(), GameState.is_overdrive_active())
@@ -234,6 +245,21 @@ func _on_booth_passed(mount: MountBase, booth_index: int, pass_count: int) -> vo
 	AudioManager.play_sfx(&"coin")
 
 
+## Starts the selected tier's boss fight, if its kill gate is met (the
+## strip's Challenge button). Returns false if it can't start now.
+func challenge_boss() -> bool:
+	return _encounter.start(tier_catalog.get_tier(GameState.get_selected_tier()))
+
+
+## Ends a running boss fight (the strip's two-step Give up).
+func give_up_boss() -> void:
+	_encounter.give_up()
+
+
+func get_encounter() -> BossEncounter:
+	return _encounter
+
+
 ## Enemies in play plus those waiting to join. Given to WaveManager for the
 ## Send limit, so several presses within one tick can't get past it.
 func get_live_enemy_count() -> int:
@@ -304,15 +330,19 @@ func _on_enemy_swept(mount: MountBase, enemy: EnemyBase) -> void:
 ## underneath it) and GameState adds its drag and damage.
 func _on_enemy_reached_rim(enemy: EnemyBase) -> void:
 	AudioManager.play_sfx(&"latch")
-	GameState.register_latch(enemy.get_instance_id(), enemy.get_latch_drag(), enemy.get_latch_dps())
+	# A boss fight's required enemies can't be removed by Emergency Clear.
+	var protected := enemy.encounter_role == EnemyBase.EncounterRole.REQUIRED
+	GameState.register_latch(enemy.get_instance_id(), enemy.get_latch_drag(), enemy.get_latch_dps(), protected)
 
 
 ## Runs once per enemy (EnemyBase guarantees it), so the kill pays once.
 ## killer is the mount that landed the lethal hit (null for a click): a
 ## healing mount (the Panda) heals only on its own kills.
 func _on_enemy_died(enemy: EnemyBase, killer: Node) -> void:
-	GameState.add_gold(enemy.get_kill_gold())
-	GameState.record_kill(enemy.get_tier_rank())
+	# Boss-fight enemies pay nothing and don't count toward the kill gate.
+	if enemy.gives_rewards():
+		GameState.add_gold(enemy.get_kill_gold())
+		GameState.record_kill(enemy.get_tier_rank())
 	var mount := killer as MountBase
 	if mount != null and mount.data != null:
 		GameState.heal_carousel(GameState.get_mount_heal(mount.data))
@@ -336,7 +366,7 @@ func _on_stall_timed_out() -> void:
 func _on_emergency_cleared() -> void:
 	AudioManager.play_sfx(&"restart")
 	for enemy: EnemyBase in _enemy_layer.get_children():
-		if enemy.is_active() and enemy.is_at_rim():
+		if enemy.is_active() and enemy.is_at_rim() and not GameState.is_latch_protected(enemy.get_instance_id()):
 			_spawn_pop(enemy.global_position, false)
 			_remove_enemy(enemy)
 
@@ -353,6 +383,19 @@ func _remove_enemy(enemy: EnemyBase) -> void:
 	for mount in _mounts:
 		mount.forget_enemy(enemy.get_instance_id())
 	enemy.queue_free()
+
+
+## A boss fight is over: its enemies leave with no rewards. One still waiting
+## to join is just dropped.
+func _remove_encounter_enemy(enemy: EnemyBase) -> void:
+	var index := _pending_spawns.find(enemy)
+	if index >= 0:
+		_pending_spawns.remove_at(index)
+		enemy.free()
+		return
+	if is_instance_valid(enemy) and enemy.is_inside_tree():
+		_spawn_pop(enemy.global_position, false)
+		_remove_enemy(enemy)
 
 
 ## Frees enemies that were waiting to join (a new run, or leaving the scene).

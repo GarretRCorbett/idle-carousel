@@ -51,10 +51,13 @@ class Latch:
 	var drag: float
 	var damage_per_second: float
 	var age: float = 0.0
+	## Emergency Clear skips it (a boss fight's required enemies).
+	var protected: bool = false
 
-	func _init(drag_amount: float, dps: float) -> void:
+	func _init(drag_amount: float, dps: float, is_protected: bool = false) -> void:
 		drag = drag_amount
 		damage_per_second = dps
+		protected = is_protected
 
 
 ## The mount a run starts with (RunConfig.starting_horses of them).
@@ -304,11 +307,12 @@ func set_boost_held(held: bool) -> void:
 # --- Latches -------------------------------------------------------------------------
 
 ## An enemy grabbed the rim. Returns false (and changes nothing) if it's already latched.
-func register_latch(enemy_id: int, drag: float, damage_per_second: float) -> bool:
+## `protected`: Emergency Clear leaves this one (a boss fight's required enemies).
+func register_latch(enemy_id: int, drag: float, damage_per_second: float, protected: bool = false) -> bool:
 	if _latches.has(enemy_id) or not is_finite(drag) or not is_finite(damage_per_second):
 		return false
 	var previous_speed := get_effective_spin_speed_rad_s()
-	var latch := Latch.new(maxf(0.0, drag), maxf(0.0, damage_per_second))
+	var latch := Latch.new(maxf(0.0, drag), maxf(0.0, damage_per_second), protected)
 	_latches[enemy_id] = latch
 	_clear_seconds = 0.0
 	# Add this latch's share instead of re-summing every latch (hundreds can land at once).
@@ -379,21 +383,35 @@ func get_emergency_clear_cooldown() -> float:
 
 
 func can_emergency_clear() -> bool:
-	return _emergency_cooldown <= 0.0 and not _latches.is_empty() and can_afford(get_emergency_clear_cost())
+	return _emergency_cooldown <= 0.0 and _has_unprotected_latch() and can_afford(get_emergency_clear_cost())
 
 
-## Pays, removes every latch (a stall ends as if they were cleared), and starts
-## the cooldown. Game then removes the latched enemies, with no Gold.
+func _has_unprotected_latch() -> bool:
+	for id in _latches:
+		if not _latches[id].protected:
+			return true
+	return false
+
+
+func is_latch_protected(enemy_id: int) -> bool:
+	return _latches.has(enemy_id) and _latches[enemy_id].protected
+
+
+## Pays, removes every latch except protected ones (a stall ends as if they
+## were cleared), and starts the cooldown. Game then removes the cleared
+## enemies, with no Gold.
 func try_emergency_clear() -> bool:
 	if not can_emergency_clear():
 		return false
 	spend_gold(get_emergency_clear_cost())
 	_emergency_cooldown = _config.emergency_clear_cooldown_seconds
 	var previous_speed := get_effective_spin_speed_rad_s()
-	_latches.clear()
+	for id in _latches.keys():
+		if not _latches[id].protected:
+			_latches.erase(id)
 	_recompute_latch_totals()
 	var stall_flipped := _evaluate_temporary_stall()
-	latch_count_changed.emit(0)
+	latch_count_changed.emit(_latches.size())
 	if stall_flipped:
 		health_changed.emit(_health, get_max_health())
 		stall_changed.emit(_stalled)

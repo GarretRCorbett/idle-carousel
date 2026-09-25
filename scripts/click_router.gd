@@ -39,13 +39,18 @@ func route_click(world_point: Vector2) -> bool:
 
 
 ## Nearest clickable enemy whose click radius covers the point, or null.
-## Ties keep the earlier-registered enemy.
+## Ties keep the earlier-registered enemy. A click inside a boss's body
+## (its hitbox) always goes to the boss, even with a Leaf in front of it.
 static func choose_target(world_point: Vector2, enemies: Array[EnemyBase]) -> EnemyBase:
 	var best: EnemyBase = null
 	var best_distance_squared := INF
 	for enemy in enemies:
 		if not is_instance_valid(enemy) or not enemy.is_active():
 			continue
+		if enemy.encounter_role == EnemyBase.EncounterRole.BOSS:
+			var core := enemy.get_hitbox_radius()
+			if world_point.distance_squared_to(enemy.global_position) <= core * core:
+				return enemy
 		var distance_squared := world_point.distance_squared_to(enemy.global_position)
 		var radius := enemy.get_click_radius()
 		if distance_squared <= radius * radius and distance_squared < best_distance_squared:

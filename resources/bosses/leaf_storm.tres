@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BossData" format=3]
+
+[ext_resource type="Script" path="res://scripts/boss_data.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/LeafStorm.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_script")
+boss_id = &"leaf_storm"
+name_key = "BOSS_LEAF_STORM"
+scene = ExtResource("2_scene")
+kills_required = 60
+time_limit_seconds = 90.0
+first_clear_gold = 200.0
+repeat_clear_gold = 50.0

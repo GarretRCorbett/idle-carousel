@@ -18,7 +18,15 @@ signal died(enemy: EnemyBase, killer: Node)
 ## world (killed or cleared). Neither can move, latch, be hit, or die again.
 enum State { APPROACHING, AT_RIM, DEAD, REMOVED }
 
+## What part it plays in a boss fight. Anything but NONE pays no Gold and
+## gives no kill credit (so a boss can't be farmed). REQUIRED ones must die
+## for the win and are never cleared by Emergency Clear.
+enum EncounterRole { NONE, BOSS, SUMMON, REQUIRED }
+
 @export var data: EnemyData
+
+## Set by BossEncounter before the enemy joins; normal enemies stay NONE.
+var encounter_role: EncounterRole = EncounterRole.NONE
 
 @export_group("Hit Flash")
 ## Visual tint right after a hit, fading back to normal.
@@ -106,6 +114,12 @@ func apply_slow(multiplier: float, seconds: float) -> void:
 		return
 	_status.apply_slow(multiplier, seconds)
 	_slow_icon.visible = _status.is_slowed()
+
+
+## Normal enemies pay Gold and count toward the tier's kill gate; encounter
+## enemies don't.
+func gives_rewards() -> bool:
+	return encounter_role == EncounterRole.NONE
 
 
 func is_slowed() -> bool:
