@@ -7,12 +7,14 @@ extends Node2D
 
 signal enemy_clicked(enemy: EnemyBase)
 
-var _enemies: Array[EnemyBase] = []
+## Registered enemies, as a set in registration order. A Dictionary, so adding
+## and removing stay constant-time with hundreds alive (an Array's has/erase
+## would scan them all for every enemy that joins or leaves).
+var _enemies: Dictionary[EnemyBase, bool] = {}
 
 
 func register_enemy(enemy: EnemyBase) -> void:
-	if not _enemies.has(enemy):
-		_enemies.append(enemy)
+	_enemies[enemy] = true
 
 
 func unregister_enemy(enemy: EnemyBase) -> void:
@@ -31,7 +33,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 ## Sends a World-space click to its enemy. Returns true if one was hit.
 func route_click(world_point: Vector2) -> bool:
-	var target := choose_target(world_point, _enemies)
+	var enemies: Array[EnemyBase] = []
+	enemies.assign(_enemies.keys())
+	var target := choose_target(world_point, enemies)
 	if target == null:
 		return false
 	enemy_clicked.emit(target)
