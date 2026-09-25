@@ -8,7 +8,7 @@
 script = ExtResource("1_script")
 enemy_name = "Leaf Storm"
 move_speed = 0.0
-base_health = 50.0
+base_health = 90.0
 damage_per_second = 0.0
 latch_drag = 0.0
 hitbox_radius = 36.0

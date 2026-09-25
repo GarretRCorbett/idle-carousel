@@ -37,6 +37,8 @@ tools/                  check.sh / check.bat (+ check_scripts.gd they run);
                         build_ui_theme.gd (rebuilds the UI theme and fonts);
                         make_tier_sprites.gd (rebuilds the light-grey enemy sprites
                         from ../kenney_assets for tier tinting);
+                        boss_sim.tscn (plays the Leaf Storm fight headless with a
+                        pre-boss build; prints win time, lowest health, stalls);
                         subset_fonts.py (rebuilds the CJK font subsets);
                         stress_test.tscn (performance: N Leaves, prints FPS and
                         tick times; run before/after perf changes, same GPU only;

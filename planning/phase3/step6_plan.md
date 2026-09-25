@@ -94,3 +94,18 @@ F2/F3 stay (debug builds): step through tiers and, in debug only, unlock a tier 
 4. Gating. 5. BossEncounter + encounter roles + protected latches + paused waves. 6. Leaf Storm.
 7. Strip UI. 8. GDD + docs. Then a headless balance run of the fight (Horse + Wolf + clicks) and a
 cleanup/optimization pass.
+
+## Balance run (tools/boss_sim.tscn, 2026-09-25)
+First numbers (Storm 50 health, storm leaves 0.25 latch damage) were far too easy: 36 s at 1.5
+clicks/s, health never under 92. Retuned to **Storm 90 health, storm leaves 0.5 latch damage and
+0.03 drag** (the same bite as a normal Leaf, but 1 health):
+
+| Build, clicking | Result | Lowest health | Stalled |
+|---|---|---|---|
+| Horse + Wolf, 1.5 clicks/s | win at 66 s (Storm dead at 61 s) | 25 | 0 s |
+| Horse + Wolf, 3 clicks/s | win at 34 s | 68 | 0 s |
+| Horse + 2 Wolves, 1.5 clicks/s | win at 65 s | 97 | 0 s |
+| Horse + Wolf, no clicks | loses on the timer | 0 | 4 s |
+
+The simulated player never Boosts or clicks storm leaves, so real play has more room. Whole packs
+of 20 do latch before the Wolf clears them; the second Wolf is what makes the fight safe.
