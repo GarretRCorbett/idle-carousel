@@ -3,8 +3,9 @@ extends Node2D
 ## Root of the play scene. Starts a fresh run and keeps the world centered.
 ## This is the single place that drives the simulation each tick, so the order
 ## is explicit: spawns from last tick join first, then GameState (boost decay,
-## income window, latch damage), then enemies move, then one snapshot of where they are, then the carousel
-## turns at the resulting speed and mounts sweep against that snapshot.
+## income window, latch damage), then enemies move, then a boss fight's timer,
+## then one snapshot of where enemies are, then the carousel turns at the
+## resulting speed and mounts sweep against that snapshot.
 
 ## Distance of mounts from the carousel center. Mounts space themselves evenly
 ## around this circle, the first one at the top (where the first booth is).

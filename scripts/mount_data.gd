@@ -7,14 +7,12 @@ extends Resource
 ## Matches the shop's upgrade id for this mount (&"wolf", &"horse", ...), so
 ## upgrades that target a mount type (Wolf Fang) find it. Don't rename after release.
 @export var mount_id: StringName = &""
-## Stationary mounts trigger once per rotation at a target point (Horse, Sloth).
-## Sweeping mounts fire outward continuously as the carousel turns.
-@export var is_stationary: bool = false
 
 @export_group("Combat")
 ## How far the sweep reaches outward from the mount, in pixels. 0 = no sweep.
 @export_range(0.0, 1000.0, 1.0, "or_greater", "suffix:px") var sweep_range: float = 0.0
-## Width of the sweep in degrees. 0 = a single ray; wider arcs hit more enemies.
+## Width of the sweep in degrees (a wedge centered on the carousel). 0 = a line.
+## A wider wedge reaches enemies sooner, not more often (each is hit once per pass).
 @export_range(0.0, 360.0, 1.0, "suffix:°") var sweep_arc: float = 0.0
 ## Damage per hit. Fixed per hit: faster spin means more hits per minute (GDD v1.4).
 @export_range(0.0, 100.0, 0.05, "or_greater") var base_damage: float = 0.0

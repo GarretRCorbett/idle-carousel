@@ -51,7 +51,8 @@ func _ready() -> void:
 			challenge_requested.emit())
 	_build_pips()
 	GameState.selected_tier_changed.connect(func(_rank: int) -> void: refresh())
-	GameState.tier_kills_changed.connect(func(_rank: int, _kills: int) -> void: refresh())
+	# Kills come often (every enemy); they only change the gate text and bar.
+	GameState.tier_kills_changed.connect(func(_rank: int, _kills: int) -> void: _on_kills_changed())
 	GameState.boss_beaten.connect(func(_rank: int, _first: bool) -> void: refresh())
 	GameState.boss_active_changed.connect(_on_boss_active_changed)
 	GameState.run_reset.connect(refresh)
@@ -63,14 +64,12 @@ func _notification(what: int) -> void:
 		refresh()
 
 
-## Game forwards the fight's timer (seconds left) every tick.
+## Game forwards the fight's timer (seconds left) every tick. (Setting the
+## same text again is free: Label ignores it.)
 func set_fight_time(seconds_left: float) -> void:
-	var shown := ceili(seconds_left)
-	if shown == ceili(_time_left) and _progress.text != "":
-		_time_left = seconds_left
-		return
 	_time_left = seconds_left
 	if _fighting and _remaining < 0:
+		var shown := ceili(seconds_left)
 		_progress.text = "%d:%02d" % [shown / 60, shown % 60]
 
 
@@ -90,8 +89,17 @@ func set_remaining(count: int) -> void:
 func _on_boss_active_changed(active: bool) -> void:
 	_fighting = active
 	_remaining = -1
+	_progress.text = ""
 	_action.disarm()
 	refresh()
+
+
+func _on_kills_changed() -> void:
+	if _fighting or not is_node_ready():
+		return
+	var tier := tier_catalog.get_tier(GameState.get_selected_tier())
+	_update_gate(tier, tier.boss if tier != null else null)
+	_action.disabled = not BossEncounter.can_challenge(tier)
 
 
 ## Rebuilds everything from GameState (cheap; runs on changes only).
@@ -109,8 +117,6 @@ func refresh() -> void:
 		_action.disabled = false
 		if _remaining >= 0:
 			_progress.text = tr(remaining_key).format([_remaining])
-		else:
-			set_fight_time(_time_left)
 	else:
 		_bar.theme_type_variation = &""
 		_action.requires_confirm = false

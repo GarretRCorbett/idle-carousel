@@ -7,7 +7,6 @@
 script = ExtResource("1_script")
 mount_name = "Wolf"
 mount_id = &"wolf"
-is_stationary = false
 sweep_range = 90.0
 sweep_arc = 0.0
 base_damage = 1.5
