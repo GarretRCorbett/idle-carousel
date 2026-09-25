@@ -15,9 +15,14 @@
   `tools/make_tier_sprites.gd` makes the light-grey copies. Leaf/Stick visual size raised
   (14 / 18 px radius; hitboxes unchanged). Frames: `step3_tier_colors.png` (all six tints,
   real size and 3x), `step3_gameplay_frame.png`.
-- **Step 3 is done** apart from Garret's review: tier tints (drafts in `resources/tiers/`) and
-  enemy sizes are his to tweak in the Inspector. Next: Step 4 (Giraffe and Sloth), which needs
-  README questions 6 (Sloth trigger) answered first.
+- **Step 3 done**, then tuned from Garret's notes (Stick sway, plainer grey, more Sticks/Rocks).
+- **Step 4 done** (`step4_plan.md`): shared `MountSweeper` (4.1), Giraffe (4.2), slow status +
+  "Zzz" (4.3), Sloth (4.4). Shop prices 150 each and all new text are drafts.
+  Finding: with 120 px reach the Sloth catches few Leaves (they cross its zone in ~1 s; a turn
+  takes 5+ s). Reach is a Garret call.
+- **Open for Garret:** tier color order (memo P + `tier_color_candidates.png`), boss/tier UI
+  (memo Q). Next build step: Step 5 (Elephant, mount tiers, Panda); Step 6 (boss + picker) after
+  the UI choice.
 
 Phase 3 roadmap scope: Sloth, Giraffe, Elephant, Panda; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)

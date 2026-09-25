@@ -1,5 +1,5 @@
 # Phase 3 · Step 4 Plan: Giraffe and Sloth
-**Status:** DRAFT for Garret's approval (2026-09-25).
+**Status:** APPROVED and built 2026-09-25 (commits 4.1–4.4 + stress tool).
 **Inputs:** GDD (Giraffe, Sloth), README decisions (Q6: the Sloth slows each approaching enemy it
 sweeps past, once per pass), `step1_plan.md` (mount interface, `MountSweep`), Step 2 code.
 
