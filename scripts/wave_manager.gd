@@ -10,6 +10,8 @@ signal enemy_spawned(enemy: EnemyBase)
 signal countdown_changed(seconds_left: int)
 ## Auto waves turned on or off.
 signal auto_changed(on: bool)
+## Send wave became allowed or blocked (too many enemies alive).
+signal send_available_changed(available: bool)
 
 @export var enemy_scene: PackedScene
 
@@ -34,12 +36,19 @@ signal auto_changed(on: bool)
 @export_group("Controls")
 ## This key sends the next wave right away (Garret wants it kept as a real control).
 @export var send_wave_key: Key = KEY_N
+## Send wave is blocked while more enemies than this are alive, so waves can't be
+## stacked without limit (Garret, 2026-09-24; revisit with Sticks and Rocks).
+## Auto waves still come on their timer. 0 = no limit.
+@export_range(0, 1000, 1) var max_live_enemies_to_send: int = 30
 
 ## Where the carousel center is, in World space. Set by Game.
 var center: Vector2 = Vector2.ZERO
 var rng := RandomNumberGenerator.new()
 var _shown_seconds: int = -1
 var _auto: bool = true
+## Where live enemies are, to count them for the Send limit. Set by Game.
+var enemy_layer: Node
+var _send_available: bool = true
 
 @onready var _timer: Timer = $WaveTimer
 
@@ -66,12 +75,21 @@ func restart_countdown() -> void:
 ## Sends the next wave right now (Send button or N). Its Leaves drop bonus
 ## Gold, and the countdown restarts, so waves never pile up by accident.
 func send_wave_now() -> int:
+	if not can_send_wave():
+		return 0
 	var count := spawn_wave(early_send_gold_multiplier)
 	restart_countdown()
 	return count
 
 
 ## Off: the countdown pauses and waves only come when sent.
+## False while more than max_live_enemies_to_send enemies are alive.
+func can_send_wave() -> bool:
+	if max_live_enemies_to_send <= 0 or enemy_layer == null:
+		return true
+	return enemy_layer.get_child_count() <= max_live_enemies_to_send
+
+
 func set_auto(on: bool) -> void:
 	if on == _auto:
 		return
@@ -90,6 +108,10 @@ func get_seconds_left() -> float:
 
 func _process(_delta: float) -> void:
 	_emit_countdown_if_changed()
+	var available := can_send_wave()
+	if available != _send_available:
+		_send_available = available
+		send_available_changed.emit(available)
 
 
 func _on_wave_timer_timeout() -> void:

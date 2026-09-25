@@ -37,9 +37,11 @@ func _ready() -> void:
 	_hud.boost_requested.connect(GameState.add_click_boost)
 	_click_router.enemy_clicked.connect(_on_enemy_clicked)
 	_wave_manager.center = _carousel.position
+	_wave_manager.enemy_layer = _enemy_layer
 	_wave_manager.enemy_spawned.connect(_on_enemy_spawned)
 	_wave_manager.countdown_changed.connect(_hud.set_wave_countdown)
 	_wave_manager.auto_changed.connect(_hud.set_auto_wave)
+	_wave_manager.send_available_changed.connect(_hud.set_send_available)
 	_wave_manager.set_auto(SaveManager.get_setting(&"auto_wave"))
 	_hud.set_auto_wave(_wave_manager.is_auto())
 	_hud.send_wave_requested.connect(_wave_manager.send_wave_now)

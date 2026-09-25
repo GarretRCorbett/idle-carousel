@@ -143,3 +143,23 @@ func test_auto_off_pauses_the_countdown() -> void:
 	waves.set_auto(true)
 	assert_bool((waves.get_node("WaveTimer") as Timer).paused).is_false()
 	assert_array(seen).is_equal([false, true])
+
+
+## Send wave is blocked while too many enemies are alive; auto waves aren't.
+func test_send_wave_is_blocked_above_the_live_enemy_limit() -> void:
+	var waves := _running_waves()
+	var layer := auto_free(Node.new()) as Node
+	waves.enemy_layer = layer
+	waves.max_live_enemies_to_send = 3
+	waves.start()
+	for i in 4:
+		layer.add_child(Node.new())
+	_sent = 0
+	assert_bool(waves.can_send_wave()).is_false()
+	assert_int(waves.send_wave_now()).is_equal(0)
+	assert_int(_sent).is_equal(0)
+	waves._on_wave_timer_timeout()  # the timer still sends
+	assert_int(_sent).is_greater(0)
+	layer.get_child(0).free()
+	assert_bool(waves.can_send_wave()).is_true()
+	assert_int(waves.send_wave_now()).is_greater(0)

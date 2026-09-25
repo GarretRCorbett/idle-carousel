@@ -155,6 +155,11 @@ func set_wave_countdown(seconds_left: int) -> void:
 	_refresh_wave_button()
 
 
+## Game forwards whether Send wave is allowed (not too many enemies alive).
+func set_send_available(available: bool) -> void:
+	_wave_button.disabled = not available
+
+
 ## Game forwards the auto-wave state here (and the toggle reports changes back).
 func set_auto_wave(on: bool) -> void:
 	_auto_wave_check.set_pressed_no_signal(on)
