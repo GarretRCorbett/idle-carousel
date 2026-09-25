@@ -36,7 +36,7 @@ the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
 - **Mounts can be doubled and sold** (GDD v1.11, after the wrap-up playtest): any type can be
   bought more than once and sold for 50%, to swap builds (e.g. sell a Horse for a second
   Wolf before a boss). Built for Horse and Wolf in Phase 2; new mounts follow the rule.
-  Affects question 9 (per-type tiers fit this well) and question 10 (count *types*, so
+  Question 9 answered: **per-type tiers** (Garret). Affects question 10 (count *types*, so
   duplicates can't unlock the Unicorn).
 - **Send wave limit:** blocked while more than 30 enemies are alive (Phase 2 wrap-up).
   Revisit once Sticks and Rocks exist; Garret might prefer one early wave at a time then.
@@ -157,7 +157,7 @@ Grouped by when they're needed. Recommendations marked ★. Full reasoning is in
 6. Turtle trigger: ★ slows each approaching enemy once as it rotates past it / one pulse at a fixed point each turn. (L1)
 7. Unicorn Gold: ★ once per full turn / per enemy hit / per turn that hits something. (L2)
 8. Unicorn heal: ★ only on its own kills / any kill while it's on the carousel. (L3)
-9. Mount tiers: ★ per type (all Horses share Horse Tier 2) / per individual mount. (L4)
+9. ~~Mount tiers~~ **Decided: per type** (all Wolves share Wolf Tier 2). (L4)
 10. Unicorn unlock: ★ 3 different mount types at Tier 2 (duplicate Horses don't count) / any 3 mounts at Tier 2. (L5)
 11. Lion shape: ★ a wedge centered on the carousel / a cone from the Lion. (L6) Also confirm the Lion's job: the Wolf already hits every enemy on its line, so a wider arc mostly hits clusters *sooner*, not more often. Is that enough, or should the Lion hit harder too?
 12. Mount art: Kenney has no turtle, eagle, lion, or unicorn. ★ placeholder shapes until the art phase / Kenney stand-ins (owl, bear, recolored horse…).

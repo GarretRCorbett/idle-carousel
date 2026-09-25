@@ -250,7 +250,7 @@ Start with 1 slot (Horse only). Slots are always bought with Gold in the Upgrade
 
 A slot and its mount are separate purchases (e.g., buy Mount Slot 2, then buy Wolf to fill it).
 
-**Doubling and selling (v1.11):** any mount type can be bought more than once (each costs more than the last) and sold back for a partial refund (50%) to free its slot, so players can reshape the carousel: Horses for income while farming, extra Wolves for a boss push. The starting Horse can't be sold. Built for the Horse and Wolf in Phase 2; the Phase 3 mounts follow the same rule. Whether mount-tier upgrades apply per type or per mount is decided in Phase 3.
+**Doubling and selling (v1.11):** any mount type can be bought more than once (each costs more than the last) and sold back for a partial refund (50%) to free its slot, so players can reshape the carousel: Horses for income while farming, extra Wolves for a boss push. The starting Horse can't be sold. Built for the Horse and Wolf in Phase 2; the Phase 3 mounts follow the same rule. Mount-tier upgrades apply **per type** (every Wolf shares Wolf Tier 2), so selling one never loses an upgrade (Garret, v1.11).
 
 Mount placement is automatic — they distribute equidistantly as added. No manual placement in v1.0.
 
