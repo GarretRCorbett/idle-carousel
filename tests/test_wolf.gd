@@ -44,6 +44,57 @@ func test_no_passes_when_stopped() -> void:
 	assert_bool(passes.y < passes.x).is_true()
 
 
+# --- Line-tip windows (MountSweep.line_half_window) ---------------------------------
+# A line from 75 to 140 px out, enemies with a 10 px hitbox.
+
+func test_middle_of_the_line_uses_the_plain_window() -> void:
+	assert_float(MountSweep.line_half_window(110.0, 10.0, 75.0, 140.0)).is_equal_approx(asin(10.0 / 110.0), 0.000001)
+
+
+func test_outer_tip_window_is_narrower() -> void:
+	# The widest touch would be at 144.7 px, past the tip, so the tip (140) decides.
+	var half := MountSweep.line_half_window(145.0, 10.0, 75.0, 140.0)
+	assert_float(half).is_less(asin(10.0 / 145.0))
+	# At that angle the tip is exactly one hitbox radius from the enemy.
+	var tip := Vector2.from_angle(half) * 140.0
+	assert_float(tip.distance_to(Vector2(145.0, 0.0))).is_equal_approx(10.0, 0.0001)
+
+
+func test_inner_tip_window_is_narrower() -> void:
+	var half := MountSweep.line_half_window(70.0, 10.0, 75.0, 140.0)
+	assert_float(half).is_less(asin(10.0 / 70.0))
+	var tip := Vector2.from_angle(half) * 75.0
+	assert_float(tip.distance_to(Vector2(70.0, 0.0))).is_equal_approx(10.0, 0.0001)
+
+
+func test_exact_tangency_at_either_end_is_a_zero_window() -> void:
+	assert_float(MountSweep.line_half_window(150.0, 10.0, 75.0, 140.0)).is_equal_approx(0.0, 0.0001)
+	assert_float(MountSweep.line_half_window(65.0, 10.0, 75.0, 140.0)).is_equal_approx(0.0, 0.0001)
+	assert_float(MountSweep.line_half_window(150.01, 10.0, 75.0, 140.0)).is_equal(-1.0)
+	assert_float(MountSweep.line_half_window(64.99, 10.0, 75.0, 140.0)).is_equal(-1.0)
+
+
+func test_window_changes_over_smoothly_at_the_tip() -> void:
+	# The plain window's touch point reaches the tip at d = sqrt(140² + 10²).
+	var d := sqrt(140.0 * 140.0 + 100.0)
+	for offset: float in [-0.01, 0.0, 0.01]:
+		assert_float(MountSweep.line_half_window(d + offset, 10.0, 75.0, 140.0)).is_equal_approx(asin(10.0 / (d + offset)), 0.0001)
+
+
+func test_enemy_covering_the_center_is_skipped() -> void:
+	assert_float(MountSweep.line_half_window(8.0, 10.0, 0.0, 140.0)).is_equal(-1.0)
+
+
+## A long tick lists an enemy once per pass; the Wolf rechecks before each hit,
+## so the pass after a kill does nothing.
+func test_long_tick_after_a_kill_gives_no_second_hit() -> void:
+	_setup_wolf()
+	var enemy := _enemy_at(1.0, 110.0, 2.0)
+	_wolf.enemy_swept.connect(func(_m: MountBase, e: EnemyBase) -> void: e.take_damage(5.0))
+	_turn(TAU * 3.0)
+	assert_array(_hits).contains_exactly([enemy])
+
+
 # --- A real Wolf ----------------------------------------------------------------------
 
 ## Carousel at the origin; Wolf 75 px out at angle 0 (pointing +X),
