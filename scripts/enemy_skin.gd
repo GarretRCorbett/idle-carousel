@@ -3,7 +3,8 @@ extends Resource
 ## How one enemy looks in a theme: a sprite, or a shape drawn in code. Only
 ## looks live here. Stats, hitbox and click radius stay in EnemyData, so a
 ## reskin can never change how a fight plays. ThemeManager.skin_for() builds
-## the default skin from EnemyData when the current theme has none.
+## the default skin from EnemyData when the current theme has none (there,
+## not here: a static builder naming EnemyData leaked both scripts at exit).
 
 enum Shape {
 	POLYGON,  ## A regular polygon with `points` corners (the old placeholder).
@@ -26,19 +27,6 @@ enum Shape {
 @export var color: Color = Color.WHITE
 ## Corners (POLYGON) or arms (STAR).
 @export_range(3, 32, 1) var points: int = 6
-
-
-## The skin EnemyData describes (its sprite, or its placeholder polygon).
-static func from_data(data: EnemyData) -> EnemySkin:
-	var skin := EnemySkin.new()
-	skin.enemy_id = data.id
-	skin.texture = data.texture
-	skin.outline_texture = data.outline_texture
-	skin.visual_size = data.placeholder_size
-	skin.shape = Shape.POLYGON
-	skin.color = data.placeholder_color
-	skin.points = data.placeholder_points
-	return skin
 
 
 ## Draws the shape on `canvas` at its origin, `size` px in radius.

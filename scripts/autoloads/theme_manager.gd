@@ -53,8 +53,21 @@ func skin_for(data: EnemyData) -> EnemySkin:
 	if skin != null:
 		return skin
 	if not _default_skins.has(data):
-		_default_skins[data] = EnemySkin.from_data(data)
+		_default_skins[data] = _skin_from_data(data)
 	return _default_skins[data]
+
+
+## The skin EnemyData describes (its sprite, or its placeholder polygon).
+func _skin_from_data(data: EnemyData) -> EnemySkin:
+	var skin := EnemySkin.new()
+	skin.enemy_id = data.id
+	skin.texture = data.texture
+	skin.outline_texture = data.outline_texture
+	skin.visual_size = data.placeholder_size
+	skin.shape = EnemySkin.Shape.POLYGON
+	skin.color = data.placeholder_color
+	skin.points = data.placeholder_points
+	return skin
 
 
 ## The boss's name key in the current theme.

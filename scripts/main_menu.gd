@@ -24,6 +24,8 @@ func _ready() -> void:
 		AudioManager.play_sfx(&"click")
 		_options.open())
 	_options.closed.connect(_play_button.grab_focus)
+	if OS.is_debug_build():
+		_options.add_tab(DebugPanel.new(), "Debug")  # themes only here
 	_title.add_theme_font_override(&"font", LocaleFonts.title_font(TranslationServer.get_locale()))
 	_carousel_spot.resized.connect(_center_carousel)
 	_center_carousel()
@@ -35,7 +37,6 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	var key := event as InputEventKey
 	if key != null and key.pressed and not key.echo and key.keycode == KEY_F4 and OS.is_debug_build():
 		ThemeManager.cycle(1)
-		print("Theme: %s" % ThemeManager.get_theme().dev_name)
 		get_viewport().set_input_as_handled()
 
 

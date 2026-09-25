@@ -52,6 +52,12 @@ func _ready() -> void:
 	_tabs.tab_changed.connect(func(_tab: int) -> void: AudioManager.play_sfx(&"tab"))
 
 
+## Adds a tab after the others (the Debug tab in debug builds).
+func add_tab(control: Control, title: String) -> void:
+	_tabs.add_child(control)
+	_tabs.set_tab_title(_tabs.get_tab_count() - 1, title)
+
+
 func open() -> void:
 	show()
 	if pause_game_while_open:

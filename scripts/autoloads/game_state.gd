@@ -717,6 +717,20 @@ func debug_set_bosses_beaten(count: int) -> void:
 	_bosses_beaten = maxi(_bosses_beaten, count)
 
 
+## Debug builds only (Debug tab): counts this tier's kill gate as met.
+func debug_fill_kills(tier_rank: int, count: int) -> void:
+	if not OS.is_debug_build() or get_tier_kills(tier_rank) >= count:
+		return
+	_tier_kills[tier_rank] = count
+	tier_kills_changed.emit(tier_rank, count)
+
+
+## Debug builds only (Debug tab): full carousel health, unless stalled.
+func debug_full_heal() -> void:
+	if OS.is_debug_build() and not _stalled:
+		_set_health(get_max_health())
+
+
 ## A kill counts for the enemy's own tier, not the one selected when it died.
 ## Only kills count; Emergency Clear and the stall safety net don't call this.
 func record_kill(tier_rank: int) -> void:

@@ -20,6 +20,8 @@ extends Node2D
 @export var next_tier_key: Key = KEY_F3
 ## Debug builds only: the next theme (the Winter and Halloween tests).
 @export var next_theme_key: Key = KEY_F4
+## Debug builds only: +5,000 Gold. More shortcuts in the Esc menu's Debug tab.
+@export var add_gold_key: Key = KEY_F5
 
 @export_group("Pops")
 ## Ring on a click that doesn't kill, and on enemies removed without Gold
@@ -90,6 +92,8 @@ func _ready() -> void:
 	_wave_manager.tier_kills = func() -> int: return GameState.get_tier_kills(GameState.get_selected_tier())
 	GameState.selected_tier_changed.connect(_on_selected_tier_changed)
 	ThemeManager.theme_changed.connect(_on_theme_changed)
+	if OS.is_debug_build():
+		_options.add_tab(DebugPanel.new(self), "Debug")
 	_wave_manager.live_enemy_count = get_live_enemy_count
 	_wave_manager.enemy_spawned.connect(_on_enemy_spawned)
 	_wave_manager.countdown_changed.connect(_hud.set_wave_countdown)
@@ -132,14 +136,47 @@ func _unhandled_input(event: InputEvent) -> void:
 			step = 1
 		if key.keycode == next_theme_key:
 			ThemeManager.cycle(1)
-			print("Theme: %s" % ThemeManager.get_theme().dev_name)
 			get_viewport().set_input_as_handled()
-			return
-		if step != 0:
-			var rank := clampi(GameState.get_selected_tier() + step, 0, tier_catalog.tiers.size() - 1)
-			GameState.debug_set_bosses_beaten(rank)  # dev keys may skip ahead
-			GameState.set_selected_tier(rank)
+		elif key.keycode == add_gold_key:
+			debug_add_gold(5000.0)
 			get_viewport().set_input_as_handled()
+		elif step != 0:
+			debug_step_tier(step)
+			get_viewport().set_input_as_handled()
+
+
+# --- Debug builds only (dev keys and the Esc menu's Debug tab) --------------------
+
+func debug_add_gold(amount: float) -> void:
+	if OS.is_debug_build():
+		GameState.add_gold(amount)
+
+
+## Previous (-1) / next (1) tier, unlocking it if needed.
+func debug_step_tier(step: int) -> void:
+	if not OS.is_debug_build():
+		return
+	var rank := clampi(GameState.get_selected_tier() + step, 0, tier_catalog.tiers.size() - 1)
+	GameState.debug_set_bosses_beaten(rank)  # dev keys may skip ahead
+	GameState.set_selected_tier(rank)
+
+
+## The selected tier's boss can be challenged now.
+func debug_fill_kill_gate() -> void:
+	var tier := tier_catalog.get_tier(GameState.get_selected_tier())
+	if tier != null and tier.boss != null:
+		GameState.debug_fill_kills(tier.rank, tier.boss.kills_required)
+
+
+func debug_unlock_all_tiers() -> void:
+	GameState.debug_set_bosses_beaten(tier_catalog.tiers.size())
+
+
+func debug_send_waves(count: int) -> void:
+	if not OS.is_debug_build():
+		return
+	for i in count:
+		_wave_manager.spawn_wave()
 
 
 ## Enemies already out change their look too (new ones pick it up in _ready).
@@ -158,6 +195,7 @@ func _on_selected_tier_changed(rank: int) -> void:
 
 func _exit_tree() -> void:
 	_discard_pending_spawns()
+	Engine.time_scale = 1.0  # the Debug tab's game speed ends with the run
 
 
 func _physics_process(delta: float) -> void:

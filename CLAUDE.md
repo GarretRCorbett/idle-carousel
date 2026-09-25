@@ -43,6 +43,10 @@ tools/                  check.sh / check.bat (+ check_scripts.gd they run);
                         make_test_themes.gd (rebuilds resources/themes/*.tres:
                         the park plus the Winter/Halloween test themes; F4 cycles
                         themes in debug builds);
+                        debug builds also get a Debug tab in the Esc menu
+                        (scripts/debug_panel.gd: Gold, tiers, kill gate, waves,
+                        heal, game speed, theme) and keys F2/F3 tier, F4 theme,
+                        F5 +5,000 Gold;
                         stress_test.tscn (performance: N Leaves, prints FPS and
                         tick times; run before/after perf changes, same GPU only;
                         Garret's Godot renders on the Radeon 780M since 2026-09-24)
