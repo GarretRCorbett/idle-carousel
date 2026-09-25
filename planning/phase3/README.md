@@ -49,6 +49,11 @@ Before = commit cdbead7 (with sound). After = end of Step 2 (silent, `--audio-dr
   Green kills. (Replaces the Step 1 table's Grey and Green rows; Blue+ unchanged.)
 - **Stick health is right**, Leaf too. **Grey tint** darker (0.60), less silver.
 - **Sticks sway** side to side as they fly in (`EnemyStick`, `sway_degrees` / `sway_hz` exports).
+- **Mount questions (Steps 4-5):** Q6 Sloth slows each approaching enemy it sweeps past, once
+  per pass (reuses `MountSweep`). Q11 Elephant: a wedge that hits harder than the Wolf, to try
+  first; Garret doesn't want it to make the Wolf pointless, so judge it in play. Q7 Panda pays
+  Gold once per full turn. Q8 Panda heals only on its own kills. Q10 Panda unlock = 3 different
+  mount types at Tier 2. Q21 Trunk Toss (knockback) waits for Phase 4.
 
 ## Decided 2026-09-24 (Garret)
 - **Boss access:** a minimal per-tier kill gate plus a manual "Challenge boss" button, built
@@ -208,12 +213,12 @@ Grouped by when they're needed. Recommendations marked ★. Full reasoning is in
 5. TEMPORARY boss-failure rule for playtests (the real fail state stays DECISION PENDING): ★ a stall ends the attempt after a short rescue window; Gold and unlocks kept / the attempt only ends if you leave / decide after the first boss playtest. (M4)
 
 **Before Steps 4–5 (mounts)**
-6. Sloth trigger: ★ slows each approaching enemy once as it rotates past it / one pulse at a fixed point each turn. (L1)
-7. Panda Gold: ★ once per full turn / per enemy hit / per turn that hits something. (L2)
-8. Panda heal: ★ only on its own kills / any kill while it's on the carousel. (L3)
+~~6. Sloth trigger~~ **Answered 2026-09-25 (see Decided).** Sloth trigger: ★ slows each approaching enemy once as it rotates past it / one pulse at a fixed point each turn. (L1)
+~~7. Panda Gold~~ **Answered 2026-09-25 (see Decided).** Panda Gold: ★ once per full turn / per enemy hit / per turn that hits something. (L2)
+~~8. Panda heal~~ **Answered 2026-09-25 (see Decided).** Panda heal: ★ only on its own kills / any kill while it's on the carousel. (L3)
 9. ~~Mount tiers~~ **Decided: per type** (all Wolves share Wolf Tier 2). (L4)
-10. Panda unlock: ★ 3 different mount types at Tier 2 (duplicate Horses don't count) / any 3 mounts at Tier 2. (L5)
-11. Elephant shape: ★ a wedge centered on the carousel / a cone from the Elephant. (L6) Also confirm the Elephant's job: the Wolf already hits every enemy on its line, so a wider arc mostly hits clusters *sooner*, not more often. Is that enough, or should the Elephant hit harder too?
+~~10. Panda unlock~~ **Answered 2026-09-25 (see Decided).** Panda unlock: ★ 3 different mount types at Tier 2 (duplicate Horses don't count) / any 3 mounts at Tier 2. (L5)
+~~11. Elephant shape~~ **Answered 2026-09-25 (see Decided).** Elephant shape: ★ a wedge centered on the carousel / a cone from the Elephant. (L6) Also confirm the Elephant's job: the Wolf already hits every enemy on its line, so a wider arc mostly hits clusters *sooner*, not more often. Is that enough, or should the Elephant hit harder too?
 12. ~~Mount art~~ **Decided:** repicked to Kenney animals (Sloth, Giraffe, Elephant, Panda).
 
 **Before Step 3 (tiers and enemies)** — all answered (see Decided).
@@ -227,7 +232,7 @@ Grouped by when they're needed. Recommendations marked ★. Full reasoning is in
 18. Ancient Log "resists the first 3 hits": ★ reduced damage on those hits / fully blocked. And immune to freeze as well as slow? ★ yes. (L10, L11)
 19. Boulder's 3 latch points: ★ each has its own health; drag drops as each is cleared / full drag until all are cleared / shared health. (L9)
 20. Obsidian Boulder "must kill twice": ★ body dies, then 2 Purple Rocks must die (two stages) / something else.
-21. Trunk Toss knockback: ★ Phase 4 with the other named upgrades / build with the Elephant now. (L7, L8)
+~~21. Trunk Toss knockback~~ **Answered 2026-09-25 (see Decided).** Trunk Toss knockback: ★ Phase 4 with the other named upgrades / build with the Elephant now. (L7, L8)
 
 **Before Step 8 (pricing)**
 22. Idle speed: ★ test 60°/s base (from 45) / keep 45 and cheapen early upgrades / wait for hold-to-boost. (M6)
