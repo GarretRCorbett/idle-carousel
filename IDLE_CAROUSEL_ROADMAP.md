@@ -157,4 +157,4 @@ A game gets only one Next Fest, so this is the one.
 ## Next Concrete Step
 _Update this line at the end of every session._
 
-> Phase 3 Step 6 plan (boss framework, Leaf Storm, strip UI, gating). Where Phase 3 stands: `planning/phase3/README.md`.
+> Garret playtests the first boss (Leaf Storm); then Phase 3 Step 7, the other five bosses. Where Phase 3 stands: `planning/phase3/README.md`.

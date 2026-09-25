@@ -23,8 +23,11 @@
 - **Step 5 done** (`step5_plan.md`): Elephant (5.1), mount tiers per type with five Tier 2 rows
   (5.2), Panda with Gold per turn, heal on own kills, "3 types at Tier 2" unlock (5.3). Prices,
   Tier 2 effects and strings are drafts.
-- Memo R answered (see Decided). Memo S (Leaf Storm design) ready for Garret. Next: Step 6 plan
-  (boss framework, Leaf Storm, the strip UI, gating, the two confirmations).
+- Memo R answered. **Step 6 built** (`step6_plan.md`, Garret: "run with it", memo S with ~20 per
+  pack, bigger waves): waves about twice as big (6.1), two-step confirm + Sell (6.2), boss progress
+  state (6.3), gating behind bosses (6.4), BossEncounter + Leaf Storm (6.5), boss strip (6.6),
+  tuning from `tools/boss_sim.tscn`. GDD v1.14.
+- **Next:** Garret playtests Grey → Leaf Storm → Green. Then Step 7 (the other five bosses).
 
 Phase 3 roadmap scope: Sloth, Giraffe, Elephant, Panda; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
@@ -151,6 +154,7 @@ plugged-in laptop: `-- 0,300,1000,2000 wolf` then `-- 0,300,1000,2000 wolf,giraf
 | `codex_memo_n_boss_timers.md` | Codex: how Clicker Heroes, Tap Titans 2, Idle Slayer, and Melvor handle boss failure; player reactions; timed-boss proposal |
 | `step1_plan.md` | Step 1: decisions, contracts, and scene trees for Steps 2–3 |
 | `step4_plan.md` | Step 4: Giraffe and Sloth (approved 2026-09-25, built) |
+| `step6_plan.md` | Step 6: Leaf Storm, boss framework, strip UI, gating, bigger waves (approved 2026-09-25, built; balance run inside) |
 | `step5_plan.md` | Step 5: Elephant, mount tiers, Panda (approved 2026-09-25, built) |
 | `codex_memo_s_leaf_storm.md` | Codex + Claude: how the first boss should work (Garret's summon-and-drift idea + the GDD's 4-Leaf split as the finale), starting numbers |
 | `codex_memo_r_confirmations_boss_loop.md` | Codex + Claude: which actions get a confirmation and how, tier switching and re-challenging bosses, making Giraffe/Wolf/Elephant feel different |

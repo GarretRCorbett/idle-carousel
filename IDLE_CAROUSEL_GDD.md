@@ -1,5 +1,5 @@
 # 🎠 Idle Carousel — Game Design Document
-### Version 1.13 | Working Title: Idle Carousel
+### Version 1.14 | Working Title: Idle Carousel
 > Solo dev project. Built in Godot 4.7 stable. Target: Steam release, anonymous, $4.99 (sale target ~$3.49–$3.75), with a free demo.
 > Personal motivation: daughters love carousels.
 > Influences: Cookie Clicker, Clicker Heroes, A Game About Feeding a Black Hole, Rusty's Retirement.
@@ -7,6 +7,7 @@
 ---
 
 ## Changelog
+- **v1.14** — First boss and gating (Garret, Phase 3 Step 6): Leaf Storm drifts, warns, and throws packs of ~20 storm leaves (then splits into 4); boss strip above the carousel with numbered tier pips; beaten bosses can be re-fought for a smaller reward; Horse and Wolf are the only mounts before it; waves are about twice as big. Details: `planning/phase3/step6_plan.md`.
 - **v1.13** — Tier colors reordered (Garret): Grey → Green → Yellow → Orange → Red → Charcoal (light outline), a danger ramp. Boss summon/split colors to re-pair.
 - **v1.12** — Mounts repicked to match the Kenney Animal Pack art (Garret, Phase 3 start): **Turtle → Sloth**, **Eagle → Giraffe**, **Lion → Elephant**, **Unicorn → Panda**. Abilities are unchanged; animal-specific upgrade names drafted by Claude, approved by Garret (Drowsy, Deep Sleep, Long Neck, Double Take, Trumpet, Trunk Toss, Bamboo Feast, Lucky Bamboo). The slow icon becomes a sleepy "Zzz".
 - **v1.11** — After the Phase 2 wrap-up playtest (Garret): **mounts can be doubled and sold** (not just Horses), so players can swap builds, e.g. an extra Horse for income, then sell it for a second Wolf before a boss. Wolves now (up to the slot count, 50% refund); the Phase 3 mounts follow the same rule. Tuning: base speed 70°/s (was 45), max boost +40% (was +50%), waves every 10 s (was 20). Send wave is blocked while more than 30 enemies are alive (revisit with Sticks and Rocks). Enemy clicks get a sound and a small pop.
@@ -321,7 +322,7 @@ Same sprite, different tint = different tier. One sprite per enemy type supports
 
 | Boss | Based On | Special Ability |
 |---|---|---|
-| Leaf Storm | Leaf | On death splits into 4 Grey Leaves |
+| Leaf Storm | Leaf | Drifts along an arc beyond the Wolf's reach; every ~12 s it stops, gathers wind (a warning), and throws a pack of ~20 weak storm leaves. Click it; your mounts defend. On death splits into 4 Grey Leaves that must die too (v1.14) |
 | Stick Giant | Stick | Moves in zigzag — harder to intercept with the Giraffe |
 | Boulder | Rock | Has 3 separate latch points, rolls faster near carousel |
 | Gilded Gale | Leaf | Spawns 2 Gold Leaves per second while alive (tier colors changed in v1.13: re-pair the summon color, Garret) |
@@ -427,9 +428,9 @@ Short, surprising bonuses that break up the idle rhythm, in the spirit of Cookie
 - First goal: Survive first wave by clicking
 - First purchase: Carousel Speed level 1 (immediate satisfaction)
 - Second purchase: Mount Slot 2 + Wolf (game transforms — now have auto-combat)
-- Third purchase: Slot 3, add Sloth or Giraffe (first strategic choice)
-- Boss: Leaf Storm — splits into 4 leaves on death, tests burst enemy handling
-- Reward: Green Tier unlocked, Slot 4 available to buy, new combat upgrades available
+- Third purchase: Slot 3: a second Wolf or a second Horse (v1.14: Horse and Wolf are the only mounts before the first boss)
+- Boss: Leaf Storm (after 60 Grey kills, a manual Challenge): a timed fight (90 s) that teaches the split between clicking (the boss) and mounts (defense). Failure costs only time.
+- Reward: Green Tier unlocked, Slot 4 available to buy, Giraffe/Sloth/Elephant/Panda, Tier 2 upgrades, extra booths, and Speed/Boost past level 3 (v1.14)
 
 ### Mid Game (Green through Purple)
 - Enemies get tougher, spawn faster

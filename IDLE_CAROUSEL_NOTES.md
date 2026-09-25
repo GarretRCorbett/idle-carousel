@@ -18,7 +18,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> **Phase 3 (2026-09-25):** Step 2 (foundations) is done and Codex-reviewed; Step 3 commits 1–3 (tiers, waves, tier/kill state + F2/F3) are done. Steps 3–5 are done: every Phase 3 mount (Giraffe, Sloth, Elephant, Panda) plus Tier 2 rows. Memo R answered (two-step confirms for Sell/Give up, re-fightable bosses, Wolf 90 / Elephant 30 reach). Memo S (how Leaf Storm should work: drift, summon packs, click it, Wolf defends, 4-Leaf finale) is ready for Garret. Next: the Step 6 plan (boss framework + Leaf Storm + strip UI + gating). Status: `planning/phase3/README.md`.
+> **Phase 3 (2026-09-25):** Steps 2–6 done: every Phase 3 mount, tier colors, bigger waves, the first boss (Leaf Storm) with the boss strip, tier pips and gating. Next: Garret playtests Grey → Leaf Storm → Green (the fight's numbers came from a headless run, `tools/boss_sim.tscn`, not a person). Then Step 7: the other five bosses. Status: `planning/phase3/README.md`.
 
 ---
 
