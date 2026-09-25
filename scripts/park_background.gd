@@ -7,14 +7,14 @@ extends Node2D
 
 @export var grass_texture: Texture2D
 ## Darkens and warms the grass (1 = original colors).
-@export var grass_tint: Color = Color(0.4, 0.38, 0.3)
+@export var grass_tint: Color = Color(0.72, 0.86, 0.74)
 ## How far the grass extends from the center; big enough to cover the screen.
 @export var grass_half_size: Vector2 = Vector2(1100.0, 700.0)
 ## Scale of each grass tile.
 @export_range(0.25, 8.0, 0.25) var grass_tile_scale: float = 1.5
 
 @export_group("Clearing")
-@export var clearing_color: Color = Color("4e4136")
+@export var clearing_color: Color = Color("ccc4b5")
 @export_range(0.0, 600.0, 1.0, "suffix:px") var clearing_radius: float = 150.0
 ## Soft outer edge, drawn as a few fading rings.
 @export_range(0.0, 200.0, 1.0, "suffix:px") var clearing_feather: float = 40.0
@@ -27,7 +27,7 @@ extends Node2D
 	Vector3(-300.0, -290.0, 2.2), Vector3(-330.0, 250.0, 2.0), Vector3(-250.0, 330.0, 1.2),
 	Vector3(290.0, -300.0, 2.0), Vector3(310.0, 270.0, 2.3), Vector3(240.0, -330.0, 1.2),
 ])
-@export var tree_tint: Color = Color(0.6, 0.56, 0.5)
+@export var tree_tint: Color = Color(0.85, 0.95, 0.88)
 
 
 func _ready() -> void:

@@ -6,7 +6,7 @@
 [ext_resource type="FontVariation" path="res://assets/fonts/title_font.tres" id="4_title_font"]
 [ext_resource type="PackedScene" path="res://scenes/mounts/Horse.tscn" id="5_horse"]
 [ext_resource type="PackedScene" path="res://scenes/OptionsMenu.tscn" id="6_options"]
-[ext_resource type="Texture2D" path="res://assets/sprites/background/menu_fall.png" id="7_bg"]
+[ext_resource type="Texture2D" path="res://assets/sprites/background/menu_park.png" id="7_bg"]
 
 [node name="MainMenu" type="Control" unique_id=1196148949]
 layout_mode = 3
@@ -19,7 +19,7 @@ theme = ExtResource("2_theme")
 script = ExtResource("1_menu")
 
 [node name="Backdrop" type="TextureRect" parent="."]
-modulate = Color(0.6, 0.55, 0.52, 1)
+modulate = Color(0.78, 0.82, 0.88, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c2gjdpvinkux6"
-path="res://.godot/imported/menu_fall.png-6e4d1297460b0296b9b862c18e34b8c6.ctex"
+uid="uid://saerjrvj0yqt"
+path="res://.godot/imported/chosen_a_menu.png-bb467789e25a4aae46dcb6f184baf986.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/background/menu_fall.png"
-dest_files=["res://.godot/imported/menu_fall.png-6e4d1297460b0296b9b862c18e34b8c6.ctex"]
+source_file="res://planning/phase3/palette/chosen_a_menu.png"
+dest_files=["res://.godot/imported/chosen_a_menu.png-bb467789e25a4aae46dcb6f184baf986.ctex"]
 
 [params]
 

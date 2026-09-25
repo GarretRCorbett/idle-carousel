@@ -12,9 +12,9 @@
 [ext_resource type="PackedScene" path="res://scenes/OptionsMenu.tscn" id="13_options"]
 [ext_resource type="Script" path="res://scripts/park_background.gd" id="14_bg"]
 [ext_resource type="Texture2D" path="res://assets/sprites/background/grass_tile.png" id="15_grass"]
-[ext_resource type="Texture2D" path="res://assets/sprites/background/tree_autumn_large.png" id="16_tree_a"]
+[ext_resource type="Texture2D" path="res://assets/sprites/background/tree_green_small.png" id="16_tree_a"]
 [ext_resource type="Texture2D" path="res://assets/sprites/background/tree_green_large.png" id="17_tree_g"]
-[ext_resource type="Texture2D" path="res://assets/sprites/background/tree_autumn_small.png" id="18_tree_s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/background/tree_green_large.png" id="18_tree_s"]
 
 [node name="Game" type="Node2D" unique_id=1479670653]
 script = ExtResource("1_78awf")

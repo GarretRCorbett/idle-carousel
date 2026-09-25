@@ -7,9 +7,9 @@ extends Node2D
 @export var size: Vector2 = Vector2(40.0, 30.0)
 @export var roof_height: float = 8.0
 @export var window_size: Vector2 = Vector2(16.0, 10.0)
-@export var body_color: Color = Color("c4553a")
-@export var roof_color: Color = Color("8f3a26")
-@export var window_color: Color = Color("f3e9d2")
+@export var body_color: Color = Color("fff4dc")
+@export var roof_color: Color = Color("405d83")
+@export var window_color: Color = Color("ddb96a")
 
 @export_group("Pass Feedback")
 ## Quick placeholder "pop" when the Horse pays out (the coin animation comes later).

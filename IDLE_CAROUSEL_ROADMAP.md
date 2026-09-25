@@ -157,4 +157,4 @@ A game gets only one Next Fest, so this is the one.
 ## Next Concrete Step
 _Update this line at the end of every session._
 
-> Garret: pick a palette (memo T) and playtest the six bosses; then Phase 3 Step 8 (economy simulator + pricing). Where Phase 3 stands: `planning/phase3/README.md`.
+> Garret: playtest the six bosses and palette A; then Phase 3 Step 8 (economy simulator + pricing). Where Phase 3 stands: `planning/phase3/README.md`.

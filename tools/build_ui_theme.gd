@@ -1,6 +1,7 @@
 extends SceneTree
 ## Builds res://assets/ui/game_theme.tres, the HUD and menu look, from Kenney
-## UI Pack sprites, Kenney Future Narrow, and the GDD palette. Every color and
+## UI Pack sprites, Kenney Future Narrow, and palette A "Gilded Garden"
+## (planning/phase3/codex_memo_t_palette.md). Every color and
 ## margin is here in one readable place. Re-run after changing it:
 ##   "$GODOT" --headless --path . -s res://tools/build_ui_theme.gd
 ## (Or edit game_theme.tres in the Inspector; re-running overwrites those edits.)
@@ -14,16 +15,18 @@ const TITLE_FONT_OUT := "res://assets/fonts/title_font.tres"
 const FALLBACK_WEIGHT := 600
 
 # GDD palette plus UI neutrals.
-const CREAM := Color("f4ebdd")
-const INK := Color("3d3530")           # GDD background; dark text on buttons
-const PANEL := Color("2b2420f0")
-const PANEL_BORDER := Color("5a4a3e")
-const TRACK := Color("1e1916")
-const GOLD := Color("f2c94c")
-const HEALTH := Color("7bb35a")
-const MUTED := Color("9a8e84")
-const TAB_IDLE := Color("3a302a")
-const TAB_HOVER := Color("4a3f38")
+const CREAM := Color("fff4dc")     # ivory text
+const INK := Color("243955")           # ink blue: dark text on gold buttons
+const PANEL := Color("243955f0")
+const PANEL_BORDER := Color("ddb96a")  # gold trim
+const TRACK := Color("182840")
+const GOLD := Color("ddb96a")
+const HEALTH := Color("79c9ae")
+const MUTED := Color("c0cad7")
+const TAB_IDLE := Color("405d83")
+const TAB_HOVER := Color("52709a")
+## Price text on a disabled (grey) button: dark enough to read on light grey.
+const DISABLED_TEXT := Color("4a5a70")
 
 
 func _initialize() -> void:
@@ -135,7 +138,7 @@ func _button(theme: Theme, type: String, normal: String, hover: String, pressed:
 	theme.set_color("font_pressed_color", type, INK)
 	theme.set_color("font_focus_color", type, INK)
 	theme.set_color("font_hover_pressed_color", type, INK)
-	theme.set_color("font_disabled_color", type, MUTED)
+	theme.set_color("font_disabled_color", type, DISABLED_TEXT)
 
 
 func _texture(name: String, top: float, bottom: float) -> StyleBoxTexture:

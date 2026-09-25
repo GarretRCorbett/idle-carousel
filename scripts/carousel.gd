@@ -1,23 +1,34 @@
 class_name Carousel
 extends Node2D
 ## The spinning platform. Only mounts and slots are children; enemies live in
-## World/EnemyLayer. Draws a code placeholder until real art exists.
+## World/EnemyLayer. Drawn in code: a walnut deck under alternating ivory and
+## violet canopy wedges, a gold scalloped trim, a ring of warm bulbs, and a
+## gold hub (palette A "Gilded Garden", planning/phase3/codex_memo_t_palette.md).
 
 ## Emitted once per tick after rotating. previous_angle is the unwrapped angle
 ## before this tick (it never wraps at 360°), so mounts can count booth passes
 ## and sweep exactly the arc travelled, even across many turns.
 signal rotation_advanced(previous_angle: float, delta_angle: float)
 
-@export_group("Placeholder Visuals")
+@export_group("Look")
 @export_range(10.0, 400.0, 1.0, "suffix:px") var radius: float = 100.0
-@export_range(1.0, 50.0, 1.0, "suffix:px") var rim_width: float = 8.0
+## The deck showing around the canopy's edge.
+@export var base_color: Color = Color("765642")
+## Canopy wedges alternate these two; they also make the spin visible.
+@export_range(4, 48, 2) var wedge_count: int = 12
+@export var wedge_color_a: Color = Color("fff4dc")
+@export var wedge_color_b: Color = Color("70568b")
+## Gold trim: the scalloped edge, its line, and the hub.
+@export var trim_color: Color = Color("ddb96a")
+@export_range(0.0, 30.0, 1.0, "suffix:px") var canopy_inset: float = 10.0
+@export_range(1.0, 20.0, 0.5, "suffix:px") var scallop_radius: float = 7.0
 @export_range(1.0, 100.0, 1.0, "suffix:px") var hub_radius: float = 16.0
-## Spokes make the rotation visible on a plain circle.
-@export_range(0, 24, 1) var spoke_count: int = 6
-@export_range(0.5, 10.0, 0.5, "suffix:px") var spoke_width: float = 2.0
-@export var base_color: Color = Color("4a7a3d")
-@export var rim_color: Color = Color("2d5a25")
-@export var hub_color: Color = Color("2d5a25")
+@export_group("Bulbs")
+@export_range(0, 120, 1) var bulb_count: int = 36
+@export var bulb_color: Color = Color("fff7e6")
+@export var bulb_glow_color: Color = Color(1.0, 0.82, 0.54, 0.35)
+@export_range(0.5, 10.0, 0.5, "suffix:px") var bulb_radius: float = 2.2
+@export_range(1.0, 20.0, 0.5, "suffix:px") var bulb_glow_radius: float = 5.0
 
 @export_group("Boost Glow")
 ## Glow while the boost bar is maxed out...
@@ -68,9 +79,20 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	draw_circle(Vector2.ZERO, radius, base_color, true, -1.0, true)
-	for i in spoke_count:
-		var direction := Vector2.from_angle(TAU * i / spoke_count)
-		# Antialiased so thin spokes glide instead of snapping pixel to pixel.
-		draw_line(direction * hub_radius, direction * (radius - rim_width), rim_color, spoke_width, true)
-	draw_arc(Vector2.ZERO, radius - rim_width / 2.0, 0.0, TAU, 64, rim_color, rim_width, true)
-	draw_circle(Vector2.ZERO, hub_radius, hub_color, true, -1.0, true)
+	var canopy := radius - canopy_inset
+	for i in wedge_count:
+		var from := TAU * i / wedge_count
+		var to := TAU * (i + 1) / wedge_count
+		var points := PackedVector2Array([Vector2.ZERO])
+		for k in 7:
+			points.append(Vector2.from_angle(lerpf(from, to, k / 6.0)) * canopy)
+		draw_colored_polygon(points, wedge_color_a if i % 2 == 0 else wedge_color_b)
+	# Scallops: a half-circle of trim at the middle of every half-wedge.
+	for i in wedge_count * 2:
+		draw_circle(Vector2.from_angle(TAU * (i + 0.5) / (wedge_count * 2)) * (canopy + 4.0), scallop_radius, trim_color, true, -1.0, true)
+	draw_arc(Vector2.ZERO, canopy, 0.0, TAU, 64, trim_color, 3.0, true)
+	for i in bulb_count:
+		var spot := Vector2.from_angle(TAU * i / bulb_count) * (radius + 1.0)
+		draw_circle(spot, bulb_glow_radius, bulb_glow_color, true, -1.0, true)
+		draw_circle(spot, bulb_radius, bulb_color, true, -1.0, true)
+	draw_circle(Vector2.ZERO, hub_radius, trim_color, true, -1.0, true)

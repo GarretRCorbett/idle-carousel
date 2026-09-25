@@ -30,9 +30,9 @@
 - Garret playtested Step 6 twice (very positive); strip shifting fixed. Step 7 questions answered.
 - **Step 7 built** (`step7_plan.md`): all five bosses, tuned with `tools/boss_sim.tscn` (now every
   tier). Found and fixed while rendering palettes: the boss strip had made the HUD wider than the
-  screen. Palette research in memo T (renders in `palette/`), waiting on Garret's pick.
-- **Next:** Garret picks a palette (memo T) and playtests the new bosses; Step 8 (economy
-  simulator + pricing), Step 9 (full playtest, Codex review, sign-off).
+  screen. Palette research in memo T; Garret picked A and it's applied.
+- **Next:** Garret playtests the new bosses and palette A; Step 8 (economy simulator + pricing),
+  Step 9 (full playtest, Codex review, sign-off).
 
 Phase 3 roadmap scope: Sloth, Giraffe, Elephant, Panda; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
@@ -98,7 +98,9 @@ Game's loop drops a duplicate check.
   piece must die** for the win, the same rule as Leaf Storm's 4 Leaves (Q16, Q20).
 - The strip no longer shifts when switching tiers (fixed from the playtest).
 - **Palette: A "Gilded Garden"** (memo T): violet-and-ivory canopy, walnut deck, gold trim and
-  poles, warm bulbs, a lighter green park, ink-blue panels with gold borders and ivory text.
+  poles, warm bulbs, a lighter green park, ink-blue panels with gold borders and ivory text. **Applied**
+  (code-drawn canopy with scallops and bulbs, green trees, ivory booth, rebuilt UI theme, grassy menu
+  backdrop): `palette/chosen_a_*.png`. Every color is an export or a theme-builder constant.
 - **Gilded Gale:** 3 Leaves every 3 s (from 2 every 4 s).
 
 ## Decided 2026-09-25 (Garret, after seeing Step 3)
