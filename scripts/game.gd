@@ -9,6 +9,8 @@ extends Node2D
 ## Distance of mounts from the carousel center. Mounts space themselves evenly
 ## around this circle, the first one at the top (where the first booth is).
 @export_range(10.0, 400.0, 1.0, "suffix:px") var mount_radius: float = 75.0
+## Every color tier. Waves come from the selected one (Grey until Step 6's picker).
+@export var tier_catalog: TierCatalog = preload("res://resources/tiers/tier_catalog.tres")
 
 @export_group("Pops")
 ## Ring on a click that doesn't kill, and on enemies removed without Gold
@@ -57,6 +59,7 @@ func _ready() -> void:
 	_hud.boost_requested.connect(GameState.add_click_boost)
 	_click_router.enemy_clicked.connect(_on_enemy_clicked)
 	_wave_manager.center = _carousel.position
+	_wave_manager.tier = tier_catalog.get_tier(0)
 	_wave_manager.live_enemy_count = get_live_enemy_count
 	_wave_manager.enemy_spawned.connect(_on_enemy_spawned)
 	_wave_manager.countdown_changed.connect(_hud.set_wave_countdown)
@@ -80,7 +83,7 @@ func _ready() -> void:
 	_sync_mounts(GameState.get_mount_roster())
 	get_viewport().size_changed.connect(_center_world)
 	_center_world()
-	_wave_manager.start()
+	_wave_manager.start(GameState.get_run_seed())
 
 
 ## Esc opens Settings (which pauses the game; Esc again closes it).

@@ -1,6 +1,40 @@
 [gd_resource type="Resource" script_class="TierData" format=3]
 
 [ext_resource type="Script" path="res://scripts/tier_data.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/Leaf.tscn" id="leaf_scene"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/Stick.tscn" id="stick_scene"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/Rock.tscn" id="rock_scene"]
+[ext_resource type="Script" path="res://scripts/wave_profile.gd" id="profile_script"]
+[ext_resource type="Script" path="res://scripts/wave_entry.gd" id="entry_script"]
+
+[sub_resource type="Resource" id="leaf_entry"]
+script = ExtResource("entry_script")
+enemy_scene = ExtResource("leaf_scene")
+weight = 62.0
+max_per_wave = 0
+unlock_after_kills = 0
+
+[sub_resource type="Resource" id="stick_entry"]
+script = ExtResource("entry_script")
+enemy_scene = ExtResource("stick_scene")
+weight = 25.0
+max_per_wave = 2
+unlock_after_kills = 0
+
+[sub_resource type="Resource" id="rock_entry"]
+script = ExtResource("entry_script")
+enemy_scene = ExtResource("rock_scene")
+weight = 13.0
+max_per_wave = 1
+unlock_after_kills = 0
+
+[sub_resource type="Resource" id="waves"]
+script = ExtResource("profile_script")
+interval_seconds = 12.0
+min_enemies = 5
+max_enemies = 8
+directions = 2
+entries = Array[ExtResource("entry_script")]([SubResource("leaf_entry"), SubResource("stick_entry"), SubResource("rock_entry")])
 
 [resource]
 script = ExtResource("1_script")
@@ -13,3 +47,4 @@ speed_multiplier = 1.09
 drag_multiplier = 1.0
 latch_dps_multiplier = 1.33
 gold_multiplier = 3.05
+waves = SubResource("waves")

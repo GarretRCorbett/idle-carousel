@@ -83,6 +83,9 @@ var _income_buckets := PackedFloat64Array()
 var _income_epoch: int = 0
 var _recent_income: float = 0.0
 var _elapsed: float = 0.0
+## Picked fresh each run; seeds wave randomness so a run can be replayed
+## (speedrun-friendly, Garret 2026-09-24).
+var _run_seed: int = 0
 # Latched enemies by instance ID. Totals are recomputed from this, so removing
 # one enemy removes exactly its share.
 var _latches: Dictionary[int, Latch] = {}
@@ -145,6 +148,7 @@ func reset_run(config_override: RunConfig = null) -> void:
 	_income_epoch = 0
 	_recent_income = 0.0
 	_elapsed = 0.0
+	_run_seed = randi()
 	# Set everything first so listeners never see a half-reset run.
 	run_reset.emit()
 	gold_changed.emit(_gold, 0.0)
@@ -589,6 +593,12 @@ func _emit_speed_if_changed(previous_speed: float) -> void:
 	var speed := get_effective_spin_speed_rad_s()
 	if speed != previous_speed:
 		spin_speed_changed.emit(speed)
+
+
+# --- Run -----------------------------------------------------------------------
+
+func get_run_seed() -> int:
+	return _run_seed
 
 
 # --- Clicking ---------------------------------------------------------------------

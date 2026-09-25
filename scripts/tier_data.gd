@@ -20,6 +20,9 @@ extends Resource
 @export_range(0.0, 100.0, 0.01, "or_greater") var latch_dps_multiplier: float = 1.0
 @export_range(0.0, 100.0, 0.01, "or_greater") var gold_multiplier: float = 1.0
 
+## How this tier's waves are made (interval, size, directions, enemy mix).
+@export var waves: WaveProfile
+
 
 func get_problems() -> PackedStringArray:
 	var problems := PackedStringArray()
@@ -31,4 +34,9 @@ func get_problems() -> PackedStringArray:
 	for value: float in [drag_multiplier, latch_dps_multiplier, gold_multiplier]:
 		if not is_finite(value) or value < 0.0:
 			problems.append("%s: drag, latch damage and Gold multipliers must be 0 or more" % tier_id)
+	if waves == null:
+		problems.append("%s: no wave profile" % tier_id)
+	else:
+		for problem in waves.get_problems():
+			problems.append("%s waves: %s" % [tier_id, problem])
 	return problems

@@ -7,7 +7,6 @@
 [ext_resource type="Script" uid="uid://cfxb46vgx1cvk" path="res://scripts/upgrade_shop.gd" id="7_shop"]
 [ext_resource type="Script" uid="uid://by8f47x4ifp4f" path="res://scripts/click_router.gd" id="8_router"]
 [ext_resource type="Script" uid="uid://blxerhlljqhwt" path="res://scripts/wave_manager.gd" id="9_waves"]
-[ext_resource type="PackedScene" path="res://scenes/enemies/Leaf.tscn" id="10_leaf"]
 [ext_resource type="Theme" path="res://assets/ui/game_theme.tres" id="12_theme"]
 [ext_resource type="PackedScene" path="res://scenes/OptionsMenu.tscn" id="13_options"]
 [ext_resource type="Script" path="res://scripts/park_background.gd" id="14_bg"]
@@ -43,8 +42,6 @@ script = ExtResource("8_router")
 
 [node name="WaveManager" type="Node" parent="." unique_id=1331348848]
 script = ExtResource("9_waves")
-enemy_scene = ExtResource("10_leaf")
-wave_interval = 10.0
 
 [node name="WaveTimer" type="Timer" parent="WaveManager" unique_id=1939518674]
 process_callback = 0

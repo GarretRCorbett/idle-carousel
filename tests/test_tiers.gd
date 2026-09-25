@@ -29,6 +29,7 @@ func _tier(rank: int = 1) -> TierData:
 	tier.drag_multiplier = 3.0
 	tier.latch_dps_multiplier = 4.0
 	tier.gold_multiplier = 5.0
+	tier.waves = CATALOG.get_tier(0).waves
 	return tier
 
 
