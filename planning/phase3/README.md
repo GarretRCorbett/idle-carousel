@@ -23,8 +23,8 @@
 - **Step 5 done** (`step5_plan.md`): Elephant (5.1), mount tiers per type with five Tier 2 rows
   (5.2), Panda with Gold per turn, heal on own kills, "3 types at Tier 2" unlock (5.3). Prices,
   Tier 2 effects and strings are drafts.
-- **Open for Garret:** memo R (confirmations, tier/boss loop, sharper mount roles: Wolf reach
-  ~90, Elephant ~30). Next: Step 6 plan (boss framework, Leaf Storm, the strip UI, gating).
+- Memo R answered (see Decided). Next: Step 6 plan (boss framework, Leaf Storm, the strip UI,
+  gating, the two confirmations).
 
 Phase 3 roadmap scope: Sloth, Giraffe, Elephant, Panda; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
@@ -83,6 +83,15 @@ plugged-in laptop: `-- 0,300,1000,2000 wolf` then `-- 0,300,1000,2000 wolf,giraf
   both wait for the first boss (pre-boss mounts: Horse and Wolf), plus Speed/Boost capped at level
   3 and extra booths waiting (memo Q's list). Built in Step 6; until then they're buyable.
   Sloth reach raised to 200 px.
+- **After memo R (Garret, 2026-09-25):** confirmations only for **Sell mount** and **Give up**, as
+  a **two-step button** (first click shows "Confirm?" for ~3 s; no pause; a Settings toggle later).
+  Buying, Challenge, tier switching and Emergency Clear stay one click; a pausing dialog only for
+  prestige, hard reset, quit with an unsaved run. **Tier switching** any time except during a boss
+  fight; future waves only. **Challenge** is for the selected tier. **Beaten bosses can be
+  re-challenged** any time with no new kill quota: first win = big bonus + unlocks, repeats = a
+  **smaller Gold** reward (tune against the fastest repeat clear). **Mount zones:** Wolf reach
+  65 → 90 px (catches enemies on the way in), Elephant 45 → 30 px (only what touches the rim),
+  Giraffe the far field.
 
 ## Decided 2026-09-24 (Garret)
 - **Boss access:** a minimal per-tier kill gate plus a manual "Challenge boss" button, built

@@ -18,7 +18,7 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> **Phase 3 (2026-09-25):** Step 2 (foundations) is done and Codex-reviewed; Step 3 commits 1–3 (tiers, waves, tier/kill state + F2/F3) are done. Steps 3–5 are done: every Phase 3 mount (Giraffe, Sloth, Elephant, Panda) plus Tier 2 rows. Next: Garret answers memo R's questions (confirmations, re-challenging bosses, Wolf/Elephant reach), then the Step 6 plan (boss framework + Leaf Storm + strip UI + gating). Status: `planning/phase3/README.md`.
+> **Phase 3 (2026-09-25):** Step 2 (foundations) is done and Codex-reviewed; Step 3 commits 1–3 (tiers, waves, tier/kill state + F2/F3) are done. Steps 3–5 are done: every Phase 3 mount (Giraffe, Sloth, Elephant, Panda) plus Tier 2 rows. Memo R answered (two-step confirms for Sell/Give up, re-fightable bosses, Wolf 90 / Elephant 30 reach). Next: the Step 6 plan (boss framework + Leaf Storm + strip UI + gating). Status: `planning/phase3/README.md`.
 
 ---
 
