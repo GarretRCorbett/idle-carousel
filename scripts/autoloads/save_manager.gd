@@ -84,5 +84,7 @@ func _apply(key: StringName) -> void:
 		LocaleFonts.apply(locale)
 		TranslationServer.set_locale(locale)
 	elif key == &"fullscreen" and DisplayServer.get_name() != "headless":
+		# Exclusive fullscreen bypasses the Windows compositor, which gives the
+		# smoothest frame pacing (borderless fullscreen can still judder).
 		DisplayServer.window_set_mode(
-				DisplayServer.WINDOW_MODE_FULLSCREEN if value else DisplayServer.WINDOW_MODE_WINDOWED)
+				DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN if value else DisplayServer.WINDOW_MODE_WINDOWED)
