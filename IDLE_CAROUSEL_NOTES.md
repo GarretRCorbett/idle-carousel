@@ -18,7 +18,16 @@
 ## ▶️ Next Concrete Step
 _Update at the end of every session._
 
-> **Phase 3 (2026-09-25):** Steps 2–6 done: every Phase 3 mount, tier colors, bigger waves, the first boss (Leaf Storm) with the boss strip, tier pips and gating. Garret's two playtests went well (strip shifting fixed). Step 7 boss questions answered (GDD v1.15). Step 7 is built: all six tier bosses, tuned headless. Palette research ready (memo T, renders in `planning/phase3/palette/`). Garret picked palette A (Gilded Garden) and it's applied, with a theme-park look. Step 8 is built: `tools/economy_sim.tscn` plus a pricing pass that hits Garret's pace at 1 click/s (results and three open questions in `planning/phase3/step8_results.md`). Next: Garret playtests bosses, look and prices; then Step 9 (full playtest, Codex review, sign-off). Status: `planning/phase3/README.md`.
+> **Phase 3 (2026-09-26):** Steps 1–8 are done, plus the look pass (theme-park plaza, Purple Garden palette, tier-shade outlines), the theming foundation (Winter/Halloween test themes, F4), and the Debug tab. GDD v1.17 has the Playtest 3 decisions (mount levels and stars, auto-boost, gentle latch drain, compact shop, Park Guide, income pops).
+> **Next session: finish Phase 3.** The small playtest-3 fixes from `planning/phase3/playtest3_plan.md` → "Phase split":
+> - the Boost panel;
+> - mount outlines;
+> - the bug where buying Boost Power ends Overdrive;
+> - the gentle latch drain;
+> - faster idle (re-run the economy sim);
+> - the combined booth "+X".
+>
+> Then Step 9: a full playtest, a Codex review, and Garret's sign-off. Phase 4 then opens with the shop redesign, levels and stars, auto-boost, the Park Guide, the tutorial and music. The devlog lives in `devlog/` (two post drafts; the voice notes are in `devlog/backstory.md`).
 
 ---
 

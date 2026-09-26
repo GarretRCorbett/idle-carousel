@@ -38,8 +38,10 @@
   a matching title screen, and royal blue buttons and title in place of yellow.
 - **Theming foundation** (`theming_plan.md`, Codex memo U): stable enemy ids, EnemySkin /
   ParkTheme / ThemeManager, Winter and Halloween test themes (F4 in debug builds).
-- **Next:** Garret playtests bosses, the look and the new prices; Step 9 (full playtest, Codex
-  review, sign-off).
+- **Purple Garden palette** (Codex style study plus Garret's picks) and tier-shade outlines. Playtest 3
+  → `playtest3_plan.md` and GDD v1.17. The Debug tab is in the Esc menu (debug builds only).
+- **Next:** the small playtest-3 fixes (`playtest3_plan.md` → "Phase split"), then Step 9 (a full
+  playtest, a Codex review, sign-off).
 
 Phase 3 roadmap scope: Sloth, Giraffe, Elephant, Panda; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
