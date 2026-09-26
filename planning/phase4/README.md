@@ -197,3 +197,32 @@ Economy sim: bosses at **0:20, 0:37, 0:54, 1:43, 2:02, 2:24**. Gilded Gale is st
 (~50 min), and it barely moves with its health, so it's an economy wall: a playtest question.
 Note: with "one boss away", almost everything is visible at the start (most rows wait only for the
 first boss); rows for later bosses appear as you go. GDD v1.19.
+
+## Step 7 plan: random events (Garret's answers, 2026-09-26)
+**Events** (Wandering Horse left out for now; numbers are drafts, tuned after a playtest):
+
+| Event | Kind | Effect | Lasts | Weight |
+|---|---|---|---|---|
+| Speed Surge | Pickup | ×2 speed (multiplies with Overdrive: ×4) | 15 s | 3 |
+| Golden Hour | Pickup | ×2 Gold from booth passes | 20 s | 3 |
+| Lucky Ticket | Pickup | Gold worth 2 minutes of normal booth income (Gilded Rims applies) | at once | 2 |
+| Pop-up Booth | Visitor | One extra ticket booth for the Horses to pass | 45 s | 2 |
+
+**Rules** (GDD "Random Events"): one event every **2–5 minutes** (random, RunConfig); **none during a
+boss fight** (the clock waits) or while stalled; never offline; purely good. The same event again
+refreshes its timer instead of stacking.
+
+**Pickups:** a glowing code-drawn token (a ticket, a lightning bolt, a coin, by event) appears at a
+random spot in the play area, bobs gently, and fades after **8 s**. Click or tap it to grab it.
+Controller: the **grab button** (new action `grab_pickup`, the top face button: Y on Xbox, X on
+Nintendo) grabs whatever pickup is on screen, and the token shows that button's prompt when a
+controller is in use. Missing one costs nothing.
+**Visitors:** a short banner ("A pop-up booth opened!") and the booth appears; it re-spaces the
+booths and leaves the same way. It never changes the booths you bought (or saves).
+**On screen:** each running effect shows as a small chip under the boss strip (icon, name, seconds left).
+
+**Code:** `EventData` resources (`resources/events/*.tres`: kind, effect, strength, duration, weight,
+strings) so new events are data; an `EventDirector` in Game picks them; GameState gets a booth-Gold
+modifier beside the speed modifiers. Active events aren't saved (like the field). Tests: timing
+window, no events in fights, refresh-not-stack, each effect, grab by click and by action.
+**Strings (drafts):** event names, the banner, "Grab" prompt.
