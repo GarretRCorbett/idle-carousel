@@ -9,3 +9,6 @@ Garret's notes, 2026-09-25. Use pieces of this in posts where they fit. **Anonym
 - **The Juniper Dev jam** (theme "spin to win"), a few months ago: he made another spinning game. It wasn't submitted (not finished in time), but he loved making it and decided to try again for Steam.
 - **Idle Carousel:** an idle game felt finishable. He planned it for a couple of months (the GDD), then development started.
 - **Dream:** if Idle Carousel reaches Steam and even 3 to 5 people buy it and like it, back to Carousel Crusade.
+- **Brand idea:** a year-ago search found very few carousel games. The dream is a carousel game studio making carousel games in many genres. Studio name idea: "Corbett's Castle" (it contains his surname, so keep it out of public posts while anonymous).
+- **Voice for posts:** casual and warm, the way Garret writes messages. Exclamation points, "haha", ":p", "lol", "honestly", "waaaay", and small asides and winks, like the park-map nod "(can you recognize where? ;))".
+
