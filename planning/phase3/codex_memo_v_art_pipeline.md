@@ -1,0 +1,46 @@
+# Codex memo V: art without AI image models (2026-09-25)
+
+Question (Garret): how is code-drawn/procedural art perceived; is AI-written drawing code or a scripted Blender-to-2D pipeline "AI art" (technically, legally, by perception); what low-risk options exist? Web research by Codex; links not independently verified by Claude. Memos are input, not decisions; not legal advice.
+
+**Keep Kenney assets and a coherent geometric style. Use AI for implementation, while Garret makes and records the visual design decisions.** Blender can fit that pipeline, but “rendered by code” does not automatically mean “not AI art.” The important distinction is who determines the visible expression—not whether the final renderer uses polygons or diffusion.
+
+Research checked September 25, 2026; US copyright discussion is general information, not legal advice.
+
+1. **Players distinguish procedural graphics from generative AI, but disagree about AI-written drawing code.** In a [2025 procedural-generation discussion](https://www.reddit.com/r/proceduralgeneration/comments/1i8r221/), participants emphasize deliberately authored rules and creative control. An unusually relevant [itch.io discussion](https://itch.io/t/4309690/generative-ai-disclosure-tagging) asks precisely whether Claude-written polygon tentacles count as AI graphics: replies range from “only AI code,” to “both,” to objections to any AI code. These are anecdotes, not representative polling.
+
+   [Steam commenters](https://steamcommunity.com/groups/steamworks/eventcomments/4137185692902102798?ctp=51&l=english) likewise distinguish coding assistance from artwork, while disputing that distinction. [Blender artists](https://blenderartists.org/t/creating-a-script-with-ai/1617410) discuss AI scripting as a useful technical tool. A [2026 Steam-review study](https://arxiv.org/abs/2608.11539) reports poorer reception for disclosed generative AI than procedural generation, but does **not** establish how players react specifically to AI-assisted draw calls. Expect mixed reactions; there is no evidence-backed promise of “no backlash.”
+
+2. **Steam clarified its form in January 2026.** Contemporary [reporting reproducing the revised form](https://www.pcgamer.com/software/ai/steam-updates-ai-disclosure-form-to-specify-that-its-focused-on-ai-generated-content-that-is-consumed-by-players-not-efficiency-tools-used-behind-the-scenes/) distinguishes development-efficiency tools, including coding helpers, from player-facing content and marketing assets. Current [Steamworks documentation](https://partner.steamgames.com/doc/gettingstarted/contentsurvey?l=english) defines:
+   
+   - **Pre-generated:** content made with AI assistance during development that ships and is consumed by players.
+   - **Live-generated:** content generated with AI during gameplay; developers must explain safeguards against illegal output.
+
+   My interpretation: ordinary runtime draw calls are **not live AI generation** merely because Claude wrote them. However, I found no published Valve ruling explicitly exempting AI-written scripts that design finished artwork. Code assistance implementing Garret’s specified geometry has a stronger exemption argument than “invent a carousel animal and render it.” For that boundary, request written Steamworks clarification with an example; conservatively disclose AI-originated visual designs as pre-generated unless Valve confirms otherwise.
+
+   Other stores differ. [Itch’s administrator says incorporated AI-generated code counts](https://itch.io/t/4309690/generative-ai-disclosure-tagging), so use its code disclosure. I found no equivalent blanket development-code declaration in [Apple’s review guidelines](https://developer.apple.com/app-store/review/guidelines/). Google’s [in-app generation policy](https://support.google.com/googleplay/android-developer/answer/14094294?hl=en) concerns generative features, but its newer [Play Console guidance](https://support.google.com/googleplay/android-developer/answer/17262077?hl=en) separately requires asset declarations and applicable AI labeling for store/promotional images and videos. Mobile is therefore not a blanket disclosure exemption.
+
+3. **Procedural artwork can be copyrightable; human authorship remains the test.** The [Copyright Office’s January 2025 report](https://www.copyright.gov/ai/Copyright-and-Artificial-Intelligence-Part-2-Copyrightability-Report.pdf) preserves protection for human expression made using assistive tools, including qualifying selection, arrangement and modification. Prompting or approving a result alone generally does not establish authorship. Applied here, personally specifying and revising silhouettes, proportions, layouts and animation gives Garret a stronger claim than approving an assistant’s independently invented scene. That is an application of the report’s principles, not a ruling on Godot or Blender scripts.
+
+   [Thaler’s 2025 appellate decision](https://media.cadc.uscourts.gov/opinions/docs/2025/03/23-5233.pdf) required human authorship for the autonomously generated work before it; it did not prohibit AI assistance. [Zarya of the Dawn](https://www.copyright.gov/docs/zarya-of-the-dawn.pdf) retained protection for human text and arrangement while excluding Midjourney images. Individual circles and ordinary polygons themselves are generally unprotectable regardless of their maker. [Copyright Office guidance](https://www.copyright.gov/comp3/chap900/ch900-visual-art.pdf)
+
+   Garret can own qualifying human-authored contributions. [Anthropic’s contractual output allocation](https://www.anthropic.com/legal/consumer-terms) does not itself create statutory copyright where authorship is absent. Practical concerns are limited exclusivity and third-party rights: Steam still requires non-infringing content, and asset licenses still matter. Neither “AI-assisted” nor “script-rendered” supplies legal immunity. [Steam requirements](https://partner.steamgames.com/doc/gettingstarted/contentsurvey?l=english)
+
+4. **Blender scripting is a viable production technique, not an automatic classification escape.** *Dead Cells’* artist describes a successful [3D-model-to-2D-sprite pipeline](https://www.gamedeveloper.com/production/art-design-deep-dive-using-a-3d-pipeline-for-2d-animation-in-i-dead-cells-i-). Technically, your proposal uses conventional modeling and rendering, without a generative image model. Nevertheless, research explicitly treats [LLM-generated Blender scripts as scene synthesis](https://arxiv.org/abs/2403.01248): AI can originate visual content through code.
+
+   My assessment is the same for Blender and Godot: automating Garret’s concrete design is stronger than delegating the design itself. Changing the output from runtime polygons to PNG sprites does not resolve the copyright, perception or Steam boundary described above.
+
+5. **The simplest alternatives are reusable assets and deliberately limited visual rules.** Kenney expressly permits [commercial CC0 use without attribution](https://kenney.nl/support). OpenGameArt and paid/itch packs are alternatives, but verify each asset’s terms; OpenGameArt itself lists [different licenses and obligations](https://opengameart.org/content/faq). Prefer one compatible family; normalize palette, scale, outlines and lighting before mixing packs.
+
+   Use [Aseprite](https://www.aseprite.org/) for small edits, and licensed fonts/icons for interface elements. A single commissioned style sheet is optional if Garret later changes his hiring preference; it is not necessary. Minimalism has strong precedents: [*Mini Metro*](https://store.steampowered.com/app/287980/Mini_Metro/) and [*Super Hexagon*](https://store.steampowered.com/app/221640/Super_Hexagon/) both have overwhelmingly positive English Steam reviews. That demonstrates acceptance of geometric styles, not proof that nobody ever objected.
+
+6. **For Idle Carousel, make provenance and authorship concrete.** Write a short human-authored specification covering palette, silhouettes, proportions, camera, shadows and motion. Keep Kenney characters and code-drawn scenery initially. If testing Blender, start with roofs, lamps and rocks; manually choose parameters and revise compositions. Keep identifiable design work with Garret and rendering/export automation with the assistant.
+
+   Suggested wording for Garret’s approval:
+
+   > “Visuals combine Kenney assets with geometric scenery rendered in Godot. Claude assisted with the drawing code under Garret’s direction. No generative image, audio or voice models were used.”
+
+   If Blender is adopted, explicitly add its scripts and renders. Avoid an unqualified “AI-free” claim. Where disclosure is required, describe the actual scope; the wording does not replace the platform’s checkbox.
+
+   In `assets/PROVENANCE.md`, record asset paths, creators, source URLs, licenses and acquisition dates; for procedural assets, record script/commit, tool/model, human design inputs, parameter changes, render settings and final approval. Preserve license files and relevant design history. This documents what happened without claiming that approval alone creates authorship.
+
+No files were changed. The environment blocked reading `CLAUDE.md`; this assessment uses your supplied context and the linked sources.
