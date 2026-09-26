@@ -66,6 +66,8 @@ class Latch:
 const STARTING_MOUNT: StringName = &"horse"
 ## Horse payout per booth pass, for pricing Emergency Clear from normal income.
 const HORSE_DATA: MountData = preload("res://resources/mounts/horse.tres")
+## Panda Gold per turn, for offline income.
+const PANDA_DATA: MountData = preload("res://resources/mounts/panda.tres")
 const DEFAULT_CONFIG: RunConfig = preload("res://resources/config/run_config.tres")
 
 var _config: RunConfig = DEFAULT_CONFIG
@@ -468,6 +470,38 @@ func get_normal_booth_income_per_second() -> float:
 	var horses := _mount_roster.count(STARTING_MOUNT)
 	var turns_per_second := deg_to_rad(_config.base_spin_speed_deg_s) * get_spin_upgrade_multiplier() / TAU
 	return horses * _booth_count * get_mount_gold(HORSE_DATA) * turns_per_second
+
+
+## Offline income per second (GDD v1.18: no fights while away): booth passes
+## plus the Panda's Gold per turn, at the unboosted, drag-free speed, times
+## RunConfig.offline_efficiency.
+func get_offline_gold_per_second() -> float:
+	var turns_per_second := deg_to_rad(_config.base_spin_speed_deg_s) * get_spin_upgrade_multiplier() / TAU
+	var pandas := _mount_roster.count(PANDA_DATA.mount_id)
+	var panda_income := pandas * get_mount_gold_per_turn(PANDA_DATA) * turns_per_second
+	return (get_normal_booth_income_per_second() + panda_income) * _config.offline_efficiency
+
+
+## Seconds away that count: 0 below the minimum, capped at the maximum.
+func get_counted_offline_seconds(seconds_away: float) -> float:
+	if not is_finite(seconds_away) or seconds_away < _config.offline_min_seconds:
+		return 0.0
+	return minf(seconds_away, _config.offline_max_hours * 3600.0)
+
+
+func get_offline_max_hours() -> float:
+	return _config.offline_max_hours
+
+
+## Pays the Gold earned while the game was closed and returns it. Like a sale
+## refund, it isn't counted in Gold/sec.
+func grant_offline_gold(seconds_away: float) -> float:
+	var amount := floorf(get_offline_gold_per_second() * get_counted_offline_seconds(seconds_away))
+	if amount <= 0.0:
+		return 0.0
+	_gold += amount
+	gold_changed.emit(_gold, amount)
+	return amount
 
 
 func get_emergency_clear_cost() -> float:

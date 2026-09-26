@@ -89,6 +89,8 @@ func _ready() -> void:
 	_on_spin_speed_changed(GameState.get_effective_spin_speed_rad_s())
 	_on_overdrive_changed(GameState.is_overdrive_active())
 	_on_stall_changed(GameState.is_stalled())
+	# Also here, not only in _process: a run can start paused ("Welcome back").
+	_refresh_emergency_button()
 
 
 ## Language changed: rebuild the text this script fills in (scene text updates itself).

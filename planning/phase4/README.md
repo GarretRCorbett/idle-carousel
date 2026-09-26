@@ -9,7 +9,10 @@
 - **Step 1 done (2026-09-26):** save system (Continue / New run, auto-save 60 s, milestone and
   manual saves, `.tmp` + `.bak`, forgiving loads, 12 tests); `TEMPORARY` stall comments retired.
   Saving is on only for runs started from the main menu, so running `Game.tscn` directly (F6),
-  tests, and the sims never touch the real save. Next: Step 2, offline progress.
+  tests, and the sims never touch the real save.
+- **Step 2 done (2026-09-26):** offline progress (Garret: normal booth income + the Panda's Gold per
+  turn at base speed, ×0.5, 1 min minimum, 8 h cap; only time with the game closed counts, so the
+  main menu pays nothing) and the "Welcome back" popup on Continue. Numbers in RunConfig "Offline".
 
 ## Scope
 From the roadmap: save system, offline progress + "Welcome back", the full upgrade tree with shop

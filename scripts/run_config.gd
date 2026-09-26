@@ -83,6 +83,15 @@ extends Resource
 @export_range(0.0, 100000.0, 1.0, "or_greater") var emergency_clear_min_cost: float = 25.0
 @export_range(0.0, 600.0, 1.0, "suffix:s") var emergency_clear_cooldown_seconds: float = 60.0
 
+@export_group("Offline")
+## While the game is closed, the carousel earns this fraction of its normal
+## income (booth passes and the Panda at base speed, no boost, no fights).
+@export_range(0.0, 1.0, 0.05) var offline_efficiency: float = 0.5
+## Only this much time away counts (GDD: an 8-hour clamp).
+@export_range(0.0, 72.0, 0.5, "suffix:h") var offline_max_hours: float = 8.0
+## Shorter absences pay nothing and show no "Welcome back".
+@export_range(0.0, 3600.0, 1.0, "suffix:s") var offline_min_seconds: float = 60.0
+
 @export_group("Ticket Booths")
 ## Booths at the start of a run (more are bought in the shop).
 @export_range(1, 8, 1) var starting_booths: int = 1
@@ -129,6 +138,10 @@ func get_problems() -> PackedStringArray:
 		problems.append("starting_horses can't be more than starting_mount_slots")
 	if starting_booths < 1:
 		problems.append("starting_booths must be at least 1")
+	for value: float in [offline_efficiency, offline_max_hours, offline_min_seconds]:
+		if not is_finite(value) or value < 0.0:
+			problems.append("offline settings must be finite numbers >= 0")
+			break
 	if not is_finite(click_boost_cap) or click_boost_cap < 0.0:
 		problems.append("click_boost_cap must be a finite number >= 0")
 	if not is_finite(click_boost_decay_seconds) or click_boost_decay_seconds <= 0.0:

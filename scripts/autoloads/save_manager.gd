@@ -39,6 +39,9 @@ var run_save_path: String = "user://save_data.json"
 var run_saves_enabled: bool = false
 ## The main menu asks for the saved run; Game loads it when it starts.
 var continue_requested: bool = false
+## A run was saved since the game started. Offline time only counts while the
+## game was closed, so time spent on the main menu pays nothing (Garret).
+var _saved_this_session: bool = false
 
 
 func _ready() -> void:
@@ -137,6 +140,7 @@ func save_run() -> bool:
 	if error != OK:
 		push_error("Can't replace %s (%s)" % [run_save_path, error_string(error)])
 		return false
+	_saved_this_session = true
 	run_saved.emit()
 	return true
 
@@ -152,6 +156,15 @@ func load_run() -> bool:
 ## Unix time of the last save, or 0 if there's none (offline progress, Step 2).
 func get_run_saved_at() -> int:
 	return int(_read_run_file().get("saved_at", 0))
+
+
+## Seconds since the last save while the game was closed; 0 if it was saved
+## during this session or the clock went backwards.
+func get_offline_seconds() -> float:
+	var saved_at := get_run_saved_at()
+	if _saved_this_session or saved_at <= 0:
+		return 0.0
+	return maxf(0.0, Time.get_unix_time_from_system() - saved_at)
 
 
 func delete_run_save() -> void:

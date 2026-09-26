@@ -8,6 +8,13 @@ NUM_SUFFIX_T,T,T,T,T,T,T,T,T,T
 MENU_TITLE,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel
 MENU_CONTINUE,Continue,Continuar,Continuer,Fortsetzen,Continuar,Продолжить,继续,続ける,계속
 MENU_NEW_RUN,New run,Nueva partida,Nouvelle partie,Neues Spiel,Novo jogo,Новая игра,新游戏,ニューゲーム,새 게임
+WELCOME_BACK_TITLE,Welcome back!,¡Bienvenido de nuevo!,Bon retour !,Willkommen zurück!,Bem-vindo de volta!,С возвращением!,欢迎回来！,おかえりなさい！,다시 오신 것을 환영합니다!
+WELCOME_BACK_AWAY,You were away for {0}.,Estuviste fuera {0}.,Vous étiez absent {0}.,Du warst {0} weg.,Você ficou fora por {0}.,Вас не было {0}.,你离开了{0}。,{0}離れていました。,{0} 동안 자리를 비웠습니다.
+WELCOME_BACK_GOLD,Your carousel earned {0} Gold,Tu carrusel ganó {0} de oro,Votre carrousel a gagné {0} or,Dein Karussell hat {0} Gold verdient,Seu carrossel ganhou {0} de ouro,Ваша карусель заработала {0} золота,你的旋转木马赚了{0}金币,メリーゴーランドが{0}ゴールドを稼ぎました,회전목마가 {0} 골드를 벌었습니다
+WELCOME_BACK_CAP,(offline earnings stop after {0} hours),(las ganancias sin conexión se detienen tras {0} horas),(les gains hors ligne s'arrêtent après {0} heures),(Offline-Einnahmen enden nach {0} Stunden),(os ganhos offline param após {0} horas),(офлайн-доход идёт не дольше {0} ч),（离线收益最多{0}小时）,（オフライン収益は{0}時間まで）,(오프라인 수익은 {0}시간까지)
+WELCOME_BACK_COLLECT,Collect,Recoger,Récupérer,Einsammeln,Coletar,Забрать,领取,受け取る,받기
+DURATION_HOURS_MINUTES,{0} h {1} min,{0} h {1} min,{0} h {1} min,{0} Std. {1} Min.,{0} h {1} min,{0} ч {1} мин,{0}小时{1}分钟,{0}時間{1}分,{0}시간 {1}분
+DURATION_MINUTES,{0} min,{0} min,{0} min,{0} Min.,{0} min,{0} мин,{0}分钟,{0}分,{0}분
 MENU_PLAY,Play,Jugar,Jouer,Spielen,Jogar,Играть,开始游戏,プレイ,플레이
 MENU_SETTINGS,Settings,Ajustes,Paramètres,Einstellungen,Configurações,Настройки,设置,設定,설정
 MENU_QUIT,Quit,Salir,Quitter,Beenden,Sair,Выход,退出,終了,종료

@@ -56,6 +56,7 @@ extends Node2D
 @onready var _wave_manager: WaveManager = $WaveManager
 @onready var _options: OptionsMenu = $OptionsLayer/OptionsMenu
 @onready var _boss_strip: BossStrip = %BossStrip
+@onready var _welcome_back: WelcomeBack = %WelcomeBack
 
 var _booths: Array[TicketBooth] = []
 var _booth_bearings: Array[float] = []
@@ -131,7 +132,8 @@ func _ready() -> void:
 	GameState.reset_run()
 	if SaveManager.continue_requested:
 		SaveManager.continue_requested = false
-		SaveManager.load_run()
+		if SaveManager.load_run():
+			_pay_offline_gold()
 	_setup_saving()
 	_layout_booths(GameState.get_booth_count())
 	_sync_mounts(GameState.get_mount_roster())
@@ -154,6 +156,16 @@ func _setup_saving() -> void:
 	GameState.selected_tier_changed.connect(_queue_save.unbind(1))
 	# A new run replaces the old save straight away.
 	_queue_save()
+
+
+## Gold earned while the game was closed, shown in "Welcome back" (before the
+## first save, which would reset the clock).
+func _pay_offline_gold() -> void:
+	var seconds_away := SaveManager.get_offline_seconds()
+	var gold := GameState.grant_offline_gold(seconds_away)
+	if gold > 0.0:
+		var capped := seconds_away > GameState.get_offline_max_hours() * 3600.0
+		_welcome_back.open(seconds_away, gold, capped, GameState.get_offline_max_hours())
 
 
 func _queue_save() -> void:
