@@ -159,22 +159,33 @@ mouse_filter = 2
 layout_mode = 2
 mouse_filter = 2
 
-[node name="BoostColumn" type="VBoxContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter" unique_id=357125464]
+[node name="BoostPanel" type="PanelContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter"]
+layout_mode = 2
+
+[node name="BoostMargin" type="MarginContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter/BoostPanel"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 6
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
 
-[node name="BoostBar" type="ProgressBar" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter/BoostColumn" unique_id=810043088]
+[node name="BoostColumn" type="VBoxContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter/BoostPanel/BoostMargin" unique_id=357125464]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="BoostBar" type="ProgressBar" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter/BoostPanel/BoostMargin/BoostColumn" unique_id=810043088]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(180, 10)
+custom_minimum_size = Vector2(200, 12)
 layout_mode = 2
 mouse_filter = 2
 max_value = 1.0
 show_percentage = false
 
-[node name="BoostButton" type="Button" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter/BoostColumn" unique_id=487136539]
+[node name="BoostButton" type="Button" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn/BoostCenter/BoostPanel/BoostMargin/BoostColumn" unique_id=487136539]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(180, 48)
+custom_minimum_size = Vector2(200, 48)
 layout_mode = 2
 focus_mode = 0
 text = "HUD_BOOST"

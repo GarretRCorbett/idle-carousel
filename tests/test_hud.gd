@@ -87,7 +87,8 @@ func test_hud_never_blocks_world_clicks() -> void:
 func test_panels_and_boost_button_take_clicks() -> void:
 	var game: Node = auto_free((load("res://scenes/Game.tscn") as PackedScene).instantiate())
 	var columns := "HUD/HUDRoot/ScreenMargin/Columns/"
-	for path in ["LeftColumn/StatsPanel", "ShopPanel", "PlayColumn/BoostCenter/BoostColumn/BoostButton"]:
+	for path in ["LeftColumn/StatsPanel", "ShopPanel", "PlayColumn/BoostCenter/BoostPanel",
+			"PlayColumn/BoostCenter/BoostPanel/BoostMargin/BoostColumn/BoostButton"]:
 		var control := game.get_node(columns + path) as Control
 		assert_int(control.mouse_filter).override_failure_message(
 				"%s should STOP clicks" % path).is_equal(Control.MOUSE_FILTER_STOP)
