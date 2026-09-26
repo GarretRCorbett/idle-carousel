@@ -9,7 +9,7 @@ func after_test() -> void:
 
 
 func test_every_player_control_is_an_action_with_a_controller_binding() -> void:
-	for action: StringName in [&"boost", &"send_wave", &"pause_menu", &"grab_pickup", &"shop_prev_tab", &"shop_next_tab"]:
+	for action: StringName in [&"boost", &"send_wave", &"pause_menu", &"grab_pickup", &"strike", &"shop_prev_tab", &"shop_next_tab"]:
 		assert_bool(InputMap.has_action(action)).override_failure_message(String(action)).is_true()
 		var bound := ControllerInput.get_joy_button(action) >= 0 or ControllerInput.get_joy_axis(action) >= 0
 		assert_bool(bound).override_failure_message("%s has no controller binding" % action).is_true()

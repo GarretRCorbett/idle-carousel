@@ -102,6 +102,7 @@ func _ready() -> void:
 	_booths.append(_first_booth)
 	_hud.boost_requested.connect(GameState.add_click_boost)
 	_click_router.enemy_clicked.connect(_on_enemy_clicked)
+	_click_router.carousel = _carousel  # controller strikes aim from here
 	_encounter = BossEncounter.new()
 	_encounter.name = "BossEncounter"
 	add_child(_encounter)

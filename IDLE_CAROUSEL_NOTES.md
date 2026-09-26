@@ -32,7 +32,7 @@ _Update at the end of every session._
 
 ### Later reminders (Garret, 2026-09-25)
 - [ ] **Before Steam launch:** create the Nintendo Developer Portal account (free; admin only, no port work). Plan: `planning/switch_release_plan.md`.
-- [ ] **Full controller pass (later):** foundation is in (ControllerInput, ControllerPrompt, every control an Input Map action; CLAUDE.md rule). Still to do: aim/strike enemies with a controller (strike-nearest idea), controller rows in Settings → Controls, a remap screen, real button icons (Kenney Input Prompts, CC0) chosen by controller type, and focus for the boss strip and HUD buttons.
+- [ ] **Full controller pass (later):** foundation is in (ControllerInput, ControllerPrompt, every control an Input Map action; CLAUDE.md rule). Strike nearest is done (left trigger, Phase 4 Step 9a). Still to do: controller rows in Settings → Controls, a remap screen, real button icons (Kenney Input Prompts, CC0) chosen by controller type, and focus for the boss strip and HUD buttons.
 - [x] **Theme / mascot decided (Garret, 2026-09-26):** **Stub** the ticket; the park is reopening; stamps, the Ticket Book, seasons. GDD v1.20, `planning/theme_ticket.md`. Next: plan the Phase 4 pieces (Stub drawn in code, the tutorial in Stub's voice, Guide → Ticket Book, stamps).
 - [ ] **Naming and themes (Garret, 2026-09-26):** "Park Guide" is a working name; "park" is used a lot. Revisit names together with the theme specifications and decisions later.
 - [ ] **Remind Garret, much later:** have Claude look at the old **Carousel Crusade** Godot project (the Slay the Spire / Wildfrost-style carousel game). Not now; it's the "after Idle Carousel ships" dream. Backstory: `devlog/backstory.md`.
