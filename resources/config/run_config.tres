@@ -4,5 +4,5 @@
 
 [resource]
 script = ExtResource("1_script")
-base_spin_speed_deg_s = 70.0
+base_spin_speed_deg_s = 90.0
 click_boost_cap = 0.4

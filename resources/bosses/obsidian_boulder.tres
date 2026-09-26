@@ -10,5 +10,5 @@ name_key = "BOSS_OBSIDIAN_BOULDER"
 scene = ExtResource("2_scene")
 kills_required = 160
 time_limit_seconds = 180.0
-first_clear_gold = 1300.0
-repeat_clear_gold = 325.0
+first_clear_gold = 1700.0
+repeat_clear_gold = 420.0

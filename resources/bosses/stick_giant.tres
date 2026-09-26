@@ -10,5 +10,5 @@ name_key = "BOSS_STICK_GIANT"
 scene = ExtResource("2_scene")
 kills_required = 80
 time_limit_seconds = 120.0
-first_clear_gold = 300.0
-repeat_clear_gold = 75.0
+first_clear_gold = 390.0
+repeat_clear_gold = 100.0

@@ -10,5 +10,5 @@ name_key = "BOSS_BOULDER"
 scene = ExtResource("2_scene")
 kills_required = 100
 time_limit_seconds = 120.0
-first_clear_gold = 450.0
-repeat_clear_gold = 110.0
+first_clear_gold = 580.0
+repeat_clear_gold = 140.0

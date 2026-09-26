@@ -10,5 +10,5 @@ name_key = "BOSS_ANCIENT_LOG"
 scene = ExtResource("2_scene")
 kills_required = 140
 time_limit_seconds = 150.0
-first_clear_gold = 900.0
-repeat_clear_gold = 225.0
+first_clear_gold = 1150.0
+repeat_clear_gold = 290.0

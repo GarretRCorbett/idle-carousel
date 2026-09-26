@@ -64,3 +64,23 @@ Every price, health value and growth rate is a draft. The ticket booth price (1,
 1. Click speed changing the run length: **playtest first and keep it in mind.** Auto-clickers (one for enemies, one for Boost) are noted for later as prestige unlocks, expensive shop items, relics or random events (`IDLE_CAROUSEL_NOTES.md`).
 2. Booth prices: **go with the sims**, so 1,500 Gold, each next booth ×1.8 (question 23 answered, GDD v1.16).
 3. Questions 22 (idle speed) and 24 (manual wave stacking) stay open; the playtest will show whether they matter.
+
+## Faster idle retune (playtest 3, 2026-09-26)
+Garret: idle felt slow. **Base spin 70 → 90°/s** (booth passes and mount hits ~29% more often).
+Alone, that halved the run (every boss by 1:24). To keep the pace:
+- **Every price ×1.3** (rounded), and the boss Gold rewards with them.
+- **Boss health ×1.15**, except **Leaf Storm 130 → 120**. It's click-only, and clicks don't speed
+  up with spin, so it depends on when Click Damage 2 is bought (later now, at 1.3× prices).
+- Tried and dropped: health ×1.3 (Obsidian not beaten in 3.5 h, ~85k Gold unspent: health
+  became the wall); health unchanged (the run ended at 1:51).
+
+| Boss | Target | Step 8 (70°/s) | Seed 1 | Seed 2 | Seed 3 | Avg (90°/s) |
+|---|---|---|---|---|---|---|
+| 1 Leaf Storm | 0:15 | 0:18 | 0:19:37 | 0:15:36 | 0:15:41 | 0:17 |
+| 2 Stick Giant | 0:35 | 0:31 | 0:36:34 | 0:37:07 | 0:37:13 | 0:37 |
+| 3 Boulder | 1:00 | 1:06 | 1:02:53 | 0:58:52 | 0:58:57 | 1:00 |
+| 4 Gilded Gale | 1:30 | 1:30 | 1:32:04 | 1:33:11 | 1:33:16 | 1:33 |
+| 5 Ancient Log | 2:05 | 2:05 | 1:56:37 | 1:52:31 | 1:52:58 | 1:54 |
+| 6 Obsidian Boulder | 2:40 | 2:36 | 2:45:59 | 2:47:11 | 2:42:25 | 2:45 |
+
+Stalled ~13–14 min per run (Step 8: 12–13). All numbers are still drafts.

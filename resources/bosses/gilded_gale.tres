@@ -10,5 +10,5 @@ name_key = "BOSS_GILDED_GALE"
 scene = ExtResource("2_scene")
 kills_required = 120
 time_limit_seconds = 150.0
-first_clear_gold = 650.0
-repeat_clear_gold = 160.0
+first_clear_gold = 840.0
+repeat_clear_gold = 210.0
