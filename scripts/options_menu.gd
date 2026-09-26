@@ -98,9 +98,24 @@ func close() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if visible and (event.is_action_pressed(&"ui_cancel") or event.is_action_pressed(&"pause_menu")):
+	if not visible:
+		return
+	if event.is_action_pressed(&"ui_cancel") or event.is_action_pressed(&"pause_menu"):
 		close()
 		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed(&"shop_prev_tab") or event.is_action_pressed(&"shop_next_tab"):
+		_step_tab(-1 if event.is_action_pressed(&"shop_prev_tab") else 1)
+		get_viewport().set_input_as_handled()
+
+
+## LB/RB (the shop's tab actions) switch tabs here too, so a controller can
+## reach the Guide. Focus that the old tab took with it goes back to Back
+## (the Guide focuses its own list when it opens with a controller).
+func _step_tab(step: int) -> void:
+	_tabs.current_tab = posmod(_tabs.current_tab + step, _tabs.get_tab_count())
+	var focus := get_viewport().gui_get_focus_owner()
+	if focus == null or not focus.is_visible_in_tree():
+		_back_button.grab_focus.call_deferred()
 
 
 ## Every loaded language, each shown in its own name (LANGUAGE_NATIVE_NAME in

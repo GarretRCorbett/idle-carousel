@@ -122,6 +122,8 @@ func _ready() -> void:
 	_wave_manager.tier_kills = func() -> int: return GameState.get_tier_kills(GameState.get_selected_tier())
 	GameState.selected_tier_changed.connect(_on_selected_tier_changed)
 	ThemeManager.theme_changed.connect(_on_theme_changed)
+	# The Park Guide (Phase 4 Step 8) after Settings and Controls; Debug stays last.
+	_options.add_tab(ParkGuide.new(tier_catalog, event_list), "OPT_TAB_GUIDE")
 	if OS.is_debug_build():
 		_options.add_tab(DebugPanel.new(self), "Debug")
 	_wave_manager.live_enemy_count = get_live_enemy_count
