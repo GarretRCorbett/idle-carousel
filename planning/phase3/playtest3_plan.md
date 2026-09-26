@@ -31,6 +31,16 @@ Garret played the Purple Garden build ("once I started playing, I loved it"). Hi
    - The other tabs get the same compact treatment (icon, level pips, one gold buy button), and the shop gets narrower.
    - Codex renders 2–3 mockups first (a worktree task); Garret picks; then build.
 
+9. **Mount upgrades are confusing** (Wolf Fang sits in Combat, the others get a one-step Tier 2 in Mounts; "the Wolf has it right"). Claude's proposal, **awaiting Garret's OK (it's a GDD change)**:
+   - Every mount gets its own leveled track on its Mounts-tab row: Wolf damage, Giraffe reach/damage, Sloth slow strength, Elephant sweep width/damage, Panda Gold/heal, Horse Gold per pass.
+   - Tiers become milestones on that track (for example Tier 2 at level 5 and Tier 3 at level 10), each adding a visible ability.
+   - The Combat tab keeps the player's own stats (click damage).
+10. **Almanac / "Park Guide"** from the pause menu, Hades-style: pages for mounts (abilities, levels, tiers), enemies and tiers, and bosses (how each fight works), unlocking as you meet them. Phase 4 size. The tutorial can link into it.
+11. **Income is invisible** ("not looking at Gold per second"; "I don't get how the Panda works"):
+    - Make every mount's effect visible: a coin "+X" over the Horse at booth passes and over the Panda each turn, and a heal sparkle when the Panda heals (like the Sloth's Zzz).
+    - Make Gold and Gold per second more prominent once idle matters.
+    - Garret's idea, a mount with flat Gold per second: maybe the Panda becomes that. Decide together with item 9.
+
 ## Open (ask Garret when building auto-boost)
 - (Answered, item 7: latches drain the bar gently.) **How Overdrive works today** (`GameState._update_boost_status`, RunConfig): it starts after the bar sits at 99% or more for 5 s, and stays on until the bar drops below 80%. Latched enemies slow the spin but do **not** lower the bar. So "a latch breaks turbo" needs a new rule. Options:
   - latched enemies drain the bar;
