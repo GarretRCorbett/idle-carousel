@@ -24,8 +24,15 @@ Garret played the Purple Garden build ("once I started playing, I loved it"). Hi
    - Garret's intent: "if something latches, it still brings you out of turbo," so players still want to protect the carousel.
 5. **Mounts:** add outlines now, the same way as the tier outlines; then a Codex art study (a few treatments of the same animals) for Garret to pick from.
 
+6. **Bug: buying Boost Power ends Overdrive.** The cap rises, so the same boost reads below the 80% "still maxed" line. Fix: keep the bar's fill fraction when the cap grows. Buying must never break Overdrive.
+7. **Latches drain boost gently** (Garret: "just slow down boost some, not bully reset it"). Each latched enemy drains the bar a little; more latches drain it faster. Losing all health still ends Overdrive, as now ("that felt right").
+8. **Shop redesign** ("takes up too much real estate; navigating is confusing, especially mounts"):
+   - The Mounts tab becomes one row per animal in a fixed order: an icon (fully greyed when locked, in color when available), the count owned ("×2") and tier (T1/T2), and compact **Buy** (gold, with the price), **Sell** and **Upgrade** buttons.
+   - The other tabs get the same compact treatment (icon, level pips, one gold buy button), and the shop gets narrower.
+   - Codex renders 2–3 mockups first (a worktree task); Garret picks; then build.
+
 ## Open (ask Garret when building auto-boost)
-- **How Overdrive works today** (`GameState._update_boost_status`, RunConfig): it starts after the bar sits at 99% or more for 5 s, and stays on until the bar drops below 80%. Latched enemies slow the spin but do **not** lower the bar. So "a latch breaks turbo" needs a new rule. Options:
+- (Answered, item 7: latches drain the bar gently.) **How Overdrive works today** (`GameState._update_boost_status`, RunConfig): it starts after the bar sits at 99% or more for 5 s, and stays on until the bar drops below 80%. Latched enemies slow the spin but do **not** lower the bar. So "a latch breaks turbo" needs a new rule. Options:
   - latched enemies drain the bar;
   - any latch ends Overdrive;
   - auto-boost pauses while something is latched.
@@ -33,8 +40,8 @@ Garret played the Purple Garden build ("once I started playing, I loved it"). Hi
 - **Strings:** the upgrade's name and description need Garret's approval.
 
 ## Build order (next sessions)
-1. Boost panel, then mount outlines. Both small.
+1. Boost panel, mount outlines, and the Boost Power / Overdrive bug. All small.
 2. Faster idle: raise the base spin, re-run the economy sim, keep the boss pace.
 3. Auto-boost, once the open questions are answered. Update the GDD.
-4. Codex worktree task: mount art study.
+4. Codex worktree tasks: mount art study, and the shop redesign mockups.
 5. Tutorial script draft for Garret's approval. Build it after Phase 3.
