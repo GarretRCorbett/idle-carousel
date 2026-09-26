@@ -5,6 +5,8 @@ extends Node
 signal setting_changed(key: StringName, value: Variant)
 ## The run was written to disk (the HUD flashes its save icon).
 signal run_saved
+## Something was met for the first time ever (a Park Guide entry unlocks).
+signal discovered(id: String)
 
 ## Bump when the save layout changes, and upgrade older files in _read_file().
 ## 2: mount levels and stars (Phase 4 Step 5) replace Tier 2 rows and Wolf Fang.
@@ -44,10 +46,15 @@ var continue_requested: bool = false
 ## A run was saved since the game started. Offline time only counts while the
 ## game was closed, so time spent on the main menu pays nothing (Garret).
 var _saved_this_session: bool = false
+## What outlives a run (the save's "permanent" section): Park Guide
+## discoveries now, prestige later. Loaded at startup, kept in memory, and
+## written with every run save, so New run keeps it.
+var _discovered: Dictionary[String, bool] = {}
 
 
 func _ready() -> void:
 	load_settings()
+	load_permanent()
 
 
 ## Reads the settings file (missing or bad values fall back to defaults) and applies them.
@@ -123,7 +130,7 @@ func save_run() -> bool:
 	var data := {
 		"version": SAVE_VERSION,
 		"saved_at": int(Time.get_unix_time_from_system()),
-		"permanent": {},  # prestige (Phase 5)
+		"permanent": _permanent_data(),
 		"run": GameState.to_save_data(),
 	}
 	var tmp_path := run_save_path + ".tmp"
@@ -167,6 +174,51 @@ func get_offline_seconds() -> float:
 	if _saved_this_session or saved_at <= 0:
 		return 0.0
 	return maxf(0.0, Time.get_unix_time_from_system() - saved_at)
+
+
+# --- Permanent (outlives runs) ----------------------------------------------------
+
+## Reads the "permanent" section from the save (or its backup). No save = nothing
+## discovered yet. Tests call it after pointing run_save_path elsewhere.
+func load_permanent() -> void:
+	_discovered.clear()
+	var permanent: Variant = _read_run_file().get("permanent", {})
+	if not permanent is Dictionary:
+		return
+	var list: Variant = permanent.get("discovered", [])
+	if list is Array:
+		for id: Variant in list:
+			if id is String and id != "":
+				_discovered[id] = true
+
+
+## Marks `id` as met, forever (Park Guide). It's saved with the next run save.
+func discover(id: String) -> void:
+	if id == "" or _discovered.has(id):
+		return
+	_discovered[id] = true
+	discovered.emit(id)
+
+
+func is_discovered(id: String) -> bool:
+	return _discovered.has(id)
+
+
+## Every discovered id, sorted (so the save file diffs cleanly).
+func get_discovered() -> PackedStringArray:
+	var ids := PackedStringArray(_discovered.keys())
+	ids.sort()
+	return ids
+
+
+## Forgets every discovery in memory (tests; the file is untouched until the next save).
+func clear_discoveries() -> void:
+	_discovered.clear()
+
+
+## Prestige (Phase 5) will add its own keys here.
+func _permanent_data() -> Dictionary:
+	return {"discovered": Array(get_discovered())}
 
 
 func delete_run_save() -> void:
