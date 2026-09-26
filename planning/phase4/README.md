@@ -150,3 +150,32 @@ Giraffe ★2 hits harder). Changes from the plan after the sims:
   (targets 0:15, 0:35, 1:00, 1:30, 2:05, 2:40). Gilded Gale is the longest wall (~50 min): watch it.
 - Save version 2: old saves convert (a Tier 2 becomes ★2 with levels 1-3; Wolf Fang levels become
   Wolf levels, up to 3 before the star and 3 after).
+
+## Step 6 plan: the rest of the upgrade tree + shop visibility (Garret's answers, 2026-09-26)
+**New upgrades** (Upgrades tab; every number is a draft, re-simmed before commit):
+
+| Upgrade | Levels | Effect per level | Price (growth) | Available |
+|---|---|---|---|---|
+| Carousel Health | 3 | +25 max health (100 → 175) | 600 (×2.5) | one level per boss beaten (0 / 1 / 2) |
+| Gilded Rims (merges Polish and Shine) | 3 | +10% to all Gold earned; the rim turns more golden | 1,500 (×2.5) | after Leaf Storm |
+| Offline Efficiency | 5 | +5% offline rate (50% → 75%) | 800 (×1.8) | after Leaf Storm |
+| Click Range | 3 | +25% click radius | 150 (×2) | from the start |
+
+- "All Gold earned" = booth passes, kills, the Panda, offline Gold and boss rewards (not sale refunds).
+- **Click Combo: skipped for now** (Garret); noted with the auto-clicker ideas.
+- ★3 abilities (Trunk Toss, Double Take, Pack Mentality) stay in Phase 5 (prestige).
+
+**Visibility** (GDD "Upgrade Visibility System"):
+- **Hidden** until you're **one boss away** from unlocking it (e.g. Elephant and Mount Slot 5 appear once
+  Leaf Storm is beaten); then **locked** (dimmed, with its requirement), then buyable. Same rule on both tabs.
+- **Affordable:** the gold button pulses gently.
+- **Fill bar:** a thin (3 px) bar under each price button, Gold toward the price.
+- **Bought / maxed:** stays in place, dimmed, "Max".
+
+**Upgrades tab sections** (small headers): Carousel (Speed, Ticket Booth, Carousel Health) · Boost (Boost
+Power, Auto-Boost) · Clicks (Click Damage, Click Range) · Gold (Gilded Rims, Offline Efficiency).
+`UpgradeData.section` sets it; headers hide when all their rows are hidden.
+
+**Also:** the economy sim buys the new rows; tests for each effect, the visibility rule, and saves
+(new upgrades load through `_apply_effect` like the rest). GDD updated (merged Gilded Rims, booth
+prices, Combat tab gone).

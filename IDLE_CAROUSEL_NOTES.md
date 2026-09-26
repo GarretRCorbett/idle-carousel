@@ -40,6 +40,7 @@ _Update at the end of every session._
 
 ### Auto-clickers (Garret, 2026-09-25, after Step 8)
 - [ ] Clicking speed swings run length a lot in the sims (1 click/s ≈ 2:36, 2 clicks/s ≈ 1:16). Playtest first and keep it in mind.
+- [ ] **Click Combo** (GDD Combat tree: rapid clicks build to 2x damage) was skipped in Phase 4 Step 6 (Garret, 2026-09-26). Revisit with the auto-clickers below.
 - [ ] Plan an **auto-clicker for enemies** and one **for Boost**. They could come after a prestige, as a very expensive shop item, or as a relic or random event. Design this with the prestige tree (GDD v1.10 already lists automation there).
 
 ### Tier colors and progression feel (Garret, 2026-09-25)
