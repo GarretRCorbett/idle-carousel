@@ -233,3 +233,55 @@ face-button dots with the top one filled, so it reads on any controller. The Deb
 event. Found while building: a typed-array `@export` default that preloads resources made the editor
 leak on exit, so the event list lives in the scene instead. The economy sim doesn't grab pickups, so
 its pace ignores events (they're short and optional).
+
+## Step 8 plan: Park Guide (working name) (Garret's answers, 2026-09-26)
+Garret wants to try this step in a **Claude Code cloud session** (headless Godot on Linux). The
+prompt is in `planning/phase4/cloud_park_guide_prompt.md`; setup is `tools/setup_godot_linux.sh`.
+
+**What it is:** a Hades-style almanac, a **"Guide" tab in the pause menu** (Esc / Start), next to
+Settings and Controls. The game is paused while it's open; nothing new on the HUD.
+
+**Pages (four groups):**
+- **Mounts:** Horse, Wolf, Giraffe, Sloth, Elephant, Panda. What it does, its level track and ★2
+  (from `MountData` and the `<mount>_level` upgrades), and **live** info: how many you own, level, ★.
+- **Enemies and tiers:** Leaf, Stick, Rock (`EnemyData`); the six color tiers (`TierData`: what
+  makes each tougher).
+- **Bosses:** the six fights (`BossData`): the timer, the special rule, the reward.
+- **Events and mechanics:** the four random events (`EventData`), Boost / Overdrive / Auto-Boost,
+  latching and the gentle drain, the stall and crank. (The tutorial will link to these later.)
+
+**Discovery:** an entry you haven't met shows a **dark silhouette and "???"** (Hades style), so you
+can see there's more. Once met it unlocks **forever** (kept across runs and later prestige):
+- a mount: when you first own it (the Horse and the basic mechanics are known from the start);
+- an enemy / a tier: when it first appears (`Game._admit_enemy`: its `EnemyData.id` and tier rank);
+- a boss: when you first challenge it (`BossEncounter.started`);
+- an event: when it first happens (`EventDirector.event_started` or a pickup appearing);
+- Overdrive, latching, the stall: the first time each happens (`GameState.overdrive_changed`,
+  `latch_count_changed`, `stall_changed`).
+
+**Saving:** discoveries live in the save file's **`permanent`** section (it's `{}` today), e.g.
+`"permanent": {"discovered": ["wolf", "leaf", "tier_1", ...]}`. `SaveManager` loads `permanent`
+at startup (not only on Continue), keeps it in memory, and writes it with every run save, so
+**New run keeps it**. Add `SaveManager.discover(id)`, `is_discovered(id)` and a `discovered(id)`
+signal; the save version stays 2 (the section already exists). Saving still only happens when
+`run_saves_enabled` (tests use a test path, as in `tests/test_save_run.gd`).
+
+**Layout:** a list on the left grouped by page (small gold headers, like the shop's sections),
+the selected entry on the right: icon (mount/enemy sprite, or a code-drawn shape), name, a short
+body text, and the live stats. **Controller-ready** (CLAUDE.md "Controller support"): the list is
+focusable buttons, up/down moves, the detail follows focus; nothing hover-only. Tab title key:
+`OPT_TAB_GUIDE` ("Guide"). Built in code or a small scene under `scenes/ui/`; data-driven, so a new
+mount/enemy/boss/event gets an entry without new UI code (e.g. a `GuideEntry` resource per entry, or
+entries built from the existing data plus a text key per id).
+
+**Text:** new strings `GUIDE_*` (a title and a 1–3 sentence body per entry, plain and friendly).
+All are **drafts for Garret's approval**. In a cloud session, put the **English text in every
+language column** (the CJK fonts can't be rebuilt there); Claude adds translations and rebuilds the
+fonts locally when merging.
+
+**Tests (GdUnit, headless):** every mount/enemy/tier/boss/event has an entry; undiscovered entries
+show "???" and no body; each discovery hook fires (buy a Wolf → `wolf` discovered, admit an enemy →
+its id and tier, start a boss fight, start an event, Overdrive/latch/stall); discoveries survive a
+save → New run → load; the Guide tab exists in the Game's options menu; the list buttons take focus.
+
+**Not in this step:** the tutorial (next), real icon art, a HUD button, prestige.
