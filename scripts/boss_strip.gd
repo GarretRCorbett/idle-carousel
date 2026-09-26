@@ -131,7 +131,7 @@ func refresh() -> void:
 		_bar.theme_type_variation = &""
 		_action.requires_confirm = false
 		_action.set_idle_text(tr(challenge_key))
-		_action.theme_type_variation = &""
+		_action.theme_type_variation = &"CrankButton"  # Challenge is the risky action: danger red (Garret)
 		_action.disabled = not BossEncounter.can_challenge(tier)
 		_update_gate(tier, boss)
 	_update_pips()

@@ -139,6 +139,7 @@ func _build_row(upgrade: UpgradeData) -> ShopRow:
 	text.add_child(row.status)
 
 	row.button = Button.new()
+	row.button.theme_type_variation = &"BuyButton"  # spending Gold is always gold
 	row.button.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	row.button.custom_minimum_size = Vector2(72, 0)
 	row.button.size_flags_vertical = Control.SIZE_SHRINK_CENTER

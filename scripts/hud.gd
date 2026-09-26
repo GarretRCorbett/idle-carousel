@@ -20,11 +20,8 @@ signal emergency_clear_requested
 @export var wave_paused_key: String = "HUD_SEND_WAVE"
 @export var emergency_ready_key: String = "HUD_CLEAR_READY"
 @export var emergency_cooldown_key: String = "HUD_CLEAR_COOLDOWN"
-## Boost bar tint during Overdrive.
-@export var overdrive_bar_modulate: Color = Color(1.6, 1.3, 0.35)
-## While stalled, the Boost bar shows the crank meter in this tint...
-@export var crank_bar_modulate: Color = Color(1.5, 0.6, 0.5)
-## ...and the Boost button shows this label (a translation key).
+## While stalled, the Boost button shows this label (a translation key).
+## Bar colors come from the UI theme's CrankBar / OverdriveBar roles.
 @export var crank_button_key: String = "HUD_CRANK"
 ## Keyboard shortcut for the Boost button.
 @export var boost_key: Key = KEY_SPACE
@@ -51,6 +48,8 @@ var _clear_enabled_shown: bool = false
 
 
 func _ready() -> void:
+	_gold_label.add_theme_color_override(&"font_color", _gold_label.get_theme_color(&"gold", &"Palette"))
+	_gold_per_sec_label.add_theme_color_override(&"font_color", _gold_per_sec_label.get_theme_color(&"muted", &"Palette"))
 	GameState.gold_changed.connect(_on_gold_changed)
 	GameState.health_changed.connect(_on_health_changed)
 	GameState.gold_per_second_changed.connect(_on_gold_per_second_changed)
@@ -138,10 +137,10 @@ func _on_crank_changed(_fraction: float) -> void:
 func _refresh_boost_bar() -> void:
 	if GameState.is_stalled():
 		_boost_bar.value = GameState.get_crank_fraction()
-		_boost_bar.self_modulate = crank_bar_modulate
+		_boost_bar.theme_type_variation = &"CrankBar"
 		return
 	_boost_bar.value = GameState.get_click_boost_fraction()
-	_boost_bar.self_modulate = overdrive_bar_modulate if GameState.is_overdrive_active() else Color.WHITE
+	_boost_bar.theme_type_variation = &"OverdriveBar" if GameState.is_overdrive_active() else &""
 
 
 func _on_health_changed(current: float, maximum: float) -> void:
