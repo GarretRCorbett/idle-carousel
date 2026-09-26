@@ -68,6 +68,9 @@ func _initialize() -> void:
 	_role_button(theme, "BlueButton", palette.secondary, palette.body)
 	theme.set_type_variation("CrankButton", "Button")
 	_role_button(theme, "CrankButton", palette.danger, palette.body)
+	# Garret: anything that spends Gold is gold (ink text), like the Gold counter.
+	theme.set_type_variation("BuyButton", "Button")
+	_role_button(theme, "BuyButton", palette.gold, palette.ink, true)
 	for role: String in ["gold", "body", "muted", "highlight", "ink", "danger", "health"]:
 		theme.set_color(role, "Palette", palette.get(role))
 

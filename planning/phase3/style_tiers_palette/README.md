@@ -39,3 +39,11 @@ A uses analogous violet/plum/lavender neutrals with cool teal actions and warm g
 [Machado's model](https://pubmed.ncbi.nlm.nih.gov/19834201/) at severity 1.0 predicts Green/Yellow luminance ratios of only **1.23:1 deuteranopia / 1.06:1 protanopia**. Orange/Red also converge toward ochre. A's teal/red become subdued grey/olive under protanopia; purple remains blue. Labels and fixed control positions still distinguish actions. Preserve numbered tier pips: [color alone is insufficient](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html). Mixed-tier enemies can still be confused; a future per-enemy tier marker would require Garret's design choice. The hue order is preserved here.
 
 **Changes and reproduction.** Six `resources/tiers/*.tres` plus `scripts/tier_data.gd` enable/document outlines. `scripts/ui_palette.gd`, two `resources/ui_palettes/*.tres`, `tools/build_ui_theme.gd`, generated `assets/ui/game_theme.tres`, `scripts/hud.gd` and `scripts/main_menu.gd` implement semantic colors. `tools/_style/{StyleStudy.tscn,style_study.gd,render_study.ps1}` reproduce this folder and restore A. Run `powershell -File tools/_style/render_study.ps1` from this worktree; it imports first and runs `tools/check.bat` last. Capture uses SubViewport PNG saves, avoiding redundant movie frames/audio. For editor review, open/save the temporary `StyleStudy.tscn` once if retaining it. Validation: Godot 4.7.2, full script/scene check and **340 tests passed**.
+
+## Garret's picks (2026-09-25)
+- **Palette A, Purple Garden**, and its title screen (cream title).
+- **Anything that spends Gold uses gold** (B's primary): shop buy buttons are the `BuyButton` variation (gold fill, ink text).
+- **Challenge uses the danger color** (like Give up).
+- **Outlines: tier shade** (option C) on Grey–Red; Charcoal keeps ivory. Ink was his second choice.
+- Later: switchable UI palettes per theme (the palettes are already separate `UiPalette` resources).
+- Rendered result: `chosen_hud.png`.
