@@ -93,6 +93,8 @@ var _events: EventDirector
 ## Pickup tokens live here, after ClickRouter, so a click on a token is
 ## handled before an enemy click (unhandled input goes last child first).
 var _pickup_layer: Node2D
+## Records first meetings for the Park Guide (kept across runs).
+var _discovery: GuideDiscovery
 
 
 func _ready() -> void:
@@ -143,6 +145,7 @@ func _ready() -> void:
 	GameState.upgrade_applied.connect(_on_upgrade_applied)
 	GameState.run_reset.connect(_refresh_gilding)
 	_setup_events()
+	_setup_discovery()
 	GameState.reset_run()
 	if SaveManager.continue_requested:
 		SaveManager.continue_requested = false
@@ -179,6 +182,15 @@ func _setup_events() -> void:
 	GameState.run_reset.connect(_restart_events)
 
 
+func _setup_discovery() -> void:
+	_discovery = GuideDiscovery.new()
+	_discovery.name = "GuideDiscovery"
+	_discovery.tier_catalog = tier_catalog
+	add_child(_discovery)
+	_discovery.watch_encounter(_encounter)
+	_discovery.watch_events(_events)
+
+
 ## A new run or a load: a fresh event clock, no running events or tokens.
 func _restart_events() -> void:
 	for pickup in _pickup_layer.get_children():
@@ -195,6 +207,7 @@ func _spawn_pickup(event: EventData) -> void:
 	pickup.position = _carousel.position + Vector2.from_angle(angle) * distance
 	pickup.grabbed.connect(_on_pickup_grabbed)
 	_pickup_layer.add_child(pickup)
+	_discovery.pickup_appeared(event)
 	AudioManager.play_sfx(&"tab")
 
 
@@ -520,6 +533,7 @@ func _admit_enemy(enemy: EnemyBase) -> void:
 	enemy.reached_rim.connect(_on_enemy_reached_rim)
 	enemy.died.connect(_on_enemy_died)
 	_click_router.register_enemy(enemy)
+	_discovery.enemy_admitted(enemy)
 
 
 func _on_enemy_clicked(enemy: EnemyBase) -> void:
