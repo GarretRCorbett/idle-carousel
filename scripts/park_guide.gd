@@ -9,6 +9,9 @@ extends HBoxContainer
 ## Controller-ready (CLAUDE.md): the list is focusable buttons, up/down moves,
 ## and the page follows focus. A mouse click picks an entry and lets go of focus.
 
+## Button text colors that mark the chosen entry.
+const FONT_STATES: Array[StringName] = [&"font_color", &"font_hover_color", &"font_focus_color", &"font_pressed_color"]
+
 ## Group headers, in GuideEntry.Group order.
 @export var group_keys: PackedStringArray = [
 	"GUIDE_GROUP_MOUNTS", "GUIDE_GROUP_ENEMIES", "GUIDE_GROUP_BOSSES", "GUIDE_GROUP_EVENTS",
@@ -35,8 +38,9 @@ extends HBoxContainer
 @export_range(8, 32, 1) var text_font_size: int = 13
 ## Unmet entries in the list.
 @export var unknown_modulate: Color = Color(1.0, 1.0, 1.0, 0.55)
-## The chosen entry's button.
-@export var selected_modulate: Color = Color(1.25, 1.2, 1.05)
+## The chosen entry's name in the list (a flat button's text is all there is
+## to mark it; a brightness tint doesn't show on white text).
+@export var selected_color: Color = Color(0.957, 0.851, 0.584, 1.0)
 ## Live stats under the text.
 @export var stats_color: Color = Color(0.48, 0.64, 1.0, 1.0)
 
@@ -109,7 +113,11 @@ func select(index: int) -> void:
 		return
 	_selected = index
 	for i in _buttons.size():
-		_buttons[i].self_modulate = selected_modulate if i == index else Color.WHITE
+		for state in FONT_STATES:
+			if i == index:
+				_buttons[i].add_theme_color_override(state, selected_color)
+			else:
+				_buttons[i].remove_theme_color_override(state)
 	_show_page()
 
 
