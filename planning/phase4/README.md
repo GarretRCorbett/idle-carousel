@@ -179,3 +179,11 @@ Power, Auto-Boost) · Clicks (Click Damage, Click Range) · Gold (Gilded Rims, O
 **Also:** the economy sim buys the new rows; tests for each effect, the visibility rule, and saves
 (new upgrades load through `_apply_effect` like the rest). GDD updated (merged Gilded Rims, booth
 prices, Combat tab gone).
+
+**Controller-ready shop (Garret, 2026-09-26: "make sure everything works with a controller"; also why
+two tabs beat three):** shop buttons take focus again (theme focus outline); up/down between rows,
+left/right across Buy · Sell · Up, LB/RB (new Input Map actions `shop_prev_tab` / `shop_next_tab`) switch
+tabs, the list scrolls to the focused row, headers aren't focusable. Nothing hover-only: an **info line**
+at the bottom of the shop shows the focused or hovered row's details (e.g. "Long Neck (level 2): +10%
+reach"), replacing the Up button's tooltip for controller and touch. The full controller pass (strike
+nearest enemy, Boost on a trigger) comes later.
