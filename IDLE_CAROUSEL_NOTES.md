@@ -24,6 +24,9 @@ _Update at the end of every session._
 
 ## 🚧 To-Do / Things To Add
 
+### Playtest 3 (Garret, 2026-09-25): next up
+- [ ] See `planning/phase3/playtest3_plan.md`: boost panel, mount outlines, faster idle, auto-boost (4 levels; open questions there), Codex mount art study, tutorial (plan now, build after Phase 3).
+
 ### Themes, someday (Garret, 2026-09-25)
 - [x] Foundation and test themes built (Garret chose "prep + test theme now"): stable enemy ids, EnemySkin, ParkTheme, ThemeManager, and Winter/Halloween test themes (F4 in debug builds). See `planning/phase3/theming_plan.md`; habits are in CLAUDE.md.
 - [ ] For a real theme: mount skins, carousel/UI/tier colors per theme, sounds, a saved choice with a picker, then the art. Tier tints darken theme colors (grey pumpkins look brown), so pick light art or per-theme tier colors.
