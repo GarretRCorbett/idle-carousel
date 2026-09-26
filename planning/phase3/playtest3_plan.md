@@ -58,3 +58,8 @@ Garret played the Purple Garden build ("once I started playing, I loved it"). Hi
 5. Tutorial script draft for Garret's approval. Build it after Phase 3.
 6. Mount levels and stars (GDD v1.17): rebuild the Tier 2 rows as per-mount tracks with the ★2 star-up; ★3 waits for prestige. Build together with the shop redesign.
 7. Income pops: a combined "+X" above each booth (test at max speed), and the Panda's "+X" per turn.
+
+## Phase split (Claude's proposal, 2026-09-25)
+- **Finish Phase 3:** the boost panel, mount outlines, the Boost Power/Overdrive bug, the gentle latch drain, faster idle (re-run the sim), and the combined booth "+X". Then Step 9: a full playtest, a Codex review, and sign-off.
+- **Start of Phase 4:** the shop redesign, mount levels and stars, auto-boost, the Park Guide, the tutorial, and **music**. Music is human-made CC0 or public domain only: Kenney jingles, CC0 loops from OpenGameArt, Kevin MacLeod (CC-BY), and "Over the Waves" (1888, public-domain composition; needs a public-domain or CC0 recording, e.g. Musopen). Logged in PROVENANCE. No AI music.
+
