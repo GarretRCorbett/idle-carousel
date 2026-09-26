@@ -68,6 +68,7 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
 3. AudioManager — persistent music/SFX players
 4. UpgradeManager — leveled upgrades from `upgrade_catalog.tres`, can_afford/purchase/levels, emits signals
 5. ThemeManager — the current ParkTheme (`resources/themes/`): enemy skins, boss names, scenery colors
+6. ControllerInput — is a controller in use (device_changed), and which button an action is bound to
 
 ## Architecture rules (from the GDD)
 - Enemies and projectiles live in world-space layers (EnemyLayer, ProjectileLayer),
@@ -110,6 +111,14 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
     sizes as `@export`s; draw from `get_visual_size()`, not `data.placeholder_size`.
   - A new enemy gets an id and a skin in every theme in `tools/make_test_themes.gd`
     (`tests/test_themes.gd` fails otherwise).
+- Controller support (Garret, 2026-09-26; the Switch plan depends on it). For every new control:
+  - It's an **Input Map action** in project.godot (keyboard + controller binding), read with
+    `is_action_pressed(...)`: never a hard-coded key or button.
+  - Button prompts come from `ControllerPrompt.draw_action(canvas, center, action)`, so they show
+    the actual binding, and appear only while `ControllerInput.using_controller` is true
+    (listen to `ControllerInput.device_changed`).
+  - Nothing is hover-only (use the shop's info-line idea); buttons can take focus; a mouse click
+    lets go of focus so Space stays Boost.
 - Pseudolocalization check: Project Settings → Advanced Settings on →
   Internationalization → Pseudolocalization → Use Pseudolocalization, run the game,
   look for plain English (missed) or cut-off text, then turn it off again.

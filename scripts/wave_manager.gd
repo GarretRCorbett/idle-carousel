@@ -30,8 +30,9 @@ signal send_available_changed(available: bool)
 @export_range(0.0, 500.0, 1.0, "suffix:px") var cluster_depth_px: float = 120.0
 
 @export_group("Controls")
-## This key sends the next wave right away (Garret wants it kept as a real control).
-@export var send_wave_key: Key = KEY_N
+## This Input Map action sends the next wave right away (N, or the left face
+## button on a controller; Garret wants it kept as a real control).
+@export var send_wave_action: StringName = &"send_wave"
 ## Send wave is blocked while more enemies than this are alive, so waves can't be
 ## stacked without limit (Garret, 2026-09-24; revisit with Sticks and Rocks).
 ## Auto waves still come on their timer. 0 = no limit.
@@ -159,8 +160,7 @@ func _emit_countdown_if_changed() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	var key := event as InputEventKey
-	if key != null and key.pressed and not key.echo and key.keycode == send_wave_key:
+	if event.is_action_pressed(send_wave_action, false, true):
 		send_wave_now()
 		get_viewport().set_input_as_handled()
 

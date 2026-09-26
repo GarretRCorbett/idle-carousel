@@ -10,11 +10,8 @@ signal grabbed(pickup: EventPickup)
 var event: EventData
 ## Seconds before it's gone.
 var lifetime: float = 8.0
-## Draw the controller's grab-button prompt (a controller is in use).
-var show_prompt: bool = false:
-	set(value):
-		show_prompt = value
-		queue_redraw()
+## The action that grabs it; the prompt shows whatever button it's bound to.
+var grab_action: StringName = &"grab_pickup"
 
 @export_range(4.0, 64.0, 1.0, "suffix:px") var radius: float = 16.0
 ## Clicks this far out still count (it's a moving target).
@@ -33,6 +30,7 @@ var _taken: bool = false
 
 func _ready() -> void:
 	_home = position
+	# The prompt shows only while a controller is in use (it redraws each frame).
 
 
 func _process(delta: float) -> void:
@@ -89,17 +87,5 @@ func _draw() -> void:
 			draw_circle(Vector2(rect.position.x, 0.0), radius * 0.3, ink_color, true, -1.0, true)
 			draw_circle(Vector2(rect.end.x, 0.0), radius * 0.3, ink_color, true, -1.0, true)
 			draw_line(Vector2(0.0, rect.position.y + 3.0), Vector2(0.0, rect.end.y - 3.0), ink_color, 1.5)
-	if show_prompt:
-		_draw_prompt(Vector2(radius * 1.1, -radius * 1.1))
-
-
-## The grab button as four face-button dots with the top one filled, so it
-## reads on any controller (Y on Xbox, X on Nintendo, triangle on PlayStation).
-func _draw_prompt(center: Vector2) -> void:
-	draw_circle(center, 9.0, ink_color, true, -1.0, true)
-	for i in 4:
-		var spot := center + Vector2.from_angle(-PI / 2.0 + i * PI / 2.0) * 4.5
-		if i == 0:
-			draw_circle(spot, 2.6, Color.WHITE, true, -1.0, true)
-		else:
-			draw_arc(spot, 2.0, 0.0, TAU, 10, Color(1, 1, 1, 0.7), 1.0, true)
+	if ControllerInput.using_controller:
+		ControllerPrompt.draw_action(self, Vector2(radius * 1.1, -radius * 1.1), grab_action, 9.0, ink_color)

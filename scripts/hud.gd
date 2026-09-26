@@ -25,8 +25,8 @@ signal emergency_clear_requested
 ## While stalled, the Boost button shows this label (a translation key).
 ## Bar colors come from the UI theme's CrankBar / OverdriveBar roles.
 @export var crank_button_key: String = "HUD_CRANK"
-## Keyboard shortcut for the Boost button.
-@export var boost_key: Key = KEY_SPACE
+## Input Map action for Boost (Space, or the right trigger on a controller).
+@export var boost_action: StringName = &"boost"
 ## "Saved" flashes in the bottom-left corner after each save (GDD: a small save icon).
 @export var saved_key: String = "HUD_SAVED"
 @export_range(0.1, 5.0, 0.1, "suffix:s") var saved_show_seconds: float = 1.2
@@ -92,7 +92,7 @@ func _ready() -> void:
 		AudioManager.play_sfx(&"crank" if GameState.is_stalled() else &"click"))
 	_boost_button.button_down.connect(func() -> void: _mouse_holding_boost = true)
 	_boost_button.button_up.connect(func() -> void: _mouse_holding_boost = false)
-	_boost_button.shortcut = _make_shortcut(boost_key)
+	_boost_button.shortcut = _make_shortcut(boost_action)
 	_make_saved_label()
 	SaveManager.run_saved.connect(_on_run_saved)
 	_make_auto_marker()
@@ -126,7 +126,7 @@ func _notification(what: int) -> void:
 func _process(delta: float) -> void:
 	_refresh_emergency_button()
 	_pulse_drain(delta)
-	var held := _mouse_holding_boost or Input.is_key_pressed(boost_key)
+	var held := _mouse_holding_boost or Input.is_action_pressed(boost_action)
 	if held != _boost_held:
 		_boost_held = held
 		boost_held_changed.emit(held)
@@ -275,9 +275,11 @@ func _on_run_saved() -> void:
 	_saved_tween.tween_property(_saved_label, "modulate:a", 0.0, 0.4)
 
 
-func _make_shortcut(key: Key) -> Shortcut:
-	var event := InputEventKey.new()
-	event.keycode = key
+## A shortcut for an Input Map action, so every key and button bound to it works.
+func _make_shortcut(action: StringName) -> Shortcut:
+	var event := InputEventAction.new()
+	event.action = action
+	event.pressed = true
 	var shortcut := Shortcut.new()
 	shortcut.events = [event]
 	return shortcut

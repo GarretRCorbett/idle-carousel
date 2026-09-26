@@ -93,8 +93,6 @@ var _events: EventDirector
 ## Pickup tokens live here, after ClickRouter, so a click on a token is
 ## handled before an enemy click (unhandled input goes last child first).
 var _pickup_layer: Node2D
-## A controller was the last thing used: pickups show the grab-button prompt.
-var _using_controller: bool = false
 
 
 func _ready() -> void:
@@ -192,7 +190,6 @@ func _spawn_pickup(event: EventData) -> void:
 	var pickup := EventPickup.new()
 	pickup.event = event
 	pickup.lifetime = GameState.get_config().pickup_seconds
-	pickup.show_prompt = _using_controller
 	var angle := _events.rng.randf() * TAU
 	var distance := _events.rng.randf_range(pickup_distance.x, pickup_distance.y)
 	pickup.position = _carousel.position + Vector2.from_angle(angle) * distance
@@ -277,16 +274,6 @@ func _notification(what: int) -> void:
 		SaveManager.save_run()
 
 
-## Tracks whether a controller is in use (pickups show the grab prompt then).
-func _input(event: InputEvent) -> void:
-	var controller := event is InputEventJoypadButton or event is InputEventJoypadMotion
-	var other := event is InputEventMouseButton or event is InputEventKey
-	if (controller and not _using_controller) or (other and _using_controller):
-		_using_controller = controller
-		for pickup: EventPickup in _pickup_layer.get_children():
-			pickup.show_prompt = controller
-
-
 ## Esc opens Settings (which pauses the game; Esc again closes it).
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"grab_pickup"):
@@ -295,7 +282,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				pickup.grab()
 				get_viewport().set_input_as_handled()
 				return
-	if event.is_action_pressed(&"ui_cancel") and not _options.visible:
+	if event.is_action_pressed(&"pause_menu") and not _options.visible:
 		_options.open()
 		get_viewport().set_input_as_handled()
 		return
