@@ -57,7 +57,14 @@ About 3–5 minutes for a new player, most of it playing, not reading.
 - Tutorial progress (done / skipped) goes in the save's `permanent` section.
 - Step 3 only runs if something latches during the tutorial; otherwise it's skipped.
 
-## Open questions for Garret
+## Garret's answers (2026-09-26)
+- **The keeper:** a mascot-style character that doesn't lock us into an art asset (like Wildfrost's
+  small guides). Garret likes the **ticket** most (light bulb as backup); see `planning/theme_ticket.md`.
+  A name would be nice but isn't required; it waits for the theme to be defined.
+- **Controller striking:** build **"strike nearest"** now (a button that hits the enemy closest to the rim).
+- **Lines:** mostly good; final pass once the theme is settled and Codex has weighed in.
+
+## Open questions for Garret (original)
 1. **The keeper's name** (and are they a person, or an animal like the mounts?).
 2. **Controller striking (step 2):** controllers can't hit enemies yet (the "strike nearest" idea
    is in NOTES for the full controller pass). Build a simple strike-nearest button together with
