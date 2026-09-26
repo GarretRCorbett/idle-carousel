@@ -88,7 +88,7 @@
 - [ ] Hold-to-boost automation (from Garret's playtest idea; see NOTES)
 - [ ] Random Events (GDD): clickable pickups (speed/Gold surges, Lucky Ticket) and surprise visitors (Wandering Horse, Pop-up Booth), data-driven
 
-**⚠️ Resolve before starting:** DECISION PENDING — death/fail state design.
+**Fail state:** decided (GDD v1.18, "safe farm, risky push"). **Plan:** `planning/phase4/README.md` (also adds the playtest-3 items: shop redesign, mount levels and stars, auto-boost, Park Guide, tutorial, music).
 **Claude Code:** UpgradeManager, save/load serialization, offline math, tests for all three.
 **Garret:** shop layout in the editor; decide fail-state design.
 **Understanding check:** What happens, step by step, when you click Buy? What's in the save file?

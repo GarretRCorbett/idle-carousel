@@ -1,5 +1,5 @@
 # 🎠 Idle Carousel — Game Design Document
-### Version 1.17 | Working Title: Idle Carousel
+### Version 1.18 | Working Title: Idle Carousel
 > Solo dev project. Built in Godot 4.7 stable. Target: Steam release, anonymous, $4.99 (sale target ~$3.49–$3.75), with a free demo.
 > Personal motivation: daughters love carousels.
 > Influences: Cookie Clicker, Clicker Heroes, A Game About Feeding a Black Hole, Rusty's Retirement.
@@ -7,6 +7,7 @@
 ---
 
 ## Changelog
+- **v1.18** — **Fail state decided** (Garret, 2026-09-26): "safe farm, risky push" (Package A) as played since Phase 2 is now the real rule. At zero health the carousel stalls; Boost cranks it back; a 60 s safety net clears enemies (not during a boss fight); a lost boss fight costs only time. Gold, mounts and unlocks are never lost. Offline has no fights. Resolves the fail-state DECISION PENDING. Also: base spin 90°/s with prices ×1.3 (playtest-3 faster idle, re-simmed).
 - **v1.17** — Playtest 3 decisions (Garret, 2026-09-25; `planning/phase3/playtest3_plan.md`):
   - **Mount levels and stars** replace the separate tier upgrades. Each mount has one track: levels (pips), a ★2 star-up in the run, and ★3 (its named ability) unlocked by prestige.
   - **Auto-boost** becomes a 4-level run upgrade (early automation, and the touchscreen fix).
@@ -162,11 +163,14 @@ The single most important stat in the game. Affects:
 ### Health
 The carousel has a health bar. Enemies that successfully latch deal damage over time until removed.
 
-> **⚠️ DECISION PENDING — Death / fail state.** Current draft: at zero health the carousel stops (Game Over), and the player respawns at the start of the current tier with a Gold penalty. Open questions: Is a hard Game Over right for an idle game, especially while offline? Should zero health instead stall the carousel until repaired? How big is the penalty? **Resolve before Phase 4.** Agents: do not implement or change this without Garret's decision.
->
-> **Temporary Phase 2 behavior (Garret's call, placeholder only):** at zero health the carousel stalls (stops spinning) until the latched enemies are cleared, then health refills a little (25%). While stalled, the Boost button cranks it back instead (restart at 15%, enemies stay). After 60 s stalled, enemies are cleared and it restarts at 25%. Mark it TEMPORARY in code; it is replaced once the real fail state is decided.
->
-> **Direction so far (v1.8, Garret):** "safe farm, risky push." A stall costs the current attempt (a boss or pushed tier) and earning time, never saved Gold or unlocks. Offline: no fights, booth-only income, and you return to a healthy carousel. See `planning/phase2/codex_memo_h_health_offline.md`.
+### Fail state (decided v1.18, Garret): "safe farm, risky push"
+There is no Game Over. A stall costs time and the current attempt, never Gold, mounts or unlocks.
+- **Stall:** at zero health the carousel stops spinning. Clearing every latched enemy restarts it at 25% health.
+- **Crank:** while stalled, the Boost button becomes a crank (about 10 presses, or hold 4 s). A full crank restarts it at 15% health with the enemies still latched, and a few seconds with no latch damage so the first sweep can land.
+- **Safety net:** after 60 s stalled, every enemy is cleared (no Gold) and it restarts at 25%. Never during a boss fight: there, cranking is the rescue and the fight's timer ends the attempt.
+- **Boss fights:** running out of time ends the attempt and resets the boss. Nothing else is lost; press Challenge again whenever you like.
+- **Offline:** no fights. Booth-only income, and you return to a healthy carousel.
+- All numbers are tunable (RunConfig). Background: `planning/phase2/codex_memo_h_health_offline.md`.
 
 ### Latch Mechanic
 When an enemy reaches the carousel edge it latches on. Visually the enemy grabs the rim and a drag effect slows the carousel. The slowdown is immediately visible and tactile.
