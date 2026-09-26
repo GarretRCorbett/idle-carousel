@@ -43,8 +43,9 @@
 - **Playtest-3 fixes done (2026-09-26):** Boost panel, mount outlines, Boost Power keeps Overdrive,
   gentle latch drain (5%/s per latch, 30% max), faster idle (90°/s; prices ×1.3, boss health
   ×1.15, re-simmed in `step8_results.md`), income pops (combined booth "+X", Panda "+X").
-- **Next: Step 9** (`step9_plan.md`): Garret's sign-off playtest, and the Codex review
-  (`--base b7267ac`), which waits until Garret says Codex has usage again.
+- **Step 9 is BLOCKED on Codex** (out of usage, 2026-09-26; wait for Garret's go). Then:
+  the Codex review (`--base b7267ac`) and Garret's sign-off playtest (`step9_plan.md`).
+  Phase 4 started meanwhile (Garret), so review fixes may land on top of Phase 4 work.
 
 Phase 3 roadmap scope: Sloth, Giraffe, Elephant, Panda; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)

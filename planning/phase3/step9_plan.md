@@ -3,6 +3,9 @@
 Phase 3 is built: four new mounts, Sticks and Rocks, six color tiers, six bosses, slots 4–6,
 the look pass, theming foundation, and the playtest-3 fixes (2026-09-26). Step 9 checks it all.
 
+> **BLOCKED (2026-09-26):** Codex is out of usage. Don't run the review until Garret says it's
+> back. Phase 4 started meanwhile; the playtest below can happen any time.
+
 ## 1. Codex review (waiting: Codex is out of usage until Garret says go)
 Base: `b7267ac` (the last Step 8 commit; Step 8 went straight to main, no merge). That covers
 34+ commits: the look pass, theming, Debug tab, Purple Garden, outlines, and the playtest-3
