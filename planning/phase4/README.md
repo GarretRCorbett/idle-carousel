@@ -289,3 +289,18 @@ its id and tier, start a boss fight, start an event, Overdrive/latch/stall); dis
 save → New run → load; the Guide tab exists in the Game's options menu; the list buttons take focus.
 
 **Not in this step:** the tutorial (next), real icon art, a HUD button, prestige.
+
+## Remaining Phase 4, re-planned around the theme (Garret, 2026-09-26: Stub the ticket, GDD v1.20)
+Step 8 (the Park Guide) is merged (PR #2, built in a Claude Code cloud session). What's left, in order:
+
+| Step | Work | Needs Garret |
+|---|---|---|
+| 9a | **Strike nearest** (controller): a button that hits the enemy closest to the rim, with its prompt | nothing (approved) |
+| 9b | **Stub, drawn in code**: 2–3 looks rendered side by side (punch-hole eyes, stub, idle hop/tilt), Garret picks. A good Codex worktree task when its usage is back | pick a look |
+| 9c | **Tutorial with Stub** (`tutorial_plan.md`): the 11 steps, lines given a final pass in Stub's voice | approve the lines |
+| 9d | **Park Guide → Ticket Book**: player-facing name and look (a stub per entry); keys/code names can stay | approve the name text |
+| 9e | **Stamps**: each boss beaten stamps your ticket; a ticket page in the Ticket Book shows them (plan first: layout, what else earns a stamp) | a short plan |
+| 10 | **Music** (human-made CC0 / public domain; shortlist first) | pick tracks |
+| 11 | Playtest, Codex review, sign-off | playtest |
+
+Seasons (a fresh ticket per prestige, seasonal re-skins) belong to Phase 5 with prestige.
