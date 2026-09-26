@@ -6,6 +6,14 @@ extends Control
 
 const GAME_SCENE := "res://scenes/Game.tscn"
 
+## The Park Guide's data, the same as Game's, set in MainMenu.tscn. This script
+## doesn't name the Guide's classes (TierCatalog, EventData, ParkGuide): any
+## such reference from the main scene's script made the headless editor leak on
+## exit, so the Guide is loaded by path at runtime instead.
+const PARK_GUIDE_SCRIPT := "res://scripts/park_guide.gd"
+@export var tier_catalog: Resource
+@export var event_list: Array = []
+
 ## Spin of the decorative carousel.
 @export_range(0.0, 360.0, 1.0, "suffix:°/s") var carousel_spin_deg_s: float = 20.0
 
@@ -34,12 +42,26 @@ func _ready() -> void:
 		AudioManager.play_sfx(&"click")
 		_options.open())
 	_options.closed.connect(_first_button().grab_focus)
+	# The Park Guide: what you've met so far, readable between runs (Garret).
+	_options.add_tab(_make_guide(), "OPT_TAB_GUIDE")
 	if OS.is_debug_build():
 		_options.add_tab(DebugPanel.new(), "Debug")  # themes only here
 	_title.add_theme_font_override(&"font", LocaleFonts.title_font(TranslationServer.get_locale()))
 	_carousel_spot.resized.connect(_center_carousel)
 	_center_carousel()
 	_first_button().grab_focus.call_deferred()
+
+
+func _make_guide() -> Control:
+	var guide_script := load(PARK_GUIDE_SCRIPT) as GDScript
+	return guide_script.new(tier_catalog, _typed_events()) as Control
+
+
+## The event list as the Guide expects it (a typed array), built without naming the type.
+func _typed_events() -> Array:
+	var typed: Array = Array([], TYPE_OBJECT, &"Resource", load("res://scripts/event_data.gd"))
+	typed.assign(event_list)
+	return typed
 
 
 func _first_button() -> Button:

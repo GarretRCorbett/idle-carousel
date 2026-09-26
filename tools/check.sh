@@ -21,6 +21,10 @@ echo "== Godot $ver"
 fail=0
 echo "== Importing project"
 out=$("$GODOT" --headless --path . --import 2>&1) || { echo "$out"; fail=1; }
+# A fresh clone (no .godot cache) logs errors on its first import; the second is the real check.
+if echo "$out" | grep -qE "SCRIPT ERROR|Parse Error|ERROR:"; then
+  out=$("$GODOT" --headless --path . --import 2>&1) || { echo "$out"; fail=1; }
+fi
 if echo "$out" | grep -qE "SCRIPT ERROR|Parse Error|ERROR:"; then
   echo "$out" | grep -E "SCRIPT ERROR|Parse Error|ERROR:"
   fail=1

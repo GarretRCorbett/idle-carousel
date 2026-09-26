@@ -191,6 +191,8 @@ func _setup_discovery() -> void:
 	add_child(_discovery)
 	_discovery.watch_encounter(_encounter)
 	_discovery.watch_events(_events)
+	# A first meeting saves right away (Garret), through the once-a-frame queue.
+	SaveManager.discovered.connect(_queue_save.unbind(1))
 
 
 ## A new run or a load: a fresh event clock, no running events or tokens.

@@ -15,6 +15,8 @@ echo == Godot %GVER%
 set FAIL=0
 echo == Importing project
 "%GODOT%" --headless --path . --import > "%TEMP%\ic_import.log" 2>&1
+REM A fresh clone (no .godot cache) logs errors on its first import; the second is the real check.
+findstr /R /C:"SCRIPT ERROR" /C:"Parse Error" /C:"ERROR:" "%TEMP%\ic_import.log" >nul && "%GODOT%" --headless --path . --import > "%TEMP%\ic_import.log" 2>&1
 findstr /R /C:"SCRIPT ERROR" /C:"Parse Error" /C:"ERROR:" "%TEMP%\ic_import.log" && set FAIL=1
 
 echo == Checking scripts

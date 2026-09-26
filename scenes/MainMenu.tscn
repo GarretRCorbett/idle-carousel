@@ -13,6 +13,11 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/background/menu/bush1.png" id="26_b1"]
 [ext_resource type="Texture2D" path="res://assets/sprites/background/menu/bush3.png" id="27_b2"]
 [ext_resource type="Texture2D" path="res://assets/sprites/background/menu/bush_alt1.png" id="28_b3"]
+[ext_resource type="Resource" path="res://resources/events/speed_surge.tres" id="42_speed_surge"]
+[ext_resource type="Resource" path="res://resources/events/golden_hour.tres" id="42_golden_hour"]
+[ext_resource type="Resource" path="res://resources/events/lucky_ticket.tres" id="42_lucky_ticket"]
+[ext_resource type="Resource" path="res://resources/events/popup_booth.tres" id="42_popup_booth"]
+[ext_resource type="Resource" path="res://resources/tiers/tier_catalog.tres" id="43_tiers"]
 
 [node name="MainMenu" type="Control" unique_id=1196148949]
 layout_mode = 3
@@ -23,6 +28,8 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_menu")
+tier_catalog = ExtResource("43_tiers")
+event_list = [ExtResource("42_speed_surge"), ExtResource("42_golden_hour"), ExtResource("42_lucky_ticket"), ExtResource("42_popup_booth")]
 
 [node name="Backdrop" type="TextureRect" parent="."]
 layout_mode = 1

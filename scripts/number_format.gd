@@ -35,6 +35,16 @@ static func gold(value: float) -> String:
 
 
 ## Small decimals like Gold per second (1 decimal) or the speed multiplier (2).
+## Up to `places` decimals with trailing zeros dropped (1.40 -> "1.4", 1.00 -> "1"),
+## for multipliers and other stats where padding adds nothing.
+static func short_decimal(value: float, places: int) -> String:
+	if not is_finite(value):
+		return "?"
+	if absf(value) >= COMPACT_FROM:
+		return gold(value)
+	return String.num(value, places).replace(".", TranslationServer.translate("NUM_DECIMAL_SEP"))
+
+
 static func decimal(value: float, places: int) -> String:
 	if not is_finite(value):
 		return "?"

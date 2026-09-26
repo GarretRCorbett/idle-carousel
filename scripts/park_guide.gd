@@ -241,9 +241,9 @@ func _stat_lines(entry: GuideEntry) -> PackedStringArray:
 					lines.append(tr(star_key).format([tr(entry.level_upgrade.star_description)]))
 		GuideEntry.Kind.TIER:
 			var tier := entry.data as TierData
-			lines.append(tr(tier_stats_key).format([NumberFormat.decimal(tier.health_multiplier, 2),
-					NumberFormat.decimal(tier.speed_multiplier, 2), NumberFormat.decimal(tier.drag_multiplier, 2),
-					NumberFormat.decimal(tier.gold_multiplier, 2)]))
+			lines.append(tr(tier_stats_key).format([NumberFormat.short_decimal(tier.health_multiplier, 2),
+					NumberFormat.short_decimal(tier.speed_multiplier, 2), NumberFormat.short_decimal(tier.drag_multiplier, 2),
+					NumberFormat.short_decimal(tier.gold_multiplier, 2)]))
 		GuideEntry.Kind.BOSS:
 			var boss := entry.data as BossData
 			if entry.tier != null:
