@@ -60,6 +60,14 @@ extends Resource
 ## ...up to this much in total, so many latches never empty it at once.
 @export_range(0.0, 1.0, 0.01, "suffix:/s") var boost_drain_max: float = 0.3
 
+@export_group("Auto-Boost")
+## Bar fraction Auto-Boost holds at each level (GDD v1.17). Keep every one
+## below boost_maxed_on_fraction, so it can keep Overdrive going but never start it.
+@export var auto_boost_holds: PackedFloat32Array = PackedFloat32Array([0.30, 0.50, 0.65, 0.82])
+## How fast it refills toward the hold, in bars per second (0.3 ≈ 3 presses a
+## second). Latches that drain faster than the spare refill still end Overdrive.
+@export_range(0.0, 5.0, 0.01, "suffix:/s") var auto_boost_refill_per_second: float = 0.3
+
 @export_group("Overdrive")
 ## Keep the boost maxed this long to trigger Overdrive...
 @export_range(0.0, 60.0, 0.5, "suffix:s") var overdrive_hold_seconds: float = 5.0
@@ -114,6 +122,12 @@ func get_problems() -> PackedStringArray:
 		problems.append("boost_maxed_off_fraction must be <= boost_maxed_on_fraction")
 	if not is_finite(boost_drain_per_latch) or boost_drain_per_latch < 0.0 or not is_finite(boost_drain_max) or boost_drain_max < 0.0:
 		problems.append("boost_drain_per_latch and boost_drain_max must be finite numbers >= 0")
+	for hold in auto_boost_holds:
+		if not is_finite(hold) or hold < 0.0 or hold >= boost_maxed_on_fraction:
+			problems.append("auto_boost_holds must be >= 0 and below boost_maxed_on_fraction")
+			break
+	if not is_finite(auto_boost_refill_per_second) or auto_boost_refill_per_second < 0.0:
+		problems.append("auto_boost_refill_per_second must be a finite number >= 0")
 	if not is_finite(overdrive_multiplier) or overdrive_multiplier < 1.0:
 		problems.append("overdrive_multiplier must be >= 1")
 	if boost_presses_to_fill < 1:

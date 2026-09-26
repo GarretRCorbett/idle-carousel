@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3]
+
+[ext_resource type="Script" path="res://scripts/upgrade_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"auto_boost"
+display_name = "UPG_AUTO_BOOST_NAME"
+description = "UPG_AUTO_BOOST_DESC"
+effect_type = 8
+cost_gold = 400.0
+cost_growth = 3.0
+max_level = 4
+level_cap_by_bosses = PackedInt32Array(3, 3, 4)

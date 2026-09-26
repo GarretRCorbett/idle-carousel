@@ -158,7 +158,7 @@ The single most important stat in the game. Affects:
 - **v1.17 (Garret):**
   - **Latched enemies drain the bar gently.** Each latch drains a little and more latches drain faster, so they push you out of Overdrive over time, never instantly. Losing all health still ends it.
   - **Buying Boost Power keeps the bar's fill**, so it never knocks you out of Overdrive.
-  - **Auto-boost** (a run upgrade, 4 levels, like Carousel Speed) presses Boost for you, and each level holds the bar higher. The top level holds it just above 80%: enough to keep Overdrive going once you've started it, never enough to start it alone. It lets touchscreen players use Boost while clicking enemies.
+  - **Auto-Boost** (a run upgrade, 4 levels, like Carousel Speed) presses Boost for you, and each level holds the bar higher. It refills at a steady pace (about 3 presses a second), so one latch can't beat it but a few can. The top level holds it just above 80%: enough to keep Overdrive going once you've started it, never enough to start it alone. It lets touchscreen players use Boost while clicking enemies.
 
 ### Health
 The carousel has a health bar. Enemies that successfully latch deal damage over time until removed.

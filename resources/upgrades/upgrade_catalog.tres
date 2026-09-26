@@ -20,7 +20,8 @@
 [ext_resource type="Resource" path="res://resources/upgrades/elephant_tier2.tres" id="18_elephant_tier2"]
 [ext_resource type="Resource" path="res://resources/upgrades/panda.tres" id="19_panda"]
 [ext_resource type="Resource" path="res://resources/upgrades/panda_tier2.tres" id="20_panda_tier2"]
+[ext_resource type="Resource" path="res://resources/upgrades/auto_boost.tres" id="21_auto_boost"]
 
 [resource]
 script = ExtResource("1_script")
-upgrades = Array[ExtResource("2_data")]([ExtResource("3_speed"), ExtResource("4_boost"), ExtResource("6_click"), ExtResource("10_fang"), ExtResource("5_booth"), ExtResource("7_slot"), ExtResource("9_wolf"), ExtResource("11_giraffe"), ExtResource("12_sloth"), ExtResource("13_elephant"), ExtResource("8_horse"), ExtResource("19_panda"), ExtResource("14_horse_tier2"), ExtResource("15_wolf_tier2"), ExtResource("16_sloth_tier2"), ExtResource("17_giraffe_tier2"), ExtResource("18_elephant_tier2"), ExtResource("20_panda_tier2")])
+upgrades = Array[ExtResource("2_data")]([ExtResource("3_speed"), ExtResource("4_boost"), ExtResource("21_auto_boost"), ExtResource("6_click"), ExtResource("10_fang"), ExtResource("5_booth"), ExtResource("7_slot"), ExtResource("9_wolf"), ExtResource("11_giraffe"), ExtResource("12_sloth"), ExtResource("13_elephant"), ExtResource("8_horse"), ExtResource("19_panda"), ExtResource("14_horse_tier2"), ExtResource("15_wolf_tier2"), ExtResource("16_sloth_tier2"), ExtResource("17_giraffe_tier2"), ExtResource("18_elephant_tier2"), ExtResource("20_panda_tier2")])

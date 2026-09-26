@@ -85,6 +85,8 @@ var _speed_modifiers: Dictionary[StringName, float] = {}
 # Upgrade effects, summed over bought levels.
 var _spin_bonus: float = 0.0
 var _boost_cap_bonus: float = 0.0
+## Auto-Boost levels bought (0 = none).
+var _auto_boost_level: int = 0
 var _click_damage_bonus: float = 0.0
 ## Extra damage per hit bought for each mount type, by MountData.mount_id.
 var _mount_damage_bonus: Dictionary[StringName, float] = {}
@@ -159,6 +161,7 @@ func _reset_fields(config: RunConfig) -> void:
 	_speed_modifiers.clear()
 	_spin_bonus = 0.0
 	_boost_cap_bonus = 0.0
+	_auto_boost_level = 0
 	_click_damage_bonus = 0.0
 	_mount_damage_bonus.clear()
 	_mount_tiers.clear()
@@ -618,6 +621,7 @@ func advance_simulation(delta: float) -> void:
 	var previous_speed := get_effective_spin_speed_rad_s()
 	_boost_elapsed = minf(_config.click_boost_decay_seconds, _boost_elapsed + delta)
 	_drain_boost_from_latches(delta)
+	_auto_boost(delta)
 	_update_boost_status(delta)
 	_emit_speed_if_changed(previous_speed)
 	_advance_health(delta)
@@ -745,6 +749,31 @@ func _drain_boost_from_latches(delta: float) -> void:
 		return
 	var rate := minf(_config.boost_drain_max, _config.boost_drain_per_latch * _latches.size())
 	_boost_peak = maxf(0.0, boost - rate * get_boost_cap() * delta) / remaining
+
+
+## The bar fraction Auto-Boost holds (0 = none bought).
+func get_auto_boost_hold() -> float:
+	var holds := _config.auto_boost_holds
+	if _auto_boost_level <= 0 or holds.is_empty():
+		return 0.0
+	return holds[mini(_auto_boost_level, holds.size()) - 1]
+
+
+## Auto-Boost: while the bar is below its hold, refill toward it at a steady
+## pace, like presses (never above the hold, so it can't start Overdrive).
+## Each refill restarts the fade, as a press does. Not while stalled: cranking
+## is the player's job.
+func _auto_boost(delta: float) -> void:
+	var hold := get_auto_boost_hold()
+	var cap := get_boost_cap()
+	if hold <= 0.0 or cap <= 0.0 or _stalled:
+		return
+	var boost := get_click_boost()
+	var target := hold * cap
+	if boost >= target:
+		return
+	_boost_peak = minf(target, boost + _config.auto_boost_refill_per_second * cap * delta)
+	_boost_elapsed = 0.0
 
 
 func is_boost_maxed() -> bool:
@@ -1120,6 +1149,8 @@ func _apply_effect(upgrade: UpgradeData) -> void:
 			_mount_damage_bonus[upgrade.target_mount] = get_mount_damage_bonus(upgrade.target_mount) + upgrade.effect_value
 		UpgradeData.EffectType.MOUNT_TIER:
 			_mount_tiers[upgrade.target_mount] = get_mount_tier(upgrade.target_mount) + 1
+		UpgradeData.EffectType.AUTO_BOOST:
+			_auto_boost_level += 1
 
 
 func _is_effect_supported(upgrade: UpgradeData) -> bool:
@@ -1132,4 +1163,5 @@ func _is_effect_supported(upgrade: UpgradeData) -> bool:
 		UpgradeData.EffectType.BUY_MOUNT,
 		UpgradeData.EffectType.ADD_MOUNT_DAMAGE,
 		UpgradeData.EffectType.MOUNT_TIER,
+		UpgradeData.EffectType.AUTO_BOOST,
 	]

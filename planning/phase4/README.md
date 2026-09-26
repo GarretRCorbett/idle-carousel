@@ -13,6 +13,10 @@
 - **Step 2 done (2026-09-26):** offline progress (Garret: normal booth income + the Panda's Gold per
   turn at base speed, ×0.5, 1 min minimum, 8 h cap; only time with the game closed counts, so the
   main menu pays nothing) and the "Welcome back" popup on Continue. Numbers in RunConfig "Offline".
+- **Step 3 done (2026-09-26):** **Auto-Boost** (Garret's name), Carousel tab after Boost Power, 4 levels
+  holding 30 / 50 / 65 / 82% of the bar; 400 Gold ×3 per level, level 4 after the second boss (drafts).
+  It refills at a steady 0.3 bar/s (≈3 presses/s; Garret's pick), never above its hold, never while
+  stalled. One latch can't beat it at the top level; two or three drain faster and end Overdrive.
 
 ## Scope
 From the roadmap: save system, offline progress + "Welcome back", the full upgrade tree with shop

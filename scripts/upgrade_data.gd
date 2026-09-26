@@ -14,6 +14,7 @@ enum EffectType {
 	BUY_MOUNT,         ## one mount_scene per level, placed in the next free slot
 	ADD_MOUNT_DAMAGE,  ## effect_value added to target_mount's damage per hit, per level
 	MOUNT_TIER,        ## raises target_mount's tier by one per level (every mount of that type)
+	AUTO_BOOST,        ## Auto-Boost: each level holds the bar higher (RunConfig.auto_boost_holds)
 }
 
 ## Which shop tab the row appears on.
