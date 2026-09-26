@@ -33,6 +33,11 @@ extends Node2D
 @export_range(0.5, 3.0, 0.05) var kill_pop_scale: float = 1.3
 ## At most this many rings at once (a mass clear can't flood the screen).
 @export_range(1, 500, 1) var max_live_pops: int = 40
+## Horse Gold shows as one combined "+X" per booth at most this often (GDD v1.17).
+@export_range(0.05, 5.0, 0.05, "suffix:s") var booth_pop_interval: float = 0.5
+## Where a "+X" starts, from the booth or mount that earned it.
+@export var booth_pop_offset: Vector2 = Vector2(0.0, -28.0)
+@export var mount_pop_offset: Vector2 = Vector2(0.0, -22.0)
 
 @onready var _world: Node2D = $World
 @onready var _carousel: Carousel = $World/Carousel
@@ -48,6 +53,8 @@ extends Node2D
 
 var _booths: Array[TicketBooth] = []
 var _booth_bearings: Array[float] = []
+## Horse Gold paid at each booth since its last "+X", by booth index.
+var _booth_tallies: Array[IncomeTally] = []
 ## Mount nodes in roster order, and the roster ids they were built from.
 var _mounts: Array[MountBase] = []
 var _mount_ids: Array[StringName] = []
@@ -209,6 +216,10 @@ func _physics_process(delta: float) -> void:
 	_snapshot.rebuild(_enemy_layer, _carousel.global_position)
 	_carousel.advance_rotation(delta, GameState.get_effective_spin_speed_rad_s())
 	_carousel.set_boost_state(GameState.is_boost_maxed(), GameState.is_overdrive_active())
+	for i in _booth_tallies.size():
+		var shown := _booth_tallies[i].advance(delta)
+		if shown > 0.0:
+			_spawn_gold_pop(_booths[i].global_position + booth_pop_offset, shown)
 
 
 ## A mount tier can change reach or wedge width. Rebase every mount at once,
@@ -282,6 +293,9 @@ func _layout_booths(count: int) -> void:
 		_booths.append(booth)
 	while _booths.size() > count and _booths.size() > 1:
 		_booths.pop_back().queue_free()
+	while _booth_tallies.size() < _booths.size():
+		_booth_tallies.append(IncomeTally.new(booth_pop_interval))
+	_booth_tallies.resize(_booths.size())
 	_booth_bearings.clear()
 	for i in _booths.size():
 		var bearing := -PI / 2.0 + TAU * i / _booths.size()
@@ -295,13 +309,17 @@ func _layout_booths(count: int) -> void:
 		mount.set_booth_bearings(_booth_bearings)
 
 
-func _on_mount_gold_earned(_mount: MountBase, amount: float) -> void:
+## The Panda's Gold per turn, shown above it right away (once a turn is slow enough).
+func _on_mount_gold_earned(mount: MountBase, amount: float) -> void:
 	GameState.add_gold(amount)
+	_spawn_gold_pop(mount.global_position + mount_pop_offset, amount)
 	AudioManager.play_sfx(&"coin")
 
 
 func _on_booth_passed(mount: MountBase, booth_index: int, pass_count: int) -> void:
-	GameState.add_gold(GameState.get_mount_gold(mount.data) * pass_count)
+	var amount := GameState.get_mount_gold(mount.data) * pass_count
+	GameState.add_gold(amount)
+	_booth_tallies[booth_index].add(amount)
 	_booths[booth_index].pop()
 	AudioManager.play_sfx(&"coin")
 
@@ -371,6 +389,15 @@ func _spawn_pop(global_point: Vector2, kill: bool) -> void:
 	pop.position = _world.to_local(global_point)
 	_live_pops += 1
 	pop.tree_exiting.connect(func() -> void: _live_pops -= 1)
+	_world.add_child(pop)
+	pop.reset_physics_interpolation()
+
+
+## A rising "+X" in world space (it doesn't turn with the carousel).
+func _spawn_gold_pop(global_point: Vector2, amount: float) -> void:
+	var pop := GoldPop.new()
+	pop.amount = amount
+	pop.position = _world.to_local(global_point)
 	_world.add_child(pop)
 	pop.reset_physics_interpolation()
 

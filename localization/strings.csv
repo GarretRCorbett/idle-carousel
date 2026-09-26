@@ -31,6 +31,7 @@ CTRL_KEY_PAUSE,Esc,Esc,Esc,Esc,Esc,Esc,Esc,Esc,Esc
 CTRL_PAUSE,Settings and pause,Ajustes y pausa,Paramètres et pause,Einstellungen und Pause,Configurações e pausa,Настройки и пауза,设置并暂停,設定と一時停止,설정 및 일시정지
 HUD_GOLD,Gold: {0},Oro: {0},Or : {0},Gold: {0},Ouro: {0},Золото: {0},金币：{0},ゴールド：{0},골드: {0}
 HUD_GOLD_PER_SEC,Gold per sec: {0},Oro por seg: {0},Or par sec : {0},Gold pro Sek.: {0},Ouro por seg: {0},Золото/сек: {0},每秒金币：{0},毎秒ゴールド：{0},초당 골드: {0}
+POP_GOLD,+{0},+{0},+{0},+{0},+{0},+{0},+{0},+{0},+{0}
 HUD_SPEED,Speed: ×{0},Velocidad: ×{0},Vitesse : ×{0},Tempo: ×{0},Velocidade: ×{0},Скорость: ×{0},速度：×{0},速度：×{0},속도: ×{0}
 HUD_BOOST,Boost,Impulso,Boost,Boost,Impulso,Ускорение,加速,ブースト,부스트
 HUD_CRANK,Crank!,¡Manivela!,Manivelle !,Kurbeln!,Manivela!,Крутить!,摇曲柄！,クランク！,크랭크!
