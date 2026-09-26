@@ -17,6 +17,9 @@
   holding 30 / 50 / 65 / 82% of the bar; 400 Gold ×3 per level, level 4 after the second boss (drafts).
   It refills at a steady 0.3 bar/s (≈3 presses/s; Garret's pick), never above its hold, never while
   stalled. One latch can't beat it at the top level; two or three drain faster and end Overdrive.
+- **Step 4 mockups rendered (2026-09-26)**, waiting for Garret's pick: `mockups/` (A compact rows, B cards,
+  C one line + details box; `compact_carousel_tab.png` for the other tabs). Made-up levels and stars.
+  Rebuild with `tools/_mockups/ShopMockups.tscn`. Note: below ~270 px the three tab titles don't fit.
 
 ## Scope
 From the roadmap: save system, offline progress + "Welcome back", the full upgrade tree with shop
