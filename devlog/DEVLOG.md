@@ -1,10 +1,21 @@
 # Idle Carousel: Dev Log
 
-Private for now (Garret decides later what to publish). Newest first. Written together by Garret and Claude. The full detail lives in `planning/`, the GDD changelog and git history; this log is the story.
+Private for now (Garret decides later what to publish). Pictures go in `devlog/images/`, named by date and order; `.gdignore` keeps Godot from importing them. Newest first. Written together by Garret and Claude. The full detail lives in `planning/`, the GDD changelog and git history; this log is the story.
 
 ---
 
 ## 2026-09-25: Bosses, balance, a new look, and a plan for everything else
+**How the look evolved today** (pictures in `images/`, in order):
+- [Palette A on the forest park](images/2026-09-25_01_palette_a_forest_park.png) and [its title screen](images/2026-09-25_02_palette_a_title.png)
+- [Grass park](images/2026-09-25_03_grass_park.png) and [its title screen](images/2026-09-25_04_title_grass_park.png): "too outside park, not enough theme park"
+- [First concrete plaza](images/2026-09-25_05_first_concrete_plaza.png) and [the concrete title screen](images/2026-09-25_06_title_concrete.png)
+- [Curved walkways](images/2026-09-25_07_curved_walkways.png), then [flared into plazas](images/2026-09-25_08_flared_walkways.png)
+- [Beige walkways](images/2026-09-25_09_beige_walkways_rejected.png), which Garret called "a bad call"; back to brick
+- [Rooftops](images/2026-09-25_11_rooftops.png), then [the big top-left roof, lamps and ring edge back](images/2026-09-25_12_big_top_left_roof.png)
+- [Title shopfronts](images/2026-09-25_13_title_shopfronts.png), then [the blue title](images/2026-09-25_14_title_blue.png)
+- Test themes: [Winter](images/2026-09-25_15_winter_test_theme.png), [Halloween](images/2026-09-25_16_halloween_test_theme.png), [Halloween mid-game](images/2026-09-25_17_halloween_mid_game.png)
+- [Codex's palette study](images/2026-09-25_18_codex_palette_study.png), and [Purple Garden, final for now](images/2026-09-25_19_purple_garden_final.png)
+
 **Built:**
 - **All six tier bosses:**
   - Leaf Storm drifts and throws leaf packs.
@@ -54,3 +65,5 @@ Private for now (Garret decides later what to publish). Newest first. Written to
 - The first boss and the boss strip with tier pips.
 
 **Garret's first two playtests of the boss loop:** "things are looking amazing."
+
+**Pictures:** [tier colors](images/2026-09-24_01_tier_colors.png), [first tiers in game](images/2026-09-24_02_first_tiers_in_game.png), [the boss strip](images/2026-09-24_03_boss_strip.png), [the Leaf Storm fight](images/2026-09-24_04_leaf_storm_fight.png).
