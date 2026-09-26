@@ -1,5 +1,5 @@
 # 🎠 Idle Carousel — Game Design Document
-### Version 1.19 | Working Title: Idle Carousel
+### Version 1.20 | Working Title: Idle Carousel
 > Solo dev project. Built in Godot 4.7 stable. Target: Steam release, anonymous, $4.99 (sale target ~$3.49–$3.75), with a free demo.
 > Personal motivation: daughters love carousels.
 > Influences: Cookie Clicker, Clicker Heroes, A Game About Feeding a Black Hole, Rusty's Retirement.
@@ -7,6 +7,7 @@
 ---
 
 ## Changelog
+- **v1.20** — **Theme and mascot** (Garret, 2026-09-26): the park is **reopening**; you bring its old carousel back for the season. The mascot is **Stub**, a paper admission ticket (punch-hole eyes) drawn in code, so any theme can re-skin it. Stub guides the tutorial; boss wins **stamp** your ticket; the Park Guide becomes the **Ticket Book**; prestige is a **new season** with a fresh ticket. See "Theme and Mascot".
 - **v1.19** — Phase 4 shop (Garret, 2026-09-26): two shop tabs, **Upgrades** (with small section headers: Carousel, Boost, Clicks, Gold) and **Mounts**; the Combat tab is gone (Wolf Fang, Long Neck, Trumpet and Drowsy became mount levels). **Gilded Rims** absorbs Polish and Shine. Click Combo is postponed. Rows stay hidden until you're one boss from unlocking them. The shop is controller-ready (focus, shoulder buttons switch tabs, an info line replaces hover tooltips). Booths cost 1,950, each next ×1.8. **Auto-Boost** is the name of the auto-boost upgrade.
 - **v1.18** — **Fail state decided** (Garret, 2026-09-26): "safe farm, risky push" (Package A) as played since Phase 2 is now the real rule. At zero health the carousel stalls; Boost cranks it back; a 60 s safety net clears enemies (not during a boss fight); a lost boss fight costs only time. Gold, mounts and unlocks are never lost. Offline has no fights. Resolves the fail-state DECISION PENDING. Also: base spin 90°/s with prices ×1.3 (playtest-3 faster idle, re-simmed).
 - **v1.17** — Playtest 3 decisions (Garret, 2026-09-25; `planning/phase3/playtest3_plan.md`):
@@ -125,6 +126,15 @@ The game does NOT have distinct build phase and combat phase that the player swi
 Enemies always pressure the carousel — you cannot just idle forever without consequence. But you choose when to escalate. Grinding the current tier is always an option if the next tier feels too hard.
 
 ---
+
+## Theme and Mascot (v1.20, Garret)
+- **Premise:** a beloved old park closed and fell to rust and debris. It's reopening, and you're bringing its carousel back for opening day and the seasons after. (The Rusted King, the final boss, is the rust at the heart of it; beating him is "Restoration Complete".)
+- **Stub**, the mascot: a paper admission ticket ("ADMIT ONE", perforated edges, a torn stub) with conductor's punch holes for eyes. An eager usher who loves the ride. A simple shape drawn in code, never locked to an art pack; themes re-skin it with a color and a stamp. The light-bulb spirit is the backup idea.
+- **Stub's jobs:** the tutorial's guide (and later tips); the Lucky Ticket event is Stub's cousin.
+- **Stamps:** each boss beaten (later, achievements) stamps your ticket, so you see it fill up.
+- **The Ticket Book:** the almanac (built as the "Park Guide") is renamed; discoveries are stubs in your book.
+- **Seasons:** prestige (Phase 5) starts a new season with a fresh ticket color, keeping your stubs and stamps. Seasonal themes (Winter, Halloween) re-skin Stub and the park.
+- Details and ideas: `planning/theme_ticket.md`.
 
 ## Currency
 

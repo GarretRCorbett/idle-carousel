@@ -1,9 +1,10 @@
 # Theme draft: the Ticket (Garret's pick, 2026-09-26)
 
-**Status:** exploring. Garret likes the ticket mascot most; the **light bulb** spirit (a rim bulb
-flickering back to life) is the backup. Nothing here is decided until Garret says so; Codex will be
-asked for thoughts (framing, mascots in cozy incrementals, Wildfrost-style guides) once its usage is
-back. Game-facing names and text are Garret's to approve.
+**Status: DECIDED (Garret, 2026-09-26: "I think we nailed it! Let's go with this and plan off of it").**
+The mascot is **Stub**; the premise is **the park is reopening**; the theme goes all the way: mascot +
+tutorial, stamps as progress, the Guide → "Ticket Book", and seasons (prestige + themes). In the GDD
+as v1.20 ("Theme and Mascot"). The light bulb stays the backup. Codex can still add thoughts on
+details (e.g. Stub's look, stamp layout) when its usage is back.
 
 ## Why a ticket
 - Already in the game: **ticket booths** pay the Gold, and the **Lucky Ticket** is an event.
