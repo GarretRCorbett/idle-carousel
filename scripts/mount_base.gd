@@ -103,8 +103,13 @@ func _draw() -> void:
 	if data.texture != null:
 		# Scale so the larger side is the placeholder's diameter.
 		var tex_size := data.texture.get_size()
-		var draw_size := tex_size * (2.0 * data.placeholder_size / maxf(tex_size.x, tex_size.y))
+		var pixel_scale := 2.0 * data.placeholder_size / maxf(tex_size.x, tex_size.y)
+		var draw_size := tex_size * pixel_scale
 		draw_set_transform(Vector2.ZERO, deg_to_rad(texture_rotation_deg))
+		# Same pixel scale as the sprite, so the bigger outline sits evenly round it.
+		if data.outline_texture != null and data.outline_color.a > 0.0:
+			var outline_size: Vector2 = data.outline_texture.get_size() * pixel_scale
+			draw_texture_rect(data.outline_texture, Rect2(-outline_size / 2.0, outline_size), false, data.outline_color)
 		draw_texture_rect(data.texture, Rect2(-draw_size / 2.0, draw_size), false)
 		draw_set_transform(Vector2.ZERO)
 		return

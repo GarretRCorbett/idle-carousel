@@ -70,11 +70,10 @@ static func make_light_grey(source: Image) -> Image:
 	return image
 
 
-## The silhouette grown by OUTLINE_PX on every side, in white. It's
-## 2 × OUTLINE_PX bigger than the sprite, so drawn centered at the same scale
-## it sits evenly around it.
-static func make_outline(sprite: Image) -> Image:
-	var pad := OUTLINE_PX
+## The silhouette grown by `pad` pixels on every side, in white. It's
+## 2 × pad bigger than the sprite, so drawn centered at the same scale it sits
+## evenly around it. Also used by make_mount_outlines.gd.
+static func make_outline(sprite: Image, pad: int = OUTLINE_PX) -> Image:
 	var outline := Image.create_empty(sprite.get_width() + 2 * pad, sprite.get_height() + 2 * pad, false, Image.FORMAT_RGBA8)
 	for y in outline.get_height():
 		for x in outline.get_width():

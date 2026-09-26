@@ -3,6 +3,8 @@
 [ext_resource type="Script" path="res://scripts/mount_data.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/sprites/mounts/sloth.png" id="2_tex"]
 
+[ext_resource type="Texture2D" uid="uid://rg0gvr31uts2" path="res://assets/sprites/mounts/sloth_outline.png" id="3_outline"]
+
 [resource]
 script = ExtResource("1_script")
 mount_name = "Sloth"
@@ -18,3 +20,5 @@ placeholder_color = Color(0.4392, 0.5098, 0.2196, 1)
 placeholder_points = 8
 placeholder_size = 18.0
 texture = ExtResource("2_tex")
+outline_texture = ExtResource("3_outline")
+outline_color = Color(0.24, 0.13, 0.07, 1)

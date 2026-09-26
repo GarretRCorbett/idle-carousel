@@ -55,3 +55,9 @@ extends Resource
 @export_range(1.0, 128.0, 1.0, "suffix:px") var placeholder_size: float = 16.0
 ## Real sprite. Leave empty to draw the placeholder polygon instead.
 @export var texture: Texture2D = null
+## The sprite's silhouette grown a few pixels, in white, drawn behind it so the
+## mount stands out from the canopy (built by tools/make_mount_outlines.gd).
+@export var outline_texture: Texture2D = null
+## Outline tint: a dark shade of the animal, like the enemy tier outlines.
+## Alpha 0 = no outline.
+@export var outline_color: Color = Color(0.1, 0.08, 0.12, 1.0)
