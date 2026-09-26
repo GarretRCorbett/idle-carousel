@@ -43,7 +43,7 @@ Each step: what's highlighted · what the keeper says · when it's done.
    or switch Auto waves off to take a breather." · **Next**
 10. **The first boss** · the boss strip · "Clear 60 debris in this tier to challenge the Leaf Storm.
     Beat it and new mounts and tiers open up." · **Next**
-11. **Goodbye** · the pause menu hint · "Everything you meet goes in the Guide (Esc / [pause]). Have
+11. **Goodbye** · the pause menu hint · "Everything you meet goes in your Ticket Book (Esc / [pause]). Have
     fun, and keep the ride spinning!" · **Next** (the tutorial ends; stalls are possible again)
 
 About 3–5 minutes for a new player, most of it playing, not reading.

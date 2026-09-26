@@ -546,7 +546,7 @@ Built in Phase 2 (v1.9), in the stats panel:
 - Clicking a mount slot shows a small popup with mount name, stars, stats, and upgrade button
 - Stars shown as a small badge on the mount (v1.17; was a tier gem)
 
-### Park Guide (v1.17, planned; Phase 4 size)
+### Ticket Book (v1.20; built as the "Park Guide", Phase 4 Step 8)
 A Hades-style almanac in the pause menu. Pages cover mounts (what each does, levels, stars), enemies and tiers, and bosses (how each fight works), each unlocking as you meet it. The first-run **tutorial** (toggleable; planned now, built after Phase 3) walks through:
 - the objective: clear the debris slowing your carousel;
 - clicking, and buying mounts;
