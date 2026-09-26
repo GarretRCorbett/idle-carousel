@@ -20,6 +20,10 @@
 - **Step 4 mockups rendered (2026-09-26)**, waiting for Garret's pick: `mockups/` (A compact rows, B cards,
   C one line + details box; `compact_carousel_tab.png` for the other tabs). Made-up levels and stars.
   Rebuild with `tools/_mockups/ShopMockups.tscn`. Note: below ~270 px the three tab titles don't fit.
+- **Step 8 built in a cloud session (2026-09-26), PR `claude/park-guide`, waiting for Garret's review:**
+  the Park Guide tab (discoveries in the save's `permanent` section, entries built from data, draft
+  `GUIDE_*` text with English in every column). On merge, locally: translate the new rows and re-run
+  `python tools/subset_fonts.py`. Renders: `guide/` (rebuild with `tools/_render/GuideRender.tscn`).
 
 ## Scope
 From the roadmap: save system, offline progress + "Welcome back", the full upgrade tree with shop
