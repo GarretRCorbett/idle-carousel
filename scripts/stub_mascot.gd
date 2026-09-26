@@ -11,10 +11,21 @@ enum Style {
 	TORN,     ## just the torn-off stub: a zigzag edge and tiny arms
 }
 enum Mood { HAPPY, SURPRISED, WORRIED, CHEER }
+## Versions of the classic ticket (Garret asked for a few more to compare).
+enum ClassicVariant {
+	PLAIN,      ## notches and a perforated stub end
+	SCALLOPED,  ## little bites along the top and bottom, like a tear-off ticket
+	TWO_TONE,   ## the stub end filled with the trim color, a star punched out
+	CHUNKY,     ## taller and rounder, with little feet
+}
 
 @export var style: Style = Style.CLASSIC:
 	set(value):
 		style = value
+		queue_redraw()
+@export var classic_variant: ClassicVariant = ClassicVariant.PLAIN:
+	set(value):
+		classic_variant = value
 		queue_redraw()
 @export var mood: Mood = Mood.HAPPY:
 	set(value):
@@ -60,14 +71,36 @@ func _draw() -> void:
 # --- Bodies ----------------------------------------------------------------------
 
 func _draw_classic() -> void:
-	var w := size
-	var h := size * 0.55
+	var chunky := classic_variant == ClassicVariant.CHUNKY
+	var w := size * (0.85 if chunky else 1.0)
+	var h := size * (0.72 if chunky else 0.55)
 	var rect := Rect2(-w / 2.0, -h / 2.0, w, h)
-	_ticket(rect, h * 0.16)
-	# The stub end: a dotted perforation near the right edge.
+	if chunky:
+		# Little feet under the body.
+		for fx: float in [-w * 0.18, w * 0.08]:
+			draw_line(Vector2(fx, rect.end.y), Vector2(fx, rect.end.y + h * 0.12), trim_color, 4.0, true)
+			draw_line(Vector2(fx, rect.end.y + h * 0.12), Vector2(fx + w * 0.06, rect.end.y + h * 0.12), trim_color, 4.0, true)
+	_ticket(rect, h * 0.16, Color(0, 0, 0, 0), h * (0.28 if chunky else 0.1))
 	var x := rect.end.x - w * 0.22
-	_perforation(Vector2(x, rect.position.y + 6.0), Vector2(x, rect.end.y - 6.0))
-	_face(Vector2(rect.position.x + w * 0.39, -h * 0.06), h * 0.9)
+	if classic_variant == ClassicVariant.TWO_TONE:
+		var stub := Rect2(Vector2(x, rect.position.y), Vector2(rect.end.x - x, h)).grow(-2.0)
+		var band := StyleBoxFlat.new()
+		band.bg_color = trim_color
+		band.corner_radius_top_right = int(h * 0.1)
+		band.corner_radius_bottom_right = int(h * 0.1)
+		draw_style_box(band, stub)
+		_star(stub.get_center() + Vector2(0.0, -h * 0.26), h * 0.12, backdrop_color)  # above the notch
+		# The side notch shows over the band too.
+		draw_circle(Vector2(rect.end.x, rect.get_center().y), h * 0.16, backdrop_color, true, -1.0, true)
+	else:
+		_perforation(Vector2(x, rect.position.y + 6.0), Vector2(x, rect.end.y - 6.0))
+	if classic_variant == ClassicVariant.SCALLOPED:
+		var bites := int(w / 12.0)
+		for i in bites:
+			var bx := rect.position.x + w * (i + 0.5) / bites
+			draw_circle(Vector2(bx, rect.position.y), 3.2, backdrop_color, true, -1.0, true)
+			draw_circle(Vector2(bx, rect.end.y), 3.2, backdrop_color, true, -1.0, true)
+	_face(Vector2(rect.position.x + (w - w * 0.22) / 2.0, -h * 0.06), h * (0.8 if chunky else 0.9))
 
 
 func _draw_tall() -> void:
@@ -106,13 +139,13 @@ func _draw_torn() -> void:
 # --- Pieces ----------------------------------------------------------------------
 
 ## A ticket body: paper with a trim border and half-circle notches on the sides.
-func _ticket(rect: Rect2, notch: float, fill: Color = Color(0, 0, 0, 0)) -> void:
+func _ticket(rect: Rect2, notch: float, fill: Color = Color(0, 0, 0, 0), corner: float = -1.0) -> void:
 	var paper := fill if fill.a > 0.0 else paper_color
 	var style_box := StyleBoxFlat.new()
 	style_box.bg_color = paper
 	style_box.border_color = trim_color
 	style_box.set_border_width_all(3)
-	style_box.set_corner_radius_all(int(notch * 0.6))
+	style_box.set_corner_radius_all(int(corner if corner >= 0.0 else notch * 0.6))
 	style_box.anti_aliasing = true
 	draw_style_box(style_box, rect)
 	# Notches: bites out of the middle of each side, showing the backdrop.
@@ -122,6 +155,15 @@ func _ticket(rect: Rect2, notch: float, fill: Color = Color(0, 0, 0, 0)) -> void
 	draw_arc(Vector2(rect.position.x, mid_y), notch, -PI / 2.0, PI / 2.0, 12, trim_color, 3.0, true)
 	draw_circle(Vector2(rect.end.x, mid_y), notch, backdrop_color, true, -1.0, true)
 	draw_arc(Vector2(rect.end.x, mid_y), notch, PI / 2.0, PI * 1.5, 12, trim_color, 3.0, true)
+
+
+## A five-point star (the punched star on the two-tone stub).
+func _star(center: Vector2, radius: float, color: Color) -> void:
+	var points := PackedVector2Array()
+	for i in 10:
+		var r := radius if i % 2 == 0 else radius * 0.45
+		points.append(center + Vector2.from_angle(-PI / 2.0 + i * PI / 5.0) * r)
+	draw_colored_polygon(points, color)
 
 
 func _perforation(from: Vector2, to: Vector2) -> void:
