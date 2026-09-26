@@ -1,19 +1,19 @@
 class_name TierData
 extends Resource
-## One color tier (Grey ... Red). One .tres per tier in res://resources/tiers/,
+## One color tier (Grey ... Charcoal). One .tres per tier in res://resources/tiers/,
 ## listed in tier_catalog.tres. Enemies spawned in a tier multiply their base
 ## EnemyData stats by these once, at spawn (EnemyBase.configure). Each tier
 ## stores its own multipliers, so one tier can be tuned without touching the others.
 
 @export var tier_id: StringName = &""
-## 0 = Grey ... 5 = Red. Matches the tier's place in the catalog.
+## 0 = Grey ... 5 = Charcoal. Matches the tier's place in the catalog.
 @export_range(0, 5, 1) var rank: int = 0
 ## Tier name as a localization key (shown by the Step 6 tier picker).
 @export var name_key: String = ""
 ## Enemy color in this tier. Multiplies the (light grey) enemy art.
 @export var tint: Color = Color.WHITE
-## Light edge around enemies in this tier, for dark tints that would vanish on
-## the grass (Charcoal). Alpha 0 = no outline.
+## Contrasting edge around enemies: ink for light tiers, ivory for Charcoal.
+## Alpha 0 = no outline.
 @export var outline_color: Color = Color(1.0, 1.0, 1.0, 0.0)
 
 @export_group("Enemy multipliers")

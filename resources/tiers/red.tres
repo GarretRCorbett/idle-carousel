@@ -43,6 +43,7 @@ tier_id = &"red"
 rank = 4
 name_key = "TIER_RED"
 tint = Color(0.95, 0.25, 0.22, 1)
+outline_color = Color(0.160784, 0.137255, 0.2, 1)
 health_multiplier = 3.84
 speed_multiplier = 1.13
 drag_multiplier = 1.0
