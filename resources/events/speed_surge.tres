@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EventData" format=3]
+
+[ext_resource type="Script" path="res://scripts/event_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"speed_surge"
+kind = 0
+effect = 0
+strength = 2.0
+duration = 15.0
+weight = 3.0
+name_key = "EVENT_SPEED_SURGE_NAME"
+banner_key = ""
+shape = 1
+color = Color(0.55, 0.85, 1, 1)

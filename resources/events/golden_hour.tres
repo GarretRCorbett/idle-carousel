@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EventData" format=3]
+
+[ext_resource type="Script" path="res://scripts/event_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"golden_hour"
+kind = 0
+effect = 1
+strength = 2.0
+duration = 20.0
+weight = 3.0
+name_key = "EVENT_GOLDEN_HOUR_NAME"
+banner_key = ""
+shape = 0
+color = Color(1, 0.84, 0.22, 1)

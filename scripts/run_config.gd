@@ -100,6 +100,13 @@ extends Resource
 ## Shorter absences pay nothing and show no "Welcome back".
 @export_range(0.0, 3600.0, 1.0, "suffix:s") var offline_min_seconds: float = 60.0
 
+@export_group("Random Events")
+## A random event comes every this-many seconds (picked at random in the window).
+@export_range(5.0, 3600.0, 5.0, "suffix:s") var event_min_seconds: float = 120.0
+@export_range(5.0, 3600.0, 5.0, "suffix:s") var event_max_seconds: float = 300.0
+## A pickup's token stays this long before it fades away.
+@export_range(1.0, 60.0, 0.5, "suffix:s") var pickup_seconds: float = 8.0
+
 @export_group("Ticket Booths")
 ## Booths at the start of a run (more are bought in the shop).
 @export_range(1, 8, 1) var starting_booths: int = 1
@@ -156,6 +163,8 @@ func get_problems() -> PackedStringArray:
 		if not is_finite(value) or value < 0.0:
 			problems.append("offline settings must be finite numbers >= 0")
 			break
+	if event_min_seconds <= 0.0 or event_max_seconds < event_min_seconds:
+		problems.append("event_max_seconds must be >= event_min_seconds > 0")
 	if not is_finite(click_boost_cap) or click_boost_cap < 0.0:
 		problems.append("click_boost_cap must be a finite number >= 0")
 	if not is_finite(click_boost_decay_seconds) or click_boost_decay_seconds <= 0.0:

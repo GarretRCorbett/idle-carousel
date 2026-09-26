@@ -23,6 +23,14 @@ extends Node2D
 ## Debug builds only: +5,000 Gold. More shortcuts in the Esc menu's Debug tab.
 @export var add_gold_key: Key = KEY_F5
 
+@export_group("Random Events")
+## Every event that can happen (GDD "Random Events"); each is a .tres, set on
+## the Game node in Game.tscn. (Not a preload default here: a typed array of
+## preloads made the editor leak on exit.)
+@export var event_list: Array[EventData] = []
+## Pickups appear this far from the carousel's center (a ring in the play area).
+@export var pickup_distance: Vector2 = Vector2(190.0, 290.0)
+
 @export_group("Saving")
 ## Auto-save interval (GDD: every 60 s). Milestones (purchases, sales, boss
 ## wins, tier changes) also save right away. Only for runs started from the
@@ -81,6 +89,12 @@ var _live_enemy_count: int = 0
 var _encounter: BossEncounter
 ## A milestone save is waiting for the end of the frame (several can land at once).
 var _save_queued: bool = false
+var _events: EventDirector
+## Pickup tokens live here, after ClickRouter, so a click on a token is
+## handled before an enemy click (unhandled input goes last child first).
+var _pickup_layer: Node2D
+## A controller was the last thing used: pickups show the grab-button prompt.
+var _using_controller: bool = false
 
 
 func _ready() -> void:
@@ -125,18 +139,19 @@ func _ready() -> void:
 	GameState.emergency_cleared.connect(_on_emergency_cleared)
 	GameState.stall_timed_out.connect(_on_stall_timed_out)
 	_hud.boost_held_changed.connect(GameState.set_boost_held)
-	GameState.booth_count_changed.connect(_layout_booths)
+	GameState.booth_count_changed.connect(_layout_all_booths.unbind(1))
 	GameState.mounts_changed.connect(_sync_mounts)
 	GameState.run_reset.connect(_discard_pending_spawns)
 	GameState.upgrade_applied.connect(_on_upgrade_applied)
 	GameState.run_reset.connect(_refresh_gilding)
+	_setup_events()
 	GameState.reset_run()
 	if SaveManager.continue_requested:
 		SaveManager.continue_requested = false
 		if SaveManager.load_run():
 			_pay_offline_gold()
 	_setup_saving()
-	_layout_booths(GameState.get_booth_count())
+	_layout_all_booths()
 	_sync_mounts(GameState.get_mount_roster())
 	get_viewport().size_changed.connect(_center_world)
 	_center_world()
@@ -148,6 +163,74 @@ func _refresh_gilding() -> void:
 	var rims := UpgradeManager.get_definition(&"gilded_rims")
 	if rims != null:
 		_carousel.set_gilding(float(GameState.get_upgrade_level(rims.id)) / rims.max_level)
+
+
+# --- Random events (Phase 4 Step 7) -----------------------------------------------
+
+func _setup_events() -> void:
+	_pickup_layer = Node2D.new()
+	_pickup_layer.name = "PickupLayer"
+	_world.add_child(_pickup_layer)
+	_events = EventDirector.new()
+	_events.name = "EventDirector"
+	_events.events = event_list
+	add_child(_events)
+	_events.pickup_requested.connect(_spawn_pickup)
+	_events.extra_booths_changed.connect(_layout_all_booths.unbind(1))
+	(%EventChips as EventChips).setup(_events)
+	GameState.run_reset.connect(_restart_events)
+
+
+## A new run or a load: a fresh event clock, no running events or tokens.
+func _restart_events() -> void:
+	for pickup in _pickup_layer.get_children():
+		pickup.queue_free()
+	_events.setup(GameState.get_config(), GameState.get_run_seed())
+
+
+func _spawn_pickup(event: EventData) -> void:
+	var pickup := EventPickup.new()
+	pickup.event = event
+	pickup.lifetime = GameState.get_config().pickup_seconds
+	pickup.show_prompt = _using_controller
+	var angle := _events.rng.randf() * TAU
+	var distance := _events.rng.randf_range(pickup_distance.x, pickup_distance.y)
+	pickup.position = _carousel.position + Vector2.from_angle(angle) * distance
+	pickup.grabbed.connect(_on_pickup_grabbed)
+	_pickup_layer.add_child(pickup)
+	AudioManager.play_sfx(&"tab")
+
+
+func _on_pickup_grabbed(pickup: EventPickup) -> void:
+	AudioManager.play_sfx(&"coin")
+	var where := pickup.global_position
+	var show_gold := func(event: EventData, amount: float) -> void:
+		if amount > 0.0 and event == pickup.event:
+			_spawn_gold_pop(where, amount)
+	_events.event_started.connect(show_gold, CONNECT_ONE_SHOT)
+	_events.start(pickup.event)
+
+
+## Booths bought plus any event (pop-up) booths.
+func _layout_all_booths() -> void:
+	_layout_booths(GameState.get_booth_count() + (_events.get_extra_booths() if _events != null else 0))
+
+
+## Debug builds only (Debug tab): an event right now (a pickup's token appears).
+func debug_spawn_event(id: StringName) -> void:
+	if not OS.is_debug_build():
+		return
+	var event := _events.get_event(id)
+	if event == null:
+		return
+	if event.kind == EventData.Kind.PICKUP:
+		_spawn_pickup(event)
+	else:
+		_events.start(event)
+
+
+func get_events() -> EventDirector:
+	return _events
 
 
 func _setup_saving() -> void:
@@ -194,8 +277,24 @@ func _notification(what: int) -> void:
 		SaveManager.save_run()
 
 
+## Tracks whether a controller is in use (pickups show the grab prompt then).
+func _input(event: InputEvent) -> void:
+	var controller := event is InputEventJoypadButton or event is InputEventJoypadMotion
+	var other := event is InputEventMouseButton or event is InputEventKey
+	if (controller and not _using_controller) or (other and _using_controller):
+		_using_controller = controller
+		for pickup: EventPickup in _pickup_layer.get_children():
+			pickup.show_prompt = controller
+
+
 ## Esc opens Settings (which pauses the game; Esc again closes it).
 func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed(&"grab_pickup"):
+		for pickup: EventPickup in _pickup_layer.get_children():
+			if not pickup.is_queued_for_deletion():
+				pickup.grab()
+				get_viewport().set_input_as_handled()
+				return
 	if event.is_action_pressed(&"ui_cancel") and not _options.visible:
 		_options.open()
 		get_viewport().set_input_as_handled()
@@ -282,6 +381,7 @@ func _physics_process(delta: float) -> void:
 	_snapshot.rebuild(_enemy_layer, _carousel.global_position)
 	_carousel.advance_rotation(delta, GameState.get_effective_spin_speed_rad_s())
 	_carousel.set_boost_state(GameState.is_boost_maxed(), GameState.is_overdrive_active())
+	_events.advance(delta)
 	for i in _booth_tallies.size():
 		var shown := _booth_tallies[i].advance(delta)
 		if shown > 0.0:
@@ -383,7 +483,7 @@ func _on_mount_gold_earned(mount: MountBase, amount: float) -> void:
 
 
 func _on_booth_passed(mount: MountBase, booth_index: int, pass_count: int) -> void:
-	var paid := GameState.earn_gold(GameState.get_mount_gold(mount.data) * pass_count)
+	var paid := GameState.earn_gold(GameState.get_mount_gold(mount.data) * pass_count * GameState.get_booth_gold_multiplier())
 	_booth_tallies[booth_index].add(paid)
 	_booths[booth_index].pop()
 	AudioManager.play_sfx(&"coin")

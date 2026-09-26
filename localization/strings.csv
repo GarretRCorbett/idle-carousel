@@ -43,6 +43,13 @@ CTRL_PAUSE,Settings and pause,Ajustes y pausa,Paramètres et pause,Einstellungen
 HUD_GOLD,Gold: {0},Oro: {0},Or : {0},Gold: {0},Ouro: {0},Золото: {0},金币：{0},ゴールド：{0},골드: {0}
 HUD_GOLD_PER_SEC,Gold per sec: {0},Oro por seg: {0},Or par sec : {0},Gold pro Sek.: {0},Ouro por seg: {0},Золото/сек: {0},每秒金币：{0},毎秒ゴールド：{0},초당 골드: {0}
 POP_GOLD,+{0},+{0},+{0},+{0},+{0},+{0},+{0},+{0},+{0}
+EVENT_SPEED_SURGE_NAME,Speed Surge,Oleada de velocidad,Coup de vitesse,Tempo-Schub,Surto de velocidade,Рывок скорости,速度激增,スピードアップ,속도 급상승
+EVENT_GOLDEN_HOUR_NAME,Golden Hour,Hora dorada,Heure dorée,Goldene Stunde,Hora dourada,Золотой час,黄金时刻,ゴールデンアワー,황금 시간
+EVENT_LUCKY_TICKET_NAME,Lucky Ticket,Boleto de la suerte,Ticket chanceux,Glückslos,Bilhete da sorte,Счастливый билет,幸运票,ラッキーチケット,행운의 티켓
+EVENT_LUCKY_TICKET_BANNER,Lucky Ticket! +{0} Gold,¡Boleto de la suerte! +{0} de oro,Ticket chanceux ! +{0} or,Glückslos! +{0} Gold,Bilhete da sorte! +{0} de ouro,Счастливый билет! +{0} золота,幸运票！+{0} 金币,ラッキーチケット！+{0} ゴールド,행운의 티켓! +{0} 골드
+EVENT_POPUP_BOOTH_NAME,Pop-up Booth,Taquilla temporal,Guichet éphémère,Pop-up-Schalter,Bilheteria temporária,Временная касса,临时售票亭,臨時チケット売り場,임시 매표소
+EVENT_POPUP_BOOTH_BANNER,A pop-up booth opened!,¡Se abrió una taquilla temporal!,Un guichet éphémère a ouvert !,Ein Pop-up-Schalter hat geöffnet!,Uma bilheteria temporária abriu!,Открылась временная касса!,临时售票亭开张了！,臨時チケット売り場がオープン！,임시 매표소가 열렸어요!
+EVENT_CHIP,{0} {1}s,{0} {1} s,{0} {1} s,{0} {1} s,{0} {1}s,{0} {1} с,{0} {1}秒,{0} {1}秒,{0} {1}초
 HUD_SPEED,Speed: ×{0},Velocidad: ×{0},Vitesse : ×{0},Tempo: ×{0},Velocidade: ×{0},Скорость: ×{0},速度：×{0},速度：×{0},속도: ×{0}
 HUD_BOOST,Boost,Impulso,Boost,Boost,Impulso,Ускорение,加速,ブースト,부스트
 HUD_BOOST_AUTO,Boost (auto {0}%),Impulso (auto {0}%),Boost (auto {0} %),Boost (auto {0} %),Impulso (auto {0}%),Ускорение (авто {0}%),加速（自动 {0}%）,ブースト（自動 {0}%）,부스트 (자동 {0}%)

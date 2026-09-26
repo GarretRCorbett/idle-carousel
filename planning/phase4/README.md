@@ -226,3 +226,10 @@ strings) so new events are data; an `EventDirector` in Game picks them; GameStat
 modifier beside the speed modifiers. Active events aren't saved (like the field). Tests: timing
 window, no events in fights, refresh-not-stack, each effect, grab by click and by action.
 **Strings (drafts):** event names, the banner, "Grab" prompt.
+
+**Step 7 done (2026-09-26):** built as planned (`EventData`, `EventDirector`, `EventPickup`, `EventChips`;
+events in `resources/events/`, listed on the Game node in Game.tscn). The grab prompt is drawn as four
+face-button dots with the top one filled, so it reads on any controller. The Debug tab has a button per
+event. Found while building: a typed-array `@export` default that preloads resources made the editor
+leak on exit, so the event list lives in the scene instead. The economy sim doesn't grab pickups, so
+its pace ignores events (they're short and optional).

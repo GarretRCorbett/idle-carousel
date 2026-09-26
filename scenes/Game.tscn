@@ -14,9 +14,16 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/background/tree_green_small.png" id="16_tree_a"]
 [ext_resource type="Texture2D" path="res://assets/sprites/background/tree_green_large.png" id="17_tree_g"]
 [ext_resource type="PackedScene" path="res://scenes/ui/WelcomeBack.tscn" id="40_welcome"]
+[ext_resource type="Script" path="res://scripts/event_chips.gd" id="41_chips"]
+[ext_resource type="Resource" path="res://resources/events/speed_surge.tres" id="42_speed_surge"]
+[ext_resource type="Resource" path="res://resources/events/golden_hour.tres" id="42_golden_hour"]
+[ext_resource type="Resource" path="res://resources/events/lucky_ticket.tres" id="42_lucky_ticket"]
+[ext_resource type="Resource" path="res://resources/events/popup_booth.tres" id="42_popup_booth"]
+[ext_resource type="Script" path="res://scripts/event_data.gd" id="42_event_data"]
 
 [node name="Game" type="Node2D" unique_id=1479670653]
 script = ExtResource("1_78awf")
+event_list = Array[ExtResource("42_event_data")]([ExtResource("42_speed_surge"), ExtResource("42_golden_hour"), ExtResource("42_lucky_ticket"), ExtResource("42_popup_booth")])
 
 [node name="World" type="Node2D" parent="." unique_id=151885564]
 position = Vector2(640, 360)
@@ -150,6 +157,12 @@ mouse_filter = 2
 [node name="BossStrip" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn" instance=ExtResource("30_strip")]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="EventChips" type="VBoxContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("41_chips")
 
 [node name="PlaySpace" type="Control" parent="HUD/HUDRoot/ScreenMargin/Columns/PlayColumn" unique_id=994945073]
 layout_mode = 2

@@ -43,6 +43,10 @@ func _ready() -> void:
 		_button(fight, "Heal carousel", func() -> void: GameState.debug_full_heal())
 		_speed_button = _button(fight, "", _next_speed)
 		_update_speed_text()
+		_section(column, "Random events")
+		var events := _grid(column)
+		for event in _game.event_list:
+			_button(events, String(event.id).capitalize(), _game.debug_spawn_event.bind(event.id))
 	_section(column, "Look")
 	var look := _grid(column)
 	_theme_button = _button(look, "", func() -> void: ThemeManager.cycle(1))

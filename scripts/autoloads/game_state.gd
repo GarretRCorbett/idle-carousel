@@ -82,6 +82,8 @@ var _overdrive: bool = false
 ## Temporary speed multipliers by source (overdrive now; random events later).
 ## They multiply together and into the effective speed.
 var _speed_modifiers: Dictionary[StringName, float] = {}
+## Temporary booth-Gold multipliers by source (Golden Hour); they multiply.
+var _booth_gold_modifiers: Dictionary[StringName, float] = {}
 # Upgrade effects, summed over bought levels.
 var _spin_bonus: float = 0.0
 var _boost_cap_bonus: float = 0.0
@@ -165,6 +167,7 @@ func _reset_fields(config: RunConfig) -> void:
 	_boost_maxed_seconds = 0.0
 	_overdrive = false
 	_speed_modifiers.clear()
+	_booth_gold_modifiers.clear()
 	_spin_bonus = 0.0
 	_boost_cap_bonus = 0.0
 	_auto_boost_level = 0
@@ -697,6 +700,29 @@ func get_effective_spin_speed_rad_s() -> float:
 			* (1.0 + get_click_boost())
 			* get_speed_modifier_multiplier()
 			* drag_factor)
+
+
+## Adds or replaces a temporary booth-Gold multiplier (Golden Hour).
+func set_booth_gold_modifier(source: StringName, multiplier: float) -> void:
+	if is_finite(multiplier) and multiplier >= 0.0:
+		_booth_gold_modifiers[source] = multiplier
+
+
+func remove_booth_gold_modifier(source: StringName) -> void:
+	_booth_gold_modifiers.erase(source)
+
+
+## Product of every booth-Gold modifier (1.0 when there are none).
+func get_booth_gold_multiplier() -> float:
+	var product := 1.0
+	for multiplier in _booth_gold_modifiers.values():
+		product *= multiplier
+	return product
+
+
+## The run's tuning (read-only; events and tools use it).
+func get_config() -> RunConfig:
+	return _config
 
 
 ## Product of every temporary speed modifier (1.0 when there are none).
