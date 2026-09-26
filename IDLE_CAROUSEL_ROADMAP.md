@@ -149,12 +149,22 @@ A game gets only one Next Fest, so this is the one.
 - [ ] Short devlog; r/incremental_games post with the real backstory
 - [ ] Export, test on a clean machine, launch at $4.99
 
+- [ ] Nintendo Developer Portal account created before launch (admin only; no port work). See below.
+
 **Claude Code:** headless export pipeline, build checks, store-page checklist.
 **Garret:** store copy, trailer, community posts, launch.
+
+---
+
+## After launch — Nintendo Switch (not on the critical path)
+Plan: `planning/switch_release_plan.md` (Garret, 2026-09-26). Steam launch → stabilization → in-house
+Switch port (Godot console tooling, e.g. RAWRLAB or W4) → certification → eShop; native Switch 2 maybe
+later. Controller support ships in the Steam version anyway. Nintendo-confidential material never goes
+to Claude Code, Codex or other AI services unless Nintendo's agreements explicitly allow it.
 
 ---
 
 ## Next Concrete Step
 _Update this line at the end of every session._
 
-> Garret: playtest the six bosses, palette A, the park look and the Step 8 prices (`planning/phase3/step8_results.md`); then Phase 3 Step 9 (full playtest, Codex review, sign-off). Where Phase 3 stands: `planning/phase3/README.md`.
+> Phase 4 in progress (`planning/phase4/README.md`): Steps 1–6 done; next, random events, then the Park Guide. Phase 3 Step 9 waits for Codex. Session detail: `IDLE_CAROUSEL_NOTES.md`.

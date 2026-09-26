@@ -31,6 +31,8 @@ _Update at the end of every session._
 - [ ] See `planning/phase3/playtest3_plan.md`: boost panel, mount outlines, faster idle, auto-boost (4 levels; open questions there), Codex mount art study, tutorial (plan now, build after Phase 3).
 
 ### Later reminders (Garret, 2026-09-25)
+- [ ] **Before Steam launch:** create the Nintendo Developer Portal account (free; admin only, no port work). Plan: `planning/switch_release_plan.md`.
+- [ ] **Naming and themes (Garret, 2026-09-26):** "Park Guide" is a working name; "park" is used a lot. Revisit names together with the theme specifications and decisions later.
 - [ ] **Remind Garret, much later:** have Claude look at the old **Carousel Crusade** Godot project (the Slay the Spire / Wildfrost-style carousel game). Not now; it's the "after Idle Carousel ships" dream. Backstory: `devlog/backstory.md`.
 - [ ] The old Carousel Crusade Steam page's capsule art is AI-generated. Never reuse it; replace it all if that app is ever reused.
 

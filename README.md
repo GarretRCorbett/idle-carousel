@@ -16,6 +16,7 @@ An incremental/idle game where a spinning carousel is both your engine and your 
 | `planning/phaseN/stepX_plan.md` | Approved plan for one step | Before building the step |
 | `planning/phaseN/codex_memo_*.md`, `claude_*.md` | Research and second opinions. **Input, not decisions**; kept as written | Never (add a new memo instead) |
 | `CLAUDE.md` / `AGENTS.md` | Rules for Claude Code / Codex: engine, architecture, workflow, Codex usage | When a rule changes |
+| `planning/switch_release_plan.md` | Nintendo Switch plan: a post-Steam expansion, not on the critical path; Nintendo confidentiality rule | When the plan changes |
 | `assets/PROVENANCE.md` | Source and license of every asset file | Every new asset |
 
 ## Checks

@@ -23,6 +23,9 @@ memos). It runs you with full access only because the Windows sandbox is broken,
   `git log`/`diff`/`show`, and searching are fine.
 - Put everything in your final message. Claude saves it and snapshots the repo before
   and after to confirm nothing changed.
+- Never ask for or process Nintendo-confidential material (SDKs, docs, certification
+  requirements, APIs) unless Nintendo's agreements explicitly permit it
+  (`planning/switch_release_plan.md`).
 - Recommendations are input, not decisions: Garret decides. Flag DECISION PENDING
   items rather than resolving them.
 - Full workflow (commands, snapshot check): CLAUDE.md → "Working with Codex (GPT)".

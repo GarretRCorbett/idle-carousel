@@ -146,6 +146,10 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
   approves all of it before it ships. Store page copy, trailer text, and credits stay
   Garret's.
 - Don't add features outside the GDD's v1.0 scope. Put ideas in IDLE_CAROUSEL_NOTES.md.
+- Nintendo (`planning/switch_release_plan.md`): never send Nintendo-confidential material (SDKs,
+  docs, certification requirements, APIs) to Codex or any other external AI service, and don't ask
+  Garret to paste it here, unless Nintendo's agreements explicitly permit it. Nothing
+  Nintendo-specific gets built before the Steam version ships.
 
 ## Working with Codex (GPT)
 Codex is Claude's second-opinion partner: design memos, research, plan reviews, and
