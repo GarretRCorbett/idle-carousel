@@ -19,15 +19,8 @@
 _Update at the end of every session._
 
 > **Phase 3 (2026-09-26):** Steps 1–8 are done, plus the look pass (theme-park plaza, Purple Garden palette, tier-shade outlines), the theming foundation (Winter/Halloween test themes, F4), and the Debug tab. GDD v1.17 has the Playtest 3 decisions (mount levels and stars, auto-boost, gentle latch drain, compact shop, Park Guide, income pops).
-> **Next session: finish Phase 3.** The small playtest-3 fixes from `planning/phase3/playtest3_plan.md` → "Phase split":
-> - the Boost panel;
-> - mount outlines;
-> - the bug where buying Boost Power ends Overdrive;
-> - the gentle latch drain;
-> - faster idle (re-run the economy sim);
-> - the combined booth "+X".
->
-> Then Step 9: a full playtest, a Codex review, and Garret's sign-off. Phase 4 then opens with the shop redesign, levels and stars, auto-boost, the Park Guide, the tutorial and music. The devlog lives in `devlog/` (two post drafts; the voice notes are in `devlog/backstory.md`).
+> **2026-09-26:** the playtest-3 fixes are done (Boost panel, mount outlines, Boost Power keeps Overdrive, gentle latch drain, faster idle at 90°/s re-simmed, income pops).
+> **Next: Phase 3 Step 9** (`planning/phase3/step9_plan.md`): Garret's sign-off playtest, then the Codex review (`--base b7267ac`) once Garret says Codex has usage again. Phase 4 then opens with the shop redesign, levels and stars, auto-boost, the Park Guide, the tutorial and music. The devlog lives in `devlog/` (two post drafts; the voice notes are in `devlog/backstory.md`).
 
 ---
 

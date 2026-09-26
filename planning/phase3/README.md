@@ -40,8 +40,11 @@
   ParkTheme / ThemeManager, Winter and Halloween test themes (F4 in debug builds).
 - **Purple Garden palette** (Codex style study plus Garret's picks) and tier-shade outlines. Playtest 3
   → `playtest3_plan.md` and GDD v1.17. The Debug tab is in the Esc menu (debug builds only).
-- **Next:** the small playtest-3 fixes (`playtest3_plan.md` → "Phase split"), then Step 9 (a full
-  playtest, a Codex review, sign-off).
+- **Playtest-3 fixes done (2026-09-26):** Boost panel, mount outlines, Boost Power keeps Overdrive,
+  gentle latch drain (5%/s per latch, 30% max), faster idle (90°/s; prices ×1.3, boss health
+  ×1.15, re-simmed in `step8_results.md`), income pops (combined booth "+X", Panda "+X").
+- **Next: Step 9** (`step9_plan.md`): Garret's sign-off playtest, and the Codex review
+  (`--base b7267ac`), which waits until Garret says Codex has usage again.
 
 Phase 3 roadmap scope: Sloth, Giraffe, Elephant, Panda; Stick and Rock; six color tiers;
 the six tier bosses; mount slots 4–6. (The Rusted King is Phase 5.)
@@ -207,6 +210,7 @@ Game's loop drops a duplicate check.
 | `step4_plan.md` | Step 4: Giraffe and Sloth (approved 2026-09-25, built) |
 | `step6_plan.md` | Step 6: Leaf Storm, boss framework, strip UI, gating, bigger waves (approved 2026-09-25, built; balance run inside) |
 | `step5_plan.md` | Step 5: Elephant, mount tiers, Panda (approved 2026-09-25, built) |
+| `step9_plan.md` | Step 9: the Codex review command and Garret's sign-off playtest list |
 | `step7_plan.md` | Step 7: the other five bosses (Garret: "go ahead"; built) |
 | `codex_memo_t_palette.md` | Codex + Claude: a Disney-park carousel palette (research, three options, trademark cautions); renders in `palette/` |
 | `codex_memo_s_leaf_storm.md` | Codex + Claude: how the first boss should work (Garret's summon-and-drift idea + the GDD's 4-Leaf split as the finale), starting numbers |
