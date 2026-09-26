@@ -31,7 +31,8 @@ Garret played the Purple Garden build ("once I started playing, I loved it"). Hi
    - The other tabs get the same compact treatment (icon, level pips, one gold buy button), and the shop gets narrower.
    - Codex renders 2–3 mockups first (a worktree task); Garret picks; then build.
 
-9. **Mount upgrades are confusing** (Wolf Fang sits in Combat, the others get a one-step Tier 2 in Mounts; "the Wolf has it right"). Claude's proposal, **awaiting Garret's OK (it's a GDD change)**:
+9. **DECIDED (Garret, "the hybrid"; GDD v1.17 → Mount Levels and Stars).** Levels (pips), then a ★2 star-up in the run, then ★3 (the named ability) via a prestige unlock. Only the words "levels" and "stars" are used; "tier" is for enemies. The original notes follow:
+   **Mount upgrades are confusing** (Wolf Fang sits in Combat, the others get a one-step Tier 2 in Mounts; "the Wolf has it right"). Claude's proposal, **awaiting Garret's OK (it's a GDD change)**:
    - Every mount gets its own leveled track on its Mounts-tab row: Wolf damage, Giraffe reach/damage, Sloth slow strength, Elephant sweep width/damage, Panda Gold/heal, Horse Gold per pass.
    - Tiers become milestones on that track (for example Tier 2 at level 5 and Tier 3 at level 10), each adding a visible ability.
    - The Combat tab keeps the player's own stats (click damage).
@@ -52,6 +53,8 @@ Garret played the Purple Garden build ("once I started playing, I loved it"). Hi
 ## Build order (next sessions)
 1. Boost panel, mount outlines, and the Boost Power / Overdrive bug. All small.
 2. Faster idle: raise the base spin, re-run the economy sim, keep the boss pace.
-3. Auto-boost, once the open questions are answered. Update the GDD.
+3. Auto-boost (GDD v1.17: 4 levels, the top one holds just above 80%; latches drain the bar gently). Prices and level names still need Garret.
 4. Codex worktree tasks: mount art study, and the shop redesign mockups.
 5. Tutorial script draft for Garret's approval. Build it after Phase 3.
+6. Mount levels and stars (GDD v1.17): rebuild the Tier 2 rows as per-mount tracks with the ★2 star-up; ★3 waits for prestige. Build together with the shop redesign.
+7. Income pops: a combined "+X" above each booth (test at max speed), and the Panda's "+X" per turn.

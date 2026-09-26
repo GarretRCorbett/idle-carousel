@@ -1,5 +1,5 @@
 # 🎠 Idle Carousel — Game Design Document
-### Version 1.16 | Working Title: Idle Carousel
+### Version 1.17 | Working Title: Idle Carousel
 > Solo dev project. Built in Godot 4.7 stable. Target: Steam release, anonymous, $4.99 (sale target ~$3.49–$3.75), with a free demo.
 > Personal motivation: daughters love carousels.
 > Influences: Cookie Clicker, Clicker Heroes, A Game About Feeding a Black Hole, Rusty's Retirement.
@@ -7,6 +7,13 @@
 ---
 
 ## Changelog
+- **v1.17** — Playtest 3 decisions (Garret, 2026-09-25; `planning/phase3/playtest3_plan.md`):
+  - **Mount levels and stars** replace the separate tier upgrades. Each mount has one track: levels (pips), a ★2 star-up in the run, and ★3 (its named ability) unlocked by prestige.
+  - **Auto-boost** becomes a 4-level run upgrade (early automation, and the touchscreen fix).
+  - Latched enemies drain the Boost bar gently. Buying Boost Power never breaks Overdrive.
+  - Horse Gold shows as one combined "+X" above each ticket booth, and the Panda shows its Gold above itself each turn.
+  - The shop becomes compact rows (Mounts tab: one row per animal).
+  - Planned: a **Park Guide** almanac, a first-run tutorial, and prestige unlocks for future mounts, relics, abilities and themes.
 - **v1.16** — Pricing pass (Phase 3 Step 8, Garret): the **Ticket Booth** now starts at 1,500 Gold and each next booth costs ×1.8 (was 500, ×1.5), picked from economy-sim runs. All prices, growth rates and boss health are tuned in the data files to a 15 / 20 / 25 / 30 / 35 / 35 min boss pace; results in `planning/phase3/step8_results.md`.
 - **v1.15** — Boss details for Phase 3 Step 7 (Garret): Gilded Gale trickles summons, Ancient Log blunts its first 3 hits, Boulder's latch points have their own health, Obsidian Boulder is two stages; every split piece must die for a win.
 - **v1.14** — First boss and gating (Garret, Phase 3 Step 6): Leaf Storm drifts, warns, and throws packs of ~20 storm leaves (then splits into 4); boss strip above the carousel with numbered tier pips; beaten bosses can be re-fought for a smaller reward; Horse and Wolf are the only mounts before it; waves are about twice as big. Details: `planning/phase3/step6_plan.md`.
@@ -123,7 +130,7 @@ Enemies always pressure the carousel — you cannot just idle forever without co
 - **Primary source:** Ticket booth generates a fixed amount of Gold each time the Horse mount passes it. Spin speed scales how *often* that happens, not the amount per pass: spin faster = booth passed more often = more Gold per minute. Horse upgrades raise the per-pass amount. (Scaling payout with speed too would make income grow with speed², which is hard to balance.)
 - **No click Gold:** clicking never pays Gold directly. The Spin button speeds the carousel up, which makes the Horses pass booths sooner.
 - **Combat source:** Defeated enemies drop bonus Gold. Stronger enemies in higher tiers drop more. Tier bosses give a large Gold bonus.
-- **Spent on:** Everything — spin speed, mount slots, ticket booth upgrades, carousel health, click damage, mount ability upgrades, mount tier upgrades.
+- **Spent on:** Everything — spin speed, mount slots, ticket booth upgrades, carousel health, click damage, mount levels and star-ups (v1.17), auto-boost.
 - **Feel:** Constant, steady flow with exciting spikes from combat. The heartbeat of the game.
 
 **Design note:** Single currency keeps the loop clean and readable. The latch mechanic naturally forces combat engagement without needing a separate currency to gate combat upgrades — a latched enemy slows your Gold income directly, so ignoring combat always has an immediate economic consequence.
@@ -147,6 +154,10 @@ The single most important stat in the game. Affects:
 - **Click an enemy:** damages it (approaching or latched). Clicking an enemy never boosts spin.
 - **Clicking empty space** does nothing. **UI buttons and panels** never count as game clicks.
 - **Overdrive:** keep the Boost bar at max for 5 seconds and speed doubles (×2) until the bar drops back below 80%. The carousel and Boost bar glow gold while it lasts. It rewards active play without being required. Hold time and multiplier are tunable.
+- **v1.17 (Garret):**
+  - **Latched enemies drain the bar gently.** Each latch drains a little and more latches drain faster, so they push you out of Overdrive over time, never instantly. Losing all health still ends it.
+  - **Buying Boost Power keeps the bar's fill**, so it never knocks you out of Overdrive.
+  - **Auto-boost** (a run upgrade, 4 levels, like Carousel Speed) presses Boost for you, and each level holds the bar higher. The top level holds it just above 80%: enough to keep Overdrive going once you've started it, never enough to start it alone. It lets touchscreen players use Boost while clicking enemies.
 
 ### Health
 The carousel has a health bar. Enemies that successfully latch deal damage over time until removed.
@@ -195,7 +206,7 @@ Six total mounts. Unlocked progressively. Each occupies one carousel slot. Each 
 - **Extra Horses (v1.5):** more Horses can be bought into empty mount slots, each costing more than the last. A Horse can be sold back for a partial refund to free its slot. Every slot is a choice: another Horse for income, or a combat mount for defense. (v1.11: every mount type works this way, see Mount Slot Progression.)
 - **Art:** Classic carousel horse. Brown/chestnut. Simple side silhouette from top-down. Coin icon appears on booth pass.
 - **Color tier:** Saddle color changes per tier (grey → green → yellow → orange → red → charcoal)
-- **Upgrades:** Tier 2 doubles Gold per pass. Tier 3 generates Gold on every sweep not just booth passes. Lucky Horseshoe adds a small triple-Gold chance.
+- **Upgrades (v1.17, Mount Levels and Stars):** levels +15% Gold per pass; ★2 doubles Gold per pass; ★3 **Lucky Horseshoe**, a chance each pass pays triple (replaces the undefined "Gold on every sweep").
 
 ---
 
@@ -205,7 +216,7 @@ Six total mounts. Unlocked progressively. Each occupies one carousel slot. Each 
 - **Behavior:** Fires outward in a line as it rotates. The line pierces: it damages every enemy in its path, each enemy at most once per pass. Particularly effective against latched enemies since it passes them on every rotation.
 - **Art:** Wolf silhouette top-down. Dark grey. Jaws open in attack position. Slash visual on enemy hit.
 - **Color tier:** Eye glow color changes per tier
-- **Upgrades:** Wolf Fang 1/2/3 increases damage. Pack Mentality adds an offset second sweep.
+- **Upgrades (v1.17):** levels are **Wolf Fang**, +damage per hit; ★2 +50% damage; ★3 **Pack Mentality**, an offset second sweep.
 
 ---
 
@@ -215,7 +226,7 @@ Six total mounts. Unlocked progressively. Each occupies one carousel slot. Each 
 - **Behavior:** As it rotates past approaching enemies (before they latch), it applies a Slow debuff. Slowed enemies move at 50% speed and have a visible slow icon above their head (a sleepy "Zzz"). Slow lasts 3 seconds.
 - **Art:** Kenney Animal Pack sloth. "Zzz" icon appears above affected enemies.
 - **Color tier:** An accent (saddle/collar) color changes per tier
-- **Upgrades:** Drowsy 1/2/3 increases slow duration. Deep Sleep converts slow to a brief freeze (the enemy dozes off).
+- **Upgrades (v1.17):** levels are **Drowsy**, longer slows; ★2 stronger slows; ★3 **Deep Sleep**, a slowed enemy briefly freezes (dozes off).
 
 ---
 
@@ -225,7 +236,7 @@ Six total mounts. Unlocked progressively. Each occupies one carousel slot. Each 
 - **Behavior:** Fires outward at significantly longer range than Wolf. Can hit enemies still approaching from a distance before they latch. Counter to fast Leaf swarms — the Giraffe's long neck reaches them mid-approach.
 - **Art:** Kenney Animal Pack giraffe. Headbutt/strike visual on distant hit.
 - **Color tier:** An accent (saddle/collar) color changes per tier
-- **Upgrades:** Long Neck 1/2/3 extends range further. Double Take makes it fire twice per sweep.
+- **Upgrades (v1.17):** levels are **Long Neck**, more reach; ★2 hits harder; ★3 **Double Take**, hits twice per sweep.
 
 ---
 
@@ -235,7 +246,7 @@ Six total mounts. Unlocked progressively. Each occupies one carousel slot. Each 
 - **Behavior:** Instead of a single line, the Elephant sweep covers a wider arc. Hits all enemies within that arc. Particularly effective when multiple enemies are latched at the same section of the rim.
 - **Art:** Kenney Animal Pack elephant. Trumpet/shockwave arc visual on sweep.
 - **Color tier:** An accent (saddle/headdress) color changes per tier
-- **Upgrades:** Trumpet 1/2/3 increases arc width. Trunk Toss adds knockback that flings latched enemies outward.
+- **Upgrades (v1.17):** levels are **Trumpet**, a wider sweep; ★2 twice as wide; ★3 **Trunk Toss**, flings latched enemies off the carousel.
 
 ---
 
@@ -243,10 +254,10 @@ Six total mounts. Unlocked progressively. Each occupies one carousel slot. Each 
 - **Type:** Sweeping
 - **Role:** Hybrid — Gold generation plus combat plus heal
 - **Behavior:** Generates a small Gold amount on each sweep (less than Horse). Deals damage to enemies in sweep path (less than Wolf). On enemy kill, restores a small amount of carousel health.
-- **Unlock requirement:** Must have upgraded at least 3 other mounts to Tier 2.
+- **Unlock requirement:** 3 different mount types at ★2 (was "Tier 2").
 - **Art:** Kenney Animal Pack panda. Sparkle trail follows sweep path.
 - **Color tier:** An accent (saddle/collar) color shifts through tier colors
-- **Upgrades:** Bamboo Feast increases all three effects by 50%. Lucky Bamboo adds a chance to double Gold on sweep.
+- **Upgrades (v1.17):** levels add Gold per turn and healing (level name TBD; "Bamboo" is a placeholder); ★2 **Bamboo Feast**, +50% to all its effects; ★3 **Lucky Bamboo**, a chance to double its Gold. Its Gold stays **per turn**, so spin speed drives it like everything else, and it shows a "+X" above the Panda each turn so its effect is visible.
 
 ### Mount Slot Progression
 Start with 1 slot (Horse only). Slots are always bought with Gold in the Upgrade Shop:
@@ -382,18 +393,23 @@ Two trees. Both cost Gold. Upgrades always show the next tier even if locked so 
 
 ---
 
-### Mount Upgrades (Gold)
+### Mount Levels and Stars (v1.17, Garret: the hybrid)
+One upgrade track per mount type, shared by every copy of that mount (selling one never loses progress):
+- **Levels (pips ●●○).** 3 small Gold purchases.
+- **★2 star-up.** Once the pips fill, the mount's button becomes a glowing **"★ Star up"** with a big price. The animal visibly transforms (star badge, golden rim, slightly bigger), then the pips reset for levels 4–6. Available every run.
+- **★3.** The mount's named ability. **Locked until a prestige unlock** (e.g. "Wolf Mastery" in the prestige tree); after that it's buyable in any run once the mount reaches level 6.
+- The words are **levels** and **stars** only. "Tier" is kept for enemy tiers, so the two never get confused.
 
-| Upgrade | Effect |
-|---|---|
-| Wolf Tier 2/3 | Speed and damage increase, then damage trail |
-| Sloth Tier 2/3 | Slow duration doubled, then freeze added |
-| Giraffe Tier 2/3 | Range extended significantly, then fires twice |
-| Elephant Tier 2/3 | Arc doubled, then knockback added |
-| Horse Tier 2/3 | Gold per pass doubled, then Gold on every sweep |
-| Panda Unlock | Requires 3 other mounts at Tier 2 |
-| Panda Tier 2 | All Panda effects plus 50% |
-| Bamboo Feast | Panda effects doubled |
+| Mount | Levels | ★2 | ★3 (prestige unlock) |
+|---|---|---|---|
+| Horse | +15% Gold per booth pass | Double Gold per pass | Lucky Horseshoe: a chance of triple Gold |
+| Wolf | Wolf Fang: +damage per hit | +50% damage | Pack Mentality: an offset second sweep |
+| Sloth | Drowsy: longer slows | Stronger slows | Deep Sleep: a brief freeze |
+| Giraffe | Long Neck: more reach | Hits harder | Double Take: hits twice per sweep |
+| Elephant | Trumpet: a wider sweep | Twice as wide | Trunk Toss: flings latched enemies off |
+| Panda | Gold per turn and healing (name TBD) | Bamboo Feast: +50% to all | Lucky Bamboo: a chance of double Gold |
+
+Numbers are drafts, tuned with the economy sim. The Panda unlocks at 3 mount types at ★2. Level names for the Horse and Panda need Garret's approval.
 
 ---
 
@@ -432,7 +448,7 @@ Short, surprising bonuses that break up the idle rhythm, in the spirit of Cookie
 - Second purchase: Mount Slot 2 + Wolf (game transforms — now have auto-combat)
 - Third purchase: Slot 3: a second Wolf or a second Horse (v1.14: Horse and Wolf are the only mounts before the first boss)
 - Boss: Leaf Storm (after 60 Grey kills, a manual Challenge): a timed fight (90 s) that teaches the split between clicking (the boss) and mounts (defense). Failure costs only time.
-- Reward: Green Tier unlocked, Slot 4 available to buy, Giraffe/Sloth/Elephant/Panda, Tier 2 upgrades, extra booths, and Speed/Boost past level 3 (v1.14)
+- Reward: Green Tier unlocked, Slot 4 available to buy, Giraffe/Sloth/Elephant/Panda, ★2 star-ups (were "Tier 2 upgrades", v1.17), extra booths, and Speed/Boost past level 3 (v1.14)
 
 ### Mid Game (Green through Purple)
 - Enemies get tougher, spawn faster
@@ -486,6 +502,10 @@ After the victory screen the player can **prestige** (see Prestige) and start a 
 - **Feel:** prestige must feel like acceleration, never punishment. Run 2 should clear Grey in minutes; target roughly 60–90 min for run 2, faster after.
 - **Challenge modifiers (direction):** after the first win, optional modifiers that make a run harder and raise its prestige reward, in the style of Wildfrost's Storm Bells (pick your own, each worth points) or Slay the Spire's Ascension (a stacking ladder). Mostly built from data that already exists: enemy tier multipliers, wave sizes, boss timers, prices.
 - **Bosses:** near-idle boss wins are meant to come only after a prestige or two, or a truly maxed build.
+- **Unlocks (v1.17, Garret):**
+  - Each mount's **★3** ability ("Wolf Mastery", etc.).
+  - Later: **new mounts**, **relics**, **abilities** and **themes**, some gated behind a prestige or two.
+  - **Auto-boost moves into the run shop** (v1.17). Auto-challenge and other automation stay prestige ideas.
 - **Speedruns:** run time and first-clear times are tracked from Phase 3, so prestige runs and challenge modifiers double as speedrun categories later.
 
 ---
@@ -504,6 +524,15 @@ After the victory screen the player can **prestige** (see Prestige) and start a 
 - May be split into 2–3 tabs (e.g., Carousel / Combat / Mounts) for readability. Every cost is in Gold; tabs organize, they never introduce a second currency.
 - Affordable upgrades highlighted, next-tier upgrades visible but locked
 - No scrolling required in early game
+- **v1.17 (Garret: "takes up too much real estate; navigating is confusing, especially mounts"):**
+  - Compact, fixed rows.
+  - **Mounts tab:** one row per animal in a fixed order, with:
+    - its icon (fully greyed when locked, in color when available);
+    - how many you own (×2) and its stars;
+    - level pips;
+    - compact **Buy** (with the price), **Sell** and **Level up** / **★ Star up** buttons.
+  - Other tabs get the same treatment where it fits, and the shop gets narrower.
+  - **Anything that spends Gold is a gold button.** Mockups come first (Codex), and Garret picks.
 
 ### Wave Controls
 Built in Phase 2 (v1.9), in the stats panel:
@@ -512,8 +541,22 @@ Built in Phase 2 (v1.9), in the stats panel:
 - Emergency Clear button — removes all latched enemies (no kill Gold) and ends a stall. **Price (v1.9):** 20 seconds of normal booth income (unboosted, no drag, so latches can't discount it), minimum 25 Gold; 60 second cooldown; usable only while something is latched.
 
 ### Mount Info
-- Clicking a mount slot shows a small popup with mount name, current tier, stats, and upgrade button
-- Mount tier shown as a small colored gem on the carousel slot
+- Clicking a mount slot shows a small popup with mount name, stars, stats, and upgrade button
+- Stars shown as a small badge on the mount (v1.17; was a tier gem)
+
+### Park Guide (v1.17, planned; Phase 4 size)
+A Hades-style almanac in the pause menu. Pages cover mounts (what each does, levels, stars), enemies and tiers, and bosses (how each fight works), each unlocking as you meet it. The first-run **tutorial** (toggleable; planned now, built after Phase 3) walks through:
+- the objective: clear the debris slowing your carousel;
+- clicking, and buying mounts;
+- the Boost bar;
+- the wave timer and settings;
+- the shop and its tabs;
+- buying and leveling a Wolf.
+
+It links into the Park Guide.
+
+### Income pops (v1.17)
+Horse Gold appears as one combined "+X" above each ticket booth about twice a second, never one pop per pass, so it stays readable at any spin speed. The Panda shows its Gold above itself each turn, with a heal sparkle. These are Gold pops, not damage numbers, so the simplicity principle below still holds.
 
 ### Simplicity principle
 No floating damage numbers in v1.0. Enemy health shown as a simple health bar above each enemy. Slow debuff shown as a sleepy "Zzz" icon. Latch shown as a chain visual on the carousel rim.
