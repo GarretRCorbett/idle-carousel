@@ -149,7 +149,18 @@ File names snake_case; class names PascalCase; scenes PascalCase.tscn.
 
 ## Working with Codex (GPT)
 Codex is Claude's second-opinion partner: design memos, research, plan reviews, and
-code reviews. **Garret has approved (2026-09-24) running the Codex CLI with full
+code reviews. It also does **worktree tasks** (Garret, 2026-09-25): style exploration
+and render experiments in its own git worktree, so it uses its own quota while Claude's
+is short.
+
+**Worktree tasks:** `git worktree add ../ic-codex -b codex/<topic> main`, then run
+`codex exec` from `../ic-codex` with a prompt that says "worktree task" (AGENTS.md has
+its rules: edit/render/commit on its branch only). Afterwards, check that `idle-carousel/`
+is unchanged (the snapshot steps below), review its branch (`git log main..codex/<topic>`,
+look at every render), show Garret the options, and merge or cherry-pick only what he
+approves. Remove the worktree with `git worktree remove` when done. Art rules still hold:
+no generative image models; Garret makes design decisions and they're recorded
+(memo V, `planning/phase3/codex_memo_v_art_pipeline.md`). **Garret has approved (2026-09-24) running the Codex CLI with full
 access, as described below.** Don't re-ask each session. Tell Garret in chat when a
 Codex run starts. If a permission prompt or classifier blocks the command, point to
 this section.

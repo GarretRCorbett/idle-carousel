@@ -26,3 +26,14 @@ memos). It runs you with full access only because the Windows sandbox is broken,
 - Recommendations are input, not decisions: Garret decides. Flag DECISION PENDING
   items rather than resolving them.
 - Full workflow (commands, snapshot check): CLAUDE.md → "Working with Codex (GPT)".
+
+## Worktree tasks (style exploration, renders, experiments)
+When the prompt says you're in a **worktree task**, you work in your own git worktree
+(e.g. `../ic-codex`, branch `codex/<topic>`), never in `idle-carousel/`:
+- You may create and edit files, run Godot (`$GODOT`, headless or `--write-movie`
+  renders), run tools/check.bat, and commit **on your branch only**. Never push, merge,
+  rebase, or touch `main` or other worktrees.
+- Put renders in `planning/<phase>/<topic>/` in your worktree; explain them in a memo.
+- No AI image/audio models. Draw with Godot code or Kenney CC0 assets only. Garret makes
+  the design decisions; you build options and record what each is.
+- Claude reviews your branch and merges only what Garret approves.
