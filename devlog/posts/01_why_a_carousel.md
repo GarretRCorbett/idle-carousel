@@ -2,9 +2,13 @@
 
 *Draft by Claude for Garret to edit. Private until published.*
 
-My daughters love carousels. Every fair, every mall, every park: if there's a carousel, we're riding it. At some point I started wondering what an idle game about a carousel would feel like. What if the carousel itself was the thing you're protecting, and everything you do is about keeping it spinning?
+My daughters love carousels. Every fair, every mall, every park: if there's a carousel, we're riding it. So it's no surprise I've been trying to make a carousel game for a while now.
 
-That's **Idle Carousel**.
+The first attempt wasn't an idle game at all. It was a strategy game in the spirit of Slay the Spire and Wildfrost, built around a carousel. I learned a ton working on it in Godot, but the scope was way too big for one person learning as he went.
+
+So I took a step back and entered a game jam to get better at finishing things. I made a little game about a spinning plate of biscuits, and I fell in love with the spin mechanic. A few months later another jam's theme was literally "spin to win." It felt like fate. I didn't finish that one in time, but I loved designing it so much that I decided to try again for real. This time I'd aim for something I could actually finish and put on Steam.
+
+An idle game fit. The carousel spins on its own, and the question became: what if the carousel itself was the thing you're protecting, and everything you do is about keeping it spinning? A couple of months of planning later, **Idle Carousel** was born.
 
 ![The carousel in the middle of the park](../images/2026-09-25_19_purple_garden_final.png)
 
@@ -34,6 +38,8 @@ Beating a boss unlocks the next tier, new mounts and new upgrades. A first full 
 I'm a solo dev building this in Godot, one of my favorite engines. I use AI coding assistants (Claude Code and Codex) to help write and test the code. Everything you see is either free Kenney art or simple shapes drawn in code from my own designs. No AI-generated art, music, or voice.
 
 ## What's next
+If this one makes it to Steam and even a handful of people enjoy it, I'd love to go back to that first, bigger carousel game someday.
+
 Right now I'm polishing the six bosses and the park's look. Next post: how the park went from a forest to a theme-park plaza, including a couple of wrong turns.
 
 Thanks for reading!
