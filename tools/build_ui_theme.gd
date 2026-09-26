@@ -1,10 +1,10 @@
+class_name UiThemeBuilder
 extends SceneTree
 ## Builds res://assets/ui/game_theme.tres, the HUD and menu look, from Kenney
-## UI Pack sprites, Kenney Future Narrow, and palette A "Gilded Garden"
-## (planning/phase3/codex_memo_t_palette.md). Every color and
+## UI Pack sprites, Kenney Future Narrow, and a semantic UiPalette. Every color and
 ## margin is here in one readable place. Re-run after changing it:
 ##   "$GODOT" --headless --path . -s res://tools/build_ui_theme.gd
-## (Or edit game_theme.tres in the Inspector; re-running overwrites those edits.)
+## Colors live in resources/ui_palettes/*.tres; do not hand-edit the output.
 
 const OUT := "res://assets/ui/game_theme.tres"
 ## Kenney Future with Rubik behind it for letters Kenney lacks (Polish/Turkish
@@ -14,24 +14,18 @@ const TITLE_FONT_OUT := "res://assets/fonts/title_font.tres"
 ## Rubik weight to sit next to Kenney Future's heavy strokes.
 const FALLBACK_WEIGHT := 600
 
-# GDD palette plus UI neutrals.
-const CREAM := Color("fff4dc")     # ivory text
-const INK := Color("243955")           # ink blue: dark text on gold buttons
-const PANEL := Color("243955f0")
-const PANEL_BORDER := Color("ddb96a")  # gold trim
-const TRACK := Color("182840")
-const GOLD := Color("ddb96a")
-const HEALTH := Color("79c9ae")
-const MUTED := Color("c0cad7")
-const TAB_IDLE := Color("405d83")
-const TAB_HOVER := Color("52709a")
-## Price text on a disabled (grey) button: dark enough to read on light grey.
-const DISABLED_TEXT := Color("4a5a70")
-## Kenney's blue buttons are sky-cyan; this tint makes them royal blue.
-const ROYAL_TINT := Color(0.55, 0.52, 1.0)
+## Select a study palette with -- purple_garden or -- gilded_plum.
+var palette: UiPalette
 
 
 func _initialize() -> void:
+	var args := OS.get_cmdline_user_args()
+	var palette_id: String = args[0] if not args.is_empty() else "purple_garden"
+	if palette_id not in ["purple_garden", "gilded_plum"]:
+		push_error("Unknown UI palette: %s" % palette_id)
+		quit(1)
+		return
+	palette = load("res://resources/ui_palettes/%s.tres" % palette_id) as UiPalette
 	var fallback := FontVariation.new()
 	fallback.base_font = load("res://assets/fonts/rubik_variable.ttf")
 	fallback.variation_opentype = {TextServerManager.get_primary_interface().name_to_tag("wght"): FALLBACK_WEIGHT}
@@ -66,22 +60,16 @@ func _initialize() -> void:
 	theme.default_font = load(UI_FONT_OUT)
 	theme.default_font_size = 15
 
-	theme.set_color("font_color", "Label", CREAM)
+	theme.set_color("font_color", "Label", palette.body)
 
-	# Every button is royal blue with ivory text (Garret: the Send wave blue
-	# for Play, Boost, Challenge and buying too, instead of yellow).
-	_blue_button(theme, "Button")
-	# The Boost button while stalled ("Crank!").
-	theme.set_type_variation("CrankButton", "Button")
-	_button(theme, "CrankButton", "button_red", "button_red", "button_red")
-	theme.set_color("font_color", "CrankButton", CREAM)
-	theme.set_color("font_hover_color", "CrankButton", CREAM)
-	theme.set_color("font_pressed_color", "CrankButton", CREAM)
-	theme.set_color("font_focus_color", "CrankButton", CREAM)
-	theme.set_color("font_hover_pressed_color", "CrankButton", CREAM)
-	# Kept so scenes that name it still work; it now matches the default.
+	# Default = primary; legacy BlueButton is the secondary role.
+	_role_button(theme, "Button", palette.primary, palette.primary_text, palette.lighten_primary_states)
 	theme.set_type_variation("BlueButton", "Button")
-	_blue_button(theme, "BlueButton")
+	_role_button(theme, "BlueButton", palette.secondary, palette.body)
+	theme.set_type_variation("CrankButton", "Button")
+	_role_button(theme, "CrankButton", palette.danger, palette.body)
+	for role: String in ["gold", "body", "muted", "highlight", "ink", "danger", "health"]:
+		theme.set_color(role, "Palette", palette.get(role))
 
 	# Toggles (Auto waves, Fullscreen): plain text plus the switch, not a button.
 	for state in ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]:
@@ -90,42 +78,46 @@ func _initialize() -> void:
 		empty.content_margin_bottom = 4.0
 		theme.set_stylebox(state, "CheckButton", empty)
 	for color in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
-		theme.set_color(color, "CheckButton", CREAM)
+		theme.set_color(color, "CheckButton", palette.body)
 
-	var panel := _flat(PANEL, 12)
-	panel.border_color = PANEL_BORDER
+	var panel := _flat(palette.panel, 12)
+	panel.border_color = palette.border
 	panel.set_border_width_all(2)
 	theme.set_stylebox("panel", "PanelContainer", panel)
 
-	theme.set_stylebox("background", "ProgressBar", _flat(TRACK, 4))
-	theme.set_stylebox("fill", "ProgressBar", _flat(GOLD, 4))
+	theme.set_stylebox("background", "ProgressBar", _flat(palette.track, 4))
+	theme.set_stylebox("fill", "ProgressBar", _flat(palette.gold, 4))
 	theme.set_type_variation("HealthBar", "ProgressBar")
-	theme.set_stylebox("fill", "HealthBar", _flat(HEALTH, 4))
+	theme.set_stylebox("fill", "HealthBar", _flat(palette.health, 4))
+	theme.set_type_variation("CrankBar", "ProgressBar")
+	theme.set_stylebox("fill", "CrankBar", _flat(palette.danger, 4))
+	theme.set_type_variation("OverdriveBar", "ProgressBar")
+	theme.set_stylebox("fill", "OverdriveBar", _flat(palette.highlight, 4))
 
-	var selected := _flat(CREAM, 8)
+	var selected := _flat(palette.body, 8)
 	selected.corner_radius_bottom_left = 0
 	selected.corner_radius_bottom_right = 0
 	_pad(selected, 10, 4)
 	var idle := selected.duplicate() as StyleBoxFlat
-	idle.bg_color = TAB_IDLE
+	idle.bg_color = palette.tab_idle
 	var hover := selected.duplicate() as StyleBoxFlat
-	hover.bg_color = TAB_HOVER
+	hover.bg_color = palette.tab_hover
 	theme.set_stylebox("tab_selected", "TabContainer", selected)
 	theme.set_stylebox("tab_unselected", "TabContainer", idle)
 	theme.set_stylebox("tab_hovered", "TabContainer", hover)
 	var tab_panel := StyleBoxEmpty.new()
 	tab_panel.content_margin_top = 10
 	theme.set_stylebox("panel", "TabContainer", tab_panel)
-	theme.set_color("font_selected_color", "TabContainer", INK)
-	theme.set_color("font_unselected_color", "TabContainer", MUTED)
-	theme.set_color("font_hovered_color", "TabContainer", CREAM)
+	theme.set_color("font_selected_color", "TabContainer", palette.ink)
+	theme.set_color("font_unselected_color", "TabContainer", palette.muted)
+	theme.set_color("font_hovered_color", "TabContainer", palette.body)
 
-	var track := _flat(TRACK, 4)
+	var track := _flat(palette.track, 4)
 	track.content_margin_top = 4
 	track.content_margin_bottom = 4
 	theme.set_stylebox("slider", "HSlider", track)
-	theme.set_stylebox("grabber_area", "HSlider", _flat(GOLD, 4))
-	theme.set_stylebox("grabber_area_highlight", "HSlider", _flat(GOLD, 4))
+	theme.set_stylebox("grabber_area", "HSlider", _flat(palette.gold, 4))
+	theme.set_stylebox("grabber_area_highlight", "HSlider", _flat(palette.gold, 4))
 
 	var err := ResourceSaver.save(theme, OUT)
 	print("Saved %s (%s)" % [OUT, error_string(err)])
@@ -134,26 +126,24 @@ func _initialize() -> void:
 
 ## Kenney buttons: 9-sliced, with a 4 px "depth" lip at the bottom that
 ## disappears when pressed, so the label shifts down to look pushed in.
-func _blue_button(theme: Theme, type: String) -> void:
-	_button(theme, type, "button_blue", "button_blue_hover", "button_blue_pressed")
-	for state in ["normal", "hover", "pressed"]:
-		(theme.get_stylebox(state, type) as StyleBoxTexture).modulate_color = ROYAL_TINT
-	for color in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
-		theme.set_color(color, type, CREAM)
-
-
-func _button(theme: Theme, type: String, normal: String, hover: String, pressed: String) -> void:
-	theme.set_stylebox("normal", type, _texture(normal, 6, 10))
-	theme.set_stylebox("hover", type, _texture(hover, 6, 10))
-	theme.set_stylebox("pressed", type, _texture(pressed, 10, 6))
-	theme.set_stylebox("disabled", type, _texture("button_grey", 6, 10))
-	theme.set_stylebox("focus", type, StyleBoxEmpty.new())
-	theme.set_color("font_color", type, INK)
-	theme.set_color("font_hover_color", type, INK)
-	theme.set_color("font_pressed_color", type, INK)
-	theme.set_color("font_focus_color", type, INK)
-	theme.set_color("font_hover_pressed_color", type, INK)
-	theme.set_color("font_disabled_color", type, DISABLED_TEXT)
+func _role_button(theme: Theme, type: String, fill: Color, text: Color, lighten: bool = false) -> void:
+	for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
+		var pressed := state in ["pressed", "hover_pressed"]
+		var box := _texture("button_grey", 10 if pressed else 6, 6 if pressed else 10)
+		var amount := palette.pressed_darkening if pressed else palette.hover_darkening
+		box.modulate_color = fill
+		if state != "normal":
+			box.modulate_color = fill.lightened(amount) if lighten else fill.darkened(amount)
+		if state == "disabled":
+			box.modulate_color = palette.disabled
+		theme.set_stylebox(state, type, box)
+	var focus := _flat(Color.TRANSPARENT, 6)
+	focus.border_color = palette.highlight
+	focus.set_border_width_all(2)
+	theme.set_stylebox("focus", type, focus)
+	for color: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
+		theme.set_color(color, type, text)
+	theme.set_color("font_disabled_color", type, palette.disabled_text)
 
 
 func _texture(name: String, top: float, bottom: float) -> StyleBoxTexture:

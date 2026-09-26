@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UiPalette" format=3]
+
+[ext_resource type="Script" path="res://scripts/ui_palette.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+dev_name = "Gilded Plum"
+primary = Color(0.866667, 0.72549, 0.415686, 1)
+primary_text = Color(0.160784, 0.137255, 0.2, 1)
+secondary = Color(0.439216, 0.337255, 0.545098, 1)
+danger = Color(0.6, 0.247059, 0.309804, 1)
+health = Color(0.65098, 0.788235, 0.541176, 1)
+panel = Color(0.203922, 0.156863, 0.219608, 1)
+border = Color(0.866667, 0.72549, 0.415686, 1)
+highlight = Color(0.909804, 0.788235, 0.960784, 1)
+lighten_primary_states = true

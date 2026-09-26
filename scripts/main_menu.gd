@@ -18,6 +18,8 @@ const GAME_SCENE := "res://scenes/Game.tscn"
 
 
 func _ready() -> void:
+	_title.add_theme_color_override(&"font_color", get_theme_color(&"body", &"Palette"))
+	_title.add_theme_color_override(&"font_outline_color", get_theme_color(&"ink", &"Palette"))
 	_play_button.pressed.connect(_on_play_pressed)
 	_quit_button.pressed.connect(_on_quit_pressed)
 	_settings_button.pressed.connect(func() -> void:
