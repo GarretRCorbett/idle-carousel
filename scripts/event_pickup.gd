@@ -65,27 +65,33 @@ func grab() -> void:
 
 
 func _draw() -> void:
-	var color := event.color if event != null else Color.GOLD
 	draw_circle(Vector2.ZERO, radius * 1.6, glow_color, true, -1.0, true)
-	match event.shape if event != null else EventData.Shape.COIN:
+	draw_token(self, event, radius, ink_color)
+	if ControllerInput.using_controller:
+		ControllerPrompt.draw_action(self, Vector2(radius * 1.1, -radius * 1.1), grab_action, 9.0, ink_color)
+
+
+## An event's token (its shape in its color) on `canvas` at its origin. The
+## Park Guide draws the same token as its icon.
+static func draw_token(canvas: CanvasItem, event_data: EventData, size: float, ink: Color) -> void:
+	var color := event_data.color if event_data != null else Color.GOLD
+	match event_data.shape if event_data != null else EventData.Shape.COIN:
 		EventData.Shape.COIN:
-			draw_circle(Vector2.ZERO, radius, ink_color, true, -1.0, true)
-			draw_circle(Vector2.ZERO, radius - 2.5, color, true, -1.0, true)
-			draw_arc(Vector2.ZERO, radius * 0.55, 0.0, TAU, 24, ink_color.lerp(color, 0.5), 2.0, true)
+			canvas.draw_circle(Vector2.ZERO, size, ink, true, -1.0, true)
+			canvas.draw_circle(Vector2.ZERO, size - 2.5, color, true, -1.0, true)
+			canvas.draw_arc(Vector2.ZERO, size * 0.55, 0.0, TAU, 24, ink.lerp(color, 0.5), 2.0, true)
 		EventData.Shape.BOLT:
-			draw_circle(Vector2.ZERO, radius, ink_color, true, -1.0, true)
-			var r := radius * 0.8
+			canvas.draw_circle(Vector2.ZERO, size, ink, true, -1.0, true)
+			var r := size * 0.8
 			var bolt := PackedVector2Array([Vector2(0.15, -1.0), Vector2(-0.45, 0.1), Vector2(-0.05, 0.1),
 					Vector2(-0.2, 1.0), Vector2(0.5, -0.2), Vector2(0.08, -0.2)])
 			for i in bolt.size():
 				bolt[i] *= r
-			draw_colored_polygon(bolt, color)
+			canvas.draw_colored_polygon(bolt, color)
 		EventData.Shape.TICKET:
-			var rect := Rect2(-radius * 1.2, -radius * 0.75, radius * 2.4, radius * 1.5)
-			draw_rect(rect.grow(2.0), ink_color)
-			draw_rect(rect, color)
-			draw_circle(Vector2(rect.position.x, 0.0), radius * 0.3, ink_color, true, -1.0, true)
-			draw_circle(Vector2(rect.end.x, 0.0), radius * 0.3, ink_color, true, -1.0, true)
-			draw_line(Vector2(0.0, rect.position.y + 3.0), Vector2(0.0, rect.end.y - 3.0), ink_color, 1.5)
-	if ControllerInput.using_controller:
-		ControllerPrompt.draw_action(self, Vector2(radius * 1.1, -radius * 1.1), grab_action, 9.0, ink_color)
+			var rect := Rect2(-size * 1.2, -size * 0.75, size * 2.4, size * 1.5)
+			canvas.draw_rect(rect.grow(2.0), ink)
+			canvas.draw_rect(rect, color)
+			canvas.draw_circle(Vector2(rect.position.x, 0.0), size * 0.3, ink, true, -1.0, true)
+			canvas.draw_circle(Vector2(rect.end.x, 0.0), size * 0.3, ink, true, -1.0, true)
+			canvas.draw_line(Vector2(0.0, rect.position.y + 3.0), Vector2(0.0, rect.end.y - 3.0), ink, 1.5)
