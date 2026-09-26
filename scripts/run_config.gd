@@ -55,6 +55,10 @@ extends Resource
 @export_range(0.0, 1.0, 0.01) var boost_maxed_on_fraction: float = 0.99
 ## ...and stays maxed until it drops below this (so dips between presses don't count).
 @export_range(0.0, 1.0, 0.01) var boost_maxed_off_fraction: float = 0.8
+## Each latched enemy drains this fraction of the bar per second...
+@export_range(0.0, 1.0, 0.01, "suffix:/s") var boost_drain_per_latch: float = 0.05
+## ...up to this much in total, so many latches never empty it at once.
+@export_range(0.0, 1.0, 0.01, "suffix:/s") var boost_drain_max: float = 0.3
 
 @export_group("Overdrive")
 ## Keep the boost maxed this long to trigger Overdrive...
@@ -99,6 +103,8 @@ func get_problems() -> PackedStringArray:
 		problems.append("base_spin_speed_deg_s must be a finite number >= 0")
 	if boost_maxed_off_fraction > boost_maxed_on_fraction:
 		problems.append("boost_maxed_off_fraction must be <= boost_maxed_on_fraction")
+	if not is_finite(boost_drain_per_latch) or boost_drain_per_latch < 0.0 or not is_finite(boost_drain_max) or boost_drain_max < 0.0:
+		problems.append("boost_drain_per_latch and boost_drain_max must be finite numbers >= 0")
 	if not is_finite(overdrive_multiplier) or overdrive_multiplier < 1.0:
 		problems.append("overdrive_multiplier must be >= 1")
 	if boost_presses_to_fill < 1:

@@ -488,6 +488,7 @@ func advance_simulation(delta: float) -> void:
 		return
 	var previous_speed := get_effective_spin_speed_rad_s()
 	_boost_elapsed = minf(_config.click_boost_decay_seconds, _boost_elapsed + delta)
+	_drain_boost_from_latches(delta)
 	_update_boost_status(delta)
 	_emit_speed_if_changed(previous_speed)
 	_advance_health(delta)
@@ -600,6 +601,21 @@ func add_click_boost() -> void:
 	_boost_elapsed = 0.0
 	_update_boost_status(0.0)
 	_emit_speed_if_changed(previous_speed)
+
+
+## Latched enemies drain the bar gently (GDD v1.17): each one takes
+## boost_drain_per_latch of the bar per second, up to boost_drain_max in total,
+## so they push you out of Overdrive over time, never all at once. The fade
+## still ends when it would have.
+func _drain_boost_from_latches(delta: float) -> void:
+	if _latches.is_empty():
+		return
+	var remaining := 1.0 - _boost_elapsed / _config.click_boost_decay_seconds
+	var boost := get_click_boost()
+	if remaining <= 0.0 or boost <= 0.0:
+		return
+	var rate := minf(_config.boost_drain_max, _config.boost_drain_per_latch * _latches.size())
+	_boost_peak = maxf(0.0, boost - rate * get_boost_cap() * delta) / remaining
 
 
 func is_boost_maxed() -> bool:
@@ -939,7 +955,12 @@ func try_purchase_upgrade(upgrade: UpgradeData) -> bool:
 		UpgradeData.EffectType.ADD_SPIN_BONUS:
 			_spin_bonus += upgrade.effect_value
 		UpgradeData.EffectType.ADD_BOOST_CAP:
+			# Keep the bar's fill fraction: a bigger cap must never drop a full
+			# bar below the "maxed" line and end Overdrive (playtest 3).
+			var old_cap := get_boost_cap()
 			_boost_cap_bonus += upgrade.effect_value
+			if old_cap > 0.0:
+				_boost_peak *= get_boost_cap() / old_cap
 		UpgradeData.EffectType.ADD_TICKET_BOOTH:
 			_booth_count += 1
 		UpgradeData.EffectType.ADD_CLICK_DAMAGE:
