@@ -4,13 +4,13 @@
 
 [resource]
 script = ExtResource("1_script")
-id = &"ticket_booth"
-display_name = "UPG_TICKET_BOOTH_NAME"
-description = "UPG_TICKET_BOOTH_DESC"
-effect_type = 2
-effect_value = 1.0
-cost_gold = 1950.0
+id = &"offline_efficiency"
+display_name = "UPG_OFFLINE_EFFICIENCY_NAME"
+description = "UPG_OFFLINE_EFFICIENCY_DESC"
+effect_type = 12
+effect_value = 0.05
+section = 4
+cost_gold = 800.0
 cost_growth = 1.8
-max_level = 3
+max_level = 5
 required_bosses = 1
-section = 1

@@ -101,14 +101,12 @@ func test_shop_refreshes_once_per_frame_on_gold_changes() -> void:
 	add_child(game)
 	var shop := game.get_node("HUD/HUDRoot/ScreenMargin/Columns/ShopPanel") as UpgradeShop
 	shop._process(0.0)
-	assert_bool(shop.is_processing()).is_false()
+	assert_bool(shop._refresh_queued).is_false()
 	GameState.add_gold(5.0)
 	GameState.add_gold(5.0)
 	assert_bool(shop._refresh_queued).is_true()
-	assert_bool(shop.is_processing()).is_true()
 	shop._process(0.0)
 	assert_bool(shop._refresh_queued).is_false()
-	assert_bool(shop.is_processing()).is_false()
 	GameState.reset_run()
 
 

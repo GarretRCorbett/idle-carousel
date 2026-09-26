@@ -88,6 +88,11 @@ var _boost_cap_bonus: float = 0.0
 ## Auto-Boost levels bought (0 = none).
 var _auto_boost_level: int = 0
 var _click_damage_bonus: float = 0.0
+var _max_health_bonus: float = 0.0
+## Gilded Rims: added to 1 for the earned-Gold multiplier.
+var _gold_bonus: float = 0.0
+var _offline_rate_bonus: float = 0.0
+var _click_range_bonus: float = 0.0
 ## Extra damage per hit bought for each mount type, by MountData.mount_id.
 var _mount_damage_bonus: Dictionary[StringName, float] = {}
 ## Buys on each mount type's track (0-7: levels 1-3, the ★2 star-up, levels
@@ -164,6 +169,10 @@ func _reset_fields(config: RunConfig) -> void:
 	_boost_cap_bonus = 0.0
 	_auto_boost_level = 0
 	_click_damage_bonus = 0.0
+	_max_health_bonus = 0.0
+	_gold_bonus = 0.0
+	_offline_rate_bonus = 0.0
+	_click_range_bonus = 0.0
 	_mount_damage_bonus.clear()
 	_mount_track.clear()
 	_booth_count = config.starting_booths
@@ -307,7 +316,28 @@ func get_gold() -> float:
 	return _gold
 
 
-## Adds earned Gold. Ignores zero, negative, and non-finite amounts.
+## Pays Gold the carousel earned (booth passes, kills, the Panda, boss rewards)
+## with Gilded Rims applied. Returns what was paid. Refunds and debug Gold use
+## add_gold() directly.
+func earn_gold(amount: float) -> float:
+	if not is_finite(amount) or amount <= 0.0:
+		return 0.0
+	var paid := amount * get_gold_multiplier()
+	add_gold(paid)
+	return paid
+
+
+## 1 plus every Gilded Rims level (1.2 = +20% Gold).
+func get_gold_multiplier() -> float:
+	return 1.0 + _gold_bonus
+
+
+## 1 plus every Click Range level; ClickRouter scales click radii by it.
+func get_click_range_multiplier() -> float:
+	return 1.0 + _click_range_bonus
+
+
+## Adds Gold as-is (counted in Gold/sec). Ignores zero, negative, and non-finite amounts.
 func add_gold(amount: float) -> void:
 	if not is_finite(amount) or amount <= 0.0:
 		return
@@ -346,7 +376,7 @@ func get_health() -> float:
 
 
 func get_max_health() -> float:
-	return _config.max_health
+	return _config.max_health + _max_health_bonus
 
 
 ## Lowers health, never below zero. At zero the carousel stalls.
@@ -483,7 +513,12 @@ func get_offline_gold_per_second() -> float:
 	var turns_per_second := deg_to_rad(_config.base_spin_speed_deg_s) * get_spin_upgrade_multiplier() / TAU
 	var pandas := _mount_roster.count(PANDA_DATA.mount_id)
 	var panda_income := pandas * get_mount_gold_per_turn(PANDA_DATA) * turns_per_second
-	return (get_normal_booth_income_per_second() + panda_income) * _config.offline_efficiency
+	return (get_normal_booth_income_per_second() + panda_income) * get_offline_rate() * get_gold_multiplier()
+
+
+## Fraction of normal income earned while closed (Offline Efficiency raises it).
+func get_offline_rate() -> float:
+	return _config.offline_efficiency + _offline_rate_bonus
 
 
 ## Seconds away that count: 0 below the minimum, capped at the maximum.
@@ -1137,6 +1172,8 @@ func try_purchase_upgrade(upgrade: UpgradeData) -> bool:
 		mount_slots_changed.emit(_mount_slots)
 	if _mount_roster.size() != previous_mount_count:
 		mounts_changed.emit(get_mount_roster())
+	if upgrade.effect_type == UpgradeData.EffectType.ADD_MAX_HEALTH:
+		health_changed.emit(_health, get_max_health())
 	upgrade_applied.emit(upgrade.id, get_upgrade_level(upgrade.id))
 	_purchase_in_progress = false
 	return true
@@ -1169,6 +1206,17 @@ func _apply_effect(upgrade: UpgradeData) -> void:
 			_mount_track[upgrade.target_mount] = _mount_track.get(upgrade.target_mount, 0) + 1
 		UpgradeData.EffectType.AUTO_BOOST:
 			_auto_boost_level += 1
+		UpgradeData.EffectType.ADD_MAX_HEALTH:
+			# The new health arrives full, so buying it never looks like damage.
+			_max_health_bonus += upgrade.effect_value
+			if not _stalled:
+				_health = minf(get_max_health(), _health + upgrade.effect_value)
+		UpgradeData.EffectType.ADD_GOLD_BONUS:
+			_gold_bonus += upgrade.effect_value
+		UpgradeData.EffectType.ADD_OFFLINE_RATE:
+			_offline_rate_bonus += upgrade.effect_value
+		UpgradeData.EffectType.ADD_CLICK_RANGE:
+			_click_range_bonus += upgrade.effect_value
 
 
 func _is_effect_supported(upgrade: UpgradeData) -> bool:
@@ -1182,4 +1230,8 @@ func _is_effect_supported(upgrade: UpgradeData) -> bool:
 		UpgradeData.EffectType.ADD_MOUNT_DAMAGE,
 		UpgradeData.EffectType.AUTO_BOOST,
 		UpgradeData.EffectType.MOUNT_LEVEL,
+		UpgradeData.EffectType.ADD_MAX_HEALTH,
+		UpgradeData.EffectType.ADD_GOLD_BONUS,
+		UpgradeData.EffectType.ADD_OFFLINE_RATE,
+		UpgradeData.EffectType.ADD_CLICK_RANGE,
 	]

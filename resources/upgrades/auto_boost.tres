@@ -12,3 +12,4 @@ cost_gold = 400.0
 cost_growth = 3.0
 max_level = 4
 level_cap_by_bosses = PackedInt32Array(3, 3, 4)
+section = 2

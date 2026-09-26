@@ -24,6 +24,7 @@ const MOUNT_ORDER: Array[StringName] = [&"wolf", &"wolf", &"giraffe", &"elephant
 ## scripted player never Boosts.)
 const UPGRADES: Array[StringName] = [
 	&"carousel_speed", &"click_damage", &"mount_slot", &"ticket_booth",
+	&"carousel_health", &"gilded_rims", &"click_range",
 	&"horse_level", &"wolf_level", &"giraffe_level", &"elephant_level", &"panda_level",
 ]
 ## A plausible player's priorities (GDD early game: speed, then a slot and

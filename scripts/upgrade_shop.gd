@@ -8,6 +8,13 @@ extends PanelContainer
 ##   own, its ★, level pips, then Buy · Sell · Up. Up buys the next step of the
 ##   mount's track (GDD v1.17: levels 1-3, the ★2 star-up, levels 4-6); it glows
 ##   when the star-up is next, and its tooltip says what the next step does.
+## Visibility (GDD "Upgrade Visibility System", Phase 4 Step 6): a row stays
+## hidden until you're one boss away from unlocking it, then shows locked with
+## its requirement. Affordable gold buttons pulse; a thin bar under each shows
+## Gold toward the price. The Upgrades tab has small section headers.
+## Controller-ready: buttons take focus (a mouse click lets go of it, so Space
+## stays Boost), LB/RB switch tabs, and an info line under the tabs shows what
+## the focused or hovered button does (nothing is hover-only).
 ## Row states:
 ##   LOCKED      prerequisite, boss, ★2 count, or (mounts) no empty slot
 ##   SAVING      Gold below the next price
@@ -33,6 +40,11 @@ enum RowState { LOCKED, SAVING, AFFORDABLE, MAXED }
 @export var star_tip_key: String = "SHOP_STAR_TIP"
 ## Tier bosses, to name the boss a gated row is waiting for.
 @export var tier_catalog: TierCatalog = preload("res://resources/tiers/tier_catalog.tres")
+## Section headers, in UpgradeData.Section order (NONE has none).
+@export var section_keys: PackedStringArray = ["", "SHOP_SECTION_CAROUSEL", "SHOP_SECTION_BOOST", "SHOP_SECTION_CLICKS", "SHOP_SECTION_GOLD"]
+## Info line: "{name}: {what it does} (level {n}/{max})" and a mount's "{name}: {count} owned".
+@export var info_row_key: String = "SHOP_INFO_ROW"
+@export var info_mount_key: String = "SHOP_INFO_MOUNT"
 ## Tab titles, in UpgradeData.Tab order.
 @export var tab_title_keys: PackedStringArray = ["SHOP_TAB_UPGRADES", "SHOP_TAB_MOUNTS"]
 
@@ -49,6 +61,12 @@ enum RowState { LOCKED, SAVING, AFFORDABLE, MAXED }
 @export var star_color: Color = Color("ffd24a")
 @export var star_button_text: Color = Color("3a2400")
 @export var star_glow: Color = Color(1.0, 0.85, 0.3, 0.6)
+## Affordable gold buttons pulse this much brighter, this fast.
+@export var pulse_tint: Color = Color(1.25, 1.2, 1.05)
+@export_range(0.5, 10.0, 0.5, "suffix:/s") var pulse_speed: float = 3.0
+@export_range(1.0, 8.0, 1.0, "suffix:px") var fill_height: float = 3.0
+## Space kept clear for the tab's scrollbar.
+@export_range(0, 30, 1, "suffix:px") var scrollbar_gutter: int = 12
 ## Level pips before the star-up (LevelPips' own blue).
 @export var level_pip_color: Color = Color("7aa2ff")
 
@@ -61,6 +79,7 @@ void fragment() {
 """
 
 @onready var _tabs: TabContainer = %ShopTabs
+@onready var _info: Label = %ShopInfo
 
 ## Rows by the upgrade id they show (a mount row by its BUY_MOUNT id).
 var _rows_by_id: Dictionary[StringName, ShopRow] = {}
@@ -69,6 +88,14 @@ var _pages: Array[VBoxContainer] = []
 var _refresh_queued: bool = false
 var _grey_material: ShaderMaterial
 var _star_style: StyleBoxFlat
+## Section headers by UpgradeData.Section, and which rows sit under each.
+var _headers: Dictionary[int, Label] = {}
+var _section_rows: Dictionary[int, Array] = {}
+## Gold buttons pulsing right now (affordable and visible).
+var _pulsing: Array[Button] = []
+var _pulse_time: float = 0.0
+## The button the info line describes (focused, else last hovered).
+var _info_button: Button
 
 
 class ShopRow:
@@ -81,6 +108,10 @@ class ShopRow:
 	# Mount rows only.
 	var track_id: StringName = &""
 	var up_button: Button
+	## Thin "Gold toward the price" bar under each gold button.
+	var fills: Dictionary[Button, ProgressBar] = {}
+	## What each button does, for the info line (kept current by _refresh).
+	var info: Dictionary[Button, String] = {}
 	var icon: TextureRect
 	var count: Label
 	var star: StarBadge
@@ -102,17 +133,29 @@ func _ready() -> void:
 		scroll.name = "Tab%d" % i
 		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 		scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+		scroll.follow_focus = true  # a controller's focus scrolls the list
 		var page := VBoxContainer.new()
 		page.add_theme_constant_override("separation", row_list_separation)
 		page.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		page.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		scroll.add_child(page)
+		# A little room on the right, so the scrollbar never covers the buttons.
+		var gutter := MarginContainer.new()
+		gutter.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		gutter.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		gutter.add_theme_constant_override("margin_right", scrollbar_gutter)
+		gutter.add_child(page)
+		scroll.add_child(gutter)
 		_tabs.add_child(scroll)
 		# A key: the tab bar translates titles itself.
 		_tabs.set_tab_title(i, tab_title_keys[i] if i < tab_title_keys.size() else str(i))
 		_pages.append(page)
 	_tabs.tab_changed.connect(func(_tab: int) -> void: AudioManager.play_sfx(&"tab"))
+	_info.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+	_info.text = ""
 	for upgrade in UpgradeManager.get_definitions():
+		if upgrade.tab == UpgradeData.Tab.UPGRADES and upgrade.section != UpgradeData.Section.NONE \
+				and not _headers.has(upgrade.section):
+			_add_header(upgrade.section)
 		match upgrade.effect_type:
 			UpgradeData.EffectType.MOUNT_LEVEL:
 				continue  # shown on its mount's row
@@ -120,6 +163,8 @@ func _ready() -> void:
 				_rows_by_id[upgrade.id] = _build_mount_row(upgrade)
 			_:
 				_rows_by_id[upgrade.id] = _build_row(upgrade)
+				if _headers.has(upgrade.section):
+					_section_rows[upgrade.section].append(upgrade.id)
 	GameState.gold_changed.connect(func(_b: float, _d: float) -> void: _queue_refresh())
 	GameState.run_reset.connect(_refresh)
 	GameState.mounts_changed.connect(func(_r: Array[StringName]) -> void: _refresh())
@@ -129,6 +174,24 @@ func _ready() -> void:
 	GameState.debug_unlocks_changed.connect(_refresh)
 	ThemeManager.theme_changed.connect(_on_theme_changed)
 	_refresh()
+
+
+func _add_header(section: int) -> void:
+	var header := _label(section_keys[section] if section < section_keys.size() else "", false, true)
+	header.add_theme_font_size_override("font_size", 11)
+	header.add_theme_color_override("font_color", get_theme_color(&"gold", &"Palette"))
+	_pages[UpgradeData.Tab.UPGRADES].add_child(header)
+	_headers[section] = header
+	_section_rows[section] = []
+
+
+## Hidden until one boss away from unlocking (maxed rows stay).
+static func is_row_hidden(id: StringName) -> bool:
+	var upgrade := UpgradeManager.get_definition(id)
+	if upgrade == null or UpgradeManager.is_maxed(id):
+		return false
+	var needed := upgrade.get_bosses_needed(GameState.get_upgrade_level(id))
+	return needed < 0 or needed > GameState.get_bosses_beaten() + 1
 
 
 ## The state a row should show right now.
@@ -195,7 +258,7 @@ func _build_row(upgrade: UpgradeData) -> ShopRow:
 	text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	text.add_theme_constant_override("separation", 2)
 	# Keys: these labels translate themselves, including on a language change.
-	text.add_child(_label(upgrade.display_name, false, true))
+	text.add_child(_label(upgrade.display_name, true, true))  # long names wrap
 	var description := _label(upgrade.description, true, true)
 	_mute(description)
 	text.add_child(description)
@@ -211,7 +274,7 @@ func _build_row(upgrade: UpgradeData) -> ShopRow:
 	row.button.custom_minimum_size = Vector2(70, 32)
 	row.button.pressed.connect(UpgradeManager.purchase.bind(upgrade.id))
 	line.add_child(text)
-	line.add_child(row.button)
+	line.add_child(_with_fill(row, row.button))
 	_pages[upgrade.tab].add_child(line)
 	return row
 
@@ -270,19 +333,18 @@ func _build_mount_row(upgrade: UpgradeData) -> ShopRow:
 	buttons.add_theme_constant_override("separation", 4)
 	row.button = _mount_button(_gold_button())
 	row.button.pressed.connect(UpgradeManager.purchase.bind(upgrade.id))
-	buttons.add_child(row.button)
+	buttons.add_child(_with_fill(row, row.button))
 	if upgrade.sell_refund_fraction > 0.0:
 		# Selling loses half the price, so it asks once (Garret, memo R).
 		row.sell_button = TwoStepButton.new()
 		row.sell_button.theme_type_variation = &"BlueButton"
-		row.sell_button.focus_mode = Control.FOCUS_NONE
 		_mount_button(row.sell_button)
 		row.sell_button.confirmed.connect(UpgradeManager.sell.bind(upgrade.id))
-		buttons.add_child(row.sell_button)
+		buttons.add_child(_with_fill(row, row.sell_button, false))
 	if track != null:
 		row.up_button = _mount_button(_gold_button())
 		row.up_button.pressed.connect(UpgradeManager.purchase.bind(track.id))
-		buttons.add_child(row.up_button)
+		buttons.add_child(_with_fill(row, row.up_button))
 	column.add_child(buttons)
 	_pages[upgrade.tab].add_child(column)
 	return row
@@ -311,9 +373,51 @@ func _gold_button() -> Button:
 	var button := Button.new()
 	button.theme_type_variation = &"BuyButton"  # spending Gold is always gold
 	button.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
-	button.focus_mode = Control.FOCUS_NONE
 	button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	return button
+
+
+## The button with a thin fill bar under it (`with_bar` false: an empty strip
+## of the same height, so Sell lines up with Buy and Up). Also hooks the
+## button up for focus and the info line.
+func _with_fill(row: ShopRow, button: Button, with_bar: bool = true) -> Control:
+	var column := VBoxContainer.new()
+	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	column.add_theme_constant_override("separation", 2)
+	column.size_flags_horizontal = button.size_flags_horizontal
+	column.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	button.size_flags_horizontal = Control.SIZE_FILL
+	column.add_child(button)
+	var strip: Control
+	if with_bar:
+		var bar := ProgressBar.new()
+		bar.show_percentage = false
+		bar.max_value = 1.0
+		row.fills[button] = bar
+		strip = bar
+	else:
+		strip = Control.new()
+	strip.custom_minimum_size = Vector2(0, fill_height)
+	strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	column.add_child(strip)
+	_hook(row, button)
+	return column
+
+
+## Focus for controllers (a mouse click lets go of it, so Space stays Boost),
+## and the info line on focus or hover.
+func _hook(row: ShopRow, button: Button) -> void:
+	button.focus_mode = Control.FOCUS_ALL
+	button.focus_entered.connect(_show_info.bind(row, button))
+	button.mouse_entered.connect(_show_info.bind(row, button))
+	button.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and not event.pressed:
+			button.release_focus.call_deferred())
+
+
+func _show_info(row: ShopRow, button: Button) -> void:
+	_info_button = button
+	_info.text = row.info.get(button, "")
 
 
 ## Buy, Sell and Up share the row equally, so the columns line up row to row.
@@ -359,23 +463,82 @@ func _on_theme_changed(_theme: ParkTheme) -> void:
 
 func _queue_refresh() -> void:
 	_refresh_queued = true
-	set_process(true)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if _refresh_queued:
 		_refresh()
-	set_process(false)
+	_pulse_time += delta
+	var glow := Color.WHITE.lerp(pulse_tint, 0.5 + 0.5 * sin(_pulse_time * pulse_speed))
+	for button in _pulsing:
+		button.self_modulate = glow if not button.disabled else Color.WHITE
+
+
+## LB/RB switch tabs; the first D-pad press lands on the shop's first button.
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed(&"shop_prev_tab") or event.is_action_pressed(&"shop_next_tab"):
+		var step := -1 if event.is_action_pressed(&"shop_prev_tab") else 1
+		_tabs.current_tab = posmod(_tabs.current_tab + step, _tabs.get_tab_count())
+		_focus_first_button()
+		get_viewport().set_input_as_handled()
+		return
+	var joypad := event is InputEventJoypadButton or event is InputEventJoypadMotion
+	if joypad and get_viewport().gui_get_focus_owner() == null:
+		for action: StringName in [&"ui_up", &"ui_down", &"ui_left", &"ui_right"]:
+			if event.is_action_pressed(action):
+				_focus_first_button()
+				get_viewport().set_input_as_handled()
+				return
+
+
+func _focus_first_button() -> void:
+	for control in _pages[_tabs.current_tab].find_children("*", "Button", true, false):
+		var button := control as Button
+		if button.is_visible_in_tree() and button.focus_mode != Control.FOCUS_NONE:
+			button.grab_focus()
+			return
 
 
 func _refresh() -> void:
 	_refresh_queued = false
+	_pulsing.clear()
 	for id in _rows_by_id:
 		var row := _rows_by_id[id]
+		row.root.visible = not is_row_hidden(id)
 		if row.icon != null:
 			_refresh_mount_row(id, row)
 		else:
 			_refresh_row(id, row)
+		if not row.root.visible:
+			continue
+		for button in row.fills:
+			var bar := row.fills[button]
+			var target := _price_target(row, button)
+			var price := UpgradeManager.get_cost(target) if target != &"" else 0.0
+			var saving := target != &"" and get_row_state(target) in [RowState.SAVING, RowState.AFFORDABLE]
+			bar.modulate.a = 1.0 if saving else 0.0
+			bar.value = clampf(GameState.get_gold() / price, 0.0, 1.0) if price > 0.0 else 1.0
+			if not button.disabled and saving:
+				_pulsing.append(button)
+	for section in _headers:
+		var any := false
+		for id: StringName in _section_rows[section]:
+			any = any or _rows_by_id[id].root.visible
+		_headers[section].visible = any
+	if _info_button != null and is_instance_valid(_info_button):
+		for id in _rows_by_id:
+			if _rows_by_id[id].info.has(_info_button):
+				_info.text = _rows_by_id[id].info[_info_button]
+
+
+## The upgrade a gold button buys (Up buys the mount's track).
+func _price_target(row: ShopRow, button: Button) -> StringName:
+	if button == row.up_button:
+		return row.track_id
+	for id in _rows_by_id:
+		if _rows_by_id[id] == row:
+			return id
+	return &""
 
 
 func _refresh_row(id: StringName, row: ShopRow) -> void:
@@ -386,6 +549,10 @@ func _refresh_row(id: StringName, row: ShopRow) -> void:
 	row.status.visible = state == RowState.LOCKED
 	row.status.text = _lock_text(id)
 	row.root.modulate = locked_modulate if state == RowState.LOCKED else (maxed_modulate if state == RowState.MAXED else Color.WHITE)
+	var upgrade := UpgradeManager.get_definition(id)
+	var info := tr(info_row_key).format([tr(upgrade.display_name), tr(upgrade.description), UpgradeManager.get_level(id), upgrade.max_level])
+	var lock := _lock_text(id)
+	row.info[row.button] = info + ("\n" + lock if lock != "" else "")
 
 
 func _refresh_mount_row(id: StringName, row: ShopRow) -> void:
@@ -402,11 +569,14 @@ func _refresh_mount_row(id: StringName, row: ShopRow) -> void:
 	row.status.text = _lock_text(id) if blocked else ""
 	row.button.disabled = state != RowState.AFFORDABLE
 	row.button.text = tr(maxed_key) if state == RowState.MAXED else tr(buy_key).format([NumberFormat.gold(UpgradeManager.get_cost(id))])
-	row.button.tooltip_text = _lock_text(id)
+	var upgrade := UpgradeManager.get_definition(id)
+	var lock := _lock_text(id)
+	row.info[row.button] = tr(info_mount_key).format([tr(upgrade.display_name), owned]) + ("\n" + lock if lock != "" else "")
 	if row.sell_button != null:
 		row.sell_button.disabled = not UpgradeManager.can_sell(id)
 		var refund := UpgradeManager.get_sell_refund(id)
 		row.sell_button.set_idle_text(tr(sell_key).format([NumberFormat.gold(refund) if refund > 0.0 else ""]).strip_edges())
+		row.info[row.sell_button] = tr(sell_key).format([NumberFormat.gold(refund)])
 	var level := GameState.get_mount_level(id)
 	var star := GameState.get_mount_star(id)
 	row.star.stars = star
@@ -454,7 +624,7 @@ func _refresh_up_button(row: ShopRow) -> void:
 		var lock := _lock_text(row.track_id)
 		if state == RowState.LOCKED and lock != "":
 			tip += "\n" + lock
-	row.up_button.tooltip_text = tip
+	row.info[row.up_button] = tip
 
 
 ## ★N, drawn in code (the UI font has no star glyph). Hidden below ★2.

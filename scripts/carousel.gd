@@ -14,6 +14,8 @@ signal rotation_advanced(previous_angle: float, delta_angle: float)
 @export_range(10.0, 400.0, 1.0, "suffix:px") var radius: float = 100.0
 ## The deck showing around the canopy's edge.
 @export var base_color: Color = Color("765642")
+## Gilded Rims (Phase 4 Step 6): the rim blends from base_color toward this.
+@export var gilded_base_color: Color = Color("c9a24a")
 ## Canopy wedges alternate these two; they also make the spin visible.
 @export_range(4, 48, 2) var wedge_count: int = 12
 @export var wedge_color_a: Color = Color("fff4dc")
@@ -45,6 +47,9 @@ var _unwrapped_angle: float = 0.0
 
 ## Called by Game once per physics tick; Carousel never moves itself.
 ## Positive speed turns clockwise on screen.
+## How gilded the rim is, 0..1 (set_gilding).
+var _gilding: float = 0.0
+
 func advance_rotation(delta: float, speed_rad_s: float) -> void:
 	var step := speed_rad_s * delta
 	if step == 0.0 or not is_finite(step):
@@ -60,6 +65,12 @@ func get_unwrapped_angle() -> float:
 
 
 ## Called each tick with the boost state from GameState.
+## 0 = plain walnut rim, 1 = fully gilded (Gilded Rims levels bought / max).
+func set_gilding(amount: float) -> void:
+	_gilding = clampf(amount, 0.0, 1.0)
+	queue_redraw()
+
+
 func set_boost_state(maxed: bool, overdrive: bool) -> void:
 	if overdrive:
 		_glow_target = overdrive_glow_modulate
@@ -78,7 +89,7 @@ func _process(delta: float) -> void:
 
 
 func _draw() -> void:
-	draw_circle(Vector2.ZERO, radius, base_color, true, -1.0, true)
+	draw_circle(Vector2.ZERO, radius, base_color.lerp(gilded_base_color, _gilding), true, -1.0, true)
 	var canopy := radius - canopy_inset
 	for i in wedge_count:
 		var from := TAU * i / wedge_count

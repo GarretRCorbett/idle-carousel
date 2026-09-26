@@ -16,7 +16,14 @@ enum EffectType {
 	MOUNT_TIER,        ## unused since Phase 4 (replaced by MOUNT_LEVEL); kept so the numbers don't shift
 	AUTO_BOOST,        ## Auto-Boost: each level holds the bar higher (RunConfig.auto_boost_holds)
 	MOUNT_LEVEL,       ## target_mount's track (GDD v1.17): levels 1-3, the ★2 star-up, levels 4-6
+	ADD_MAX_HEALTH,    ## effect_value added to the carousel's max health (and to its health now)
+	ADD_GOLD_BONUS,    ## Gilded Rims: effect_value added to the earned-Gold multiplier (0.1 = +10%)
+	ADD_OFFLINE_RATE,  ## effect_value added to the offline rate (0.05 = +5 points)
+	ADD_CLICK_RANGE,   ## effect_value added to the click-radius multiplier (0.25 = +25%)
 }
+
+## Small headers on the Upgrades tab, in this order (Garret, Phase 4 Step 6).
+enum Section { NONE, CAROUSEL, BOOST, CLICKS, GOLD }
 
 ## A MOUNT_LEVEL track's 4th buy is the ★2 star-up (after levels 1-3).
 const STAR_BUY := 3
@@ -34,6 +41,8 @@ enum Tab { UPGRADES, MOUNTS }
 ## Added once per level.
 @export var effect_value: float = 0.0
 @export var tab: Tab = Tab.UPGRADES
+## Which header it sits under on the Upgrades tab (the catalog keeps sections together).
+@export var section: Section = Section.NONE
 
 @export_group("Mounts")
 ## BUY_MOUNT: the mount scene each level adds.

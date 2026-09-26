@@ -187,3 +187,13 @@ tabs, the list scrolls to the focused row, headers aren't focusable. Nothing hov
 at the bottom of the shop shows the focused or hovered row's details (e.g. "Long Neck (level 2): +10%
 reach"), replacing the Up button's tooltip for controller and touch. The full controller pass (strike
 nearest enemy, Boost on a trigger) comes later.
+
+**Step 6 done (2026-09-26):** built as planned. Carousel Health, Gilded Rims (the rim turns golden),
+Offline Efficiency, Click Range; rows hidden until one boss away, pulsing affordable buttons, thin fill
+bars, section headers, controller focus with LB/RB (`shop_prev_tab` / `shop_next_tab`) and the info line.
+Earned Gold goes through `GameState.earn_gold()` (Gilded Rims); refunds and debug Gold don't.
+Retune: Gilded Gale 540, Obsidian 470 (the Obsidian pass/fail line sits between 440 and 520).
+Economy sim: bosses at **0:20, 0:37, 0:54, 1:43, 2:02, 2:24**. Gilded Gale is still the longest gap
+(~50 min), and it barely moves with its health, so it's an economy wall: a playtest question.
+Note: with "one boss away", almost everything is visible at the start (most rows wait only for the
+first boss); rows for later bosses appear as you go. GDD v1.19.

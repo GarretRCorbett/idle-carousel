@@ -4,12 +4,12 @@
 
 [resource]
 script = ExtResource("1_script")
-id = &"click_damage"
-display_name = "UPG_CLICK_DAMAGE_NAME"
-description = "UPG_CLICK_DAMAGE_DESC"
-effect_type = 3
+id = &"click_range"
+display_name = "UPG_CLICK_RANGE_NAME"
+description = "UPG_CLICK_RANGE_DESC"
+effect_type = 13
 effect_value = 0.25
-cost_gold = 50.0
-cost_growth = 1.6
-max_level = 10
 section = 3
+cost_gold = 150.0
+cost_growth = 2.0
+max_level = 3

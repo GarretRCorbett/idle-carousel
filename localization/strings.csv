@@ -66,12 +66,26 @@ SHOP_STAR_UP,Star up {0},Estrella {0},Étoile {0},Stern {0},Estrela {0},Звез
 SHOP_COUNT,×{0},×{0},×{0},×{0},×{0},×{0},×{0},×{0},×{0}
 SHOP_LEVEL_TIP,{0} (level {1}): {2},{0} (nivel {1}): {2},{0} (niveau {1}) : {2},{0} (Stufe {1}): {2},{0} (nível {1}): {2},{0} (уровень {1}): {2},{0}（{1}级）：{2},{0}（レベル{1}）：{2},{0} (레벨 {1}): {2}
 SHOP_STAR_TIP,Star up: {0},Estrella: {0},Étoile : {0},Stern: {0},Estrela: {0},Звезда: {0},升星：{0},星上げ：{0},별 올리기: {0}
+SHOP_INFO_ROW,{0}: {1} (level {2}/{3}),{0}: {1} (nivel {2}/{3}),{0} : {1} (niveau {2}/{3}),{0}: {1} (Stufe {2}/{3}),{0}: {1} (nível {2}/{3}),{0}: {1} (уровень {2}/{3}),{0}：{1}（{2}/{3}级）,{0}：{1}（レベル{2}/{3}）,{0}: {1} (레벨 {2}/{3})
+SHOP_INFO_MOUNT,{0}: {1} on the carousel,{0}: {1} en el carrusel,{0} : {1} sur le manège,{0}: {1} auf dem Karussell,{0}: {1} no carrossel,{0}: {1} на карусели,{0}：旋转木马上有{1}个,{0}：メリーゴーランドに{1}体,{0}: 회전목마에 {1}마리
 UPG_CAROUSEL_SPEED_NAME,Carousel Speed,Velocidad del carrusel,Vitesse du manège,Karussell-Tempo,Velocidade do carrossel,Скорость карусели,旋转速度,回転速度,회전목마 속도
 UPG_CAROUSEL_SPEED_DESC,+20% base speed,+20% de velocidad base,+20 % de vitesse de base,+20 % Grundtempo,+20% de velocidade base,+20% к базовой скорости,基础速度 +20%,基本速度 +20%,기본 속도 +20%
 UPG_AUTO_BOOST_NAME,Auto-Boost,Auto-impulso,Auto-boost,Auto-Boost,Auto-impulso,Автоускорение,自动加速,オートブースト,자동 부스트
 UPG_AUTO_BOOST_DESC,Holds the Boost bar at 30 / 50 / 65 / 82%,Mantiene la barra de impulso al 30 / 50 / 65 / 82%,Maintient la barre de boost à 30 / 50 / 65 / 82 %,Hält die Boost-Leiste bei 30 / 50 / 65 / 82 %,Mantém a barra de impulso em 30 / 50 / 65 / 82%,Держит шкалу ускорения на 30 / 50 / 65 / 82%,让加速条保持在 30 / 50 / 65 / 82%,ブーストゲージを 30 / 50 / 65 / 82% に保つ,부스트 게이지를 30 / 50 / 65 / 82%로 유지
 UPG_BOOST_POWER_NAME,Boost Power,Potencia de impulso,Puissance du boost,Boost-Stärke,Força do impulso,Сила ускорения,加速强度,ブースト強化,부스트 강화
 UPG_BOOST_POWER_DESC,+10% max boost,+10% de impulso máximo,+10 % de boost max,+10 % max. Boost,+10% de impulso máximo,+10% к макс. ускорению,最大加速 +10%,最大ブースト +10%,최대 부스트 +10%
+UPG_CAROUSEL_HEALTH_NAME,Carousel Health,Salud del carrusel,Santé du manège,Karussell-Leben,Vida do carrossel,Прочность карусели,旋转木马生命,メリーゴーランド耐久,회전목마 체력
+UPG_CAROUSEL_HEALTH_DESC,+25 max health,+25 de salud máxima,+25 santé max,+25 max. Leben,+25 de vida máxima,+25 к макс. прочности,最大生命 +25,最大耐久 +25,최대 체력 +25
+UPG_CLICK_RANGE_NAME,Click Range,Alcance del clic,Portée du clic,Klick-Reichweite,Alcance do clique,Радиус клика,点击范围,クリック範囲,클릭 범위
+UPG_CLICK_RANGE_DESC,+25% click area,+25% de área de clic,+25 % de zone de clic,+25 % Klickbereich,+25% de área de clique,+25% к зоне клика,点击区域 +25%,クリック範囲 +25%,클릭 영역 +25%
+UPG_GILDED_RIMS_NAME,Gilded Rims,Bordes dorados,Bords dorés,Vergoldete Ränder,Bordas douradas,Позолоченные края,镀金边缘,金縁,금박 테두리
+UPG_GILDED_RIMS_DESC,+10% all Gold earned,+10% de todo el oro ganado,+10 % de tout l'or gagné,+10 % auf alles verdiente Gold,+10% de todo o ouro ganho,+10% ко всему золоту,所有金币收入 +10%,全ての獲得ゴールド +10%,모든 골드 획득 +10%
+UPG_OFFLINE_EFFICIENCY_NAME,Offline Efficiency,Eficiencia sin conexión,Efficacité hors ligne,Offline-Effizienz,Eficiência offline,Офлайн-доход,离线效率,オフライン効率,오프라인 효율
+UPG_OFFLINE_EFFICIENCY_DESC,+5% offline earnings,+5% de ganancias sin conexión,+5 % de gains hors ligne,+5 % Offline-Einnahmen,+5% de ganhos offline,+5% к офлайн-доходу,离线收益 +5%,オフライン収益 +5%,오프라인 수익 +5%
+SHOP_SECTION_CAROUSEL,Carousel,Carrusel,Manège,Karussell,Carrossel,Карусель,旋转木马,メリーゴーランド,회전목마
+SHOP_SECTION_BOOST,Boost,Impulso,Boost,Boost,Impulso,Ускорение,加速,ブースト,부스트
+SHOP_SECTION_CLICKS,Clicks,Clics,Clics,Klicks,Cliques,Клики,点击,クリック,클릭
+SHOP_SECTION_GOLD,Gold,Oro,Or,Gold,Ouro,Золото,金币,ゴールド,골드
 UPG_CLICK_DAMAGE_NAME,Click Damage,Daño por clic,Dégâts par clic,Klickschaden,Dano por clique,Урон от клика,点击伤害,クリックダメージ,클릭 피해
 UPG_CLICK_DAMAGE_DESC,+0.25 damage per click,"+0,25 de daño por clic","+0,25 dégât par clic","+0,25 Schaden pro Klick","+0,25 de dano por clique","+0,25 урона за клик",每次点击伤害 +0.25,クリックごとのダメージ +0.25,클릭당 피해 +0.25
 UPG_HORSE_LEVEL_NAME,Golden Saddle,Silla dorada,Selle dorée,Goldener Sattel,Sela dourada,Золотое седло,金马鞍,金の鞍,황금 안장

@@ -1,5 +1,5 @@
 # 🎠 Idle Carousel — Game Design Document
-### Version 1.18 | Working Title: Idle Carousel
+### Version 1.19 | Working Title: Idle Carousel
 > Solo dev project. Built in Godot 4.7 stable. Target: Steam release, anonymous, $4.99 (sale target ~$3.49–$3.75), with a free demo.
 > Personal motivation: daughters love carousels.
 > Influences: Cookie Clicker, Clicker Heroes, A Game About Feeding a Black Hole, Rusty's Retirement.
@@ -7,6 +7,7 @@
 ---
 
 ## Changelog
+- **v1.19** — Phase 4 shop (Garret, 2026-09-26): two shop tabs, **Upgrades** (with small section headers: Carousel, Boost, Clicks, Gold) and **Mounts**; the Combat tab is gone (Wolf Fang, Long Neck, Trumpet and Drowsy became mount levels). **Gilded Rims** absorbs Polish and Shine. Click Combo is postponed. Rows stay hidden until you're one boss from unlocking them. The shop is controller-ready (focus, shoulder buttons switch tabs, an info line replaces hover tooltips). Booths cost 1,950, each next ×1.8. **Auto-Boost** is the name of the auto-boost upgrade.
 - **v1.18** — **Fail state decided** (Garret, 2026-09-26): "safe farm, risky push" (Package A) as played since Phase 2 is now the real rule. At zero health the carousel stalls; Boost cranks it back; a 60 s safety net clears enemies (not during a boss fight); a lost boss fight costs only time. Gold, mounts and unlocks are never lost. Offline has no fights. Resolves the fail-state DECISION PENDING. Also: base spin 90°/s with prices ×1.3 (playtest-3 faster idle, re-simmed).
 - **v1.17** — Playtest 3 decisions (Garret, 2026-09-25; `planning/phase3/playtest3_plan.md`):
   - **Mount levels and stars** replace the separate tier upgrades. Each mount has one track: levels (pips), a ★2 star-up in the run, and ★3 (its named ability) unlocked by prestige.
@@ -182,7 +183,7 @@ When an enemy reaches the carousel edge it latches on. Visually the enemy grabs 
 To remove a latched enemy: click it directly, OR wait for a combat mount to sweep past it, OR use Emergency Clear.
 
 ### Ticket Booths (up to 4)
-The game starts with one booth at the top. More booths are bought in the shop, up to 4, each costing more than the last. Booths re-space evenly as they're added (2 = opposite sides, 3 = 120° apart, 4 = 90° apart); moving a booth never pays Gold. Only **Horse** passes pay at booths. Booth 2 is a major Gold generation upgrade and one of the most satisfying visual moments in the game.
+The game starts with one booth at the top. More booths are bought in the shop, up to 4, each costing more than the last (1,950 Gold, each next ×1.8; v1.19). Booths re-space evenly as they're added (2 = opposite sides, 3 = 120° apart, 4 = 90° apart); moving a booth never pays Gold. Only **Horse** passes pay at booths. Booth 2 is a major Gold generation upgrade and one of the most satisfying visual moments in the game.
 
 ### Income Formula
 Gold/sec from booths = Horses × booths × turns per second × Gold per pass. Horses and booths multiply each other, which is why both get more expensive with each purchase.
@@ -353,47 +354,33 @@ Killing a boss awards a large Gold bonus, unlocks the next color tier, makes the
 
 ## Upgrade Trees
 
-Two trees. Both cost Gold. Upgrades always show the next tier even if locked so the player can always see what they are working toward.
+Two shop tabs (v1.19): **Upgrades** and **Mounts**. Everything costs Gold. A locked upgrade shows once you're one boss from unlocking it, so the player can see what they're working toward.
 
 ### Upgrade Visibility System
 - **Affordable now:** Highlighted, pulsing gently, buy button active
 - **Almost affordable (within 20% of cost):** Visible, greyed out, shows cost and current amount
 - **Locked (requires previous upgrade):** Visible as silhouette, shows requirement text
-- **Hidden (far future):** Completely hidden until prerequisites met — surprise unlocks feel like discoveries
-- **Progress fill (v1.5):** every visible row shows a fill bar of current Gold toward its cost
+- **Hidden (far future):** hidden until you're one boss away from unlocking it (v1.19); surprise unlocks feel like discoveries
+- **Progress fill (v1.5):** a thin bar under each price button shows current Gold toward the cost (v1.19)
 - **Bought:** the row stays in place, compact and marked as bought, so rows never shift under the cursor
 
 ---
 
-### Carousel Tree (Gold)
+### Upgrades tab (v1.19; numbers are drafts)
 
-| Upgrade | Effect |
-|---|---|
-| Carousel Speed (levels 1–10) | +20% base spin speed per level — immediate visual feedback |
-| Boost Power (levels 1–10) | +10% max Boost per level |
-| Mount Slot 2-6 | Unlocks additional mount positions (4–6 require a boss first) |
-| Ticket Booths 2–4 | Extra booths, re-spaced evenly; first costs 500, each ×1.5 the last |
-| Carousel Health 1/2/3 | Max health increased |
-| Polish and Shine | +10% to all Gold generation |
-| Gilded Rims | Cosmetic glow plus +5% Gold |
-| Offline Efficiency | Increases offline Gold rate from 50% toward 75% |
+| Section | Upgrade | Effect |
+|---|---|---|
+| Carousel | Carousel Speed (10 levels) | +20% base spin speed per level; immediate visual feedback |
+| Carousel | Ticket Booths 2–4 | Extra booths, re-spaced evenly; 1,950 Gold, each next ×1.8 |
+| Carousel | Carousel Health (3 levels) | +25 max health each (one level per boss beaten) |
+| Boost | Boost Power (10 levels) | +10% max Boost per level |
+| Boost | Auto-Boost (4 levels) | Holds the Boost bar at 30 / 50 / 65 / 82% |
+| Clicks | Click Damage (10 levels) | +0.25 click damage per level |
+| Clicks | Click Range (3 levels) | +25% click area; easier to hit fast Leaves |
+| Gold | Gilded Rims (3 levels) | +10% to all Gold earned; the rim turns more golden (absorbs Polish and Shine) |
+| Gold | Offline Efficiency (5 levels) | Offline rate 50% → 75% |
 
----
-
-### Combat Tree (Gold)
-
-| Upgrade | Effect |
-|---|---|
-| Click Damage 1/2/3 | Clicks deal significantly more damage |
-| Click Range | Click hitbox larger — easier to hit fast Leaves |
-| Click Combo | Rapid clicks within 1 second build a 2x damage multiplier |
-| Wolf Fang 1/2/3 | Wolf sweep damage increased |
-| Long Neck 1/2/3 | Giraffe range extended |
-| Trumpet 1/2/3 | Elephant arc width increased |
-| Drowsy 1/2/3 | Sloth slow duration extended |
-| Trunk Toss | Elephant knockback added |
-| Double Take | Giraffe fires twice per sweep |
-| Pack Mentality | Wolf fires offset second sweep |
+Mount Slots 2–6 are on the Mounts tab (4–6 require a boss first). The old Combat tree's mount rows (Wolf Fang, Long Neck, Trumpet, Drowsy) are now **mount levels**, and Trunk Toss, Double Take and Pack Mentality are the **★3** abilities (Mount Levels and Stars, below). **Click Combo** (rapid clicks build to 2× damage) is postponed (Garret, v1.19; see NOTES).
 
 ---
 
@@ -525,7 +512,8 @@ After the victory screen the player can **prestige** (see Prestige) and start a 
 
 ### Upgrade Shop
 - Panel on right side of screen
-- May be split into 2–3 tabs (e.g., Carousel / Combat / Mounts) for readability. Every cost is in Gold; tabs organize, they never introduce a second currency.
+- Two tabs (v1.19): **Upgrades** (section headers Carousel · Boost · Clicks · Gold) and **Mounts**. Every cost is in Gold; tabs organize, they never introduce a second currency. Fewer tabs keep controller navigation short (shoulder buttons switch tabs).
+- **Controller-ready (v1.19):** every shop button takes focus; an info line under the tabs shows what the focused or hovered button does, so nothing is hover-only.
 - Affordable upgrades highlighted, next-tier upgrades visible but locked
 - No scrolling required in early game
 - **v1.17 (Garret: "takes up too much real estate; navigating is confusing, especially mounts"):**

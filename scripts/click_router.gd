@@ -35,7 +35,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func route_click(world_point: Vector2) -> bool:
 	var enemies: Array[EnemyBase] = []
 	enemies.assign(_enemies.keys())
-	var target := choose_target(world_point, enemies)
+	var target := choose_target(world_point, enemies, GameState.get_click_range_multiplier())
 	if target == null:
 		return false
 	enemy_clicked.emit(target)
@@ -45,7 +45,8 @@ func route_click(world_point: Vector2) -> bool:
 ## Nearest clickable enemy whose click radius covers the point, or null.
 ## Ties keep the earlier-registered enemy. A click inside a boss's body
 ## (its hitbox) always goes to the boss, even with a Leaf in front of it.
-static func choose_target(world_point: Vector2, enemies: Array[EnemyBase]) -> EnemyBase:
+## `range_multiplier` scales every click radius (Click Range).
+static func choose_target(world_point: Vector2, enemies: Array[EnemyBase], range_multiplier: float = 1.0) -> EnemyBase:
 	var best: EnemyBase = null
 	var best_distance_squared := INF
 	for enemy in enemies:
@@ -56,7 +57,7 @@ static func choose_target(world_point: Vector2, enemies: Array[EnemyBase]) -> En
 			if world_point.distance_squared_to(enemy.global_position) <= core * core:
 				return enemy
 		var distance_squared := world_point.distance_squared_to(enemy.global_position)
-		var radius := enemy.get_click_radius()
+		var radius := enemy.get_click_radius() * range_multiplier
 		if distance_squared <= radius * radius and distance_squared < best_distance_squared:
 			best = enemy
 			best_distance_squared = distance_squared

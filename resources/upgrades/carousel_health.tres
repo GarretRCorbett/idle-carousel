@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3]
+
+[ext_resource type="Script" path="res://scripts/upgrade_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"carousel_health"
+display_name = "UPG_CAROUSEL_HEALTH_NAME"
+description = "UPG_CAROUSEL_HEALTH_DESC"
+effect_type = 10
+effect_value = 25.0
+section = 1
+cost_gold = 600.0
+cost_growth = 2.5
+max_level = 3
+level_cap_by_bosses = PackedInt32Array(1, 2, 3)

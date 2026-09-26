@@ -20,7 +20,11 @@
 [ext_resource type="Resource" path="res://resources/upgrades/sloth_level.tres" id="30_sloth_level"]
 [ext_resource type="Resource" path="res://resources/upgrades/elephant_level.tres" id="30_elephant_level"]
 [ext_resource type="Resource" path="res://resources/upgrades/panda_level.tres" id="30_panda_level"]
+[ext_resource type="Resource" path="res://resources/upgrades/carousel_health.tres" id="40_carousel_health"]
+[ext_resource type="Resource" path="res://resources/upgrades/click_range.tres" id="40_click_range"]
+[ext_resource type="Resource" path="res://resources/upgrades/gilded_rims.tres" id="40_gilded_rims"]
+[ext_resource type="Resource" path="res://resources/upgrades/offline_efficiency.tres" id="40_offline_efficiency"]
 
 [resource]
 script = ExtResource("1_script")
-upgrades = Array[ExtResource("2_data")]([ExtResource("3_speed"), ExtResource("4_boost"), ExtResource("21_auto_boost"), ExtResource("6_click"), ExtResource("5_booth"), ExtResource("7_slot"), ExtResource("8_horse"), ExtResource("9_wolf"), ExtResource("11_giraffe"), ExtResource("12_sloth"), ExtResource("13_elephant"), ExtResource("19_panda"), ExtResource("30_horse_level"), ExtResource("30_wolf_level"), ExtResource("30_giraffe_level"), ExtResource("30_sloth_level"), ExtResource("30_elephant_level"), ExtResource("30_panda_level")])
+upgrades = Array[ExtResource("2_data")]([ExtResource("3_speed"), ExtResource("5_booth"), ExtResource("40_carousel_health"), ExtResource("4_boost"), ExtResource("21_auto_boost"), ExtResource("6_click"), ExtResource("40_click_range"), ExtResource("40_gilded_rims"), ExtResource("40_offline_efficiency"), ExtResource("7_slot"), ExtResource("8_horse"), ExtResource("9_wolf"), ExtResource("11_giraffe"), ExtResource("12_sloth"), ExtResource("13_elephant"), ExtResource("19_panda"), ExtResource("30_horse_level"), ExtResource("30_wolf_level"), ExtResource("30_giraffe_level"), ExtResource("30_sloth_level"), ExtResource("30_elephant_level"), ExtResource("30_panda_level")])

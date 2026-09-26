@@ -199,7 +199,7 @@ func _finish(victory: bool) -> void:
 	_phase = Phase.IDLE
 	if victory:
 		first_clear = GameState.record_boss_victory(tier.rank)
-		GameState.add_gold(tier.boss.first_clear_gold if first_clear else tier.boss.repeat_clear_gold)
+		GameState.earn_gold(tier.boss.first_clear_gold if first_clear else tier.boss.repeat_clear_gold)
 	var leftovers := _members.duplicate()
 	_members.clear()
 	_required.clear()

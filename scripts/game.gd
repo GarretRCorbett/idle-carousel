@@ -129,6 +129,7 @@ func _ready() -> void:
 	GameState.mounts_changed.connect(_sync_mounts)
 	GameState.run_reset.connect(_discard_pending_spawns)
 	GameState.upgrade_applied.connect(_on_upgrade_applied)
+	GameState.run_reset.connect(_refresh_gilding)
 	GameState.reset_run()
 	if SaveManager.continue_requested:
 		SaveManager.continue_requested = false
@@ -140,6 +141,13 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_center_world)
 	_center_world()
 	_wave_manager.start(GameState.get_run_seed())
+
+
+## Gilded Rims: the rim turns more golden with each level.
+func _refresh_gilding() -> void:
+	var rims := UpgradeManager.get_definition(&"gilded_rims")
+	if rims != null:
+		_carousel.set_gilding(float(GameState.get_upgrade_level(rims.id)) / rims.max_level)
 
 
 func _setup_saving() -> void:
@@ -283,6 +291,7 @@ func _physics_process(delta: float) -> void:
 ## A mount tier can change reach or wedge width. Rebase every mount at once,
 ## so an enemy that just came into reach isn't a free hit.
 func _on_upgrade_applied(id: StringName, _level: int) -> void:
+	_refresh_gilding()
 	var upgrade := UpgradeManager.get_definition(id)
 	if upgrade != null and upgrade.effect_type == UpgradeData.EffectType.MOUNT_LEVEL:
 		_layout_mounts()
@@ -369,15 +378,13 @@ func _layout_booths(count: int) -> void:
 
 ## The Panda's Gold per turn, shown above it right away (once a turn is slow enough).
 func _on_mount_gold_earned(mount: MountBase, amount: float) -> void:
-	GameState.add_gold(amount)
-	_spawn_gold_pop(mount.global_position + mount_pop_offset, amount)
+	_spawn_gold_pop(mount.global_position + mount_pop_offset, GameState.earn_gold(amount))
 	AudioManager.play_sfx(&"coin")
 
 
 func _on_booth_passed(mount: MountBase, booth_index: int, pass_count: int) -> void:
-	var amount := GameState.get_mount_gold(mount.data) * pass_count
-	GameState.add_gold(amount)
-	_booth_tallies[booth_index].add(amount)
+	var paid := GameState.earn_gold(GameState.get_mount_gold(mount.data) * pass_count)
+	_booth_tallies[booth_index].add(paid)
 	_booths[booth_index].pop()
 	AudioManager.play_sfx(&"coin")
 
@@ -487,7 +494,7 @@ func _on_enemy_reached_rim(enemy: EnemyBase) -> void:
 func _on_enemy_died(enemy: EnemyBase, killer: Node) -> void:
 	# Boss-fight enemies pay nothing and don't count toward the kill gate.
 	if enemy.gives_rewards():
-		GameState.add_gold(enemy.get_kill_gold())
+		GameState.earn_gold(enemy.get_kill_gold())
 		GameState.record_kill(enemy.get_tier_rank())
 	var mount := killer as MountBase
 	if mount != null and mount.data != null:

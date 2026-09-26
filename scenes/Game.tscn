@@ -204,11 +204,25 @@ theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="ShopTabs" type="TabContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/ShopPanel/ShopMargin"]
+[node name="ShopColumn" type="VBoxContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/ShopPanel/ShopMargin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="ShopTabs" type="TabContainer" parent="HUD/HUDRoot/ScreenMargin/Columns/ShopPanel/ShopMargin/ShopColumn"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/side_margin = 0
 theme_override_font_sizes/font_size = 12
+size_flags_vertical = 3
+
+[node name="ShopInfo" type="Label" parent="HUD/HUDRoot/ScreenMargin/Columns/ShopPanel/ShopMargin/ShopColumn"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(1, 1, 1, 0.75)
+autowrap_mode = 3
 
 [node name="OptionsLayer" type="CanvasLayer" parent="."]
 layer = 10
