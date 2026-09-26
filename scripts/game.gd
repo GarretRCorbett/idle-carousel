@@ -284,7 +284,7 @@ func _physics_process(delta: float) -> void:
 ## so an enemy that just came into reach isn't a free hit.
 func _on_upgrade_applied(id: StringName, _level: int) -> void:
 	var upgrade := UpgradeManager.get_definition(id)
-	if upgrade != null and upgrade.effect_type == UpgradeData.EffectType.MOUNT_TIER:
+	if upgrade != null and upgrade.effect_type == UpgradeData.EffectType.MOUNT_LEVEL:
 		_layout_mounts()
 
 

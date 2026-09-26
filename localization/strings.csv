@@ -60,6 +60,12 @@ SHOP_MAXED,Max,Máx,Max,Max,Máx,Макс,已满,最大,최대
 SHOP_REQUIRES,Requires {0},Requiere {0},Nécessite {0},Benötigt {0},Requer {0},Нужно: {0},需要 {0},{0}が必要,{0} 필요
 SHOP_NEEDS_SLOT,Needs an empty slot,Necesita un espacio libre,Nécessite un emplacement libre,Braucht einen freien Platz,Precisa de um espaço livre,Нужно свободное место,需要一个空位,空きスロットが必要,빈 슬롯 필요
 SHOP_SELL,Sell {0},Vender {0},Vendre {0},Verkaufen {0},Vender {0},Продать {0},出售 {0},売却 {0},판매 {0}
+SHOP_BUY,Buy {0},Comprar {0},Acheter {0},Kaufen {0},Comprar {0},Купить {0},购买 {0},購入 {0},구매 {0}
+SHOP_UP,Up {0},Mejorar {0},Améliorer {0},Stufe {0},Melhorar {0},Улучшить {0},升级 {0},強化 {0},강화 {0}
+SHOP_STAR_UP,Star up {0},Estrella {0},Étoile {0},Stern {0},Estrela {0},Звезда {0},升星 {0},星上げ {0},별 올리기 {0}
+SHOP_COUNT,×{0},×{0},×{0},×{0},×{0},×{0},×{0},×{0},×{0}
+SHOP_LEVEL_TIP,{0} (level {1}): {2},{0} (nivel {1}): {2},{0} (niveau {1}) : {2},{0} (Stufe {1}): {2},{0} (nível {1}): {2},{0} (уровень {1}): {2},{0}（{1}级）：{2},{0}（レベル{1}）：{2},{0} (레벨 {1}): {2}
+SHOP_STAR_TIP,Star up: {0},Estrella: {0},Étoile : {0},Stern: {0},Estrela: {0},Звезда: {0},升星：{0},星上げ：{0},별 올리기: {0}
 UPG_CAROUSEL_SPEED_NAME,Carousel Speed,Velocidad del carrusel,Vitesse du manège,Karussell-Tempo,Velocidade do carrossel,Скорость карусели,旋转速度,回転速度,회전목마 속도
 UPG_CAROUSEL_SPEED_DESC,+20% base speed,+20% de velocidad base,+20 % de vitesse de base,+20 % Grundtempo,+20% de velocidade base,+20% к базовой скорости,基础速度 +20%,基本速度 +20%,기본 속도 +20%
 UPG_AUTO_BOOST_NAME,Auto-Boost,Auto-impulso,Auto-boost,Auto-Boost,Auto-impulso,Автоускорение,自动加速,オートブースト,자동 부스트
@@ -68,8 +74,20 @@ UPG_BOOST_POWER_NAME,Boost Power,Potencia de impulso,Puissance du boost,Boost-St
 UPG_BOOST_POWER_DESC,+10% max boost,+10% de impulso máximo,+10 % de boost max,+10 % max. Boost,+10% de impulso máximo,+10% к макс. ускорению,最大加速 +10%,最大ブースト +10%,최대 부스트 +10%
 UPG_CLICK_DAMAGE_NAME,Click Damage,Daño por clic,Dégâts par clic,Klickschaden,Dano por clique,Урон от клика,点击伤害,クリックダメージ,클릭 피해
 UPG_CLICK_DAMAGE_DESC,+0.25 damage per click,"+0,25 de daño por clic","+0,25 dégât par clic","+0,25 Schaden pro Klick","+0,25 de dano por clique","+0,25 урона за клик",每次点击伤害 +0.25,クリックごとのダメージ +0.25,클릭당 피해 +0.25
-UPG_WOLF_FANG_NAME,Wolf Fang,Colmillo de lobo,Croc du loup,Wolfszahn,Presa do lobo,Волчий клык,狼牙,オオカミの牙,늑대 송곳니
-UPG_WOLF_FANG_DESC,+0.5 Wolf damage per hit,"+0,5 de daño del lobo por golpe","+0,5 dégât du loup par coup","+0,5 Wolfschaden pro Treffer","+0,5 de dano do lobo por golpe","+0,5 урона волка за удар",狼每次攻击伤害 +0.5,オオカミの一撃ダメージ +0.5,늑대 타격당 피해 +0.5
+UPG_HORSE_LEVEL_NAME,Golden Saddle,Silla dorada,Selle dorée,Goldener Sattel,Sela dourada,Золотое седло,金马鞍,金の鞍,황금 안장
+UPG_HORSE_LEVEL_DESC,+15% Gold per booth pass,+15% de oro por taquilla,+15 % d'or par guichet,+15 % Gold pro Schalter,+15% de ouro por bilheteria,+15% золота за кассу,每次经过售票亭金币 +15%,窓口ごとのゴールド +15%,매표소 통과당 골드 +15%
+UPG_WOLF_LEVEL_NAME,Wolf Fang,Colmillo de lobo,Croc du loup,Wolfszahn,Presa do lobo,Волчий клык,狼牙,オオカミの牙,늑대 송곳니
+UPG_WOLF_LEVEL_DESC,+0.75 Wolf damage per hit,"+0,75 de daño del lobo por golpe","+0,75 dégât du loup par coup","+0,75 Wolfschaden pro Treffer","+0,75 de dano do lobo por golpe","+0,75 урона волка за удар",狼每次攻击伤害 +0.75,オオカミの一撃ダメージ +0.75,늑대 타격당 피해 +0.75
+UPG_GIRAFFE_LEVEL_NAME,Long Neck,Cuello largo,Long cou,Langer Hals,Pescoço longo,Длинная шея,长脖子,長い首,긴 목
+UPG_GIRAFFE_LEVEL_DESC,+10% Giraffe reach,+10% de alcance de la jirafa,+10 % de portée de la girafe,+10 % Giraffen-Reichweite,+10% de alcance da girafa,+10% дальности жирафа,长颈鹿范围 +10%,キリンの射程 +10%,기린 사거리 +10%
+UPG_SLOTH_LEVEL_NAME,Drowsy,Somnoliento,Somnolent,Schläfrig,Sonolento,Сонливость,昏昏欲睡,うとうと,졸음
+UPG_SLOTH_LEVEL_DESC,+15% slow time,+15% de tiempo de ralentización,+15 % de durée de ralentissement,+15 % Verlangsamungsdauer,+15% de tempo de lentidão,+15% к длительности замедления,减速时间 +15%,スロー時間 +15%,감속 시간 +15%
+UPG_ELEPHANT_LEVEL_NAME,Trumpet,Trompeta,Barrissement,Trompete,Trombeta,Трубный зов,象鸣,ラッパ,나팔
+UPG_ELEPHANT_LEVEL_DESC,+10% sweep width,+10% de ancho de barrido,+10 % de largeur de balayage,+10 % Schwungbreite,+10% de largura de varredura,+10% к ширине удара,横扫宽度 +10%,なぎ払いの幅 +10%,휩쓸기 폭 +10%
+UPG_PANDA_LEVEL_NAME,Bamboo Snack,Bocado de bambú,En-cas de bambou,Bambus-Snack,Lanche de bambu,Бамбуковый перекус,竹子点心,竹のおやつ,대나무 간식
+UPG_PANDA_LEVEL_DESC,+15% Gold per turn and healing,+15% de oro por vuelta y curación,+15 % d'or par tour et de soin,+15 % Gold pro Runde und Heilung,+15% de ouro por volta e cura,+15% золота за оборот и лечения,每圈金币和治疗 +15%,1周ごとのゴールドと回復 +15%,회전당 골드와 치유 +15%
+UPG_GIRAFFE_STAR2_DESC,Every Giraffe: +50% damage,Todas las jirafas: +50% de daño,Toutes les girafes : +50 % de dégâts,Alle Giraffen: +50 % Schaden,Todas as girafas: +50% de dano,Все жирафы: +50% урона,所有长颈鹿：伤害+50%,全てのキリン：ダメージ+50%,모든 기린: 피해 +50%
+SHOP_NEEDS_STAR2_TYPES,{0}/{1} mount types at star 2,{0}/{1} tipos de montura con 2 estrellas,{0}/{1} types de monture à 2 étoiles,{0}/{1} Reittierarten mit 2 Sternen,{0}/{1} tipos de montaria com 2 estrelas,{0}/{1} видов с 2 звёздами,{0}/{1} 种坐骑达到2星,{0}/{1} 種類が星2,{0}/{1} 종류 별 2
 UPG_TICKET_BOOTH_NAME,Ticket Booth,Taquilla,Guichet,Ticketschalter,Bilheteria,Билетная касса,售票亭,チケット売り場,매표소
 UPG_TICKET_BOOTH_DESC,Another booth for the Horse to pass,Otra taquilla por la que pasa el caballo,Un autre guichet devant lequel passe le cheval,"Ein weiterer Schalter, an dem das Pferd vorbeikommt",Outra bilheteria para o cavalo passar,Ещё одна касса на пути лошади,再建一个售票亭，让马经过,ウマが通る売り場をもう1つ,말이 지나갈 매표소 하나 더
 UPG_MOUNT_SLOT_NAME,Mount Slot,Espacio de montura,Emplacement de monture,Reittierplatz,Espaço de montaria,Место для скакуна,坐骑位,乗り物スロット,탈것 슬롯
@@ -84,21 +102,13 @@ UPG_SLOTH_NAME,Sloth,Perezoso,Paresseux,Faultier,Preguiça,Ленивец,树懒
 UPG_SLOTH_DESC,Slows enemies it passes (no damage),Ralentiza a los enemigos que alcanza (sin daño),Ralentit les ennemis qu'il croise (sans dégâts),"Verlangsamt Gegner, die er streift (kein Schaden)",Deixa lentos os inimigos que alcança (sem dano),Замедляет врагов на пути (без урона),减速经过的敌人（无伤害）,通りかかった敵を遅くする（ダメージなし）,지나가는 적을 느리게 함 (피해 없음)
 UPG_ELEPHANT_NAME,Elephant,Elefante,Éléphant,Elefant,Elefante,Слон,大象,ゾウ,코끼리
 UPG_ELEPHANT_DESC,Heavy stomp: hits hard near the rim,Pisotón pesado: golpea fuerte junto al borde,Piétinement lourd : frappe fort près du bord,Schweres Stampfen: trifft hart nahe am Rand,Pisada pesada: acerta forte perto da borda,Тяжёлый топот: сильно бьёт у края,重踏：在边缘附近重击,重い踏みつけ：縁の近くで強打,무거운 발구르기: 가장자리 근처를 세게 공격
-UPG_HORSE_TIER2_NAME,Horse Tier 2,Caballo nivel 2,Cheval niveau 2,Pferd Stufe 2,Cavalo nível 2,"Лошадь, ур. 2",马 2阶,ウマ ランク2,말 2단계
-UPG_HORSE_TIER2_DESC,Every Horse: double Gold per booth pass,Todos los caballos: doble oro por taquilla,Tous les chevaux : or doublé par guichet,Alle Pferde: doppeltes Gold pro Schalter,Todos os cavalos: ouro em dobro por bilheteria,Все лошади: двойное золото за кассу,所有马：每次经过售票亭金币翻倍,全てのウマ：窓口ごとのゴールド2倍,모든 말: 매표소 골드 2배
-UPG_WOLF_TIER2_NAME,Wolf Tier 2,Lobo nivel 2,Loup niveau 2,Wolf Stufe 2,Lobo nível 2,"Волк, ур. 2",狼 2阶,オオカミ ランク2,늑대 2단계
-UPG_WOLF_TIER2_DESC,Every Wolf: +50% damage,Todos los lobos: +50% de daño,Tous les loups : +50 % de dégâts,Alle Wölfe: +50 % Schaden,Todos os lobos: +50% de dano,Все волки: +50% урона,所有狼：伤害+50%,全てのオオカミ：ダメージ+50%,모든 늑대: 피해 +50%
-UPG_SLOTH_TIER2_NAME,Sloth Tier 2,Perezoso nivel 2,Paresseux niveau 2,Faultier Stufe 2,Preguiça nível 2,"Ленивец, ур. 2",树懒 2阶,ナマケモノ ランク2,나무늘보 2단계
-UPG_SLOTH_TIER2_DESC,Every Sloth: slows last twice as long,Todos los perezosos: ralentizan el doble de tiempo,Tous les paresseux : ralentissements deux fois plus longs,Alle Faultiere: Verlangsamung hält doppelt so lange,Todas as preguiças: lentidão dura o dobro,Все ленивцы: замедление вдвое дольше,所有树懒：减速持续时间翻倍,全てのナマケモノ：スロー時間2倍,모든 나무늘보: 감속 시간 2배
-UPG_GIRAFFE_TIER2_NAME,Giraffe Tier 2,Jirafa nivel 2,Girafe niveau 2,Giraffe Stufe 2,Girafa nível 2,"Жираф, ур. 2",长颈鹿 2阶,キリン ランク2,기린 2단계
-UPG_GIRAFFE_TIER2_DESC,Every Giraffe: +50% reach,Todas las jirafas: +50% de alcance,Toutes les girafes : +50 % de portée,Alle Giraffen: +50 % Reichweite,Todas as girafas: +50% de alcance,Все жирафы: +50% дальности,所有长颈鹿：范围+50%,全てのキリン：射程+50%,모든 기린: 사거리 +50%
-UPG_ELEPHANT_TIER2_NAME,Elephant Tier 2,Elefante nivel 2,Éléphant niveau 2,Elefant Stufe 2,Elefante nível 2,"Слон, ур. 2",大象 2阶,ゾウ ランク2,코끼리 2단계
-UPG_ELEPHANT_TIER2_DESC,Every Elephant: twice as wide,Todos los elefantes: el doble de ancho,Tous les éléphants : deux fois plus large,Alle Elefanten: doppelt so breit,Todos os elefantes: o dobro de largura,Все слоны: вдвое шире,所有大象：范围宽度翻倍,全てのゾウ：範囲の幅2倍,모든 코끼리: 범위 폭 2배
-SHOP_NEEDS_TIER2_TYPES,{0}/{1} mount types at Tier 2,{0}/{1} tipos de montura en nivel 2,{0}/{1} types de monture au niveau 2,{0}/{1} Reittierarten auf Stufe 2,{0}/{1} tipos de montaria no nível 2,{0}/{1} видов на ур. 2,{0}/{1} 种坐骑达到2阶,{0}/{1} 種類がランク2,{0}/{1} 종류 2단계
+UPG_HORSE_STAR2_DESC,Every Horse: double Gold per booth pass,Todos los caballos: doble oro por taquilla,Tous les chevaux : or doublé par guichet,Alle Pferde: doppeltes Gold pro Schalter,Todos os cavalos: ouro em dobro por bilheteria,Все лошади: двойное золото за кассу,所有马：每次经过售票亭金币翻倍,全てのウマ：窓口ごとのゴールド2倍,모든 말: 매표소 골드 2배
+UPG_WOLF_STAR2_DESC,Every Wolf: +50% damage,Todos los lobos: +50% de daño,Tous les loups : +50 % de dégâts,Alle Wölfe: +50 % Schaden,Todos os lobos: +50% de dano,Все волки: +50% урона,所有狼：伤害+50%,全てのオオカミ：ダメージ+50%,모든 늑대: 피해 +50%
+UPG_SLOTH_STAR2_DESC,Every Sloth: slows last twice as long,Todos los perezosos: ralentizan el doble de tiempo,Tous les paresseux : ralentissements deux fois plus longs,Alle Faultiere: Verlangsamung hält doppelt so lange,Todas as preguiças: lentidão dura o dobro,Все ленивцы: замедление вдвое дольше,所有树懒：减速持续时间翻倍,全てのナマケモノ：スロー時間2倍,모든 나무늘보: 감속 시간 2배
+UPG_ELEPHANT_STAR2_DESC,Every Elephant: twice as wide,Todos los elefantes: el doble de ancho,Tous les éléphants : deux fois plus large,Alle Elefanten: doppelt so breit,Todos os elefantes: o dobro de largura,Все слоны: вдвое шире,所有大象：范围宽度翻倍,全てのゾウ：範囲の幅2倍,모든 코끼리: 범위 폭 2배
 UPG_PANDA_NAME,Panda,Panda,Panda,Panda,Panda,Панда,熊猫,パンダ,판다
 UPG_PANDA_DESC,"Gold each turn, light hits, heals on its kills","Oro en cada vuelta, golpes ligeros, cura con sus bajas","De l'or à chaque tour, coups légers, soigne en tuant","Gold pro Runde, leichte Treffer, heilt bei eigenen Kills","Ouro a cada volta, golpes leves, cura com seus abates","Золото за оборот, лёгкие удары, лечит за свои убийства",每圈得金币，轻击，击杀时治疗,1周ごとにゴールド、軽い攻撃、倒すと回復,"회전마다 골드, 가벼운 공격, 처치 시 회복"
-UPG_PANDA_TIER2_NAME,Panda Tier 2,Panda nivel 2,Panda niveau 2,Panda Stufe 2,Panda nível 2,"Панда, ур. 2",熊猫 2阶,パンダ ランク2,판다 2단계
-UPG_PANDA_TIER2_DESC,"Every Panda: +50% damage, Gold and healing","Todos los pandas: +50% de daño, oro y curación","Tous les pandas : +50 % de dégâts, d’or et de soin","Alle Pandas: +50 % Schaden, Gold und Heilung","Todos os pandas: +50% de dano, ouro e cura","Все панды: +50% урона, золота и лечения",所有熊猫：伤害、金币和治疗+50%,全てのパンダ：ダメージ・ゴールド・回復+50%,"모든 판다: 피해, 골드, 회복 +50%"
+UPG_PANDA_STAR2_DESC,"Every Panda: +50% damage, Gold and healing","Todos los pandas: +50% de daño, oro y curación","Tous les pandas : +50 % de dégâts, d’or et de soin","Alle Pandas: +50 % Schaden, Gold und Heilung","Todos os pandas: +50% de dano, ouro e cura","Все панды: +50% урона, золота и лечения",所有熊猫：伤害、金币和治疗+50%,全てのパンダ：ダメージ・ゴールド・回復+50%,"모든 판다: 피해, 골드, 회복 +50%"
 UI_CONFIRM,Confirm?,¿Confirmar?,Confirmer ?,Bestätigen?,Confirmar?,Точно?,确认？,確認？,확인?
 SHOP_BEAT_BOSS,Beat {0},Vence a {0},Battez {0},Besiege {0},Derrote {0},Победите: {0},击败 {0},{0}を倒す,{0} 처치
 BOSS_LEAF_STORM,Leaf Storm,Tormenta de hojas,Tempête de feuilles,Blättersturm,Tempestade de folhas,Листопад,落叶风暴,リーフストーム,낙엽 폭풍

@@ -36,15 +36,26 @@ extends Resource
 ## more triggers per minute, not more Gold per trigger (GDD v1.4).
 @export_range(0.0, 1000.0, 0.1, "or_greater") var base_gold_bonus: float = 0.0
 
-@export_group("Tier 2")
-## What this type's Tier 2 upgrade multiplies, for every mount of the type
+@export_group("Levels")
+## What each level of this type's track adds (GDD v1.17, Mount Levels and
+## Stars), for every mount of the type. Damage is flat per hit; the others are
+## fractions of the base value (0.15 = +15% per level). 0 = unchanged.
+@export_range(0.0, 100.0, 0.05, "or_greater") var level_damage_bonus: float = 0.0
+@export_range(0.0, 1.0, 0.01) var level_reach_bonus: float = 0.0
+@export_range(0.0, 1.0, 0.01) var level_arc_bonus: float = 0.0
+@export_range(0.0, 1.0, 0.01) var level_gold_bonus: float = 0.0
+@export_range(0.0, 1.0, 0.01) var level_slow_seconds_bonus: float = 0.0
+@export_range(0.0, 1.0, 0.01) var level_heal_bonus: float = 0.0
+
+@export_group("Star 2")
+## What the ★2 star-up multiplies, for every mount of the type
 ## (GameState.get_mount_* apply them). 1 = unchanged.
-@export_range(0.1, 10.0, 0.05) var tier2_damage_multiplier: float = 1.0
-@export_range(0.1, 10.0, 0.05) var tier2_reach_multiplier: float = 1.0
-@export_range(0.1, 10.0, 0.05) var tier2_arc_multiplier: float = 1.0
-@export_range(0.1, 10.0, 0.05) var tier2_gold_multiplier: float = 1.0
-@export_range(0.1, 10.0, 0.05) var tier2_slow_seconds_multiplier: float = 1.0
-@export_range(0.1, 10.0, 0.05) var tier2_heal_multiplier: float = 1.0
+@export_range(0.1, 10.0, 0.05) var star2_damage_multiplier: float = 1.0
+@export_range(0.1, 10.0, 0.05) var star2_reach_multiplier: float = 1.0
+@export_range(0.1, 10.0, 0.05) var star2_arc_multiplier: float = 1.0
+@export_range(0.1, 10.0, 0.05) var star2_gold_multiplier: float = 1.0
+@export_range(0.1, 10.0, 0.05) var star2_slow_seconds_multiplier: float = 1.0
+@export_range(0.1, 10.0, 0.05) var star2_heal_multiplier: float = 1.0
 
 @export_group("Placeholder Visuals")
 ## Fill color of the code-drawn placeholder polygon.

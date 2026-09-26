@@ -16,5 +16,5 @@ sell_refund_fraction = 0.5
 cost_gold = 11700.0
 cost_growth = 1.5
 max_level = 5
-required_tier2_types = 3
+required_star2_types = 3
 required_bosses = 1

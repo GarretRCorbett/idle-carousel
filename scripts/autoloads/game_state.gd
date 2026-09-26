@@ -90,8 +90,9 @@ var _auto_boost_level: int = 0
 var _click_damage_bonus: float = 0.0
 ## Extra damage per hit bought for each mount type, by MountData.mount_id.
 var _mount_damage_bonus: Dictionary[StringName, float] = {}
-## Tier per mount type (1 if never upgraded), by MountData.mount_id.
-var _mount_tiers: Dictionary[StringName, int] = {}
+## Buys on each mount type's track (0-7: levels 1-3, the ★2 star-up, levels
+## 4-6), by MountData.mount_id. Shared by every copy of the type.
+var _mount_track: Dictionary[StringName, int] = {}
 var _booth_count: int = 1
 # Mounts: ids (the BUY_MOUNT upgrade id, e.g. &"horse") in placement order.
 var _mount_roster: Array[StringName] = []
@@ -164,7 +165,7 @@ func _reset_fields(config: RunConfig) -> void:
 	_auto_boost_level = 0
 	_click_damage_bonus = 0.0
 	_mount_damage_bonus.clear()
-	_mount_tiers.clear()
+	_mount_track.clear()
 	_booth_count = config.starting_booths
 	_mount_slots = config.starting_mount_slots
 	_mount_roster.clear()
@@ -934,66 +935,83 @@ func get_click_damage() -> float:
 	return _config.base_click_damage + _click_damage_bonus
 
 
-## Damage per hit for one mount type: its base_damage plus every damage
-## upgrade bought for it (Wolf Fang for the Wolf).
+## Mount stats with the type's levels and stars applied. Mounts and Game read
+## these, never the raw MountData numbers, so an upgrade reaches every mount.
+
+## Damage per hit: base, plus each level's flat bonus (and any old-style damage
+## upgrade), times ★2.
 func get_mount_damage(data: MountData) -> float:
 	if data == null:
 		return 0.0
-	return (data.base_damage + get_mount_damage_bonus(data.mount_id)) * _tier2(data, data.tier2_damage_multiplier)
+	var per_hit := data.base_damage + get_mount_damage_bonus(data.mount_id) + _levels(data) * data.level_damage_bonus
+	return per_hit * _star2(data, data.star2_damage_multiplier)
 
 
-## Mount stats with the type's tier applied. Mounts and Game read these,
-## never the raw MountData numbers, so a tier upgrade reaches every mount.
 func get_mount_reach(data: MountData) -> float:
-	return data.sweep_range * _tier2(data, data.tier2_reach_multiplier)
+	return data.sweep_range * _grow(data, data.level_reach_bonus) * _star2(data, data.star2_reach_multiplier)
 
 
 ## Full wedge width in degrees (0 = a line).
 func get_mount_arc(data: MountData) -> float:
-	return data.sweep_arc * _tier2(data, data.tier2_arc_multiplier)
+	return data.sweep_arc * _grow(data, data.level_arc_bonus) * _star2(data, data.star2_arc_multiplier)
 
 
 ## Gold per trigger (booth pass for the Horse).
 func get_mount_gold(data: MountData) -> float:
-	return data.base_gold_bonus * _tier2(data, data.tier2_gold_multiplier)
+	return data.base_gold_bonus * _grow(data, data.level_gold_bonus) * _star2(data, data.star2_gold_multiplier)
 
 
 func get_mount_gold_per_turn(data: MountData) -> float:
-	return data.gold_per_turn * _tier2(data, data.tier2_gold_multiplier)
+	return data.gold_per_turn * _grow(data, data.level_gold_bonus) * _star2(data, data.star2_gold_multiplier)
 
 
 func get_mount_heal(data: MountData) -> float:
-	return data.heal_per_kill * _tier2(data, data.tier2_heal_multiplier)
+	return data.heal_per_kill * _grow(data, data.level_heal_bonus) * _star2(data, data.star2_heal_multiplier)
 
 
-## Mount types at Tier 2 or higher, not counting `except_id` (so the Panda
-## can't count itself). Duplicates don't count: tiers are per type.
+func get_mount_slow_seconds(data: MountData) -> float:
+	return data.slow_seconds * _grow(data, data.level_slow_seconds_bonus) * _star2(data, data.star2_slow_seconds_multiplier)
+
+
 ## True if the next level waits for more bosses (the first boss is a real
 ## milestone: Garret, memo Q).
 func is_boss_gated(upgrade: UpgradeData) -> bool:
 	return get_upgrade_level(upgrade.id) >= upgrade.get_level_cap(_bosses_beaten)
 
 
-func get_tier2_type_count(except_id: StringName = &"") -> int:
+## Mount types at ★2, not counting `except_id` (so the Panda can't count
+## itself). Duplicates don't count: stars are per type.
+func get_star2_type_count(except_id: StringName = &"") -> int:
 	var count := 0
-	for id in _mount_tiers:
-		if id != except_id and _mount_tiers[id] >= 2:
+	for id in _mount_track:
+		if id != except_id and get_mount_star(id) >= 2:
 			count += 1
 	return count
 
 
-func get_mount_slow_seconds(data: MountData) -> float:
-	return data.slow_seconds * _tier2(data, data.tier2_slow_seconds_multiplier)
+## 1, or 2 after the star-up. Per type: every Wolf shares the Wolf's stars.
+func get_mount_star(mount_id: StringName) -> int:
+	return 2 if _mount_track.get(mount_id, 0) > UpgradeData.STAR_BUY else 1
 
 
-## 1 = not upgraded. Per type: every Wolf shares the Wolf's tier.
-func get_mount_tier(mount_id: StringName) -> int:
-	return _mount_tiers.get(mount_id, 1)
+## Levels bought (0-6), not counting the star-up.
+func get_mount_level(mount_id: StringName) -> int:
+	var buys: int = _mount_track.get(mount_id, 0)
+	return buys - 1 if buys > UpgradeData.STAR_BUY else buys
 
 
-## `multiplier` once the type is Tier 2 or above, else 1.
-func _tier2(data: MountData, multiplier: float) -> float:
-	return multiplier if get_mount_tier(data.mount_id) >= 2 else 1.0
+func _levels(data: MountData) -> int:
+	return get_mount_level(data.mount_id)
+
+
+## 1 + levels x the per-level fraction.
+func _grow(data: MountData, per_level: float) -> float:
+	return 1.0 + _levels(data) * per_level
+
+
+## `multiplier` once the type is ★2, else 1.
+func _star2(data: MountData, multiplier: float) -> float:
+	return multiplier if get_mount_star(data.mount_id) >= 2 else 1.0
 
 
 func get_mount_damage_bonus(mount_id: StringName) -> float:
@@ -1085,7 +1103,7 @@ func can_purchase_upgrade(upgrade: UpgradeData) -> bool:
 		return false
 	if upgrade.prerequisite_id != &"" and not is_upgrade_purchased(upgrade.prerequisite_id):
 		return false
-	if get_tier2_type_count(upgrade.id) < upgrade.required_tier2_types:
+	if get_star2_type_count(upgrade.id) < upgrade.required_star2_types:
 		return false
 	if is_boss_gated(upgrade):
 		return false
@@ -1147,8 +1165,8 @@ func _apply_effect(upgrade: UpgradeData) -> void:
 			_mount_roster.append(upgrade.id)
 		UpgradeData.EffectType.ADD_MOUNT_DAMAGE:
 			_mount_damage_bonus[upgrade.target_mount] = get_mount_damage_bonus(upgrade.target_mount) + upgrade.effect_value
-		UpgradeData.EffectType.MOUNT_TIER:
-			_mount_tiers[upgrade.target_mount] = get_mount_tier(upgrade.target_mount) + 1
+		UpgradeData.EffectType.MOUNT_LEVEL:
+			_mount_track[upgrade.target_mount] = _mount_track.get(upgrade.target_mount, 0) + 1
 		UpgradeData.EffectType.AUTO_BOOST:
 			_auto_boost_level += 1
 
@@ -1162,6 +1180,6 @@ func _is_effect_supported(upgrade: UpgradeData) -> bool:
 		UpgradeData.EffectType.ADD_MOUNT_SLOT,
 		UpgradeData.EffectType.BUY_MOUNT,
 		UpgradeData.EffectType.ADD_MOUNT_DAMAGE,
-		UpgradeData.EffectType.MOUNT_TIER,
 		UpgradeData.EffectType.AUTO_BOOST,
+		UpgradeData.EffectType.MOUNT_LEVEL,
 	]

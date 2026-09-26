@@ -7,7 +7,9 @@ signal setting_changed(key: StringName, value: Variant)
 signal run_saved
 
 ## Bump when the save layout changes, and upgrade older files in _read_file().
-const SAVE_VERSION := 1
+## 2: mount levels and stars (Phase 4 Step 5) replace Tier 2 rows and Wolf Fang.
+const SAVE_VERSION := 2
+const MOUNT_IDS: Array[String] = ["horse", "wolf", "giraffe", "sloth", "elephant", "panda"]
 
 const SECTION := "settings"
 ## Volumes are 0..1 (linear); 0 mutes the bus.
@@ -194,4 +196,26 @@ func _read_file(path: String) -> Dictionary:
 	var version := int(parsed.get("version", 0))
 	if version < 1 or version > SAVE_VERSION:
 		return {}  # from a newer build: leave it alone rather than misread it
+	if version == 1:
+		_upgrade_v1(parsed["run"])
 	return parsed
+
+
+## Version 1 had "<mount>_tier2" (one level) and "wolf_fang" (up to 10). A Tier 2
+## becomes the ★2 star-up (levels 1-3 included); Wolf Fang levels become Wolf
+## levels (up to 3 before the star, 3 more after it).
+static func _upgrade_v1(run: Dictionary) -> void:
+	var levels: Variant = run.get("upgrade_levels")
+	if not levels is Dictionary:
+		return
+	var fang := int(levels.get("wolf_fang", 0))
+	for mount in MOUNT_IDS:
+		var starred := int(levels.get(mount + "_tier2", 0)) > 0
+		var own_levels := fang if mount == "wolf" else 0
+		var buys := mini(own_levels, UpgradeData.STAR_BUY)
+		if starred:
+			buys = UpgradeData.STAR_BUY + 1 + clampi(own_levels - UpgradeData.STAR_BUY, 0, 3)
+		levels.erase(mount + "_tier2")
+		if buys > 0:
+			levels[mount + "_level"] = buys
+	levels.erase("wolf_fang")

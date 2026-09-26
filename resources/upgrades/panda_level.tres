@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3]
+
+[ext_resource type="Script" path="res://scripts/upgrade_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"panda_level"
+display_name = "UPG_PANDA_LEVEL_NAME"
+description = "UPG_PANDA_LEVEL_DESC"
+effect_type = 9
+tab = 2
+target_mount = &"panda"
+cost_gold = 3200.0
+cost_growth = 1.6
+max_level = 7
+star_cost = 14600.0
+star_description = "UPG_PANDA_STAR2_DESC"
+prerequisite_id = &"panda"
+level_cap_by_bosses = PackedInt32Array(3, 7)

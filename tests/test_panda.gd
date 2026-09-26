@@ -76,7 +76,7 @@ func _mount(game: Game, id: StringName) -> MountBase:
 func test_heals_only_on_its_own_kills() -> void:
 	var game := _game()
 	for id: StringName in [&"horse", &"wolf", &"giraffe"]:
-		GameState._mount_tiers[id] = 2
+		GameState._mount_track[id] = UpgradeData.STAR_BUY + 1
 	GameState.add_gold(100000.0)
 	UpgradeManager.purchase(&"mount_slot")
 	UpgradeManager.purchase(&"mount_slot")
@@ -105,25 +105,26 @@ func test_heal_caps_at_max_and_skips_a_stall() -> void:
 
 # --- Unlock ---------------------------------------------------------------------------
 
-func test_unlock_needs_three_different_types_at_tier_2() -> void:
+func test_unlock_needs_three_different_types_at_star_2() -> void:
 	GameState.add_gold(100000.0)
 	UpgradeManager.purchase(&"mount_slot")
-	GameState._mount_tiers[&"horse"] = 2
-	GameState._mount_tiers[&"wolf"] = 2
-	GameState._mount_tiers[&"panda"] = 2  # the Panda never counts itself
-	assert_int(GameState.get_tier2_type_count(&"panda")).is_equal(2)
+	GameState._mount_track[&"horse"] = UpgradeData.STAR_BUY + 1
+	GameState._mount_track[&"wolf"] = UpgradeData.STAR_BUY + 1
+	GameState._mount_track[&"panda"] = UpgradeData.STAR_BUY + 1  # the Panda never counts itself
+	assert_int(GameState.get_star2_type_count(&"panda")).is_equal(2)
 	assert_bool(UpgradeManager.can_purchase(&"panda")).is_false()
 	assert_int(UpgradeShop.get_row_state(&"panda")).is_equal(UpgradeShop.RowState.LOCKED)
-	GameState._mount_tiers[&"sloth"] = 2
+	GameState._mount_track[&"sloth"] = UpgradeData.STAR_BUY + 1
 	assert_bool(UpgradeManager.can_purchase(&"panda")).is_true()
 
 
-func test_panda_tier_2_raises_all_three_effects() -> void:
+func test_panda_star_2_raises_all_three_effects() -> void:
 	var data := _panda_data()
+	GameState._mount_track[&"panda"] = UpgradeData.STAR_BUY  # level 3, so only the star differs
 	var damage := GameState.get_mount_damage(data)
 	var gold := GameState.get_mount_gold_per_turn(data)
 	var heal := GameState.get_mount_heal(data)
-	GameState._mount_tiers[&"panda"] = 2
+	GameState._mount_track[&"panda"] = UpgradeData.STAR_BUY + 1
 	assert_float(GameState.get_mount_damage(data)).is_equal_approx(damage * 1.5, 0.0001)
 	assert_float(GameState.get_mount_gold_per_turn(data)).is_equal_approx(gold * 1.5, 0.0001)
 	assert_float(GameState.get_mount_heal(data)).is_equal_approx(heal * 1.5, 0.0001)

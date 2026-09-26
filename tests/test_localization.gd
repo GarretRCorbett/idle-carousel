@@ -73,7 +73,8 @@ func test_code_keys_exist() -> void:
 	var shop := UpgradeShop.new()
 	for key in [hud.gold_key, hud.gold_per_second_key, hud.speed_key, hud.wave_countdown_key, hud.wave_paused_key,
 			hud.emergency_ready_key, hud.emergency_cooldown_key, hud.crank_button_key,
-			shop.cost_key, shop.requires_key, shop.maxed_key, shop.needs_slot_key, shop.sell_key,
+			shop.cost_key, shop.requires_key, shop.maxed_key, shop.needs_slot_key, shop.sell_key, shop.needs_star2_key,
+			shop.beat_boss_key, shop.buy_key, shop.up_key, shop.star_up_key, shop.count_key, shop.level_tip_key, shop.star_tip_key,
 			"OPT_TAB_SETTINGS", "OPT_TAB_CONTROLS"] + Array(shop.tab_title_keys):
 		assert_bool(keys.has(key)).override_failure_message("missing key %s" % key).is_true()
 	hud.free()

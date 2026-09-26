@@ -23,18 +23,20 @@ const MOUNT_ORDER: Array[StringName] = [&"wolf", &"wolf", &"giraffe", &"elephant
 ## Everything else it may buy, cheapest first. (Boost Power is skipped: the
 ## scripted player never Boosts.)
 const UPGRADES: Array[StringName] = [
-	&"carousel_speed", &"click_damage", &"wolf_fang", &"mount_slot", &"ticket_booth",
-	&"horse_tier2", &"wolf_tier2", &"giraffe_tier2", &"elephant_tier2", &"panda_tier2",
+	&"carousel_speed", &"click_damage", &"mount_slot", &"ticket_booth",
+	&"horse_level", &"wolf_level", &"giraffe_level", &"elephant_level", &"panda_level",
 ]
 ## A plausible player's priorities (GDD early game: speed, then a slot and
 ## the Wolf). Each is bought in order, saving up for it.
 const BUILD_ORDER: Array[StringName] = [
-	&"click_damage", &"carousel_speed", &"mount_slot", &"wolf", &"wolf_fang",
-	&"carousel_speed", &"click_damage", &"mount_slot", &"wolf", &"wolf_fang",
+	&"click_damage", &"carousel_speed", &"mount_slot", &"wolf", &"wolf_level",
+	&"carousel_speed", &"click_damage", &"mount_slot", &"wolf", &"wolf_level",
 	&"click_damage", &"carousel_speed", &"click_damage",
-	# After Leaf Storm:
-	&"mount_slot", &"giraffe", &"ticket_booth", &"wolf_tier2", &"horse_tier2",
-	&"mount_slot", &"elephant", &"giraffe_tier2", &"elephant_tier2",
+	# After Leaf Storm (a track's 4th buy is its star-up):
+	&"mount_slot", &"giraffe", &"ticket_booth", &"wolf_level", &"wolf_level",
+	&"horse_level", &"horse_level", &"horse_level", &"horse_level",
+	&"mount_slot", &"elephant", &"giraffe_level", &"giraffe_level", &"giraffe_level", &"giraffe_level",
+	&"elephant_level", &"elephant_level", &"elephant_level", &"elephant_level",
 ]
 const DT := 1.0 / 60.0
 ## Game seconds simulated per rendered frame (the frame end frees removed enemies).

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3]
+
+[ext_resource type="Script" path="res://scripts/upgrade_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"horse_level"
+display_name = "UPG_HORSE_LEVEL_NAME"
+description = "UPG_HORSE_LEVEL_DESC"
+effect_type = 9
+tab = 2
+target_mount = &"horse"
+cost_gold = 480.0
+cost_growth = 1.6
+max_level = 7
+star_cost = 2500.0
+star_description = "UPG_HORSE_STAR2_DESC"
+level_cap_by_bosses = PackedInt32Array(3, 7)

@@ -105,3 +105,48 @@ save uses the two-step "Confirm?" button (GDD v1.14: confirmations for losing th
 
 **New strings** (drafts for Garret): `MENU_CONTINUE` "Continue", `MENU_NEW_RUN` "New Run",
 `OPTIONS_SAVE` "Save", `OPTIONS_SAVED` "Saved".
+
+## Step 5 plan: shop redesign (A) + mount levels and stars
+Garret picked **A, compact rows** for Mounts and the compact style for the other tabs (2026-09-26).
+
+**One track per mount** (GDD v1.17), a single upgrade `<mount>_level` in place of `<mount>_tier2`
+(and Wolf Fang, which becomes the Wolf's levels):
+- Buys 1–3 are **levels** (pips). Buy 4 is the **★2 star-up** (its own big price; glowing button).
+  Buys 5–7 are levels 4–6 (the pips reset and turn gold). ★3 waits for prestige (Phase 5).
+- Shared by every copy of the mount; selling one never loses progress (as tiers today).
+- The Panda unlocks at **3 mount types at ★2** (was 3 at Tier 2).
+
+| Mount | Each level (draft) | ★2 (today's Tier 2 value) |
+|---|---|---|
+| Horse | +15% Gold per booth pass | ×2 Gold per pass |
+| Wolf ("Wolf Fang") | +0.5 damage per hit | ×1.5 damage |
+| Giraffe ("Long Neck") | +10% reach | ×1.5 damage (GDD "hits harder"; today's Tier 2 gives reach) |
+| Sloth ("Drowsy") | +15% slow time | ×2 slow time |
+| Elephant ("Trumpet") | +10% wedge width | ×2 wedge width |
+| Panda | +15% Gold per turn and healing | ×1.5 Gold, healing and damage |
+
+Prices (drafts, then re-simmed): levels start near today's Wolf Fang/Tier 2 scale (×1.6 per level);
+the star-up costs about today's Tier 2 price. The economy sim's build order is updated to buy levels.
+
+**Shop (A):** a Mounts row = icon (greyed when locked), name, ×count, ★ badge, pips (gold after ★2),
+the lock reason if locked, then **Buy** (gold) · **Sell** (blue, two-step) · **Up** / **Star up**
+(gold; glowing for the star-up). What the next level does goes in the Up button's tooltip. Other tabs:
+one line per upgrade (name, short description, pips, gold price button). Shop about 270 px wide.
+
+**Code:** `UpgradeData` gets `star_cost` (the price of buy 4) and a `MOUNT_LEVEL` effect; `MountData`'s
+`tier2_*` become `star2_*` plus per-level bonuses; `GameState.get_mount_star()` / `get_mount_level()`
+replace `get_mount_tier()`; the shop's Mounts tab becomes one row per animal. **Save v2:** old saves
+convert (a Tier 2 becomes ★2; Wolf Fang levels become Wolf levels, up to 3). Tests for all of it.
+
+**Step 5 done (2026-09-26).** Built as planned, with Garret's picks (Golden Saddle, Bamboo Snack,
+Giraffe ★2 hits harder). Changes from the plan after the sims:
+- Wolf levels give **+0.75** damage (not +0.5): with only 6 levels (Wolf Fang had 10) the late Wolf
+  was too weak and Ancient Log couldn't be beaten.
+- Track prices (level / star-up): Horse 480 / 2,500, Wolf 420 / 2,500, Giraffe 640 / 3,250,
+  Sloth 640 / 3,900, Elephant 2,100 / 9,750, Panda 3,200 / 14,600; levels ×1.6 (Wolf ×1.75).
+- Boss health: Stick Giant 330, Boulder 590, Gilded Gale 580 (Leaf Storm 120, Ancient Log 460,
+  Obsidian 440 unchanged). The fights sit near a pass/fail line, so small changes swing a lot.
+- Economy sim, 1 click/s, seeds 1-3: bosses at **0:20, 0:37, 0:54, 1:45, 2:06, 2:27**
+  (targets 0:15, 0:35, 1:00, 1:30, 2:05, 2:40). Gilded Gale is the longest wall (~50 min): watch it.
+- Save version 2: old saves convert (a Tier 2 becomes ★2 with levels 1-3; Wolf Fang levels become
+  Wolf levels, up to 3 before the star and 3 after).

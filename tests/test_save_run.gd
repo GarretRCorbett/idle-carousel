@@ -38,8 +38,7 @@ func _play_a_little() -> void:
 	_buy(&"click_damage")
 	_buy(&"mount_slot", 2)
 	_buy(&"wolf")
-	_buy(&"wolf_fang")
-	_buy(&"wolf_tier2")
+	_buy(&"wolf_level", 5)  # 3 levels, the star-up, level 4
 	_buy(&"ticket_booth")
 	GameState.set_selected_tier(1)
 	for i in 7:
@@ -75,7 +74,8 @@ func test_loaded_stats_match_the_run_that_bought_them() -> void:
 	assert_int(GameState.get_mount_slots()).is_equal(slots)
 	assert_array(GameState.get_mount_roster()).is_equal(roster)
 	assert_float(GameState.get_mount_damage(load("res://resources/mounts/wolf.tres"))).is_equal_approx(wolf_damage, 0.00001)
-	assert_int(GameState.get_mount_tier(&"wolf")).is_equal(2)
+	assert_int(GameState.get_mount_star(&"wolf")).is_equal(2)
+	assert_int(GameState.get_mount_level(&"wolf")).is_equal(4)
 	assert_bool(GameState.is_tier_unlocked(1)).is_true()
 	assert_int(GameState.get_selected_tier()).is_equal(1)
 
@@ -157,3 +157,26 @@ func test_not_a_save_changes_nothing() -> void:
 	GameState.add_gold(50.0)
 	assert_bool(GameState.load_save_data({"gold": 9.0}, UpgradeManager.get_definitions())).is_false()
 	assert_float(GameState.get_gold()).is_equal(50.0)
+
+
+## Version 1 saves had Tier 2 rows and Wolf Fang; they become tracks.
+func test_a_version_1_save_is_converted() -> void:
+	var file := FileAccess.open(TEST_PATH, FileAccess.WRITE)
+	file.store_string(JSON.stringify({"version": 1, "saved_at": 1, "run": {
+		"upgrade_levels": {"mount_slot": 2, "wolf": 1, "giraffe": 1, "wolf_fang": 5, "wolf_tier2": 1,
+			"horse_tier2": 1, "giraffe_tier2": 0}, "bosses_beaten": 1}}))
+	file.close()
+	assert_bool(SaveManager.load_run()).is_true()
+	assert_int(GameState.get_mount_star(&"wolf")).is_equal(2)
+	assert_int(GameState.get_mount_level(&"wolf")).is_equal(5)  # Wolf Fang 5 = levels 1-3 + 4-5
+	assert_int(GameState.get_mount_star(&"horse")).is_equal(2)
+	assert_int(GameState.get_mount_level(&"horse")).is_equal(3)
+	assert_int(GameState.get_mount_star(&"giraffe")).is_equal(1)
+	assert_int(GameState.get_mount_level(&"giraffe")).is_equal(0)
+	assert_int(GameState.get_upgrade_level(&"wolf_fang")).is_equal(0)
+
+
+func test_wolf_fang_without_tier_2_stops_at_level_3() -> void:
+	var run := {"upgrade_levels": {"wolf_fang": 8}}
+	SaveManager._upgrade_v1(run)
+	assert_dict(run["upgrade_levels"]).is_equal({"wolf_level": 3})

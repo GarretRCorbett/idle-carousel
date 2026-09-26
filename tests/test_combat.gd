@@ -206,20 +206,18 @@ func test_respacing_never_pays_a_booth_pass() -> void:
 	assert_float(GameState.get_gold()).is_equal(gold - spent)
 
 
-func test_wolf_fang_needs_the_wolf_and_adds_damage() -> void:
+func test_wolf_fang_levels_need_the_wolf_and_add_damage() -> void:
 	GameState.add_gold(10000.0)
-	assert_bool(UpgradeManager.purchase(&"wolf_fang")).is_false()
-	assert_int(UpgradeShop.get_row_state(&"wolf_fang")).is_equal(UpgradeShop.RowState.LOCKED)
+	assert_bool(UpgradeManager.purchase(&"wolf_level")).is_false()
+	assert_int(UpgradeShop.get_row_state(&"wolf_level")).is_equal(UpgradeShop.RowState.LOCKED)
 	UpgradeManager.purchase(&"mount_slot")
 	UpgradeManager.purchase(&"wolf")
-	assert_bool(UpgradeManager.purchase(&"wolf_fang")).is_true()
-	var fang := UpgradeManager.get_definition(&"wolf_fang")
-	assert_int(fang.tab).is_equal(UpgradeData.Tab.COMBAT)
-	assert_float(GameState.get_mount_damage_bonus(&"wolf")).is_equal_approx(fang.effect_value, 0.00001)
+	assert_bool(UpgradeManager.purchase(&"wolf_level")).is_true()
 	var wolf := load("res://resources/mounts/wolf.tres") as MountData
-	assert_float(GameState.get_mount_damage(wolf)).is_equal_approx(wolf.base_damage + fang.effect_value, 0.00001)
-	# Other mount types don't get the Wolf's bonus.
-	assert_float(GameState.get_mount_damage_bonus(&"horse")).is_equal(0.0)
+	assert_float(GameState.get_mount_damage(wolf)).is_equal_approx(wolf.base_damage + wolf.level_damage_bonus, 0.00001)
+	# Other mount types don't get the Wolf's levels.
+	var horse := load("res://resources/mounts/horse.tres") as MountData
+	assert_float(GameState.get_mount_damage(horse)).is_equal(horse.base_damage)
 
 
 ## The damage Game applies on a sweep comes from GameState, so upgrades count.
@@ -228,7 +226,7 @@ func test_game_applies_mount_damage_from_game_state() -> void:
 	GameState.add_gold(10000.0)
 	UpgradeManager.purchase(&"mount_slot")
 	UpgradeManager.purchase(&"wolf")
-	UpgradeManager.purchase(&"wolf_fang")
+	UpgradeManager.purchase(&"wolf_level")
 	var wolf := _mounts(game)[1]
 	var enemy := _first_enemy(game)
 	var health := enemy.get_health()
@@ -244,12 +242,11 @@ func test_game_has_no_mount_type_branches() -> void:
 				"game.gd mentions %s" % type_name).is_false()
 
 
-func test_wolf_fang_level_1_kills_a_grey_leaf_in_one_pass() -> void:
+func test_wolf_level_1_kills_a_grey_leaf_in_one_pass() -> void:
 	var wolf := load("res://resources/mounts/wolf.tres") as MountData
 	var leaf := load("res://resources/enemies/leaf.tres") as EnemyData
-	var fang := UpgradeManager.get_definition(&"wolf_fang")
 	assert_float(wolf.base_damage).is_less(leaf.base_health)  # two passes without it
-	assert_float(wolf.base_damage + fang.effect_value).is_greater_equal(leaf.base_health)
+	assert_float(wolf.base_damage + wolf.level_damage_bonus).is_greater_equal(leaf.base_health)
 
 
 func test_early_sent_leaf_pays_bonus_gold() -> void:

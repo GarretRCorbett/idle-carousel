@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3]
+
+[ext_resource type="Script" path="res://scripts/upgrade_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"elephant_level"
+display_name = "UPG_ELEPHANT_LEVEL_NAME"
+description = "UPG_ELEPHANT_LEVEL_DESC"
+effect_type = 9
+tab = 2
+target_mount = &"elephant"
+cost_gold = 2100.0
+cost_growth = 1.6
+max_level = 7
+star_cost = 9750.0
+star_description = "UPG_ELEPHANT_STAR2_DESC"
+prerequisite_id = &"elephant"
+level_cap_by_bosses = PackedInt32Array(3, 7)

@@ -9,19 +9,18 @@
 [ext_resource type="Resource" path="res://resources/upgrades/mount_slot.tres" id="7_slot"]
 [ext_resource type="Resource" path="res://resources/upgrades/horse.tres" id="8_horse"]
 [ext_resource type="Resource" path="res://resources/upgrades/wolf.tres" id="9_wolf"]
-[ext_resource type="Resource" path="res://resources/upgrades/wolf_fang.tres" id="10_fang"]
 [ext_resource type="Resource" path="res://resources/upgrades/giraffe.tres" id="11_giraffe"]
 [ext_resource type="Resource" path="res://resources/upgrades/sloth.tres" id="12_sloth"]
 [ext_resource type="Resource" path="res://resources/upgrades/elephant.tres" id="13_elephant"]
-[ext_resource type="Resource" path="res://resources/upgrades/horse_tier2.tres" id="14_horse_tier2"]
-[ext_resource type="Resource" path="res://resources/upgrades/wolf_tier2.tres" id="15_wolf_tier2"]
-[ext_resource type="Resource" path="res://resources/upgrades/sloth_tier2.tres" id="16_sloth_tier2"]
-[ext_resource type="Resource" path="res://resources/upgrades/giraffe_tier2.tres" id="17_giraffe_tier2"]
-[ext_resource type="Resource" path="res://resources/upgrades/elephant_tier2.tres" id="18_elephant_tier2"]
 [ext_resource type="Resource" path="res://resources/upgrades/panda.tres" id="19_panda"]
-[ext_resource type="Resource" path="res://resources/upgrades/panda_tier2.tres" id="20_panda_tier2"]
 [ext_resource type="Resource" path="res://resources/upgrades/auto_boost.tres" id="21_auto_boost"]
+[ext_resource type="Resource" path="res://resources/upgrades/horse_level.tres" id="30_horse_level"]
+[ext_resource type="Resource" path="res://resources/upgrades/wolf_level.tres" id="30_wolf_level"]
+[ext_resource type="Resource" path="res://resources/upgrades/giraffe_level.tres" id="30_giraffe_level"]
+[ext_resource type="Resource" path="res://resources/upgrades/sloth_level.tres" id="30_sloth_level"]
+[ext_resource type="Resource" path="res://resources/upgrades/elephant_level.tres" id="30_elephant_level"]
+[ext_resource type="Resource" path="res://resources/upgrades/panda_level.tres" id="30_panda_level"]
 
 [resource]
 script = ExtResource("1_script")
-upgrades = Array[ExtResource("2_data")]([ExtResource("3_speed"), ExtResource("4_boost"), ExtResource("21_auto_boost"), ExtResource("6_click"), ExtResource("10_fang"), ExtResource("5_booth"), ExtResource("7_slot"), ExtResource("9_wolf"), ExtResource("11_giraffe"), ExtResource("12_sloth"), ExtResource("13_elephant"), ExtResource("8_horse"), ExtResource("19_panda"), ExtResource("14_horse_tier2"), ExtResource("15_wolf_tier2"), ExtResource("16_sloth_tier2"), ExtResource("17_giraffe_tier2"), ExtResource("18_elephant_tier2"), ExtResource("20_panda_tier2")])
+upgrades = Array[ExtResource("2_data")]([ExtResource("3_speed"), ExtResource("4_boost"), ExtResource("21_auto_boost"), ExtResource("6_click"), ExtResource("5_booth"), ExtResource("7_slot"), ExtResource("8_horse"), ExtResource("9_wolf"), ExtResource("11_giraffe"), ExtResource("12_sloth"), ExtResource("13_elephant"), ExtResource("19_panda"), ExtResource("30_horse_level"), ExtResource("30_wolf_level"), ExtResource("30_giraffe_level"), ExtResource("30_sloth_level"), ExtResource("30_elephant_level"), ExtResource("30_panda_level")])
