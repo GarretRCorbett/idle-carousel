@@ -6,6 +6,10 @@
 - **Fail state decided** (Garret, GDD v1.18): "safe farm, risky push" as played since Phase 2 is
   official. That clears the roadmap's "resolve before Phase 4".
 - **Order** (Garret): save system first; Claude renders the shop mockups (Codex is out).
+- **Step 1 done (2026-09-26):** save system (Continue / New run, auto-save 60 s, milestone and
+  manual saves, `.tmp` + `.bak`, forgiving loads, 12 tests); `TEMPORARY` stall comments retired.
+  Saving is on only for runs started from the main menu, so running `Game.tscn` directly (F6),
+  tests, and the sims never touch the real save. Next: Step 2, offline progress.
 
 ## Scope
 From the roadmap: save system, offline progress + "Welcome back", the full upgrade tree with shop

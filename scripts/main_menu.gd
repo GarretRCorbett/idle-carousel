@@ -1,6 +1,7 @@
 class_name MainMenu
 extends Control
-## Title screen: a slowly spinning carousel, Play, Settings (with Controls), and Quit.
+## Title screen: a slowly spinning carousel, Continue (when there's a save),
+## New run, Settings (with Controls), and Quit.
 ## Player-facing text is set in the scene (placeholder until Garret replaces it).
 
 const GAME_SCENE := "res://scenes/Game.tscn"
@@ -11,7 +12,9 @@ const GAME_SCENE := "res://scenes/Game.tscn"
 @onready var _carousel: Carousel = %MenuCarousel
 @onready var _title: Label = $Center/Column/Title
 @onready var _carousel_spot: Control = %CarouselSpot
-@onready var _play_button: Button = %PlayButton
+@onready var _continue_button: Button = %ContinueButton
+## New run. Over an existing save it asks "Confirm?" first (it replaces the save).
+@onready var _play_button: TwoStepButton = %PlayButton
 @onready var _settings_button: Button = %SettingsButton
 @onready var _quit_button: Button = %QuitButton
 @onready var _options: OptionsMenu = %OptionsMenu
@@ -20,18 +23,27 @@ const GAME_SCENE := "res://scenes/Game.tscn"
 func _ready() -> void:
 	_title.add_theme_color_override(&"font_color", get_theme_color(&"body", &"Palette"))
 	_title.add_theme_color_override(&"font_outline_color", get_theme_color(&"ink", &"Palette"))
-	_play_button.pressed.connect(_on_play_pressed)
+	var has_save := SaveManager.has_run_save()
+	_continue_button.visible = has_save
+	_continue_button.pressed.connect(_on_continue_pressed)
+	_play_button.set_idle_text(tr("MENU_NEW_RUN"))
+	_play_button.requires_confirm = has_save
+	_play_button.confirmed.connect(_on_play_pressed)
 	_quit_button.pressed.connect(_on_quit_pressed)
 	_settings_button.pressed.connect(func() -> void:
 		AudioManager.play_sfx(&"click")
 		_options.open())
-	_options.closed.connect(_play_button.grab_focus)
+	_options.closed.connect(_first_button().grab_focus)
 	if OS.is_debug_build():
 		_options.add_tab(DebugPanel.new(), "Debug")  # themes only here
 	_title.add_theme_font_override(&"font", LocaleFonts.title_font(TranslationServer.get_locale()))
 	_carousel_spot.resized.connect(_center_carousel)
 	_center_carousel()
-	_play_button.grab_focus.call_deferred()
+	_first_button().grab_focus.call_deferred()
+
+
+func _first_button() -> Button:
+	return _continue_button if _continue_button.visible else _play_button
 
 
 ## Debug builds only: F4 shows the next theme (the Winter and Halloween tests).
@@ -46,6 +58,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready():
 		_title.add_theme_font_override(&"font", LocaleFonts.title_font(TranslationServer.get_locale()))
+		_play_button.set_idle_text(tr("MENU_NEW_RUN"))
 
 
 func _process(delta: float) -> void:
@@ -56,8 +69,18 @@ func _center_carousel() -> void:
 	_carousel.position = _carousel_spot.size / 2.0
 
 
+func _on_continue_pressed() -> void:
+	AudioManager.play_sfx(&"click")
+	SaveManager.continue_requested = true
+	SaveManager.run_saves_enabled = true
+	get_tree().change_scene_to_file(GAME_SCENE)
+
+
+## A fresh run replaces the save (Game saves it once it starts).
 func _on_play_pressed() -> void:
 	AudioManager.play_sfx(&"click")
+	SaveManager.continue_requested = false
+	SaveManager.run_saves_enabled = true
 	get_tree().change_scene_to_file(GAME_SCENE)
 
 

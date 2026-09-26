@@ -23,6 +23,12 @@ extends Node2D
 ## Debug builds only: +5,000 Gold. More shortcuts in the Esc menu's Debug tab.
 @export var add_gold_key: Key = KEY_F5
 
+@export_group("Saving")
+## Auto-save interval (GDD: every 60 s). Milestones (purchases, sales, boss
+## wins, tier changes) also save right away. Only for runs started from the
+## main menu (SaveManager.run_saves_enabled).
+@export_range(5.0, 600.0, 1.0, "suffix:s") var auto_save_seconds: float = 60.0
+
 @export_group("Pops")
 ## Ring on a click that doesn't kill, and on enemies removed without Gold
 ## (Emergency Clear, the stall safety net).
@@ -72,6 +78,8 @@ var _pending_spawns: Array[EnemyBase] = []
 var _live_enemy_count: int = 0
 ## Runs boss fights (created here; ticked in _physics_process).
 var _encounter: BossEncounter
+## A milestone save is waiting for the end of the frame (several can land at once).
+var _save_queued: bool = false
 
 
 func _ready() -> void:
@@ -121,11 +129,49 @@ func _ready() -> void:
 	GameState.run_reset.connect(_discard_pending_spawns)
 	GameState.upgrade_applied.connect(_on_upgrade_applied)
 	GameState.reset_run()
+	if SaveManager.continue_requested:
+		SaveManager.continue_requested = false
+		SaveManager.load_run()
+	_setup_saving()
 	_layout_booths(GameState.get_booth_count())
 	_sync_mounts(GameState.get_mount_roster())
 	get_viewport().size_changed.connect(_center_world)
 	_center_world()
 	_wave_manager.start(GameState.get_run_seed())
+
+
+func _setup_saving() -> void:
+	var timer := Timer.new()
+	timer.name = "AutoSaveTimer"
+	timer.wait_time = auto_save_seconds
+	timer.autostart = true
+	timer.timeout.connect(SaveManager.save_run)
+	add_child(timer)
+	# Bound methods, not lambdas: they disconnect themselves when Game is freed.
+	GameState.upgrade_applied.connect(_queue_save.unbind(2))
+	GameState.upgrade_sold.connect(_queue_save.unbind(2))
+	GameState.boss_beaten.connect(_queue_save.unbind(2))
+	GameState.selected_tier_changed.connect(_queue_save.unbind(1))
+	# A new run replaces the old save straight away.
+	_queue_save()
+
+
+func _queue_save() -> void:
+	if _save_queued:
+		return
+	_save_queued = true
+	_save_queued_now.call_deferred()
+
+
+func _save_queued_now() -> void:
+	_save_queued = false
+	SaveManager.save_run()
+
+
+## Closing the window saves first (the Esc menu's Quit and Main menu save too).
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		SaveManager.save_run()
 
 
 ## Esc opens Settings (which pauses the game; Esc again closes it).
@@ -439,7 +485,7 @@ func _on_enemy_died(enemy: EnemyBase, killer: Node) -> void:
 	_remove_enemy(enemy)
 
 
-## TEMPORARY safety net: stalled too long, so every enemy is removed (no Gold).
+## The safety net: stalled too long, so every enemy is removed (no Gold).
 ## Waves keep coming.
 func _on_stall_timed_out() -> void:
 	for enemy: EnemyBase in _enemy_layer.get_children():

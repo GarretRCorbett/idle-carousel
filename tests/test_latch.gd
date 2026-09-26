@@ -1,6 +1,6 @@
 extends GdUnitTestSuite
 ## Latches and carousel health: drag curve, latch damage and grace, regen,
-## and the TEMPORARY stall (clear, crank, timeout).
+## and the stall (clear, crank, timeout).
 
 var _config: RunConfig
 
@@ -137,7 +137,7 @@ func test_regen_never_passes_max() -> void:
 	assert_float(GameState.get_health()).is_equal(100.0)
 
 
-# --- TEMPORARY stall: clearing ----------------------------------------------------------
+# --- Stall: clearing ------------------------------------------------------------------
 
 func test_zero_health_stalls_and_boost_cannot_move_it() -> void:
 	_stall()
@@ -173,7 +173,7 @@ func test_stall_signals_on_and_off() -> void:
 	assert_array(flips).is_equal([true, false])
 
 
-# --- TEMPORARY stall: crank -------------------------------------------------------------
+# --- Stall: crank ---------------------------------------------------------------------
 
 func test_presses_crank_instead_of_boosting() -> void:
 	_stall()
@@ -227,7 +227,7 @@ func test_crank_resets_after_a_stall_ends() -> void:
 	assert_float(GameState.get_crank_fraction()).is_equal(0.0)
 
 
-# --- TEMPORARY stall: safety-net timeout ----------------------------------------------
+# --- Stall: safety-net timeout ------------------------------------------------------
 
 func test_long_stall_times_out_clears_latches_and_restarts() -> void:
 	var timeouts := [0]

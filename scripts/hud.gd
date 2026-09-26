@@ -25,6 +25,9 @@ signal emergency_clear_requested
 @export var crank_button_key: String = "HUD_CRANK"
 ## Keyboard shortcut for the Boost button.
 @export var boost_key: Key = KEY_SPACE
+## "Saved" flashes in the bottom-left corner after each save (GDD: a small save icon).
+@export var saved_key: String = "HUD_SAVED"
+@export_range(0.1, 5.0, 0.1, "suffix:s") var saved_show_seconds: float = 1.2
 
 @onready var _gold_label: Label = %GoldLabel
 @onready var _gold_per_sec_label: Label = %GoldPerSecLabel
@@ -45,6 +48,8 @@ var _wave_seconds: int = 0
 var _clear_seconds_shown: int = -2
 var _clear_cost_shown: float = -1.0
 var _clear_enabled_shown: bool = false
+var _saved_label: Label
+var _saved_tween: Tween
 
 
 func _ready() -> void:
@@ -75,6 +80,8 @@ func _ready() -> void:
 	_boost_button.button_down.connect(func() -> void: _mouse_holding_boost = true)
 	_boost_button.button_up.connect(func() -> void: _mouse_holding_boost = false)
 	_boost_button.shortcut = _make_shortcut(boost_key)
+	_make_saved_label()
+	SaveManager.run_saved.connect(_on_run_saved)
 	# Read the current values in case they were announced before we connected.
 	_on_gold_changed(GameState.get_gold(), 0.0)
 	_on_health_changed(GameState.get_health(), GameState.get_max_health())
@@ -94,6 +101,7 @@ func _notification(what: int) -> void:
 		_refresh_wave_button()
 		_clear_seconds_shown = -2
 		_refresh_emergency_button()
+		_saved_label.text = tr(saved_key)
 
 
 func _process(_delta: float) -> void:
@@ -122,7 +130,7 @@ func _on_overdrive_changed(_active: bool) -> void:
 	_refresh_boost_bar()
 
 
-## TEMPORARY stall: the Boost button becomes the crank.
+## Stalled: the Boost button becomes the crank.
 func _on_stall_changed(stalled: bool) -> void:
 	_boost_button.text = tr(crank_button_key) if stalled else tr(_boost_button_text)
 	_boost_button.theme_type_variation = &"CrankButton" if stalled else &""
@@ -184,6 +192,29 @@ func _refresh_emergency_button() -> void:
 	else:
 		_emergency_button.text = tr(emergency_ready_key).format([NumberFormat.gold(cost)])
 	_emergency_button.disabled = not enabled
+
+
+func _make_saved_label() -> void:
+	_saved_label = Label.new()
+	_saved_label.name = "SavedLabel"
+	_saved_label.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+	_saved_label.text = tr(saved_key)
+	_saved_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_saved_label.modulate.a = 0.0
+	$HUDRoot.add_child(_saved_label)
+	_saved_label.add_theme_color_override(&"font_color", _saved_label.get_theme_color(&"body", &"Palette"))
+	_saved_label.add_theme_color_override(&"font_outline_color", _saved_label.get_theme_color(&"ink", &"Palette"))
+	_saved_label.add_theme_constant_override(&"outline_size", 6)
+	_saved_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT, Control.PRESET_MODE_KEEP_SIZE, 20)
+
+
+func _on_run_saved() -> void:
+	if _saved_tween != null:
+		_saved_tween.kill()
+	_saved_label.modulate.a = 1.0
+	_saved_tween = create_tween()
+	_saved_tween.tween_interval(saved_show_seconds)
+	_saved_tween.tween_property(_saved_label, "modulate:a", 0.0, 0.4)
 
 
 func _make_shortcut(key: Key) -> Shortcut:

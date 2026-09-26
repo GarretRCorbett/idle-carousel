@@ -23,6 +23,7 @@ const LANGUAGE_LIST_FONT: Font = preload("res://assets/fonts/language_list_font.
 ## Locale codes in the same order as the Language list.
 var _locales: PackedStringArray = []
 @onready var _back_button: Button = %BackButton
+@onready var _save_button: Button = %SaveButton
 @onready var _main_menu_button: Button = %MainMenuButton
 @onready var _quit_button: Button = %QuitButton
 @onready var _tabs: TabContainer = %OptionsTabs
@@ -40,12 +41,18 @@ func _ready() -> void:
 		AudioManager.play_sfx(&"click"))
 	_setup_language_list()
 	_back_button.pressed.connect(close)
-	# Only in the game (the main menu has its own Quit). No save system yet
-	# (Phase 4), so leaving ends the run.
+	# Only in the game (the main menu has its own Quit). Leaving saves the run
+	# (when run saving is on; see SaveManager.run_saves_enabled).
+	_save_button.visible = pause_game_while_open and SaveManager.run_saves_enabled
 	_main_menu_button.visible = pause_game_while_open
 	_quit_button.visible = pause_game_while_open
+	_save_button.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+	_save_button.text = tr("OPT_SAVE")
+	_save_button.pressed.connect(_on_save_pressed)
 	_main_menu_button.pressed.connect(_on_main_menu_pressed)
-	_quit_button.pressed.connect(func() -> void: get_tree().quit())
+	_quit_button.pressed.connect(func() -> void:
+		SaveManager.save_run()
+		get_tree().quit())
 	# Keys: the tab bar translates titles itself.
 	_tabs.set_tab_title(0, "OPT_TAB_SETTINGS")
 	_tabs.set_tab_title(1, "OPT_TAB_CONTROLS")
@@ -59,14 +66,23 @@ func add_tab(control: Control, title: String) -> void:
 
 
 func open() -> void:
+	_save_button.text = tr("OPT_SAVE")
 	show()
 	if pause_game_while_open:
 		get_tree().paused = true
 	_back_button.grab_focus.call_deferred()
 
 
+## Manual save; the button says "Saved" until the menu opens again.
+func _on_save_pressed() -> void:
+	AudioManager.play_sfx(&"click")
+	if SaveManager.save_run():
+		_save_button.text = tr("HUD_SAVED")
+
+
 func _on_main_menu_pressed() -> void:
 	AudioManager.play_sfx(&"click")
+	SaveManager.save_run()
 	get_tree().paused = false
 	get_tree().change_scene_to_file(MAIN_MENU_SCENE)
 

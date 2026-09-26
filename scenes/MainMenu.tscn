@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" path="res://scenes/OptionsMenu.tscn" id="6_options"]
 [ext_resource type="Texture2D" path="res://assets/sprites/background/menu/sky.png" id="7_bg"]
 [ext_resource type="Script" path="res://scripts/park_scenery.gd" id="20_scenery"]
+[ext_resource type="Script" path="res://scripts/two_step_button.gd" id="21_two_step"]
 [ext_resource type="Texture2D" path="res://assets/sprites/background/menu/fence_iron.png" id="25_fence"]
 [ext_resource type="Texture2D" path="res://assets/sprites/background/menu/bush1.png" id="26_b1"]
 [ext_resource type="Texture2D" path="res://assets/sprites/background/menu/bush3.png" id="27_b2"]
@@ -91,12 +92,21 @@ size_flags_horizontal = 4
 mouse_filter = 2
 theme_override_constants/separation = 12
 
+[node name="ContinueButton" type="Button" parent="Center/Column/Buttons"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(240, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "MENU_CONTINUE"
+
 [node name="PlayButton" type="Button" parent="Center/Column/Buttons"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(240, 56)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "MENU_PLAY"
+text = "MENU_NEW_RUN"
+script = ExtResource("21_two_step")
 
 [node name="SettingsButton" type="Button" parent="Center/Column/Buttons"]
 theme_type_variation = &"BlueButton"

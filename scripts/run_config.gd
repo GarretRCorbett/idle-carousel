@@ -23,8 +23,8 @@ extends Resource
 @export_range(0.0, 1000.0, 0.1, "or_greater") var regen_per_second: float = 2.0
 @export_range(0.0, 60.0, 0.1, "suffix:s") var regen_delay_seconds: float = 2.0
 
-@export_group("Stall (TEMPORARY)")
-## TEMPORARY Phase 2 rule; the real fail state is DECISION PENDING (GDD).
+@export_group("Stall")
+## The fail state (GDD v1.18, "safe farm, risky push"): nothing is ever lost but time.
 ## At 0 health the carousel stops. Clearing every latch restarts it at this
 ## fraction of max health (0.25 = 25%).
 @export_range(0.01, 1.0, 0.01) var stall_recovery_fraction: float = 0.25

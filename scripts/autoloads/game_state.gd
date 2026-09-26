@@ -24,11 +24,11 @@ signal mounts_changed(roster: Array[StringName])
 signal mount_slots_changed(count: int)
 ## Number of latched enemies changed.
 signal latch_count_changed(count: int)
-## TEMPORARY: the carousel stalled at 0 health (true) or restarted (false).
+## The carousel stalled at 0 health (true) or restarted (false).
 signal stall_changed(stalled: bool)
-## TEMPORARY: while stalled, how full the crank meter is (0..1).
+## While stalled, how full the crank meter is (0..1).
 signal crank_changed(fraction: float)
-## TEMPORARY: stalled too long. Latches are already cleared and health restored;
+## Stalled too long (the safety net). Latches are already cleared and health restored;
 ## Game removes every enemy (no Gold).
 signal stall_timed_out
 ## Emergency Clear removed every latch. Game removes the latched enemies (no Gold).
@@ -120,7 +120,7 @@ var _total_drag: float = 0.0
 var _total_latch_dps: float = 0.0
 # Seconds since the rim was last latched (drives regen).
 var _clear_seconds: float = 0.0
-# TEMPORARY stall (see RunConfig "Stall").
+# The stall (fail state, GDD v1.18; tuning in RunConfig "Stall").
 var _stalled: bool = false
 var _stall_seconds: float = 0.0
 var _crank: float = 0.0
@@ -140,6 +140,12 @@ func reset_run(config_override: RunConfig = null) -> void:
 	if not problems.is_empty():
 		push_error("RunConfig invalid, using defaults: %s" % ", ".join(problems))
 		config = DEFAULT_CONFIG
+	_reset_fields(config)
+	_announce_run()
+
+
+## Sets every value to a fresh run's, without announcing anything.
+func _reset_fields(config: RunConfig) -> void:
 	_config = config
 	_gold = config.starting_gold
 	_health = config.max_health
@@ -181,7 +187,11 @@ func reset_run(config_override: RunConfig = null) -> void:
 	_bosses_beaten = 0
 	_boss_clear_times.clear()
 	_boss_active = false
-	# Set everything first so listeners never see a half-reset run.
+
+
+## Announces every value after a reset or a load. Everything is set first, so
+## listeners never see a half-built run.
+func _announce_run() -> void:
 	run_reset.emit()
 	gold_changed.emit(_gold, 0.0)
 	gold_per_second_changed.emit(get_recent_gold_per_second())
@@ -195,8 +205,94 @@ func reset_run(config_override: RunConfig = null) -> void:
 	latch_count_changed.emit(0)
 	stall_changed.emit(false)
 	crank_changed.emit(0.0)
-	selected_tier_changed.emit(0)
+	selected_tier_changed.emit(_selected_tier)
 	boss_active_changed.emit(false)
+
+
+# --- Saving ---------------------------------------------------------------------
+# Only the facts are saved; bonuses, booths, slots and mount tiers are rebuilt
+# from the upgrade levels by the same code a purchase uses. The field (enemies,
+# latches, health, boost, a boss fight) isn't saved: a loaded run starts clean
+# at full health, and a fight in progress is forfeited (GDD v1.18).
+
+## This run's progress as plain JSON-safe values.
+func to_save_data() -> Dictionary:
+	var levels := {}
+	for id in _upgrade_levels:
+		if _upgrade_levels[id] > 0:
+			levels[String(id)] = _upgrade_levels[id]
+	var roster: Array[String] = []
+	for id in _mount_roster:
+		roster.append(String(id))
+	var kills := {}
+	for rank in _tier_kills:
+		kills[str(rank)] = _tier_kills[rank]
+	var clear_times := {}
+	for rank in _boss_clear_times:
+		clear_times[str(rank)] = _boss_clear_times[rank]
+	return {
+		"gold": _gold,
+		"upgrade_levels": levels,
+		"mount_roster": roster,
+		"selected_tier": _selected_tier,
+		"tier_kills": kills,
+		"bosses_beaten": _bosses_beaten,
+		"boss_clear_times": clear_times,
+		"run_seconds": _elapsed,
+		"run_seed": _run_seed,
+	}
+
+
+## Replaces the run with saved progress, then announces it like a reset.
+## `definitions` is the upgrade catalog (UpgradeManager.get_definitions()).
+## Forgiving: unknown upgrades are skipped, levels are clamped to each
+## upgrade's max, a roster that doesn't match the levels is rebuilt, and bad
+## numbers fall back to a fresh run's. Returns false (and changes nothing) if
+## `data` isn't a save at all.
+func load_save_data(data: Dictionary, definitions: Array[UpgradeData]) -> bool:
+	if not data.get("upgrade_levels") is Dictionary:
+		return false
+	_reset_fields(_config)
+	var gold := float(data.get("gold", 0.0))
+	_gold = gold if is_finite(gold) and gold >= 0.0 else 0.0
+	var levels: Dictionary = data["upgrade_levels"]
+	for upgrade in definitions:
+		if upgrade == null or not levels.has(String(upgrade.id)):
+			continue
+		var level := clampi(int(levels[String(upgrade.id)]), 0, upgrade.max_level)
+		for i in level:
+			_upgrade_levels[upgrade.id] = get_upgrade_level(upgrade.id) + 1
+			_apply_effect(upgrade)
+	# The levels decide how many of each mount there are; the save only keeps
+	# their order. Use it if it holds exactly the same mounts.
+	var saved_roster: Array[StringName] = []
+	var roster_data: Variant = data.get("mount_roster", [])
+	if roster_data is Array:
+		for id: Variant in roster_data:
+			saved_roster.append(StringName(str(id)))
+	var sorted_saved := saved_roster.duplicate()
+	var sorted_built := _mount_roster.duplicate()
+	sorted_saved.sort()
+	sorted_built.sort()
+	if sorted_saved == sorted_built:
+		_mount_roster = saved_roster
+	_bosses_beaten = maxi(0, int(data.get("bosses_beaten", 0)))
+	var kills: Variant = data.get("tier_kills", {})
+	if kills is Dictionary:
+		for rank: Variant in kills:
+			_tier_kills[int(rank)] = maxi(0, int(kills[rank]))
+	var clear_times: Variant = data.get("boss_clear_times", {})
+	if clear_times is Dictionary:
+		for rank: Variant in clear_times:
+			_boss_clear_times[int(rank)] = float(clear_times[rank])
+	var tier := int(data.get("selected_tier", 0))
+	_selected_tier = tier if is_tier_unlocked(tier) else 0
+	var seconds := float(data.get("run_seconds", 0.0))
+	_elapsed = seconds if is_finite(seconds) and seconds >= 0.0 else 0.0
+	_income_epoch = floori(_elapsed / _config.income_bucket_seconds)
+	_run_seed = int(data.get("run_seed", _run_seed))
+	_announce_run()
+	return true
 
 
 # --- Gold -------------------------------------------------------------------
@@ -247,7 +343,7 @@ func get_max_health() -> float:
 	return _config.max_health
 
 
-## Lowers health, never below zero. At zero the carousel stalls (TEMPORARY).
+## Lowers health, never below zero. At zero the carousel stalls.
 func damage_carousel(amount: float) -> void:
 	if not is_finite(amount) or amount <= 0.0:
 		return
@@ -422,9 +518,8 @@ func try_emergency_clear() -> bool:
 	return true
 
 
-# --- TEMPORARY Phase 2 stall ----------------------------------------------------------
-# Replace once Garret decides the GDD's DECISION PENDING fail state
-# (direction so far: planning/phase2/README.md, "Package A").
+# --- Stall (the fail state, GDD v1.18: "safe farm, risky push") ------------------------
+# Background: planning/phase2/README.md, "Package A".
 
 ## Stall at 0 health; restart at 25% once nothing is latched (0 health with
 ## nothing latched restarts right away). Returns true if the stall flipped.
@@ -518,7 +613,7 @@ func _advance_income_window() -> void:
 
 ## base × upgrades × (1 + click boost) × modifiers (Overdrive, events) ÷ (1 + drag).
 ## Drag slows it less and less as it stacks, so Boost always helps; only the
-## TEMPORARY stall stops it completely.
+## stall stops it completely.
 func get_effective_spin_speed_rad_s() -> float:
 	if _stalled:
 		return 0.0
@@ -951,6 +1046,24 @@ func try_purchase_upgrade(upgrade: UpgradeData) -> bool:
 	var previous_mount_count := _mount_roster.size()
 	_gold -= cost
 	_upgrade_levels[upgrade.id] = get_upgrade_level(upgrade.id) + 1
+	_apply_effect(upgrade)
+	# Everything is committed; now announce it.
+	gold_changed.emit(_gold, -cost)
+	_emit_speed_if_changed(previous_speed)
+	if _booth_count != previous_booths:
+		booth_count_changed.emit(_booth_count)
+	if _mount_slots != previous_slots:
+		mount_slots_changed.emit(_mount_slots)
+	if _mount_roster.size() != previous_mount_count:
+		mounts_changed.emit(get_mount_roster())
+	upgrade_applied.emit(upgrade.id, get_upgrade_level(upgrade.id))
+	_purchase_in_progress = false
+	return true
+
+
+## One level's effect, with no signals. Buying and loading both use it, so a
+## loaded run can't disagree with one that bought the same things.
+func _apply_effect(upgrade: UpgradeData) -> void:
 	match upgrade.effect_type:
 		UpgradeData.EffectType.ADD_SPIN_BONUS:
 			_spin_bonus += upgrade.effect_value
@@ -973,18 +1086,6 @@ func try_purchase_upgrade(upgrade: UpgradeData) -> bool:
 			_mount_damage_bonus[upgrade.target_mount] = get_mount_damage_bonus(upgrade.target_mount) + upgrade.effect_value
 		UpgradeData.EffectType.MOUNT_TIER:
 			_mount_tiers[upgrade.target_mount] = get_mount_tier(upgrade.target_mount) + 1
-	# Everything is committed; now announce it.
-	gold_changed.emit(_gold, -cost)
-	_emit_speed_if_changed(previous_speed)
-	if _booth_count != previous_booths:
-		booth_count_changed.emit(_booth_count)
-	if _mount_slots != previous_slots:
-		mount_slots_changed.emit(_mount_slots)
-	if _mount_roster.size() != previous_mount_count:
-		mounts_changed.emit(get_mount_roster())
-	upgrade_applied.emit(upgrade.id, get_upgrade_level(upgrade.id))
-	_purchase_in_progress = false
-	return true
 
 
 func _is_effect_supported(upgrade: UpgradeData) -> bool:

@@ -6,6 +6,8 @@ NUM_SUFFIX_M,M,M,M,M,M,M,M,M,M
 NUM_SUFFIX_B,B,B,Md,Mrd,B,B,B,B,B
 NUM_SUFFIX_T,T,T,T,T,T,T,T,T,T
 MENU_TITLE,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel,Idle Carousel
+MENU_CONTINUE,Continue,Continuar,Continuer,Fortsetzen,Continuar,Продолжить,继续,続ける,계속
+MENU_NEW_RUN,New run,Nueva partida,Nouvelle partie,Neues Spiel,Novo jogo,Новая игра,新游戏,ニューゲーム,새 게임
 MENU_PLAY,Play,Jugar,Jouer,Spielen,Jogar,Играть,开始游戏,プレイ,플레이
 MENU_SETTINGS,Settings,Ajustes,Paramètres,Einstellungen,Configurações,Настройки,设置,設定,설정
 MENU_QUIT,Quit,Salir,Quitter,Beenden,Sair,Выход,退出,終了,종료
@@ -17,6 +19,8 @@ OPT_MUSIC_VOLUME,Music,Música,Musique,Musik,Música,Музыка,音乐,音楽,
 OPT_FULLSCREEN,Fullscreen,Pantalla completa,Plein écran,Vollbild,Tela cheia,Полный экран,全屏,フルスクリーン,전체 화면
 OPT_LANGUAGE,Language,Idioma,Langue,Sprache,Idioma,Язык,语言,言語,언어
 LANGUAGE_NATIVE_NAME,English,Español,Français,Deutsch,Português (Brasil),Русский,简体中文,日本語,한국어
+OPT_SAVE,Save,Guardar,Sauvegarder,Speichern,Salvar,Сохранить,保存,セーブ,저장
+HUD_SAVED,Saved,Guardado,Sauvegardé,Gespeichert,Salvo,Сохранено,已保存,セーブ完了,저장됨
 OPT_BACK,Back,Volver,Retour,Zurück,Voltar,Назад,返回,戻る,뒤로
 OPT_MAIN_MENU,Main menu,Menú principal,Menu principal,Hauptmenü,Menu principal,Главное меню,主菜单,メインメニュー,메인 메뉴
 CTRL_KEY_CLICK,Left click,Clic izquierdo,Clic gauche,Linksklick,Clique esquerdo,Левый клик,鼠标左键,左クリック,왼쪽 클릭
