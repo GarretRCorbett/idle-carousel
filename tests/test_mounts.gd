@@ -107,7 +107,7 @@ func test_real_mount_rows_are_on_the_mounts_tab() -> void:
 		var row := UpgradeManager.get_definition(id)
 		assert_object(row).is_not_null()
 		assert_int(row.tab).is_equal(UpgradeData.Tab.MOUNTS)
-	assert_int(UpgradeManager.get_definition(&"click_damage").tab).is_equal(UpgradeData.Tab.COMBAT)
+	assert_int(UpgradeManager.get_definition(&"click_damage").tab).is_equal(UpgradeData.Tab.UPGRADES)
 
 
 func test_shop_says_a_mount_needs_a_slot() -> void:

@@ -20,6 +20,8 @@ signal emergency_clear_requested
 @export var wave_paused_key: String = "HUD_SEND_WAVE"
 @export var emergency_ready_key: String = "HUD_CLEAR_READY"
 @export var emergency_cooldown_key: String = "HUD_CLEAR_COOLDOWN"
+## With Auto-Boost bought, the Boost button says what it holds ("Boost (auto 65%)").
+@export var boost_auto_key: String = "HUD_BOOST_AUTO"
 ## While stalled, the Boost button shows this label (a translation key).
 ## Bar colors come from the UI theme's CrankBar / OverdriveBar roles.
 @export var crank_button_key: String = "HUD_CRANK"
@@ -28,6 +30,15 @@ signal emergency_clear_requested
 ## "Saved" flashes in the bottom-left corner after each save (GDD: a small save icon).
 @export var saved_key: String = "HUD_SAVED"
 @export_range(0.1, 5.0, 0.1, "suffix:s") var saved_show_seconds: float = 1.2
+
+@export_group("Boost bar")
+## A thin tick on the Boost bar where Auto-Boost holds it.
+@export var auto_marker_color: Color = Color(1.0, 0.96, 0.86, 0.9)
+@export_range(1.0, 6.0, 0.5, "suffix:px") var auto_marker_width: float = 2.0
+## While latched enemies drain the bar, it pulses toward this tint, so you can
+## see why the bar is sinking (GDD v1.17: latches drain it gently).
+@export var drain_tint: Color = Color(1.0, 0.4, 0.35)
+@export_range(0.5, 20.0, 0.5, "suffix:/s") var drain_pulse_speed: float = 6.0
 
 @onready var _gold_label: Label = %GoldLabel
 @onready var _gold_per_sec_label: Label = %GoldPerSecLabel
@@ -49,6 +60,8 @@ var _clear_seconds_shown: int = -2
 var _clear_cost_shown: float = -1.0
 var _clear_enabled_shown: bool = false
 var _saved_label: Label
+var _auto_marker: ColorRect
+var _pulse_time: float = 0.0
 var _saved_tween: Tween
 
 
@@ -82,6 +95,10 @@ func _ready() -> void:
 	_boost_button.shortcut = _make_shortcut(boost_key)
 	_make_saved_label()
 	SaveManager.run_saved.connect(_on_run_saved)
+	_make_auto_marker()
+	GameState.upgrade_applied.connect(func(_id: StringName, _level: int) -> void: _refresh_auto_boost())
+	GameState.run_reset.connect(_refresh_auto_boost)
+	_boost_bar.resized.connect(_refresh_auto_boost)
 	# Read the current values in case they were announced before we connected.
 	_on_gold_changed(GameState.get_gold(), 0.0)
 	_on_health_changed(GameState.get_health(), GameState.get_max_health())
@@ -106,8 +123,9 @@ func _notification(what: int) -> void:
 		_saved_label.text = tr(saved_key)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	_refresh_emergency_button()
+	_pulse_drain(delta)
 	var held := _mouse_holding_boost or Input.is_key_pressed(boost_key)
 	if held != _boost_held:
 		_boost_held = held
@@ -134,7 +152,7 @@ func _on_overdrive_changed(_active: bool) -> void:
 
 ## Stalled: the Boost button becomes the crank.
 func _on_stall_changed(stalled: bool) -> void:
-	_boost_button.text = tr(crank_button_key) if stalled else tr(_boost_button_text)
+	_boost_button.text = tr(crank_button_key) if stalled else _boost_label()
 	_boost_button.theme_type_variation = &"CrankButton" if stalled else &""
 	_refresh_boost_bar()
 
@@ -194,6 +212,44 @@ func _refresh_emergency_button() -> void:
 	else:
 		_emergency_button.text = tr(emergency_ready_key).format([NumberFormat.gold(cost)])
 	_emergency_button.disabled = not enabled
+
+
+## "Boost", or "Boost (auto 65%)" once Auto-Boost is bought.
+func _boost_label() -> String:
+	var hold := GameState.get_auto_boost_hold()
+	return tr(boost_auto_key).format([roundi(hold * 100.0)]) if hold > 0.0 else tr(_boost_button_text)
+
+
+func _make_auto_marker() -> void:
+	_auto_marker = ColorRect.new()
+	_auto_marker.name = "AutoBoostMarker"
+	_auto_marker.color = auto_marker_color
+	_auto_marker.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_boost_bar.add_child(_auto_marker)
+	_refresh_auto_boost()
+
+
+## The marker sits where Auto-Boost holds the bar; the button says so too.
+func _refresh_auto_boost() -> void:
+	var hold := GameState.get_auto_boost_hold()
+	_auto_marker.visible = hold > 0.0
+	var height := _boost_bar.size.y + 6.0
+	_auto_marker.position = Vector2(roundf(_boost_bar.size.x * hold - auto_marker_width / 2.0), -3.0)
+	_auto_marker.size = Vector2(auto_marker_width, height)
+	if not GameState.is_stalled():
+		_boost_button.text = _boost_label()
+
+
+## Pulses the bar red while latched enemies are draining a boost.
+func _pulse_drain(delta: float) -> void:
+	var draining := GameState.get_latched_count() > 0 and GameState.get_click_boost() > 0.0 and not GameState.is_stalled()
+	if not draining:
+		_pulse_time = 0.0
+		_boost_bar.self_modulate = Color.WHITE
+		return
+	_pulse_time += delta
+	var t := 0.5 + 0.5 * sin(_pulse_time * drain_pulse_speed)
+	_boost_bar.self_modulate = Color.WHITE.lerp(drain_tint, t)
 
 
 func _make_saved_label() -> void:

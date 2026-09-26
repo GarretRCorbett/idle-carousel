@@ -22,7 +22,8 @@ enum EffectType {
 const STAR_BUY := 3
 
 ## Which shop tab the row appears on.
-enum Tab { CAROUSEL, COMBAT, MOUNTS }
+## (Combat was folded into Upgrades once Wolf Fang moved to the Wolf's track.)
+enum Tab { UPGRADES, MOUNTS }
 
 ## Internal key. Never shown to the player; don't rename after release.
 @export var id: StringName = &""
@@ -32,7 +33,7 @@ enum Tab { CAROUSEL, COMBAT, MOUNTS }
 @export var effect_type: EffectType = EffectType.ADD_SPIN_BONUS
 ## Added once per level.
 @export var effect_value: float = 0.0
-@export var tab: Tab = Tab.CAROUSEL
+@export var tab: Tab = Tab.UPGRADES
 
 @export_group("Mounts")
 ## BUY_MOUNT: the mount scene each level adds.

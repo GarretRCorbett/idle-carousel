@@ -149,3 +149,21 @@ func test_hud_fits_the_screen_width() -> void:
 	var columns := game.find_child("Columns", true, false) as Control
 	var screen_width := float(ProjectSettings.get_setting("display/window/size/viewport_width"))
 	assert_float(columns.get_combined_minimum_size().x).is_less_equal(screen_width - 32.0)
+
+
+## Auto-Boost shows on the Boost panel: a marker at its hold and the button says it.
+func test_auto_boost_shows_its_hold_on_the_boost_bar() -> void:
+	var game := (load("res://scenes/Game.tscn") as PackedScene).instantiate() as Game
+	add_child(game)
+	auto_free(game)
+	var bar := game.find_child("BoostBar", true, false) as ProgressBar
+	var button := game.find_child("BoostButton", true, false) as Button
+	var marker := bar.get_node("AutoBoostMarker") as ColorRect
+	assert_bool(marker.visible).is_false()
+	GameState.add_gold(100000.0)
+	UpgradeManager.purchase(&"auto_boost")
+	var hold := GameState.get_auto_boost_hold()
+	assert_bool(marker.visible).is_true()
+	assert_float(marker.position.x + marker.size.x / 2.0).is_equal_approx(bar.size.x * hold, 1.0)
+	assert_str(button.text).contains(str(roundi(hold * 100.0)))
+	GameState.reset_run()

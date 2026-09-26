@@ -45,6 +45,7 @@ HUD_GOLD_PER_SEC,Gold per sec: {0},Oro por seg: {0},Or par sec : {0},Gold pro Se
 POP_GOLD,+{0},+{0},+{0},+{0},+{0},+{0},+{0},+{0},+{0}
 HUD_SPEED,Speed: ×{0},Velocidad: ×{0},Vitesse : ×{0},Tempo: ×{0},Velocidade: ×{0},Скорость: ×{0},速度：×{0},速度：×{0},속도: ×{0}
 HUD_BOOST,Boost,Impulso,Boost,Boost,Impulso,Ускорение,加速,ブースト,부스트
+HUD_BOOST_AUTO,Boost (auto {0}%),Impulso (auto {0}%),Boost (auto {0} %),Boost (auto {0} %),Impulso (auto {0}%),Ускорение (авто {0}%),加速（自动 {0}%）,ブースト（自動 {0}%）,부스트 (자동 {0}%)
 HUD_CRANK,Crank!,¡Manivela!,Manivelle !,Kurbeln!,Manivela!,Крутить!,摇曲柄！,クランク！,크랭크!
 HUD_SEND_WAVE_COUNTDOWN,Send wave ({0}),Enviar oleada ({0}),Envoyer la vague ({0}),Welle senden ({0}),Enviar onda ({0}),Волна ({0}),发送波次（{0}）,ウェーブ送信（{0}）,웨이브 보내기 ({0})
 HUD_SEND_WAVE,Send wave,Enviar oleada,Envoyer la vague,Welle senden,Enviar onda,Отправить волну,发送波次,ウェーブ送信,웨이브 보내기
@@ -52,8 +53,7 @@ HUD_AUTO_WAVES,Auto waves,Oleadas automáticas,Vagues auto,Auto-Wellen,Ondas aut
 HUD_CLEAR_LATCHED,Clear latched,Quitar enganchados,Retirer les accrochés,Festhänger entfernen,Remover presos,Сбросить прицепившихся,清除附着,しがみつきを除去,달라붙은 것 제거
 HUD_CLEAR_READY,Clear latched ({0}),Quitar enganchados ({0}),Retirer les accrochés ({0}),Festhänger entfernen ({0}),Remover presos ({0}),Сбросить ({0}),清除附着（{0}）,しがみつき除去（{0}）,달라붙은 것 제거 ({0})
 HUD_CLEAR_COOLDOWN,Clear ready in {0}s,Listo en {0} s,Prêt dans {0} s,Bereit in {0} s,Pronto em {0} s,Готово через {0} с,{0} 秒后可用,あと{0}秒で使用可,{0}초 후 사용 가능
-SHOP_TAB_CAROUSEL,Carousel,Carrusel,Manège,Karussell,Carrossel,Карусель,旋转木马,メリーゴーラウンド,회전목마
-SHOP_TAB_COMBAT,Combat,Combate,Combat,Kampf,Combate,Бой,战斗,戦闘,전투
+SHOP_TAB_UPGRADES,Upgrades,Mejoras,Améliorations,Upgrades,Melhorias,Улучшения,升级,アップグレード,업그레이드
 SHOP_TAB_MOUNTS,Mounts,Monturas,Montures,Reittiere,Montarias,Скакуны,坐骑,乗り物,탈것
 SHOP_COST,{0},{0},{0},{0},{0},{0},{0},{0},{0}
 SHOP_MAXED,Max,Máx,Max,Max,Máx,Макс,已满,最大,최대
@@ -69,7 +69,7 @@ SHOP_STAR_TIP,Star up: {0},Estrella: {0},Étoile : {0},Stern: {0},Estrela: {0},�
 UPG_CAROUSEL_SPEED_NAME,Carousel Speed,Velocidad del carrusel,Vitesse du manège,Karussell-Tempo,Velocidade do carrossel,Скорость карусели,旋转速度,回転速度,회전목마 속도
 UPG_CAROUSEL_SPEED_DESC,+20% base speed,+20% de velocidad base,+20 % de vitesse de base,+20 % Grundtempo,+20% de velocidade base,+20% к базовой скорости,基础速度 +20%,基本速度 +20%,기본 속도 +20%
 UPG_AUTO_BOOST_NAME,Auto-Boost,Auto-impulso,Auto-boost,Auto-Boost,Auto-impulso,Автоускорение,自动加速,オートブースト,자동 부스트
-UPG_AUTO_BOOST_DESC,Presses Boost for you; each level holds the bar higher,Pulsa Impulso por ti; cada nivel mantiene la barra más alta,Appuie sur Boost pour vous ; chaque niveau garde la barre plus haut,Drückt Boost für dich; jede Stufe hält die Leiste höher,Aperta Impulso por você; cada nível mantém a barra mais alta,Жмёт ускорение за вас; каждый уровень держит шкалу выше,自动为你按加速；每级让加速条保持得更高,ブーストを自動で押す。レベルごとにゲージを高く保つ,부스트를 대신 눌러 줍니다. 레벨마다 게이지를 더 높게 유지합니다
+UPG_AUTO_BOOST_DESC,Holds the Boost bar at 30 / 50 / 65 / 82%,Mantiene la barra de impulso al 30 / 50 / 65 / 82%,Maintient la barre de boost à 30 / 50 / 65 / 82 %,Hält die Boost-Leiste bei 30 / 50 / 65 / 82 %,Mantém a barra de impulso em 30 / 50 / 65 / 82%,Держит шкалу ускорения на 30 / 50 / 65 / 82%,让加速条保持在 30 / 50 / 65 / 82%,ブーストゲージを 30 / 50 / 65 / 82% に保つ,부스트 게이지를 30 / 50 / 65 / 82%로 유지
 UPG_BOOST_POWER_NAME,Boost Power,Potencia de impulso,Puissance du boost,Boost-Stärke,Força do impulso,Сила ускорения,加速强度,ブースト強化,부스트 강화
 UPG_BOOST_POWER_DESC,+10% max boost,+10% de impulso máximo,+10 % de boost max,+10 % max. Boost,+10% de impulso máximo,+10% к макс. ускорению,最大加速 +10%,最大ブースト +10%,최대 부스트 +10%
 UPG_CLICK_DAMAGE_NAME,Click Damage,Daño por clic,Dégâts par clic,Klickschaden,Dano por clique,Урон от клика,点击伤害,クリックダメージ,클릭 피해

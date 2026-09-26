@@ -2,7 +2,7 @@ class_name UpgradeShop
 extends PanelContainer
 ## The shop (Phase 4 Step 5, layout A): tabs of compact rows, always in catalog
 ## order so rows never shift under the cursor.
-## - Carousel and Combat: one line per upgrade (name, short description, level
+## - Upgrades: one line per upgrade (name, short description, level
 ##   pips, a gold price button).
 ## - Mounts: one row per animal: icon (greyed while locked), name, how many you
 ##   own, its ★, level pips, then Buy · Sell · Up. Up buys the next step of the
@@ -34,7 +34,7 @@ enum RowState { LOCKED, SAVING, AFFORDABLE, MAXED }
 ## Tier bosses, to name the boss a gated row is waiting for.
 @export var tier_catalog: TierCatalog = preload("res://resources/tiers/tier_catalog.tres")
 ## Tab titles, in UpgradeData.Tab order.
-@export var tab_title_keys: PackedStringArray = ["SHOP_TAB_CAROUSEL", "SHOP_TAB_COMBAT", "SHOP_TAB_MOUNTS"]
+@export var tab_title_keys: PackedStringArray = ["SHOP_TAB_UPGRADES", "SHOP_TAB_MOUNTS"]
 
 @export_group("Look")
 @export var locked_modulate: Color = Color(1.0, 1.0, 1.0, 0.55)

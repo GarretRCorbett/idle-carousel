@@ -12,4 +12,3 @@ effect_value = 0.25
 cost_gold = 50.0
 cost_growth = 1.6
 max_level = 10
-tab = 1
